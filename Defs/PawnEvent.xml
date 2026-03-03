@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>Raid</defName>
+		<label>raid</label>
+		<description>{0} came to raid the colony</description>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>BodyPartLost</defName>
+		<label>body part lost</label>
+		<description>{0}'s {1} was lost</description>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>BodyPartHarvested</defName>
+		<label>body part harvested</label>
+		<description>{0}'s {1} was harvested by {2}</description>
+	</PawnEventDef>
+</Defs>

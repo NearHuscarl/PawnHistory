@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <PawnTableDef>
+    <defName>WorldPawnTracker_MainTable</defName>
+    <workerClass>PawnHistory.Source.WorldPawn.PawnTable_WorldPawns</workerClass>
+    <columns>
+      <li>Info</li>
+      <li>LabelWithIcon</li>
+      <li>WorldPawnBio</li>
+      <li>WorldPawnHealth</li>
+      <li>Faction</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Ideo</li>
+      <li MayRequire="Ludeon.RimWorld.Biotech">Xenotype</li>
+      <li>ForcefullyKeptAsWorldPawns</li>
+      <li>WorldSituation</li>
+      <li>RemainingSpace</li>
+    </columns>
+  </PawnTableDef>
+
+</Defs>

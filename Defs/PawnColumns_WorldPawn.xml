@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <PawnColumnDef>
+    <defName>ForcefullyKeptAsWorldPawns</defName>
+    <headerIcon>UI/Icons/PawnIdeology</headerIcon>
+    <workerClass>PawnHistory.Source.WorldPawn.PawnColumnWorker_ForceKept</workerClass>
+    <headerTip>Forcefully Kept as World Pawns</headerTip>
+    <sortable>true</sortable>
+  </PawnColumnDef>
+
+  <PawnColumnDef>
+    <defName>WorldPawnBio</defName>
+    <workerClass>PawnHistory.Source.WorldPawn.PawnColumnWorker_Bio</workerClass>
+    <headerTip>Bio</headerTip>
+  </PawnColumnDef>
+
+  <PawnColumnDef>
+    <defName>WorldPawnHealth</defName>
+    <headerIcon>UI/Icons/ThingCategories/Medicine</headerIcon>
+    <workerClass>PawnHistory.Source.WorldPawn.PawnColumnWorker_Health</workerClass>
+    <headerTip>Health</headerTip>
+  </PawnColumnDef>
+
+  <PawnColumnDef>
+    <defName>WorldSituation</defName>
+    <label>World situation</label>
+    <workerClass>PawnHistory.Source.WorldPawn.PawnColumnWorker_WorldSituation</workerClass>
+    <headerTip>Current status of the pawn outside of your map</headerTip>
+    <sortable>true</sortable>
+    <width>160</width>
+  </PawnColumnDef>
+
+
+</Defs>
