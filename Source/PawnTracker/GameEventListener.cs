@@ -12,12 +12,18 @@ namespace PawnHistory.Source.PawnTracker
     {
     }
 
+    public class GameEvent(Pawn pawn, PawnEventDef eventDef, string combatLogText = null) : GameEventBase
+    {
+        public Pawn Pawn { get; } = pawn;
+        public PawnEventDef eventDef { get; } = eventDef;
+        public string combatLogText { get; } = combatLogText;
+    }
+
     public class RaidEvent(IEnumerable<Pawn> enemies, Faction faction) : GameEventBase
     {
         public IEnumerable<Pawn> Enemies { get; } = enemies;
         public Faction Faction { get; } = faction;
     }
-
 
     public class GameEventListener
     {

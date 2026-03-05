@@ -14,7 +14,6 @@ namespace PawnHistory.Source.PawnTracker
     {
         public static void Prefix(IncidentParms parms, float raidLootPoints, List<Pawn> pawns)
         {
-            Log.Message("Raided!");
             var raidingPawns = pawns.Where(p => p != null).ToList();
             if (!raidingPawns.Any())
                 return;

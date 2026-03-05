@@ -51,11 +51,13 @@
     <Compile Include="Source\DebugTools.cs" />
     <Compile Include="Source\Helper\HediffHelper.cs" />
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
+    <Compile Include="Source\PawnTracker\Harmony\BattleLog_Add_Patch.cs" />
     <Compile Include="Source\PawnTracker\HistoryCardUtility.cs" />
+    <Compile Include="Source\PawnTracker\HistoryRecord.cs" />
     <Compile Include="Source\PawnTracker\ITab_Pawn_History.cs" />
     <Compile Include="Source\PawnTracker\PawnEventOf.cs" />
     <Compile Include="Source\PawnTracker\GameEventListener.cs" />
-    <Compile Include="Source\PawnTracker\Patches.cs" />
+    <Compile Include="Source\PawnTracker\Harmony\IncidentWorker_RaidEnemy_Patch.cs" />
     <Compile Include="Source\PawnTracker\PawnEventDef.cs" />
     <Compile Include="Source\PawnTracker\PawnTracker.cs" />
     <Compile Include="Source\WorldPawn\InfoCard.cs" />
@@ -68,8 +70,10 @@
     <Compile Include="Source\WorldPawn\MainTabWindow_WorldPawns.cs" />
     <Compile Include="Source\WorldPawn\PawnTableDefOf.cs" />
     <Compile Include="Source\WorldPawn\Widget.cs" />
+    <Compile Include="TickDelayManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".gitignore" />
     <Content Include="About\About.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -83,8 +87,11 @@
     <Content Include="Defs\PawnTables_WorldPawn.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Languages\English\Keyed\PawnHistory.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref">
       <Version>1.6.4633</Version>

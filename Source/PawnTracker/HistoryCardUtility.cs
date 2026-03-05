@@ -1,50 +1,111 @@
 ﻿using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
-namespace PawnHistory.Source.PawnTracker
+namespace PawnHistory.Source.PawnTracker;
+
+public class HistoryCardUtility
 {
-    public class HistoryCardUtility
+    private static float containerPadding;
+    /// <summary>
+    /// default gap between common UI controls
+    /// </summary>
+    private static float gap;
+
+    private static float filterHeight;
+
+    private static float headerHeight;
+
+    private static float rowHeight;
+    private static float colGap;
+    private static float colWidthDate;
+    private static float colWidthEvent;
+    private static float colWidthDesc;
+    private static float cellPx;
+    private static int visibleRecords;
+
+    private static float scrollWidth;
+    public static Vector2 scrollPosition;
+
+    static HistoryCardUtility() => ReloadLayoutConfig();
+
+    [Reloadable]
+    [NearDebugAction]
+    private static void ReloadLayoutConfig()
     {
-        public static readonly float labelPadding = 2f;
-        public static readonly float rowHeight = 28f;
-        public static readonly float scrollWidth = 20f;
-        public static readonly float headerHeight = 35f;
-        public static Rect HistoryRect = new(0.0f, 0.0f, 800f, 480f);
-        public static Vector2 scrollPosition = Vector2.zero;
+        var pawns = DebugTools.AllCorpses();
+        System.Diagnostics.Debugger.Break();
+        containerPadding = 8f;
+        gap = 10f;
 
-        public static void DrawHistoryCard(Rect cardRect, Pawn pawn, CompHistory comp)
+        filterHeight = 30f;
+
+        headerHeight = 25f;
+
+        rowHeight = 28f;
+        colGap = 5f;
+        colWidthDate = 90f;
+        colWidthEvent = 100f;
+        colWidthDesc = 400f;
+        cellPx = 5f;
+        visibleRecords = 14;
+
+        scrollWidth = 10f;
+        scrollPosition = Vector2.zero;
+    }
+
+    public static void DrawHistoryCard(Rect tabRect, Pawn pawn, CompHistory comp)
+    {
+        var color = GUI.color;
+        var font = Text.Font;
+        var anchor = Text.Anchor;
+
+        var inRect = tabRect.ContractedBy(containerPadding);
+
+        GUI.BeginGroup(inRect);
+
+        // --- HEADER SETUP ---
+        Text.Font = GameFont.Small; GUI.color = Color.gray; Text.Anchor = TextAnchor.MiddleLeft;
+
+        var headerRect = new Rect(0, filterHeight + gap, inRect.width, headerHeight);
+        Widgets.Label(new Rect(cellPx, headerRect.y, colWidthDate, headerHeight), "NH_PH_HistoryCard_HeaderDate".Translate());
+        Widgets.Label(new Rect(colWidthDate + colGap, headerRect.y, colWidthEvent, headerHeight), "NH_PH_HistoryCard_HeaderEvent".Translate());
+        Widgets.Label(new Rect(colWidthDate + colWidthEvent + colGap * 2, headerRect.y, colWidthDesc, headerHeight), "NH_PH_HistoryCard_HeaderDescription".Translate());
+
+        // --- SCROLL VIEW ---
+        var tableY = filterHeight + gap + headerHeight;
+        var outRect = new Rect(0, tableY, inRect.width, inRect.height - tableY);
+        var viewRect = new Rect(0, 0, inRect.width - scrollWidth, rowHeight * visibleRecords);
+
+        Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
+        for (var i = comp.records.Count - 1; i >= 0; i--)
         {
-            var anchor = Text.Anchor;
-            var font = Text.Font;
+            var record = comp.records[i];
+            var row = new Rect(0, rowHeight * i, viewRect.width, rowHeight);
+            if (i % 2 == 0) Widgets.DrawHighlight(row);
 
-            Text.Font = GameFont.Small;
-            GUI.color = Color.white;
+            var dateCell = new Rect(row.x + cellPx, row.y, colWidthDate, row.height);
+            GUI.color = Color.gray; Text.Font = GameFont.Tiny; Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(dateCell, comp.GetShortDate(record));
+            TooltipHandler.TipRegion(dateCell, comp.GetTipDate(record));
 
-            var outRect = new Rect(cardRect.x, cardRect.y + headerHeight, cardRect.width, cardRect.height - headerHeight);
-            var viewHeight = rowHeight * 15 + 3;
-            var viewRect = new Rect(0.0f, 0.0f, cardRect.width - scrollWidth, viewHeight);
+            var eventCell = new Rect(colWidthDate + colGap, row.y, colWidthEvent, row.height);
+            GUI.color = Color.white; Text.Font = GameFont.Small; Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(eventCell, record.eventDef.defName);
 
-            Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
+            GUI.color = Color.white; Text.Font = GameFont.Tiny; Text.Anchor = TextAnchor.MiddleLeft;
+            var descCell = new Rect(colWidthDate + colWidthEvent + colGap * 2, row.y, colWidthDesc, row.height);
+            Widgets.Label(descCell, record.GetDescription());
 
-            for (var i = 0; i < comp.records.Count; i++)
-            {
-                var rect5 = new Rect(0.0f, i * rowHeight, viewRect.width, rowHeight);
-                var num8 = rect5.y + rect5.height / 2f;
-                var y2 = num8 - Text.LineHeight / 2f;
-                var rect6 = new Rect(rect5.x + labelPadding, y2, 180, Text.LineHeight);
-                var record = comp.records[i];
-                Widgets.Label(rect6, $"{record.Date} {record.EventDef.defName} {record.EventDef.description}");
-            }
-            Widgets.EndScrollView();
-
-            Text.Anchor = anchor;
-            Text.Font = font;
+            var ticksAgo = GenTicks.TicksAbs - record.date;
+            var dateAgoText = $"Occurred {ticksAgo.ToStringTicksToPeriod()} ago";
+            TooltipHandler.TipRegion(descCell, dateAgoText);
         }
+        Widgets.EndScrollView();
+        GUI.EndGroup();
+
+        GUI.color = color;
+        Text.Font = font;
+        Text.Anchor = anchor;
     }
 }

@@ -20,12 +20,12 @@ public class ITab_Pawn_History : ITab
 
     public override bool IsVisible
     {
-        get => CompHistoryManager.GetComp(PawnToShowInfo) != null;
+        get => CompHistoryManager.GetComp(PawnToShowInfo).records.Count > 0;
     }
 
     public ITab_Pawn_History()
     {
-        this.size = new Vector2(600f, 500f);
+        this.size = new Vector2(630f, 510f);
         this.labelKey = "TabHistory";
         this.tutorTag = "History";
     }
@@ -39,9 +39,7 @@ public class ITab_Pawn_History : ITab
     protected override void FillTab()
     {
         var pawn = PawnToShowInfo;
-
-        GUI.BeginGroup(HistoryCardUtility.HistoryRect);
-        HistoryCardUtility.DrawHistoryCard(HistoryCardUtility.HistoryRect, pawn, CompHistoryManager.GetComp(pawn));
-        GUI.EndGroup();
+        var tabRect = new Rect(0, 0, size.x, size.y);
+        HistoryCardUtility.DrawHistoryCard(tabRect, pawn, CompHistoryManager.GetComp(pawn));
     }
 }

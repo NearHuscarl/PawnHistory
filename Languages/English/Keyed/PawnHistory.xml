@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+	<!-- Tab -->
+	<TabHistory>History</TabHistory>
+	
+	<!-- History Card -->
+	<NH_PH_HistoryCard_HeaderDate>Date</NH_PH_HistoryCard_HeaderDate>
+	<NH_PH_HistoryCard_HeaderEvent>Event</NH_PH_HistoryCard_HeaderEvent>
+	<NH_PH_HistoryCard_HeaderDescription>Description</NH_PH_HistoryCard_HeaderDescription>
+</LanguageData>

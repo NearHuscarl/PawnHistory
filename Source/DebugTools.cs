@@ -1,20 +1,25 @@
 ﻿using LudeonTK;
 using PawnHistory.Source.PawnTracker;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Verse;
 using Verse.Noise;
 
 namespace PawnHistory.Source;
 
+/// <summary>
+/// https://github.com/pardeike/Rimworld-Doorstop
+/// </summary>
 [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method)]
 public class ReloadableAttribute : Attribute { }
 
 class NearDebugActionAttribute : DebugActionAttribute
 {
     public NearDebugActionAttribute() : base(
-            category: "PawnHistory",
+            category: "Pawn History",
             name: null,
             requiresRoyalty: false,
             requiresIdeology: false,
@@ -29,35 +34,52 @@ class NearDebugActionAttribute : DebugActionAttribute
     }
 }
 
+class NearDebugOutputAttribute : DebugOutputAttribute
+{
+    public NearDebugOutputAttribute() : base(category: "Pawn History", true) { }
+}
+
 public static class DebugTools
 {
     // Hot reload feature does not work with generic type
     // https://github.com/pardeike/Rimworld-Doorstop/issues/5
-    private static object First(object ie)
+    public static object First(object ie)
     {
         return ((IEnumerable<Pawn>)ie).First();
     }
-
-    [Reloadable]
-    [NearDebugAction]
-    public static void LogRandomThings()
+    public static Pawn[] AllPawns()
     {
-        var p = Find.CurrentMap.mapPawns.AllHumanlike;
+        return Find.CurrentMap.mapPawns.AllPawns.ToArray();
+    }
+    public static Pawn[] AllCorpses()
+    {
+        return Find.CurrentMap.listerThings.ThingsInGroup(ThingRequestGroup.Corpse).Cast<Corpse>().Select(c => c.InnerPawn).ToArray();
+    }
 
-        foreach (var pawn in Find.CurrentMap.mapPawns.AllHumanlike)
+    [NearDebugOutput]
+    public static void PawnHistoryRecords()
+    {
+        var options = new List<DebugMenuOption>();
+        var alivePawns = Find.CurrentMap.mapPawns.AllPawns;
+        var deadPawns = Find.CurrentMap.listerThings.ThingsInGroup(ThingRequestGroup.Corpse).Cast<Corpse>().Select(c => c.InnerPawn);
+        var pawns = alivePawns.Concat(deadPawns).Where(x => x.HasComp<CompHistory>()).OrderByDescending(x => CompHistoryManager.GetComp(x).records.Count);
+
+        foreach (var pawn in pawns)
         {
-            var comp = CompHistoryManager.GetComp(pawn);
+            var compHistory = CompHistoryManager.GetComp(pawn);
+            var label = $"{pawn.Name} ({compHistory.records.Count})";
 
-            Log.Message($"{pawn.Name}'s records:");
-            foreach (var record in comp.records)
+            options.Add(new DebugMenuOption(label, DebugMenuOptionMode.Action, () =>
             {
-                Log.Message($"{record.Date} {record.EventDef.defName} {record.EventDef.description}");
-            }
-            Log.Message("----------------\n");
+                DebugTables.MakeTablesDialog(compHistory.records,
+                    new TableDataGetter<HistoryRecord>("Date", r => r.date),
+                    new TableDataGetter<HistoryRecord>("DateReadable", r => compHistory.GetShortDate(r)),
+                    new TableDataGetter<HistoryRecord>("defName", r => r.eventDef.defName),
+                    new TableDataGetter<HistoryRecord>("label", r => r.eventDef.label),
+                    new TableDataGetter<HistoryRecord>("description", r => r.GetDescription())
+                 );
+            }));
         }
-
-        Log.Message(First(p));
-
-        //System.Diagnostics.Debugger.Break();
+        Find.WindowStack.Add(new Dialog_DebugOptionListLister(options));
     }
 }

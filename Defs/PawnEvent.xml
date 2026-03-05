@@ -4,16 +4,31 @@
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>Raid</defName>
 		<label>raid</label>
-		<description>{0} came to raid the colony</description>
+		<description>{0} came to raid the colony.</description>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>Kill</defName>
+		<label>kill</label>
+		<description>{0} killed something.</description>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>Downed</defName>
+		<label>downed</label>
+		<description>{0} was downed.</description>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>Death</defName>
+		<label>death</label>
+		<description>{0} was dead.</description>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>BodyPartLost</defName>
 		<label>body part lost</label>
-		<description>{0}'s {1} was lost</description>
+		<description>{0}'s {1} was lost.</description>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>BodyPartHarvested</defName>
 		<label>body part harvested</label>
-		<description>{0}'s {1} was harvested by {2}</description>
+		<description>{0}'s {1} was harvested by {2}.</description>
 	</PawnEventDef>
 </Defs>
