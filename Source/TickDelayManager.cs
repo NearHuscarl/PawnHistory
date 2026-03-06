@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Verse;
 
-namespace PawnHistory;
+namespace PawnHistory.Source;
 
 public class TickDelayManager(Game game) : GameComponent
 {

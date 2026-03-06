@@ -23,7 +23,7 @@ internal class PawnTracker
     }
 
     public static bool ShouldTrack(ThingDef thingDef) => thingDef.race?.intelligence == Intelligence.Humanlike;
-    public static bool ShouldTrack(Pawn pawn) => ShouldTrack(pawn.def);
+    public static bool ShouldTrack(Pawn pawn) => pawn != null && ShouldTrack(pawn.def);
 
     private static void AddCompToHumanlikes()
     {
@@ -54,19 +54,18 @@ internal class PawnTracker
 
     private static void SetupEvenListeners()
     {
-        GameEventListener.Subscribe<RaidEvent>(e =>
+        GameEventListener.Subscribe<GroupEvent>(e =>
         {
-            foreach (var pawn in e.Enemies)
+            foreach (var pawn in e.Pawns)
             {
                 var comp = CompHistoryManager.GetComp(pawn);
-
-                CompHistoryManager.GetComp(pawn).records.Add(new HistoryRecord(PawnEventDefOf.Raid, pawn));
+                CompHistoryManager.GetComp(pawn).records.Add(new HistoryRecord(e.eventDef, pawn, e.resolveDesc(pawn)));
             }
         });
 
         GameEventListener.Subscribe<GameEvent>(e =>
         {
-            CompHistoryManager.GetComp(e.Pawn).records.Add(new HistoryRecord(e.eventDef, e.Pawn, e.combatLogText));
+            CompHistoryManager.GetComp(e.Pawn).records.Add(new HistoryRecord(e.eventDef, e.Pawn, e.resolvedDesc, e.relatedPawns));
         });
     }
 }

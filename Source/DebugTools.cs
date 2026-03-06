@@ -1,4 +1,5 @@
-﻿using LudeonTK;
+﻿using HarmonyLib;
+using LudeonTK;
 using PawnHistory.Source.PawnTracker;
 using RimWorld;
 using System;
@@ -43,10 +44,6 @@ public static class DebugTools
 {
     // Hot reload feature does not work with generic type
     // https://github.com/pardeike/Rimworld-Doorstop/issues/5
-    public static object First(object ie)
-    {
-        return ((IEnumerable<Pawn>)ie).First();
-    }
     public static Pawn[] AllPawns()
     {
         return Find.CurrentMap.mapPawns.AllPawns.ToArray();
@@ -72,12 +69,14 @@ public static class DebugTools
             options.Add(new DebugMenuOption(label, DebugMenuOptionMode.Action, () =>
             {
                 DebugTables.MakeTablesDialog(compHistory.records,
-                    new TableDataGetter<HistoryRecord>("Date", r => r.date),
-                    new TableDataGetter<HistoryRecord>("DateReadable", r => compHistory.GetShortDate(r)),
+                    new TableDataGetter<HistoryRecord>("Timestamp", r => r.date),
+                    new TableDataGetter<HistoryRecord>("Date", r => compHistory.GetShortDate(r)),
                     new TableDataGetter<HistoryRecord>("defName", r => r.eventDef.defName),
                     new TableDataGetter<HistoryRecord>("label", r => r.eventDef.label),
-                    new TableDataGetter<HistoryRecord>("description", r => r.GetDescription())
-                 );
+                    new TableDataGetter<HistoryRecord>("description", r => r.GetDescription()),
+                    new TableDataGetter<HistoryRecord>("concerns", r => string.Join(", ", r.concerns.Select(c => c.NameShortColored))),
+                    new TableDataGetter<HistoryRecord>("currentPawnToJumpTo", r => r.currentPawnToJumpTo)
+                );
             }));
         }
         Find.WindowStack.Add(new Dialog_DebugOptionListLister(options));

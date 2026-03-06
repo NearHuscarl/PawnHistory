@@ -2,33 +2,49 @@
 
 <Defs>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>RaidSingle</defName>
+		<label>raid</label>
+		<description>{PAWN} from {FACTION} came to raid the colony.</description>
+		<icon>Ui/Commands/AttackSettlement</icon>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>Raid</defName>
 		<label>raid</label>
-		<description>{0} came to raid the colony.</description>
+		<description>{PAWN} and {OTHERRAIDER} from {FACTION} came to raid the colony.</description>
+		<icon>Ui/Commands/AttackSettlement</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>Kill</defName>
 		<label>kill</label>
-		<description>{0} killed something.</description>
+		<description>{PAWN} killed something.</description>
+		<icon>Things/Mote/BattleSymbols/SkullTarget</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>Downed</defName>
 		<label>downed</label>
-		<description>{0} was downed.</description>
+		<description>{PAWN} was incapacitated due to {REASON}.</description>
+		<icon>Things/Mote/BattleSymbols/Downed</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>Death</defName>
 		<label>death</label>
-		<description>{0} was dead.</description>
+		<description>{PAWN} died because of {REASON}.</description>
+		<icon>Things/Mote/BattleSymbols/Skull</icon>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>TradeCaravanArrived</defName>
+		<label>trade caravan arrived</label>
+		<description>{PAWN} arrived as part of a {TRADERKIND} caravan from {FACTION}.</description>
+		<icon>Ui/Commands/SellableItems</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>BodyPartLost</defName>
 		<label>body part lost</label>
-		<description>{0}'s {1} was lost.</description>
+		<description>{PAWN}'s {1} was lost.</description>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>BodyPartHarvested</defName>
 		<label>body part harvested</label>
-		<description>{0}'s {1} was harvested by {2}.</description>
+		<description>{PAWN}'s {1} was harvested by {2}.</description>
 	</PawnEventDef>
 </Defs>

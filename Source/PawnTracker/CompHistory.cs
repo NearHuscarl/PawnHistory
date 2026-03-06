@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
+using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 
@@ -9,7 +11,8 @@ namespace PawnHistory.Source.PawnTracker;
 public class CompHistory : ThingComp
 {
     public List<HistoryRecord> records;
-    
+    private Pawn Pawn => parent as Pawn ?? throw new ArgumentNullException(nameof(Pawn));
+
     public CompHistory() => EnsureInitialized();
 
     private void EnsureInitialized()
@@ -21,6 +24,7 @@ public class CompHistory : ThingComp
             // remove corrupted records during development.
             if (record.pawn == null)
             {
+                Log.Error($"HistoryRecord.pawn = null. {record.eventDef}, {record.date}. WHY!?");
                 records.Remove(record);
             }
         }
@@ -28,7 +32,7 @@ public class CompHistory : ThingComp
 
     public string GetShortDate(HistoryRecord record)
     {
-        var location = parent.Tile.Valid ? Find.WorldGrid.LongLatOf(parent.Tile) : Vector2.zero;
+        var location = Pawn.WorldLocation();
         var hourInt = GenDate.HourInteger(record.date, location.x);
         var hour = $"{hourInt}h";
 
@@ -47,7 +51,7 @@ public class CompHistory : ThingComp
 
     public string GetTipDate(HistoryRecord record)
     {
-        var location = parent.Tile.Valid ? Find.WorldGrid.LongLatOf(parent.Tile) : Vector2.zero;
+        var location = Pawn.WorldLocation();
         return GenDate.DateFullStringWithHourAt(record.date, location);
     }
 

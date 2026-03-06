@@ -6,9 +6,11 @@ namespace PawnHistory.Source.PawnTracker;
 [DefOf]
 internal class PawnEventDefOf
 {
+    public static PawnEventDef RaidSingle;
     public static PawnEventDef Raid;
     public static PawnEventDef Kill;
     public static PawnEventDef Death;
     public static PawnEventDef Downed;
     public static PawnEventDef BodyPartLost;
+    public static PawnEventDef TradeCaravanArrived;
 }
