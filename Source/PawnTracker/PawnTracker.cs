@@ -1,15 +1,38 @@
 ﻿using HarmonyLib;
+using RimWorld;
+using RimWorld.Planet;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
 
+// Features:
+// - Display history record
+//   - Colorize names and important information
+//   - Tooltip
+//   - Click to jump to related pawns
+//   - Some icons
+
+// Icon References (AssetRipper)
+// - Assets\Resources\textures\things\mote\thoughtsymbol
+// - Assets\Resources\textures\things\mote\speechsymbols
+// - Assets\Resources\textures\things\mote\battlesymbols
+// - Assets\Resources\textures\ui
+
 // Events:
 // Mental breaks, reason
-// Down event, reason
-// Kill event, save & use combat log text
-// Ideology convert, believe reduced
+// Ideology convert, belief reduced
 // Pawn.Notify_PassedToWorld() event?
+// More record icons?
+
+// Create a filter in WorldPawn window (All/Alive/Dead)
+// - Add a column to see the history of dead AND destroyed pawn. Concerned dead&destoryed pawn will open a dedicated history window.
+
+// TODO: handle another related pawn in BattleLogEntry_RangedImpact
 
 [StaticConstructorOnStartup]
 internal class PawnTracker

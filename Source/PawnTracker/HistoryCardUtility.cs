@@ -1,5 +1,10 @@
-﻿using RimWorld;
+﻿using HarmonyLib;
+using RimWorld;
+using RimWorld.Planet;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
@@ -33,8 +38,9 @@ public class HistoryCardUtility
     [NearDebugAction]
     private static void ReloadLayoutConfig()
     {
-        var pawns = DebugTools.AllCorpses();
-        System.Diagnostics.Debugger.Break();
+        //var pawns = DebugTools.AllPawns();
+        //System.Diagnostics.Debugger.Break();
+
         containerPadding = 8f;
         gap = 10f;
 
@@ -100,6 +106,11 @@ public class HistoryCardUtility
             var ticksAgo = GenTicks.TicksAbs - record.date;
             var dateAgoText = $"Occurred {ticksAgo.ToStringTicksToPeriod()} ago";
             TooltipHandler.TipRegion(descCell, dateAgoText);
+            if (Widgets.ButtonInvisible(row, record.concerns.Count > 0))
+            {
+                var thing = record.GetThingToJumpTo();
+                CameraJumper.TryJumpAndSelect(thing);
+            }
         }
         Widgets.EndScrollView();
         GUI.EndGroup();

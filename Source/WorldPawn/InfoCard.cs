@@ -7,38 +7,31 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
-namespace PawnHistory.Source.WorldPawn
+namespace PawnHistory.Source.WorldPawn;
+
+public enum InfoCardType
 {
-    public enum InfoCardType
+    Bio,
+    Health,
+}
+
+class InfoCard(Pawn pawn, InfoCardType infoType) : Window
+{
+    private readonly InfoCardType infoType = infoType;
+    private readonly Pawn pawn = pawn;
+
+    public override Vector2 InitialSize => new(650f, 500f);
+
+    public override void DoWindowContents(Rect inRect)
     {
-        Bio,
-        Health,
-    }
-
-    class InfoCard : Window
-    {
-        private readonly InfoCardType infoType;
-        private readonly Pawn pawn;
-
-        public override Vector2 InitialSize => new Vector2(850f, 700f);
-
-        public InfoCard(Pawn pawn, InfoCardType infoType)
+        switch (infoType)
         {
-            this.infoType = infoType;
-            this.pawn = pawn;
-        }
-
-        public override void DoWindowContents(Rect inRect)
-        {
-            switch (infoType)
-            {
-                case InfoCardType.Bio:
-                    CharacterCardUtility.DrawCharacterCard(inRect.ContractedBy(18f), pawn);
-                    break;
-                case InfoCardType.Health:
-                    HealthCardUtility.DrawPawnHealthCard(inRect.ContractedBy(18f), pawn, false, HealthCardUtility.ShowBloodLoss(pawn), null);
-                    break;
-            }
+            case InfoCardType.Bio:
+                CharacterCardUtility.DrawCharacterCard(inRect.ContractedBy(18f), pawn);
+                break;
+            case InfoCardType.Health:
+                HealthCardUtility.DrawPawnHealthCard(inRect.ContractedBy(18f), pawn, false, HealthCardUtility.ShowBloodLoss(pawn), null);
+                break;
         }
     }
 }

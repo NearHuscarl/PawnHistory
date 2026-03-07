@@ -3,7 +3,7 @@
 
   <PawnColumnDef>
     <defName>ForcefullyKeptAsWorldPawns</defName>
-    <headerIcon>UI/Icons/PawnIdeology</headerIcon>
+    <headerIcon>UI/Icons/Pin</headerIcon>
     <workerClass>PawnHistory.Source.WorldPawn.PawnColumnWorker_ForceKept</workerClass>
     <headerTip>Forcefully Kept as World Pawns</headerTip>
     <sortable>true</sortable>

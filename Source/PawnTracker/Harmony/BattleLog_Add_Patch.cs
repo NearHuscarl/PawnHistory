@@ -5,7 +5,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
 
-[HarmonyPatch(typeof(BattleLog), "Add")]
+[HarmonyPatch(typeof(BattleLog), nameof(BattleLog.Add))]
 public static class BattleLog_Add_Patch
 {
     static readonly AccessTools.FieldRef<BattleLogEntry_StateTransition, HediffDef> CulpritHediffRef =
@@ -52,7 +52,7 @@ public static class BattleLog_Add_Patch
 
                 TaggedString resolvedDesc;
                 // log entry is not associated with any active battle. Non-combat dead needs to be handled manually (e.g. BloodLoss, ToxicBuildup...)
-                if (killOrDownEntry == null)
+                if (combatLogText == null)
                 {
                     var culpritHediff = CulpritHediffRef(transitionEntry);
                     resolvedDesc = eventDef.description.Formatted(subjectPawn.NameShortColored.Named("PAWN"), culpritHediff.label.Colorize(culpritHediff.defaultLabelColor).Named("REASON"));

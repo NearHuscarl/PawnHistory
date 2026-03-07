@@ -48,9 +48,9 @@ public static class DebugTools
     {
         return Find.CurrentMap.mapPawns.AllPawns.ToArray();
     }
-    public static Pawn[] AllCorpses()
+    public static Corpse[] AllCorpses()
     {
-        return Find.CurrentMap.listerThings.ThingsInGroup(ThingRequestGroup.Corpse).Cast<Corpse>().Select(c => c.InnerPawn).ToArray();
+        return Find.CurrentMap.listerThings.ThingsInGroup(ThingRequestGroup.Corpse).Cast<Corpse>().ToArray();
     }
 
     [NearDebugOutput]

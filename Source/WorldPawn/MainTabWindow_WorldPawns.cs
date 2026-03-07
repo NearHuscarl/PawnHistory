@@ -5,39 +5,30 @@ using UnityEngine;
 using Verse;
 
 
-namespace PawnHistory.Source.WorldPawn
+namespace PawnHistory.Source.WorldPawn;
+
+public class MainTabWindow_WorldPawns : MainTabWindow_PawnTable
 {
-    public class MainTabWindow_WorldPawns : MainTabWindow_PawnTable
+    private List<Pawn> worldPawns = [];
+
+    public MainTabWindow_WorldPawns()
     {
-        private List<Pawn> worldPawns = new List<Pawn>();
+        worldPawns = Find.World.worldPawns.AllPawnsAliveOrDead.ToList();
+    }
 
-        public MainTabWindow_WorldPawns()
-        {
-            worldPawns = Find.World.worldPawns.AllPawnsAlive.ToList();
-            Log.Message("[WorldPawnTracker] MainTabWindow_WorldPawns()");
-        }
+    protected override PawnTableDef PawnTableDef => PawnTableDefOf.WorldPawnTracker_MainTable;
 
-        protected override PawnTableDef PawnTableDef => PawnTableDefOf.WorldPawnTracker_MainTable;
+    protected override IEnumerable<Pawn> Pawns => worldPawns;
 
-        protected override IEnumerable<Pawn> Pawns
-        {
-            get
-            {
-                return worldPawns;
-            }
-        }
+    protected override float ExtraTopSpace => 5;
 
-        protected override float ExtraTopSpace => 5;
+    public override void DoWindowContents(Rect rect)
+    {
+        base.DoWindowContents(rect);
+    }
 
-        public override void DoWindowContents(Rect rect)
-        {
-            base.DoWindowContents(rect);
-        }
-
-        public override void PostOpen()
-        {
-            base.PostOpen();
-            //Find.World.renderer.wantedMode = WorldRenderMode.None;
-        }
+    public override void PostOpen()
+    {
+        base.PostOpen();
     }
 }

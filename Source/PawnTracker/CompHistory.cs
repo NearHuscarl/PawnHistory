@@ -1,9 +1,7 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
-using RimWorld.Planet;
-using UnityEngine;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
@@ -32,7 +30,7 @@ public class CompHistory : ThingComp
 
     public string GetShortDate(HistoryRecord record)
     {
-        var location = Pawn.WorldLocation();
+        var location = Pawn.LocationOnMap();
         var hourInt = GenDate.HourInteger(record.date, location.x);
         var hour = $"{hourInt}h";
 
@@ -51,7 +49,7 @@ public class CompHistory : ThingComp
 
     public string GetTipDate(HistoryRecord record)
     {
-        var location = Pawn.WorldLocation();
+        var location = Pawn.LocationOnMap();
         return GenDate.DateFullStringWithHourAt(record.date, location);
     }
 

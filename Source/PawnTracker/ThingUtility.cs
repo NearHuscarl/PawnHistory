@@ -19,7 +19,7 @@ public static class ThingUtility
         return pawn;
     }
 
-    public static Vector2 WorldLocation(this Thing thing)
+    public static Vector2 LocationOnMap(this Thing thing)
     {
         PlanetTile tile;
         if (thing.Spawned)

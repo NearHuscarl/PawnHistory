@@ -1,10 +1,9 @@
 ﻿using RimWorld;
 
-namespace PawnHistory.Source.WorldPawn
+namespace PawnHistory.Source.WorldPawn;
+
+[DefOf]
+public class PawnTableDefOf
 {
-    [DefOf]
-    public class PawnTableDefOf
-    {
-        public static PawnTableDef WorldPawnTracker_MainTable; 
-    }
+    public static PawnTableDef WorldPawnTracker_MainTable; 
 }
