@@ -20,6 +20,12 @@
 		<icon>Things/Mote/BattleSymbols/Downed</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>Anesthetized</defName>
+		<label>anesthetized</label>
+		<description>{PAWN} was put under {ANESTHETIC}.</description>
+		<icon>Things/Mote/ThoughtSymbol/SleepZ</icon>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>Death</defName>
 		<label>death</label>
 		<description>{PAWN} died because of {REASON}.</description>

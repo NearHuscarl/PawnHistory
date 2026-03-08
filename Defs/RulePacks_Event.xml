@@ -18,6 +18,8 @@
                 <li>bodyPartLost(hasInstigator==true, hasWeapon==)    ->[PAWN]'s [PART] was [HEDIFF] by [INSTIGATOR].</li>
                 <li>bodyPartLost(hasInstigator==,hasWeapon==true)     ->[PAWN]'s [PART] was [HEDIFF] by a [WEAPON].</li>
                 <li>bodyPartLost(hasInstigator==,hasWeapon==)         ->[PAWN]'s [PART] was [HEDIFF].</li>
+                <li>bodyPartLostSurgery(intent==Harvest)              ->[PAWN]'s [PART] was harvested by [DOCTOR].</li>
+                <li>bodyPartLostSurgery(intent==Amputate)             ->[PAWN]'s [PART] was amputated by [DOCTOR] due to [HEDIFF].</li>
             </rulesStrings>
         </rulePack>
     </RulePackDef>

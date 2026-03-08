@@ -10,6 +10,7 @@ internal class PawnEventDefOf
     public static PawnEventDef Kill;
     public static PawnEventDef Death;
     public static PawnEventDef Downed;
+    public static PawnEventDef Anesthetized;
     public static PawnEventDef BodyPartLost;
     public static PawnEventDef TradeCaravanArrived;
 }
