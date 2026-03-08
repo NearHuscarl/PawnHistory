@@ -46,6 +46,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Defs\RulePacks_Event.xml" />
+    <Compile Include="Source\HediffUtility.cs" />
     <Compile Include="Source\PawnTracker\CompProperties_History.cs" />
     <Compile Include="Source\PawnTracker\CompHistory.cs" />
     <Compile Include="Source\DebugTools.cs" />
@@ -53,6 +55,7 @@
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
     <Compile Include="Source\PawnTracker\Harmony\BattleLog_Add_Patch.cs" />
     <Compile Include="Source\PawnTracker\Harmony\IncidentWorker_TraderCaravanArrival_Patch.cs" />
+    <Compile Include="Source\PawnTracker\Harmony\Pawn_HealthTracker_AddHediff_Patch.cs" />
     <Compile Include="Source\PawnTracker\HistoryCardUtility.cs" />
     <Compile Include="Source\PawnTracker\HistoryRecord.cs" />
     <Compile Include="Source\PawnTracker\ITab_Pawn_History.cs" />

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <RulePackDef>
+        <defName>PawnEvent_Raid</defName>
+        <rulePack>
+            <rulesStrings>
+                <li>raid(otherCount==0)->[PAWN] from [FACTION] came to raid the colony.</li>
+                <li>raid(otherCount>=1)->[PAWN] and [THREAT] from [FACTION] came to raid the colony.</li>
+            </rulesStrings>
+        </rulePack>
+    </RulePackDef>
+
+    <RulePackDef>
+        <defName>PawnEvent_BodyPartLost</defName>
+        <rulePack>
+            <rulesStrings>
+                <li>bodyPartLost(hasInstigator==true, hasWeapon==true)->[PAWN]'s [PART] was [HEDIFF] by [INSTIGATOR]'s [WEAPON].</li>
+                <li>bodyPartLost(hasInstigator==true, hasWeapon==)    ->[PAWN]'s [PART] was [HEDIFF] by [INSTIGATOR].</li>
+                <li>bodyPartLost(hasInstigator==,hasWeapon==true)     ->[PAWN]'s [PART] was [HEDIFF] by a [WEAPON].</li>
+                <li>bodyPartLost(hasInstigator==,hasWeapon==)         ->[PAWN]'s [PART] was [HEDIFF].</li>
+            </rulesStrings>
+        </rulePack>
+    </RulePackDef>
+</Defs>

@@ -10,5 +10,6 @@ namespace PawnHistory.Source.PawnTracker
     public class PawnEventDef : Def
     {
         public string icon;
+        public RulePackDef rulePackDef;
     }
 }

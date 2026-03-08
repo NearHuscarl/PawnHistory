@@ -2,15 +2,9 @@
 
 <Defs>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
-		<defName>RaidSingle</defName>
-		<label>raid</label>
-		<description>{PAWN} from {FACTION} came to raid the colony.</description>
-		<icon>Ui/Commands/AttackSettlement</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>Raid</defName>
 		<label>raid</label>
-		<description>{PAWN} and {OTHERRAIDER} from {FACTION} came to raid the colony.</description>
+		<rulePackDef>PawnEvent_Raid</rulePackDef>
 		<icon>Ui/Commands/AttackSettlement</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
@@ -40,11 +34,7 @@
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>BodyPartLost</defName>
 		<label>body part lost</label>
-		<description>{PAWN}'s {1} was lost.</description>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
-		<defName>BodyPartHarvested</defName>
-		<label>body part harvested</label>
-		<description>{PAWN}'s {1} was harvested by {2}.</description>
+		<rulePackDef>PawnEvent_BodyPartLost</rulePackDef>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 	</PawnEventDef>
 </Defs>

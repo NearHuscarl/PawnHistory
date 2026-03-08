@@ -38,7 +38,7 @@ public static class BattleLog_Add_Patch
             {
                 GameEventListener.Publish(new GameEvent(initiatorPawn, PawnEventDefOf.Kill, $"{combatLogText} {transitionText}")
                 {
-                    relatedPawns = subjectPawn != null ? [subjectPawn] : [],
+                    relatedPawns = [subjectPawn],
                 });
             }
             if (subjectPawn != null && PawnTracker.ShouldTrack(subjectPawn))
@@ -50,19 +50,21 @@ public static class BattleLog_Add_Patch
                     return;
                 }
 
-                TaggedString resolvedDesc;
+                string resolvedDesc;
                 // log entry is not associated with any active battle. Non-combat dead needs to be handled manually (e.g. BloodLoss, ToxicBuildup...)
                 if (combatLogText == null)
                 {
                     var culpritHediff = CulpritHediffRef(transitionEntry);
-                    resolvedDesc = eventDef.description.Formatted(subjectPawn.NameShortColored.Named("PAWN"), culpritHediff.label.Colorize(culpritHediff.defaultLabelColor).Named("REASON"));
+                    resolvedDesc = eventDef.description
+                        .Formatted(subjectPawn.NameShortColored.Named("PAWN"), culpritHediff.label.Colorize(culpritHediff.defaultLabelColor).Named("REASON"))
+                        .Resolve();
                 }
                 else
                     resolvedDesc = $"{combatLogText} {transitionText}";
 
                 GameEventListener.Publish(new GameEvent(subjectPawn, eventDef, resolvedDesc)
                 {
-                    relatedPawns = initiatorPawn != null ? [initiatorPawn] : [],
+                    relatedPawns = [initiatorPawn],
                 });
             }
         });
