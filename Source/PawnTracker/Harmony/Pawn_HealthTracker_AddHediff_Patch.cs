@@ -23,7 +23,7 @@ internal class Pawn_HealthTracker_AddHediff_Patch
             var pawn = PawnRef(__instance);
             if (!PawnTracker.ShouldTrack(pawn)) return;
 
-            if (dinfo.Value.Def == DamageDefOf.SurgicalCut)
+            if (dinfo != null && dinfo.Value.Def == DamageDefOf.SurgicalCut)
                 HandleSurgeryEvent(pawn, hediff, part, dinfo, result);
         }
     }
@@ -38,7 +38,7 @@ internal class Pawn_HealthTracker_AddHediff_Patch
             if (HediffUtility.IsPartVital(part, pawn))
                 return;
 
-            if (dinfo.Value.Def != DamageDefOf.SurgicalCut)
+            if (dinfo != null && dinfo.Value.Def != DamageDefOf.SurgicalCut)
                 HandleCombatEvent(pawn, hediff, part, dinfo, result);
         }
     }

@@ -25,12 +25,18 @@ namespace PawnHistory.Source.PawnTracker;
 
 // Events:
 // Mental breaks, reason
+// Permanent injury
+// Raid type: seige with a different icon
 // Ideology convert, belief reduced
 // Pawn.Notify_PassedToWorld() event?
 // More record icons?
 
 // Create a filter in WorldPawn window (All/Alive/Dead)
 // - Add a column to see the history of dead AND destroyed pawn. Concerned dead&destoryed pawn will open a dedicated history window.
+
+// Bug:
+// -- Human fist kill -> wrong message
+// -- kill record POV is wrong for the killer
 
 // TODO: handle another related pawn in BattleLogEntry_RangedImpact
 

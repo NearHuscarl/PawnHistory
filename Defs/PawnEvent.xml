@@ -32,15 +32,21 @@
 		<icon>Things/Mote/BattleSymbols/Skull</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>BodyPartLost</defName>
+		<label>body part lost</label>
+		<rulePackDef>PawnEvent_BodyPartLost</rulePackDef>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>TradeCaravanArrived</defName>
 		<label>trade caravan arrived</label>
 		<description>{PAWN} arrived as part of a {TRADERKIND} caravan from {FACTION}.</description>
 		<icon>Ui/Commands/SellableItems</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
-		<defName>BodyPartLost</defName>
-		<label>body part lost</label>
-		<rulePackDef>PawnEvent_BodyPartLost</rulePackDef>
-		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<defName>TradeCaravanLeft</defName>
+		<label>trade caravan left</label>
+		<rulePackDef>PawnEvent_TradeCaravanLeft</rulePackDef>
+		<icon>Ui/Commands/ForceCaravanToDepart</icon>
 	</PawnEventDef>
 </Defs>

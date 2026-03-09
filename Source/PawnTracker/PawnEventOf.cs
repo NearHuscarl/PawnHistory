@@ -13,4 +13,5 @@ internal class PawnEventDefOf
     public static PawnEventDef Anesthetized;
     public static PawnEventDef BodyPartLost;
     public static PawnEventDef TradeCaravanArrived;
+    public static PawnEventDef TradeCaravanLeft;
 }

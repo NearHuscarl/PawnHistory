@@ -23,4 +23,18 @@
             </rulesStrings>
         </rulePack>
     </RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_TradeCaravanLeft</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>tradeCaravanLeft(reason==Timeout)             ->[PAWN] from [TRADERKIND] of [FACTION] decided to leave.</li>
+				<li>tradeCaravanLeft(reason==DangerousTemperature)->[PAWN] from [TRADERKIND] of [FACTION] decided to leave because of dangerous temperature.</li>
+				<li>tradeCaravanLeft(reason==AnomalousWeather)    ->[PAWN] from [TRADERKIND] of [FACTION] decided to leave because of anomalous weather.</li>
+				<li>tradeCaravanLeft(reason==Trapped)             ->[PAWN] from [TRADERKIND] of [FACTION] decided to leave because they are trapped inside.</li>
+				<li>tradeCaravanLeft(reason==TraderLost)          ->[PAWN] from [TRADERKIND] of [FACTION] decided to leave after their trader or caravan animal are incapitated.</li>
+				<li>tradeCaravanLeft(reason==PawnLost)            ->[PAWN] from [TRADERKIND] of [FACTION] decided to leave after some of their members are lost.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>

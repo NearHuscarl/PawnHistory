@@ -55,6 +55,7 @@
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
     <Compile Include="Source\PawnTracker\Harmony\BattleLog_Add_Patch.cs" />
     <Compile Include="Source\PawnTracker\Harmony\IncidentWorker_TraderCaravanArrival_Patch.cs" />
+    <Compile Include="Source\PawnTracker\Harmony\Transition_CheckSignal_Patch.cs" />
     <Compile Include="Source\PawnTracker\Harmony\Pawn_HealthTracker_AddHediff_Patch.cs" />
     <Compile Include="Source\PawnTracker\HistoryCardUtility.cs" />
     <Compile Include="Source\PawnTracker\HistoryRecord.cs" />

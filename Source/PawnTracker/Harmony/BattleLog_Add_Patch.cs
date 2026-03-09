@@ -14,6 +14,14 @@ public static class BattleLog_Add_Patch
     static readonly AccessTools.FieldRef<BattleLogEntry_StateTransition, BodyPartRecord> CulpritHediffTargetPartRef =
         AccessTools.FieldRefAccess<BattleLogEntry_StateTransition, BodyPartRecord>("culpritHediffTargetPart");
 
+    static readonly AccessTools.FieldRef<BattleLogEntry_StateTransition, Pawn> SubjectPawnRef =
+        AccessTools.FieldRefAccess<BattleLogEntry_StateTransition, Pawn>("subjectPawn");
+    static readonly AccessTools.FieldRef<BattleLogEntry_StateTransition, Pawn> InitiatorRef =
+        AccessTools.FieldRefAccess<BattleLogEntry_StateTransition, Pawn>("initiator");
+
+    static readonly AccessTools.FieldRef<BattleLogEntry_RangedImpact, Pawn> OriginalTargetPawnRef =
+        AccessTools.FieldRefAccess<BattleLogEntry_RangedImpact, Pawn>("originalTargetPawn");
+
     public static void Postfix(BattleLog __instance, LogEntry entry)
     {
         if (entry is not BattleLogEntry_StateTransition transitionEntry) return;
@@ -24,22 +32,23 @@ public static class BattleLog_Add_Patch
         {
             var battle = __instance.Battles.FirstOrDefault(b => b.Entries.Contains(transitionEntry));
             var transitionIndex = battle.Entries.IndexOf(transitionEntry);
-            var concerns = transitionEntry.GetConcerns().ToList();
-            var initiator = concerns.Count == 1 ? null : concerns[0];
-            var subject = concerns.Count == 1 ? concerns[0] : concerns[1];
+            var initiator = InitiatorRef(transitionEntry);
+            var subject = SubjectPawnRef(transitionEntry);
             var isKillLog = transitionEntry.IconFromPOV(null) == LogEntry.Skull;
-            var killOrDownEntry = battle.Entries.Skip(transitionIndex + 1).FirstOrDefault(e => e is LogEntry_DamageResult && e.Concerns(subject));
-            var initiatorPawn = initiator as Pawn;
-            var subjectPawn = subject as Pawn;
-            var combatLogText = (subject as Pawn).health.hediffSet.hediffs.FirstOrDefault(h => h.combatLogEntry?.Target?.LogID == killOrDownEntry?.LogID)?.combatLogText;
+            var damageResultEntry = battle.Entries.Skip(transitionIndex + 1).FirstOrDefault(e => e is LogEntry_DamageResult && e.Concerns(subject));
+            var combatLogText = subject?.health.hediffSet.hediffs.FirstOrDefault(h => h.combatLogEntry?.Target?.LogID == damageResultEntry?.LogID)?.combatLogText;
             var culpritHediff = CulpritHediffRef(transitionEntry);
+            Pawn originalTargetPawn = null;
+
+            if (damageResultEntry is BattleLogEntry_RangedImpact rangedEntry)
+                originalTargetPawn = OriginalTargetPawnRef(rangedEntry);
 
             if (isKillLog)
-                HandleKillEvent(initiatorPawn, subjectPawn, combatLogText, transitionEntry);
+                HandleKillEvent(initiator, subject, combatLogText, transitionEntry, originalTargetPawn);
             if (!isKillLog && culpritHediff == HediffDefOf.Anesthetic)
-                HandleAnesthetizedEvent(initiatorPawn, subjectPawn, culpritHediff);
+                HandleAnesthetizedEvent(initiator, subject, culpritHediff);
             if (culpritHediff != HediffDefOf.Anesthetic)
-                HandleDownOrDeathEvent(initiatorPawn, subjectPawn, combatLogText, transitionEntry);
+                HandleDownOrDeathEvent(initiator, subject, combatLogText, transitionEntry, originalTargetPawn);
         });
     }
 
@@ -59,7 +68,7 @@ public static class BattleLog_Add_Patch
         });
     }
 
-    private static void HandleDownOrDeathEvent(Pawn initiator, Pawn subject, string combatLogText, BattleLogEntry_StateTransition transitionEntry)
+    private static void HandleDownOrDeathEvent(Pawn initiator, Pawn subject, string combatLogText, BattleLogEntry_StateTransition transitionEntry, Pawn originalTargetPawn)
     {
         if (!PawnTracker.ShouldTrack(subject))
             return;
@@ -87,11 +96,11 @@ public static class BattleLog_Add_Patch
 
         GameEventListener.Publish(new GameEvent(subject, eventDef, resolvedDesc)
         {
-            relatedPawns = [initiator],
+            relatedPawns = [initiator, originalTargetPawn],
         });
     }
 
-    private static void HandleKillEvent(Pawn initiator, Pawn subject, string combatLogText, BattleLogEntry_StateTransition transitionEntry)
+    private static void HandleKillEvent(Pawn initiator, Pawn subject, string combatLogText, BattleLogEntry_StateTransition transitionEntry, Pawn originalTargetPawn)
     {
         if (!PawnTracker.ShouldTrack(initiator))
             return;
@@ -99,7 +108,7 @@ public static class BattleLog_Add_Patch
         var transitionText = transitionEntry.ToGameStringFromPOV(null);
         GameEventListener.Publish(new GameEvent(initiator, PawnEventDefOf.Kill, $"{combatLogText} {transitionText}")
         {
-            relatedPawns = [subject],
+            relatedPawns = [subject, originalTargetPawn],
         });
     }
 }
