@@ -25,7 +25,10 @@ namespace PawnHistory.Source.PawnTracker;
 
 // Events:
 // Mental breaks, reason
+// Crawling to safety
 // Permanent injury
+// - From combat
+// - From other curcumstances: scarification ritual, anomaly ritual, healing wound
 // Raid type: seige with a different icon
 // Ideology convert, belief reduced
 // Pawn.Notify_PassedToWorld() event?

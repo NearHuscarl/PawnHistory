@@ -48,6 +48,7 @@
   <ItemGroup>
     <Content Include="Defs\RulePacks_Event.xml" />
     <Compile Include="Source\HediffUtility.cs" />
+    <Compile Include="Source\Helper\LangUtility.cs" />
     <Compile Include="Source\PawnTracker\CompProperties_History.cs" />
     <Compile Include="Source\PawnTracker\CompHistory.cs" />
     <Compile Include="Source\DebugTools.cs" />

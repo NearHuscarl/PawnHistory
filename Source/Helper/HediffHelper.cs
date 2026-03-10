@@ -12,19 +12,18 @@ namespace PawnHistory.Source.Helper
     {
         public static IEnumerable<Hediff> VisibleHediffs(Pawn pawn)
         {
-            List<Hediff_MissingPart> mpca = pawn.health.hediffSet.GetMissingPartsCommonAncestors();
+            var mpca = pawn.health.hediffSet.GetMissingPartsCommonAncestors();
             foreach (Hediff_MissingPart t in mpca)
             {
                 yield return t;
             }
 
-            IEnumerable<Hediff> visibleDiffs = pawn.health.hediffSet.hediffs.Where(d => !(d is Hediff_MissingPart) && d.Visible);
+            var visibleDiffs = pawn.health.hediffSet.hediffs.Where(d => !(d is Hediff_MissingPart) && d.Visible);
             foreach (Hediff diff in visibleDiffs)
             {
                 yield return diff;
             }
         }
-
 
         private static float GetListPriority(BodyPartRecord rec)
             => rec == null

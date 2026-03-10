@@ -68,7 +68,7 @@ public static class BattleLog_Add_Patch
         });
     }
 
-    private static void HandleDownOrDeathEvent(Pawn initiator, Pawn subject, string combatLogText, BattleLogEntry_StateTransition transitionEntry, Pawn originalTargetPawn)
+    private static void HandleDownOrDeathEvent(Pawn initiator, Pawn subject, string combatLogText, BattleLogEntry_StateTransition transitionEntry, Pawn originalTarget)
     {
         if (!PawnTracker.ShouldTrack(subject))
             return;
@@ -96,11 +96,11 @@ public static class BattleLog_Add_Patch
 
         GameEventListener.Publish(new GameEvent(subject, eventDef, resolvedDesc)
         {
-            relatedPawns = [initiator, originalTargetPawn],
+            relatedPawns = [initiator, originalTarget],
         });
     }
 
-    private static void HandleKillEvent(Pawn initiator, Pawn subject, string combatLogText, BattleLogEntry_StateTransition transitionEntry, Pawn originalTargetPawn)
+    private static void HandleKillEvent(Pawn initiator, Pawn subject, string combatLogText, BattleLogEntry_StateTransition transitionEntry, Pawn originalTarget)
     {
         if (!PawnTracker.ShouldTrack(initiator))
             return;
@@ -108,7 +108,7 @@ public static class BattleLog_Add_Patch
         var transitionText = transitionEntry.ToGameStringFromPOV(null);
         GameEventListener.Publish(new GameEvent(initiator, PawnEventDefOf.Kill, $"{combatLogText} {transitionText}")
         {
-            relatedPawns = [subject, originalTargetPawn],
+            relatedPawns = [subject, originalTarget],
         });
     }
 }

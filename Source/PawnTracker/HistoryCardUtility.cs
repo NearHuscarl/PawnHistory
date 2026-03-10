@@ -96,11 +96,11 @@ public class HistoryCardUtility
             TooltipHandler.TipRegion(dateCell, comp.GetTipDate(record));
 
             GUI.color = Color.white;
-            var iconCell = new Rect(colWidthDate + colGap, row.y + ((row.height - colWidthIcon) / 2), colWidthIcon, colWidthIcon);
+            var iconCell = new Rect(colWidthDate, row.y + ((row.height - colWidthIcon) / 2), colWidthIcon, colWidthIcon);
             GUI.DrawTexture(iconCell, record.GetIcon(), ScaleMode.ScaleToFit);
 
             GUI.color = Color.white; Text.Font = GameFont.Tiny; Text.Anchor = TextAnchor.MiddleLeft;
-            var descCell = new Rect(colWidthDate + colWidthIcon + colGap * 2, row.y, colWidthDesc, row.height);
+            var descCell = new Rect(colWidthDate + colWidthIcon + colGap, row.y, colWidthDesc, row.height);
             Widgets.Label(descCell, record.GetDescription());
 
             var ticksAgo = GenTicks.TicksAbs - record.date;

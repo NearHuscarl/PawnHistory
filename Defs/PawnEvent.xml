@@ -38,6 +38,12 @@
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>BodyPartPermanentlyDamaged</defName>
+		<label>body part permanently damaged</label>
+		<rulePackDef>PawnEvent_BodyPartPermanentlyDamaged</rulePackDef>
+		<icon>Damage/FleshScratch2</icon>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>TradeCaravanArrived</defName>
 		<label>trade caravan arrived</label>
 		<description>{PAWN} arrived as part of a {TRADERKIND} caravan from {FACTION}.</description>

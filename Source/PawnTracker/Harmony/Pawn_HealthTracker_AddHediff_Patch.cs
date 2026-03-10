@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Verse;
@@ -11,40 +12,52 @@ using static Verse.DamageWorker;
 
 namespace PawnHistory.Source.PawnTracker;
 
-[HarmonyPatch(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.AddHediff), [typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo?), typeof(DamageWorker.DamageResult)])]
+[HarmonyPatch(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.AddHediff), [typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo?), typeof(DamageResult)])]
 internal class Pawn_HealthTracker_AddHediff_Patch
 {
     static readonly AccessTools.FieldRef<Pawn_HealthTracker, Pawn> PawnRef = AccessTools.FieldRefAccess<Pawn_HealthTracker, Pawn>("pawn");
 
     static void Prefix(Pawn_HealthTracker __instance, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo, DamageResult result)
     {
-        if (hediff.def == HediffDefOf.MissingBodyPart && part != null)
-        {
-            var pawn = PawnRef(__instance);
-            if (!PawnTracker.ShouldTrack(pawn)) return;
+        part ??= hediff.Part;
+        var pawn = PawnRef(__instance);
+        if (part == null) return;
 
-            if (dinfo != null && dinfo.Value.Def == DamageDefOf.SurgicalCut)
-                HandleSurgeryEvent(pawn, hediff, part, dinfo, result);
+        if (!PawnTracker.ShouldTrack(pawn))
+            return;
+
+        if (hediff.def == HediffDefOf.MissingBodyPart)
+        {
+            if (dinfo?.Def == DamageDefOf.SurgicalCut)
+                HandleRemovePartEvent(pawn, hediff, part);
         }
     }
     static void Postfix(Pawn_HealthTracker __instance, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo, DamageResult result)
     {
-        if (hediff.def == HediffDefOf.MissingBodyPart && part != null)
-        {
-            var pawn = PawnRef(__instance);
-            if (!PawnTracker.ShouldTrack(pawn)) return;
+        part ??= hediff.Part;
+        var pawn = PawnRef(__instance);
+        if (part == null) return;
 
-            // missing vital body part will make a pawn die, this is handled by in-game combat log.
+        if (!PawnTracker.ShouldTrack(pawn))
+            return;
+
+        if (hediff.def == HediffDefOf.MissingBodyPart)
+        {
+            // missing vital body part will make a pawn die, this is handled by in-game combat log instead.
             if (HediffUtility.IsPartVital(part, pawn))
                 return;
 
-            if (dinfo != null && dinfo.Value.Def != DamageDefOf.SurgicalCut)
-                HandleCombatEvent(pawn, hediff, part, dinfo, result);
+            if (dinfo?.Def != DamageDefOf.SurgicalCut)
+                HandleDestroyPartEvent(pawn, hediff, part, dinfo);
+        }
+        else if (hediff.IsPermanent() && dinfo.HasValue /* from combat rather than old wound */)
+        {
+            HandleScarredPartEvent(pawn, hediff, part, dinfo);
         }
     }
 
     // Must be called in postfix because hediff.label does not exist in prefix.
-    private static void HandleCombatEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo, DamageResult result)
+    private static void HandleDestroyPartEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo)
     {
         var instigator = dinfo?.Instigator as Pawn;
         var weapon = dinfo?.Weapon?.label ?? dinfo?.Def.label;
@@ -53,8 +66,8 @@ internal class Pawn_HealthTracker_AddHediff_Patch
 
         request.Includes.Add(eventDef.rulePackDef);
         request.Rules.Add(new Rule_String("PAWN", pawn.NameShortColored.Resolve()));
-        request.Rules.Add(new Rule_String("PART", part.Label.Colorize(hediff.def.defaultLabelColor)));
-        request.Rules.Add(new Rule_String("HEDIFF", hediff.LabelBase.ToLower().Colorize(hediff.def.defaultLabelColor)));
+        request.Rules.Add(new Rule_String("PART", part.Label.Colorize(hediff.LabelColor)));
+        request.Rules.Add(new Rule_String("HEDIFF", hediff.LabelBase.ToLower().Colorize(hediff.LabelColor))); // <destroyedLabel>
 
         if (dinfo?.Instigator is Pawn)
         {
@@ -72,17 +85,45 @@ internal class Pawn_HealthTracker_AddHediff_Patch
         GameEventListener.Publish(new GameEvent(pawn, eventDef, resolvedDesc) { relatedPawns = [instigator] });
     }
 
-    private static void HandleSurgeryEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo, DamageResult result)
+    private static void HandleScarredPartEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo)
+    {
+        var instigator = dinfo?.Instigator as Pawn;
+        var weapon = dinfo?.Weapon?.label ?? dinfo?.Def.label;
+        var eventDef = PawnEventDefOf.BodyPartPermanentlyDamaged;
+        var request = new GrammarRequest();
+
+        request.Includes.Add(eventDef.rulePackDef);
+        request.Rules.AddRange(GrammarUtility.RulesForPawn("PAWN", pawn));
+        request.Rules.Add(new Rule_String("PART", part.Label.Colorize(hediff.LabelColor)));
+        request.Rules.Add(new Rule_String("HEDIFF", hediff.LabelBase.ToLower().Colorize(hediff.LabelColor))); // <permanentLabel>
+
+        if (dinfo?.Instigator is Pawn)
+        {
+            request.Rules.Add(new Rule_String("INSTIGATOR", instigator.NameShortColored.Resolve()));
+            request.Constants.Add("hasInstigator", "true");
+        }
+
+        if (weapon != null)
+        {
+            request.Rules.Add(new Rule_String("WEAPON", weapon));
+            request.Constants.Add("hasWeapon", "true");
+        }
+
+        var resolvedDesc = GrammarResolver.Resolve("bodyPartPermanentlyDamaged", request);
+        GameEventListener.Publish(new GameEvent(pawn, eventDef, resolvedDesc) { relatedPawns = [instigator] });
+    }
+
+    // Must be called in prefix to retrieve the bad hediff before amptuation.
+    private static void HandleRemovePartEvent(Pawn pawn, Hediff hediff, BodyPartRecord part)
     {
         var eventDef = PawnEventDefOf.BodyPartLost;
         var request = new GrammarRequest();
         var doctor = GetOperatingDoctor(pawn);
-        Hediff badHediff;
-        var removeIntent = PartRemovalIntent(pawn, part, out badHediff);
+        var removeIntent = PartRemovalIntent(pawn, part, out Hediff badHediff);
 
         request.Includes.Add(eventDef.rulePackDef);
         request.Rules.Add(new Rule_String("PAWN", pawn.NameShortColored.Resolve()));
-        request.Rules.Add(new Rule_String("PART", part.Label.Colorize(hediff.def.defaultLabelColor)));
+        request.Rules.Add(new Rule_String("PART", part.Label.Colorize(hediff.LabelColor)));
         request.Rules.Add(new Rule_String("DOCTOR", doctor.NameShortColored.Resolve()));
         request.Constants.Add("intent", removeIntent.ToString());
 

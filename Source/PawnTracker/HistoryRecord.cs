@@ -18,7 +18,7 @@ public class HistoryRecord : IExposable
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
         this.resolvedDesc = resolvedDesc;
         currentPawnToJumpTo = 0;
-        concerns = [pawn, .. (relatedPawns ?? []).Where(p => p != null)];
+        concerns = (relatedPawns ?? []).Where(p => p != null).Concat(pawn).Distinct().ToList();
     }
 
     public PawnEventDef eventDef;

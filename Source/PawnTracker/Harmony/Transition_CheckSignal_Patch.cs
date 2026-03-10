@@ -46,6 +46,9 @@ public static class Transition_CheckSignal_Patch
         var nextToil = __instance.target;
         var pawns = lord.ownedPawns.Where(PawnTracker.ShouldTrack).ToList();
 
+        if (currentToil == nextToil)
+            return;
+
         Log.Message($"{lord.LordJob}: {lord.CurLordToil}->{__instance.target} trigger={__instance.triggers[index1].GetType().Name}");
 
         if (lord.LordJob is LordJob_TradeWithColony)
