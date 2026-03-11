@@ -56,6 +56,7 @@
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
     <Compile Include="Source\PawnTracker\Harmony\BattleLog_Add_Patch.cs" />
     <Compile Include="Source\PawnTracker\Harmony\IncidentWorker_TraderCaravanArrival_Patch.cs" />
+    <Compile Include="Source\PawnTracker\Harmony\LordMaker_MakeNewLord_Patch.cs" />
     <Compile Include="Source\PawnTracker\Harmony\Transition_CheckSignal_Patch.cs" />
     <Compile Include="Source\PawnTracker\Harmony\Pawn_HealthTracker_AddHediff_Patch.cs" />
     <Compile Include="Source\PawnTracker\HistoryCardUtility.cs" />
@@ -63,7 +64,7 @@
     <Compile Include="Source\PawnTracker\ITab_Pawn_History.cs" />
     <Compile Include="Source\PawnTracker\PawnEventOf.cs" />
     <Compile Include="Source\PawnTracker\GameEventListener.cs" />
-    <Compile Include="Source\PawnTracker\Harmony\IncidentWorker_RaidEnemy_Patch.cs" />
+    <Compile Include="Source\PawnTracker\Harmony\IncidentWorker_Raid_TryGenerateRaidInfo_Patch.cs" />
     <Compile Include="Source\PawnTracker\PawnEventDef.cs" />
     <Compile Include="Source\PawnTracker\PawnTracker.cs" />
     <Compile Include="Source\PawnTracker\ThingUtility.cs" />

@@ -10,7 +10,7 @@ using Verse;
 using Verse.Grammar;
 using static Verse.DamageWorker;
 
-namespace PawnHistory.Source.PawnTracker;
+namespace PawnHistory.Source.PawnTracker.Harmony;
 
 [HarmonyPatch(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.AddHediff), [typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo?), typeof(DamageResult)])]
 internal class Pawn_HealthTracker_AddHediff_Patch

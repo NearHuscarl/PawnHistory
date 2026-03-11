@@ -8,6 +8,12 @@
 		<icon>Ui/Commands/AttackSettlement</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>RaidFriendly</defName>
+		<label>friendlies arrived</label>
+		<rulePackDef>PawnEvent_Raid</rulePackDef>
+		<icon>Ui/Commands/CallAid</icon>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>Kill</defName>
 		<label>kill</label>
 		<description>{PAWN} killed something.</description>

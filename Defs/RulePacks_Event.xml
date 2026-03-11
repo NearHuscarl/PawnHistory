@@ -4,9 +4,14 @@
         <defName>PawnEvent_Raid</defName>
         <rulePack>
             <rulesStrings>
-                <li>raid(otherCount==0)->[PAWN] from [FACTION] came to raid the colony.</li>
-                <li>raid(otherCount>=1)->[PAWN] and [THREAT] from [FACTION] came to raid the colony.</li>
-            </rulesStrings>
+				<li>raid(raidProperty==None)      ->[PAWN][THREAT] from [FACTION] raided the colony.</li>
+				<li>raid(raidProperty==Breacher)  ->[PAWN][THREAT] from [FACTION] raided the colony using breaching tactics.</li>
+				<li>raid(raidProperty==Sapper)    ->[PAWN][THREAT] from [FACTION] raided the colony using sapper tactics.</li>
+				<li>raid(raidProperty==Siege)     ->[PAWN][THREAT] from [FACTION] besieged the colony.</li>
+				<li>raid(raidProperty==CenterDrop)->[PAWN][THREAT] from [FACTION] raided the colony by dropping directly into it.</li>
+				<li>raidFriendly(hostileFaction==)    ->[PAWN][FRIEND] from [FACTION] came to aid the colony.</li>
+				<li>raidFriendly(hostileFaction==true)->[PAWN][FRIEND] from [FACTION] came to aid the colony against [HOSTILEFACTION].</li>
+			</rulesStrings>
         </rulePack>
     </RulePackDef>
 
@@ -37,12 +42,12 @@
 		<defName>PawnEvent_TradeCaravanLeft</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>tradeCaravanLeft(reason==Timeout)             ->[PAWN] from [TRADERKIND] of [FACTION] decided to leave.</li>
-				<li>tradeCaravanLeft(reason==DangerousTemperature)->[PAWN] from [TRADERKIND] of [FACTION] decided to leave because of dangerous temperature.</li>
-				<li>tradeCaravanLeft(reason==AnomalousWeather)    ->[PAWN] from [TRADERKIND] of [FACTION] decided to leave because of anomalous weather.</li>
-				<li>tradeCaravanLeft(reason==Trapped)             ->[PAWN] from [TRADERKIND] of [FACTION] decided to leave because they are trapped inside.</li>
-				<li>tradeCaravanLeft(reason==TraderLost)          ->[PAWN] from [TRADERKIND] of [FACTION] decided to leave after their trader or caravan animal are incapacitated.</li>
-				<li>tradeCaravanLeft(reason==PawnLost)            ->[PAWN] from [TRADERKIND] of [FACTION] decided to leave after some of their members are lost.</li>
+				<li>tradeCaravanLeft(reason==Timeout)             ->[PAWN] from [TRADERKIND] of [FACTION] began to leave the colony.</li>
+				<li>tradeCaravanLeft(reason==DangerousTemperature)->[PAWN] from [TRADERKIND] of [FACTION] began to leave the colony because of dangerous temperature.</li>
+				<li>tradeCaravanLeft(reason==AnomalousWeather)    ->[PAWN] from [TRADERKIND] of [FACTION] began to leave the colony because of anomalous weather.</li>
+				<li>tradeCaravanLeft(reason==Trapped)             ->[PAWN] from [TRADERKIND] of [FACTION] attempted to leave because the caravan became trapped inside.</li>
+				<li>tradeCaravanLeft(reason==TraderLost)          ->[PAWN] from [TRADERKIND] of [FACTION] began to leave the colony after their trader or caravan animal was incapacitated.</li>
+				<li>tradeCaravanLeft(reason==PawnLost)            ->[PAWN] from [TRADERKIND] of [FACTION] began to leave the colony after some of their members were lost.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

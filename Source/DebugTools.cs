@@ -1,10 +1,12 @@
 ﻿using LudeonTK;
 using PawnHistory.Source.PawnTracker;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using UnityEngine;
 using Verse;
 using Verse.AI.Group;
 
@@ -88,7 +90,12 @@ public static class DebugTools
             Log.Error($"Please select a pawn that has an assigned lord (raider, caravan trader, refugee...)");
             return;
         }
-        Log.Message(ExportGraphviz(pawn.lord));
+
+        var graphviz = ExportGraphviz(pawn.lord);
+        
+        Log.Message(graphviz);
+        GUIUtility.systemCopyBuffer = graphviz;
+        Messages.Message("Lord graph is copied to clipboard.", MessageTypeDefOf.NeutralEvent);
         DebugActionsUtility.DustPuffFrom(pawn);
     }
 
@@ -106,7 +113,13 @@ public static class DebugTools
 
         // nodes
         foreach (var toil in graph.lordToils)
-            sb.AppendLine($"\"{ToilName(toil)}\";");
+        {
+            var name = ToilName(toil);
+            if (toil == graph.StartingToil)
+                sb.AppendLine($"\"{name}\" [shape=box style=filled fillcolor=lightgreen];");
+            else
+                sb.AppendLine($"\"{name}\";");
+        }
 
         var existingEdges = new HashSet<string>();
 
@@ -177,7 +190,6 @@ public static class DebugTools
 
         return $"{name}({string.Join(", ", args)})";
     }
-
 
     private static string ToilName(LordToil toil) => toil.GetType().Name.ReplaceFirst("LordToil_", "");
 }

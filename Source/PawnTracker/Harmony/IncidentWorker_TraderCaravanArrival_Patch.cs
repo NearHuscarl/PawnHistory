@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Verse;
 
-namespace PawnHistory.Source.PawnTracker;
+namespace PawnHistory.Source.PawnTracker.Harmony;
 
 [HarmonyPatch(typeof(IncidentWorker_TraderCaravanArrival), "SendLetter")]
 public static class IncidentWorker_TraderCaravanArrival_Patch
