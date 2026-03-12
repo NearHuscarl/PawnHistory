@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using PawnHistory.Source.PawnTracker.Recorders;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ internal class Pawn_HealthTracker_AddHediff_Patch
         var pawn = PawnRef(__instance);
         if (part == null) return;
 
-        if (!PawnTracker.ShouldTrack(pawn))
+        if (!RecorderManager.ShouldRecord(pawn))
             return;
 
         if (hediff.def == HediffDefOf.MissingBodyPart)
@@ -38,7 +39,7 @@ internal class Pawn_HealthTracker_AddHediff_Patch
         var pawn = PawnRef(__instance);
         if (part == null) return;
 
-        if (!PawnTracker.ShouldTrack(pawn))
+        if (!RecorderManager.ShouldRecord(pawn))
             return;
 
         if (hediff.def == HediffDefOf.MissingBodyPart)

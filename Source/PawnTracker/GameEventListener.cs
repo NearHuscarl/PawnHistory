@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 using Verse.AI.Group;
 
@@ -17,14 +15,6 @@ public class GameEvent(Pawn pawn, PawnEventDef eventDef, TaggedString resolvedDe
     public Pawn Pawn { get; } = pawn;
     public List<Pawn> relatedPawns { get; set; } = [];
     public TaggedString resolvedDesc = resolvedDesc;
-}
-
-public class GroupEvent(List<Pawn> pawns, Faction faction, PawnEventDef eventDef, Func<Pawn, TaggedString> resolveDesc) : GameEventBase
-{
-    public PawnEventDef eventDef { get; } = eventDef;
-    public Func<Pawn, TaggedString> resolveDesc { get; private set; } = resolveDesc;
-    public List<Pawn> Pawns { get; } = pawns;
-    public Faction Faction { get; } = faction;
 }
 
 public class RaidEvent(List<Pawn> pawns, Faction faction, RaidStrategyDef raidStrategy, PawnsArrivalModeDef raidArrivalMode, bool isFriendly = false) : GameEventBase
@@ -63,12 +53,19 @@ public class GameEventListener
 
     public static void Publish<T>(T evt) where T : GameEventBase
     {
-        if (listeners.TryGetValue(typeof(T), out var list))
+        try
         {
-            foreach (var listener in list.Cast<Action<T>>())
+            if (listeners.TryGetValue(typeof(T), out var list))
             {
-                listener(evt);
+                foreach (var listener in list.Cast<Action<T>>())
+                {
+                    listener(evt);
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"[PawnHistory] Failed after firing {evt.GetType().Name}\n\n{ex}");
         }
     }
 }

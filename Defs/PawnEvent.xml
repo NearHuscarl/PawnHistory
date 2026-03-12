@@ -29,7 +29,7 @@
 		<defName>Anesthetized</defName>
 		<label>anesthetized</label>
 		<description>{PAWN} was put under {ANESTHETIC}.</description>
-		<icon>Things/Mote/ThoughtSymbol/SleepZ</icon>
+		<icon>EventIcons/Sleep</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>Death</defName>
@@ -47,12 +47,12 @@
 		<defName>BodyPartPermanentlyDamaged</defName>
 		<label>body part permanently damaged</label>
 		<rulePackDef>PawnEvent_BodyPartPermanentlyDamaged</rulePackDef>
-		<icon>Damage/FleshScratch2</icon>
+		<icon>EventIcons/Scars</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>TradeCaravanArrived</defName>
 		<label>trade caravan arrived</label>
-		<description>{PAWN} arrived as part of a {TRADERKIND} caravan from {FACTION}.</description>
+		<rulePackDef>PawnEvent_TradeCaravanArrived</rulePackDef>
 		<icon>Ui/Commands/SellableItems</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
@@ -60,5 +60,17 @@
 		<label>trade caravan left</label>
 		<rulePackDef>PawnEvent_TradeCaravanLeft</rulePackDef>
 		<icon>Ui/Commands/ForceCaravanToDepart</icon>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>VisitorArrived</defName>
+		<label>visitor arrived</label>
+		<rulePackDef>PawnEvent_VisitorArrived</rulePackDef>
+		<icon>EventIcons/VisitorArrived</icon>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>TravelGroupArrived</defName>
+		<label>travel group passing by</label>
+		<rulePackDef>PawnEvent_TravelGroupArrived</rulePackDef>
+		<icon>EventIcons/TravelGroup</icon>
 	</PawnEventDef>
 </Defs>

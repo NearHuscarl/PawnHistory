@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using PawnHistory.Source.PawnTracker.Recorders;
 using RimWorld;
 using System;
 using System.Linq;
@@ -54,7 +55,7 @@ public static class BattleLog_Add_Patch
 
     private static void HandleAnesthetizedEvent(Pawn initiator, Pawn subject, HediffDef anestheticHediff)
     {
-        if (!PawnTracker.ShouldTrack(subject))
+        if (!RecorderManager.ShouldRecord(subject))
             return;
 
         var resolvedDesc = PawnEventDefOf.Anesthetized.description.Formatted(
@@ -70,7 +71,7 @@ public static class BattleLog_Add_Patch
 
     private static void HandleDownOrDeathEvent(Pawn initiator, Pawn subject, string combatLogText, BattleLogEntry_StateTransition transitionEntry, Pawn originalTarget)
     {
-        if (!PawnTracker.ShouldTrack(subject))
+        if (!RecorderManager.ShouldRecord(subject))
             return;
 
         var isKillLog = transitionEntry.IconFromPOV(null) == LogEntry.Skull;
@@ -102,7 +103,7 @@ public static class BattleLog_Add_Patch
 
     private static void HandleKillEvent(Pawn initiator, Pawn subject, string combatLogText, BattleLogEntry_StateTransition transitionEntry, Pawn originalTarget)
     {
-        if (!PawnTracker.ShouldTrack(initiator))
+        if (!RecorderManager.ShouldRecord(initiator))
             return;
         
         var transitionText = transitionEntry.ToGameStringFromPOV(null);

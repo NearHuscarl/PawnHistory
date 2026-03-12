@@ -4,13 +4,13 @@
         <defName>PawnEvent_Raid</defName>
         <rulePack>
             <rulesStrings>
-				<li>raid(raidProperty==None)      ->[PAWN][THREAT] from [FACTION] raided the colony.</li>
-				<li>raid(raidProperty==Breacher)  ->[PAWN][THREAT] from [FACTION] raided the colony using breaching tactics.</li>
-				<li>raid(raidProperty==Sapper)    ->[PAWN][THREAT] from [FACTION] raided the colony using sapper tactics.</li>
-				<li>raid(raidProperty==Siege)     ->[PAWN][THREAT] from [FACTION] besieged the colony.</li>
-				<li>raid(raidProperty==CenterDrop)->[PAWN][THREAT] from [FACTION] raided the colony by dropping directly into it.</li>
-				<li>raidFriendly(hostileFaction==)    ->[PAWN][FRIEND] from [FACTION] came to aid the colony.</li>
-				<li>raidFriendly(hostileFaction==true)->[PAWN][FRIEND] from [FACTION] came to aid the colony against [HOSTILEFACTION].</li>
+				<li>raid(raidProperty==None)      ->[PAWN][OTHERS] from [FACTION] raided the colony.</li>
+				<li>raid(raidProperty==Breacher)  ->[PAWN][OTHERS] from [FACTION] raided the colony using breaching tactics.</li>
+				<li>raid(raidProperty==Sapper)    ->[PAWN][OTHERS] from [FACTION] raided the colony using sapper tactics.</li>
+				<li>raid(raidProperty==Siege)     ->[PAWN][OTHERS] from [FACTION] besieged the colony.</li>
+				<li>raid(raidProperty==CenterDrop)->[PAWN][OTHERS] from [FACTION] raided the colony by dropping directly into it.</li>
+				<li>raidFriendly(hostileFaction==)    ->[PAWN][OTHERS] from [FACTION] came to aid the colony.</li>
+				<li>raidFriendly(hostileFaction==true)->[PAWN][OTHERS] from [FACTION] came to aid the colony against [HOSTILEFACTION].</li>
 			</rulesStrings>
         </rulePack>
     </RulePackDef>
@@ -39,6 +39,15 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_TradeCaravanArrived</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>tradeCaravanArrived->[PAWN] arrived as part of a [TRADERKIND] caravan from [FACTION].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_TradeCaravanLeft</defName>
 		<rulePack>
 			<rulesStrings>
@@ -48,6 +57,24 @@
 				<li>tradeCaravanLeft(reason==Trapped)             ->[PAWN] from [TRADERKIND] of [FACTION] attempted to leave because the caravan became trapped inside.</li>
 				<li>tradeCaravanLeft(reason==TraderLost)          ->[PAWN] from [TRADERKIND] of [FACTION] began to leave the colony after their trader or caravan animal was incapacitated.</li>
 				<li>tradeCaravanLeft(reason==PawnLost)            ->[PAWN] from [TRADERKIND] of [FACTION] began to leave the colony after some of their members were lost.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_VisitorArrived</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>visitorArrived->[PAWN][OTHERS] from [FACTION] arrived to visit the colony.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_TravelGroupArrived</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>travelGroupArrived->[PAWN][OTHERS] from [FACTION] passed by the colony.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

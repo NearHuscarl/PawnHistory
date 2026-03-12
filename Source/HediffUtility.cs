@@ -30,7 +30,6 @@ internal class HediffUtility
         if (part.def.tags == null || part.def.tags.Count == 0)
             return part.IsCorePart;
 
-
         foreach (var tag in part.def.tags)
         {
             if (!vitalTags.Contains(tag)) continue;

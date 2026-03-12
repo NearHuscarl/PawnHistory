@@ -27,7 +27,6 @@ public class HistoryCardUtility
     private static float colWidthIcon;
     private static float colWidthDesc;
     private static float cellPx;
-    private static int visibleRecords;
 
     private static float scrollWidth;
     public static Vector2 scrollPosition;
@@ -54,7 +53,6 @@ public class HistoryCardUtility
         colWidthIcon = 20f;
         colWidthDesc = 470f;
         cellPx = 5f;
-        visibleRecords = 13;
 
         scrollWidth = 16f;
         scrollPosition = Vector2.zero;
@@ -76,18 +74,19 @@ public class HistoryCardUtility
         var headerRect = new Rect(0, filterHeight + gap, inRect.width, headerHeight);
         Widgets.Label(new Rect(cellPx, headerRect.y, colWidthDate, headerHeight), "NH_PH_HistoryCard_HeaderDate".Translate());
         //Widgets.Label(new Rect(colWidthDate + colGap, headerRect.y, colWidthIcon, headerHeight), "NH_PH_HistoryCard_HeaderEvent".Translate());
-        Widgets.Label(new Rect(colWidthDate + colWidthIcon + colGap * 2, headerRect.y, colWidthDesc, headerHeight), "NH_PH_HistoryCard_HeaderDescription".Translate());
+        Widgets.Label(new Rect(colWidthDate + colWidthIcon + colGap, headerRect.y, colWidthDesc, headerHeight), "NH_PH_HistoryCard_HeaderDescription".Translate());
 
         // --- SCROLL VIEW ---
         var tableY = filterHeight + gap + headerHeight;
         var outRect = new Rect(0, tableY, inRect.width, inRect.height - tableY);
-        var viewRect = new Rect(0, 0, inRect.width - scrollWidth, rowHeight * visibleRecords);
+        var viewRect = new Rect(0, 0, inRect.width - scrollWidth, rowHeight * comp.records.Count);
 
         Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
-        for (var i = 0; i < comp.records.Count; i++)
+        for (int i = comp.records.Count - 1; i >= 0; i--)
         {
+            var rowIndex = comp.records.Count - 1 - i; // display in reversed order
             var record = comp.records[i];
-            var row = new Rect(0, rowHeight * i, viewRect.width, rowHeight);
+            var row = new Rect(0, rowHeight * rowIndex, viewRect.width, rowHeight);
             if (i % 2 == 0) Widgets.DrawHighlight(row);
 
             var dateCell = new Rect(row.x + cellPx, row.y, colWidthDate, row.height);
