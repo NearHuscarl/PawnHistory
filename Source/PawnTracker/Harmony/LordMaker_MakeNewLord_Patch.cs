@@ -27,6 +27,8 @@ public static class LordMaker_MakeNewLord_Patch
         }
     }
 
+    // Run only after Lord is assigned a LordJob
+
     public static void OnLordJobStart(Lord __instance)
     {
         var lord = __instance;

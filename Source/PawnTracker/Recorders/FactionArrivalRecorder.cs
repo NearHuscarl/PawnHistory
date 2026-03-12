@@ -24,7 +24,7 @@ internal class FactionArrivalRecorder : RecorderBase
         });
     }
 
-    private static void HandleVisitStartedEvents(Lord lord, List<Pawn> pawns)
+    private void HandleVisitStartedEvents(Lord lord, List<Pawn> pawns)
     {
         var eventDef = PawnEventDefOf.VisitorArrived;
 
@@ -34,11 +34,11 @@ internal class FactionArrivalRecorder : RecorderBase
             {
                 RelatedPawns = pawns,
             });
-            CompHistoryManager.GetComp(pawn).records.Add(new HistoryRecord(eventDef, pawn, desc));
+            AddRecord(new HistoryRecord(eventDef, pawn, desc));
         }
     }
 
-    private static void HandleTravelerGroupStartedEvents(Lord lord, List<Pawn> pawns)
+    private void HandleTravelerGroupStartedEvents(Lord lord, List<Pawn> pawns)
     {
         var eventDef = PawnEventDefOf.TravelGroupArrived;
 
@@ -48,7 +48,7 @@ internal class FactionArrivalRecorder : RecorderBase
             {
                 RelatedPawns = pawns,
             });
-            CompHistoryManager.GetComp(pawn).records.Add(new HistoryRecord(eventDef, pawn, desc));
+            AddRecord(new HistoryRecord(eventDef, pawn, desc));
         }
     }
 }

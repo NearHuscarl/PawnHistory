@@ -5,7 +5,7 @@ using Verse.Grammar;
 
 namespace PawnHistory.Source.PawnTracker;
 
-public class DescriptionParams(string rootKeyword, Pawn pawn, Faction faction)
+public class DescriptionParams(string rootKeyword, Pawn pawn, Faction faction = null)
 {
     public string RootKeyword { get; } = rootKeyword;
     public Pawn Pawn { get; } = pawn;
@@ -13,6 +13,7 @@ public class DescriptionParams(string rootKeyword, Pawn pawn, Faction faction)
     public List<Rule> ExtraRules { get; set; } = [];
     public Dictionary<string, string> ExtraConstants { get; set; } = [];
     public List<Pawn> RelatedPawns { get; set; }
+    public bool AddRulesForPawn { get; set; }
 }
 
 public static class PawnEventDefExtension
@@ -34,7 +35,12 @@ public static class PawnEventDefExtension
 
         request.Includes.Add(eventDef.rulePackDef);
         request.Rules.Add(new Rule_String("PAWN", pawn.NameShortColored.Resolve()));
-        request.Rules.Add(new Rule_String("FACTION", faction.NameColored.Resolve()));
+
+        if (descParams.AddRulesForPawn)
+            request.Rules.AddRange(GrammarUtility.RulesForPawn("PAWN", pawn));
+
+        if (faction != null)
+            request.Rules.Add(new Rule_String("FACTION", faction.NameColored.Resolve()));
 
         if (relatedPawns != null)
         {

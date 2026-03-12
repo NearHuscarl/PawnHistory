@@ -17,8 +17,8 @@ public class HistoryRecord : IExposable
         this.eventDef = eventDef;
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
         this.resolvedDesc = resolvedDesc;
-        currentPawnToJumpTo = 0;
-        concerns = (relatedPawns ?? []).Where(p => p != null).Concat(pawn).Distinct().ToList();
+        CurrentPawnToJumpTo = 0;
+        concerns = new List<Pawn> { pawn }.Concat(relatedPawns ?? []).Where(p => p != null).Concat(pawn).Distinct().ToList();
     }
 
     public PawnEventDef eventDef;
@@ -26,7 +26,7 @@ public class HistoryRecord : IExposable
     public TaggedString resolvedDesc;
     public Pawn pawn;
     public List<Pawn> concerns;
-    public int currentPawnToJumpTo { get; private set; }
+    public int CurrentPawnToJumpTo { get; private set; }
 
     public Texture2D GetIcon()
     {
@@ -40,14 +40,14 @@ public class HistoryRecord : IExposable
 
     public Thing GetThingToJumpTo()
     {
-        currentPawnToJumpTo = (currentPawnToJumpTo + 1) % concerns.Count;
+        CurrentPawnToJumpTo = (CurrentPawnToJumpTo + 1) % concerns.Count;
 
         var selectedThing = Find.Selector.SingleSelectedThing;
 
-        if (selectedThing == concerns[currentPawnToJumpTo].SpawnedThing())
-            currentPawnToJumpTo = (currentPawnToJumpTo + 1) % concerns.Count;
+        if (selectedThing == concerns[CurrentPawnToJumpTo].SpawnedThing())
+            CurrentPawnToJumpTo = (CurrentPawnToJumpTo + 1) % concerns.Count;
 
-        return concerns[currentPawnToJumpTo].SpawnedThing();
+        return concerns[CurrentPawnToJumpTo].SpawnedThing();
     }
 
     public void ExposeData()

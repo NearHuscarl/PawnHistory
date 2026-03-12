@@ -31,7 +31,7 @@ internal class CaravanRecorder : RecorderBase
         });
     }
 
-    private static void HandleCaravanTradeArrivedEvents(Lord lord, List<Pawn> pawns)
+    private void HandleCaravanTradeArrivedEvents(Lord lord, List<Pawn> pawns)
     {
         var eventDef = PawnEventDefOf.TradeCaravanArrived;
         var trader = pawns.FirstOrDefault(p => p.trader != null);
@@ -46,7 +46,7 @@ internal class CaravanRecorder : RecorderBase
                     new Rule_String("TRADERKIND", traderKind),
                 ],
             });
-            CompHistoryManager.GetComp(pawn).records.Add(new HistoryRecord(eventDef, pawn, desc));
+            AddRecord(new HistoryRecord(eventDef, pawn, desc));
         }
     }
 
@@ -60,7 +60,7 @@ internal class CaravanRecorder : RecorderBase
         PawnLost,
     }
 
-    private static void HandleCaravanTradeLeftEvents(LordToil nextToil, Lord lord, List<Pawn> pawns, Trigger trigger)
+    private void HandleCaravanTradeLeftEvents(LordToil nextToil, Lord lord, List<Pawn> pawns, Trigger trigger)
     {
         var trader = pawns.FirstOrDefault(p => p.trader != null);
         var traderKind = trader?.trader?.traderKind?.label ?? "trader";
@@ -97,7 +97,7 @@ internal class CaravanRecorder : RecorderBase
                         { "reason", reason.ToString() },
                     }
                 });
-                CompHistoryManager.GetComp(pawn).records.Add(new HistoryRecord(eventDef, pawn, desc));
+                AddRecord(new HistoryRecord(eventDef, pawn, desc));
             }
         }
     }

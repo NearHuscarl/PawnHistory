@@ -1,11 +1,6 @@
 ﻿using PawnHistory.Source.PawnTracker.Recorders;
-using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Verse;
-using Verse.AI.Group;
-using Verse.Grammar;
 
 namespace PawnHistory.Source.PawnTracker;
 
@@ -39,6 +34,7 @@ namespace PawnHistory.Source.PawnTracker;
 // Raid type: seige with a different icon
 // Ideology convert, belief reduced
 // Pawn.Notify_PassedToWorld() event?
+// TaleRecorder.RecordTale()
 // Search for <IncidentDef>
 
 // Create a filter in WorldPawn window (All/Alive/Dead)
@@ -58,15 +54,6 @@ internal class PawnTracker
         new HarmonyLib.Harmony("rimworld.mod.nearhuscarl.pawnhistory").PatchAllUncategorized(Assembly.GetExecutingAssembly());
 
         CompHistoryManager.AttachHistoryComp();
-        SetupEvenListeners();
         RecorderManager.Initialize();
-    }
-
-    private static void SetupEvenListeners()
-    {
-        GameEventListener.Subscribe<GameEvent>(e =>
-        {
-            CompHistoryManager.GetComp(e.Pawn).records.Add(new HistoryRecord(e.eventDef, e.Pawn, e.resolvedDesc, e.relatedPawns));
-        });
     }
 }

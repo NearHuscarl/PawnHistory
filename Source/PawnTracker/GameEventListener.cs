@@ -9,14 +9,6 @@ namespace PawnHistory.Source.PawnTracker;
 
 public class GameEventBase() { }
 
-public class GameEvent(Pawn pawn, PawnEventDef eventDef, TaggedString resolvedDesc) : GameEventBase
-{
-    public PawnEventDef eventDef { get; } = eventDef;
-    public Pawn Pawn { get; } = pawn;
-    public List<Pawn> relatedPawns { get; set; } = [];
-    public TaggedString resolvedDesc = resolvedDesc;
-}
-
 public class RaidEvent(List<Pawn> pawns, Faction faction, RaidStrategyDef raidStrategy, PawnsArrivalModeDef raidArrivalMode, bool isFriendly = false) : GameEventBase
 {
     public List<Pawn> Pawns { get; } = pawns;
@@ -32,6 +24,39 @@ public class LordToilChangeEvent(LordToil currentToil, LordToil nextToil, Trigge
     public LordToil NextToil { get; } = nextToil;
     public Trigger Trigger { get; } = trigger;
     public Lord Lord { get; } = lord;
+}
+
+public class HediffPreAddEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo) : GameEventBase
+{
+    public Pawn Pawn { get; } = pawn;
+    public Hediff Hediff { get; } = hediff;
+    public BodyPartRecord Part { get; } = part;
+    public DamageInfo? Dinfo { get; } = dinfo;
+}
+
+public class HediffPostAddEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo) : GameEventBase
+{
+    public Pawn Pawn { get; } = pawn;
+    public Hediff Hediff { get; } = hediff;
+    public BodyPartRecord Part { get; } = part;
+    public DamageInfo? Dinfo { get; } = dinfo;
+}
+
+public enum CasualtyType
+{
+    Killed,
+    Downed,
+}
+
+public class CasualtyLogAddedEvent(Battle battle, BattleLogEntry_StateTransition transitionEntry, LogEntry_DamageResult lastDamageEntry, Pawn initiator, Pawn subject, CasualtyType casualty, HediffDef culpritHediff) : GameEventBase
+{
+    public Battle Battle { get; } = battle;
+    public BattleLogEntry_StateTransition TransitionEntry { get; } = transitionEntry;
+    public LogEntry_DamageResult LastDamageEntry { get; } = lastDamageEntry;
+    public Pawn Initiator { get; } = initiator;
+    public Pawn Subject { get; } = subject;
+    public CasualtyType Casualty { get; } = casualty;
+    public HediffDef CulpritHediff { get; } = culpritHediff;
 }
 
 public class GameEventListener

@@ -74,8 +74,8 @@ public static class DebugTools
                     new TableDataGetter<HistoryRecord>("Date", r => compHistory.GetShortDate(r)),
                     new TableDataGetter<HistoryRecord>("label", r => r.eventDef.label),
                     new TableDataGetter<HistoryRecord>("description", r => r.GetDescription()),
-                    new TableDataGetter<HistoryRecord>("concerns", r => string.Join(", ", r.concerns.Select(c => c.NameShortColored))),
-                    new TableDataGetter<HistoryRecord>("currentPawnToJumpTo", r => r.currentPawnToJumpTo)
+                    new TableDataGetter<HistoryRecord>("concerns", r => string.Join(", ", r.concerns.Select(c => c?.NameShortColored ?? "null"))),
+                    new TableDataGetter<HistoryRecord>("currentPawnToJumpTo", r => r.CurrentPawnToJumpTo)
                 );
             }));
         }
