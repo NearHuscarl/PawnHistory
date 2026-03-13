@@ -28,6 +28,7 @@ namespace PawnHistory.Source.PawnTracker;
 // Mental breaks, reason
 // Skill level up/down
 // Crawling to safety
+// Craft a legendary item
 // Permanent injury
 // + From combat
 // - From other curcumstances: scarification ritual, anomaly ritual, healing wound `.ispermanent = true`

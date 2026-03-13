@@ -33,7 +33,9 @@
 		<defName>PawnEvent_BodyPartPermanentlyDamaged</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>bodyPartPermanentlyDamaged->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART] by [INSTIGATOR]'s [WEAPON].</li>
+				<li>bodyPartPermanentlyDamaged(hasInstigator==true)            ->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART] by [INSTIGATOR]'s [WEAPON].</li>
+				<li>bodyPartPermanentlyDamaged(hasInstigator==,hasWeapon==true)->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART] by [WEAPON].</li>
+				<li>bodyPartPermanentlyDamaged(hasInstigator==,hasWeapon==)    ->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

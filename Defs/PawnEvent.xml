@@ -73,4 +73,11 @@
 		<rulePackDef>PawnEvent_TravelGroupArrived</rulePackDef>
 		<icon>EventIcons/TravelGroup</icon>
 	</PawnEventDef>
+	
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>LightningStriked</defName>
+		<label>hit by lightning strike</label>
+		<description>{PAWN} was struck by lightning, burning {POSSESSIVE} {PART}.</description>
+		<icon>EventIcons/Flashstorm</icon>
+	</PawnEventDef>
 </Defs>

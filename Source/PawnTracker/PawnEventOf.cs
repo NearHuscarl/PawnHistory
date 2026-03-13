@@ -18,4 +18,5 @@ internal class PawnEventDefOf
     public static PawnEventDef TradeCaravanLeft;
     public static PawnEventDef VisitorArrived;
     public static PawnEventDef TravelGroupArrived;
+    public static PawnEventDef LightningStriked;
 }

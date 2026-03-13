@@ -59,6 +59,13 @@ public class CasualtyLogAddedEvent(Battle battle, BattleLogEntry_StateTransition
     public HediffDef CulpritHediff { get; } = culpritHediff;
 }
 
+public class LightningStrikeEvent(IntVec3 strikeLoc, Map map, float radius) : GameEventBase
+{
+    public IntVec3 StrikeLoc { get; } = strikeLoc;
+    public Map Map { get; } = map;
+    public float Radius { get; } = radius;
+}
+
 public class GameEventListener
 {
     private static readonly Dictionary<Type, List<Delegate>> listeners = [];

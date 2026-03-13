@@ -45,7 +45,7 @@ internal class RaidRecorder : RecorderBase
                 ExtraRules = rules,
                 ExtraConstants = constants,
             });
-            CompHistoryManager.GetComp(pawn).records.Add(new HistoryRecord(eventDef, pawn, desc));
+            AddRecord(new HistoryRecord(eventDef, pawn, desc));
         }
     }
 
@@ -83,8 +83,7 @@ internal class RaidRecorder : RecorderBase
                     { "raidProperty", raidProperty.ToString() },
                 }
             });
-
-            CompHistoryManager.GetComp(pawn).records.Add(new HistoryRecord(eventDef, pawn, desc));
+            AddRecord(new HistoryRecord(eventDef, pawn, desc));
         }
     }
 }
