@@ -7,4 +7,9 @@
 	<NH_PH_HistoryCard_HeaderDate>Date</NH_PH_HistoryCard_HeaderDate>
 	<NH_PH_HistoryCard_HeaderEvent>Event</NH_PH_HistoryCard_HeaderEvent>
 	<NH_PH_HistoryCard_HeaderDescription>Description</NH_PH_HistoryCard_HeaderDescription>
+
+
+	<NH_PH_PawnList_Two>{0} and {1}</NH_PH_PawnList_Two>
+	<NH_PH_PawnList_Three>{0}, {1} and 1 other</NH_PH_PawnList_Three>
+	<NH_PH_PawnList_Many>{0}, {1} and {2} others</NH_PH_PawnList_Many>
 </LanguageData>

@@ -12,20 +12,21 @@ public class HistoryRecord : IExposable
     /// Empty constructor is required so Scribe can instantiate it
     /// </summary>
     public HistoryRecord() => date = GenTicks.TicksAbs;
-    public HistoryRecord(PawnEventDef eventDef, Pawn pawn, TaggedString resolvedDesc, List<Pawn> relatedPawns = null) : this()
+    public HistoryRecord(PawnEventDef eventDef, Pawn pawn, TaggedString resolvedDesc, List<Thing> concerns = null) : this()
     {
         this.eventDef = eventDef;
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
         this.resolvedDesc = resolvedDesc;
+        this.concerns = new List<Thing> { pawn }.Concat(concerns ?? []).Where(p => p != null).Concat(pawn).Distinct().ToList();
+        
         CurrentPawnToJumpTo = 0;
-        concerns = new List<Pawn> { pawn }.Concat(relatedPawns ?? []).Where(p => p != null).Concat(pawn).Distinct().ToList();
     }
 
     public PawnEventDef eventDef;
     public int date;
     public TaggedString resolvedDesc;
     public Pawn pawn;
-    public List<Pawn> concerns;
+    public List<Thing> concerns;
     public int CurrentPawnToJumpTo { get; private set; }
 
     public Texture2D GetIcon()
@@ -44,10 +45,10 @@ public class HistoryRecord : IExposable
 
         var selectedThing = Find.Selector.SingleSelectedThing;
 
-        if (selectedThing == concerns[CurrentPawnToJumpTo].SpawnedThing())
+        if (selectedThing == concerns[CurrentPawnToJumpTo].GetJumpTarget())
             CurrentPawnToJumpTo = (CurrentPawnToJumpTo + 1) % concerns.Count;
 
-        return concerns[CurrentPawnToJumpTo].SpawnedThing();
+        return concerns[CurrentPawnToJumpTo].GetJumpTarget();
     }
 
     public void ExposeData()

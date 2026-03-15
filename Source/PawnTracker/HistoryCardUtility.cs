@@ -1,10 +1,6 @@
-﻿using HarmonyLib;
+﻿using PawnHistory.Source.DebugTools;
 using RimWorld;
-using RimWorld.Planet;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker;

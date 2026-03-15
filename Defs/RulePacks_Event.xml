@@ -80,4 +80,35 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_MentalBreak</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>mentalBreak(name==Berserk)             ->[PAWN] went berserk. [PAWN_pronoun] was going to attack anyone [PAWN_pronoun] sees. [REASON]</li>
+				<li>mentalBreak(name==FireStartingSpree)   ->[PAWN] was on a fire starting spree. [PAWN_pronoun] wandered around for a while, randomly starting fires. [REASON]</li>
+				<li>mentalBreak(name==Catatonic)           ->[PAWN] suffered a total mental breakdown and entered a catatonic state for several days. [REASON]</li>
+				<li>mentalBreak(name==Jailbreaker)         ->[PAWN] had a mental breakdown and was going to induce [PRISONERS] to escape. [REASON]</li>
+				<li>mentalBreak(name==RunWild)             ->[PAWN] was fed up with civilization. [PAWN_pronoun] decided to leave [FACTION] to live with the animals in the wild. [REASON]</li>
+				<li>mentalBreak(name==GiveUpExit)          ->[PAWN] gave up on this community. [PAWN_pronoun] decided to leave and pursue a better life elsewhere. [REASON]</li>
+				<li>mentalBreak(name==Binging_DrugExtreme) ->[PAWN] binged on [DRUG] during an extreme mental break. [REASON]</li>
+				<li>mentalBreak(name==Binging_DrugMajor)   ->[PAWN] binged on [DRUG] during a major mental break. [REASON]</li>
+				<li>mentalBreak(name==Binging_Food)        ->[PAWN] pigged out on food. [REASON]</li>
+				<li>mentalBreak(name==Wander_Psychotic)    ->[PAWN] wandered around in a psychotic state. [REASON]</li>
+				<li>mentalBreak(name==Wander_Sad)          ->[PAWN] broke down and wandered around in sadness. [REASON]</li>
+				<li>mentalBreak(name==Wander_OwnRoom)      ->[PAWN] hid in [PAWN_possessive] room. [REASON]</li>
+				<li>mentalBreak(name==Catatonic)           ->[PAWN] suffered a total mental breakdown and entered a catatonic state. [PAWN_pronoun] would recover in several days. [REASON]</li>
+				<li>mentalBreak(name==Tantrum)             ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash up random furniture, items and structures. [REASON]</li>
+				<li>mentalBreak(name==TargetedTantrum)     ->[PAWN] had a tantrum. [PAWN_pronoun] was going to destroy [THING]. [REASON]</li>
+				<li>mentalBreak(name==BedroomTantrum)      ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash things in [PAWN_possessive] room. [REASON]</li>
+				<li>mentalBreak(name==SadisticRage)        ->[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. [REASON]</li>
+				<li>mentalBreak(name==InsultingSpree)      ->[PAWN] was on an insulting spree. [PAWN_pronoun] was going to wander around, randomly insulting others. [REASON]</li>
+				<li>mentalBreak(name==Slaughterer)         ->[PAWN] had a mental breakdown and was going to vent [PAWN_possessive] anger by slaughtering [TARGET]. [REASON]</li>
+				<li>mentalBreak(name==TargetedInsultingSpree)  ->[PAWN] fixated [PAWN_possessive] rage on [TARGET]. [PAWN_pronoun] was going to follow [TARGET_objective] around, hurling insults. [REASON]</li>
+				<li>mentalBreak(name==CorpseObsession)     ->[PAWN] became obsessed with corpses. [PAWN_pronoun] was going to find and present [TARGET]'s corpse for all to see. [REASON]</li>
+				<li>mentalBreak(name==MurderousRage)       ->[PAWN] flew into a murderous rage and decided to kill [TARGET]. [REASON]</li>
+				<li>mentalBreakDefault                     ->[INGAMEDESC]. [REASON]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>

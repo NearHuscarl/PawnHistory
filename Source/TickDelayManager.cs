@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace PawnHistory.Source;
 
 public class TickDelayManager(Game game) : GameComponent
 {
-    private List<(int tick, Action action)> queue = new();
+    private readonly List<(int tick, Action action)> queue = [];
 
     public static void Delay(int ticks, Action action)
     {

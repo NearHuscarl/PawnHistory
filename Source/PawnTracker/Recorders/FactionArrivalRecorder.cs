@@ -30,10 +30,10 @@ internal class FactionArrivalRecorder : RecorderBase
 
         foreach (var pawn in pawns)
         {
-            var desc = eventDef.ResolveDescription(new DescriptionParams("visitorArrived", pawn, lord.faction)
-            {
-                RelatedPawns = pawns,
-            });
+            var desc = eventDef.ResolveDescription("visitorArrived", pawn)
+                .WithFaction(lord.faction)
+                .WithOthers(pawns)
+                .Resolve();
             AddRecord(new HistoryRecord(eventDef, pawn, desc));
         }
     }
@@ -44,10 +44,10 @@ internal class FactionArrivalRecorder : RecorderBase
 
         foreach (var pawn in pawns)
         {
-            var desc = eventDef.ResolveDescription(new DescriptionParams("travelGroupArrived", pawn, lord.faction)
-            {
-                RelatedPawns = pawns,
-            });
+            var desc = eventDef.ResolveDescription("travelGroupArrived", pawn)
+                .WithFaction(lord.faction)
+                .WithOthers(pawns)
+                .Resolve();
             AddRecord(new HistoryRecord(eventDef, pawn, desc));
         }
     }

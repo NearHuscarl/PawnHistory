@@ -1,15 +1,17 @@
-﻿using RimWorld;
+﻿using PawnHistory.Source.DebugTools;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
+using Verse.AI;
 using Verse.AI.Group;
 
 namespace PawnHistory.Source.PawnTracker;
 
 public class GameEventBase() { }
 
-public class RaidEvent(List<Pawn> pawns, Faction faction, RaidStrategyDef raidStrategy, PawnsArrivalModeDef raidArrivalMode, bool isFriendly = false) : GameEventBase
+public class RaidEvent(List<Pawn> pawns, Faction faction, RaidStrategyDef raidStrategy, PawnsArrivalModeDef raidArrivalMode, bool isFriendly) : GameEventBase
 {
     public List<Pawn> Pawns { get; } = pawns;
     public Faction Faction { get; } = faction;
@@ -59,6 +61,28 @@ public class CasualtyLogAddedEvent(Battle battle, BattleLogEntry_StateTransition
     public HediffDef CulpritHediff { get; } = culpritHediff;
 }
 
+public class MentalBreakStartedEvent(Pawn pawn, string reason, MentalBreakWorker mentalBreakWorker) : GameEventBase
+{
+    public Pawn Pawn { get; } = pawn;
+    public string Reason { get; } = reason;
+    public MentalBreakWorker MentalBreakWorker { get; } = mentalBreakWorker;
+}
+
+public class MentalBreakStartEvent(Pawn pawn, string reason, MentalBreakWorker mentalBreakWorker) : MentalBreakStartedEvent(pawn, reason, mentalBreakWorker) { }
+
+public class JobStartedEvent(Pawn pawn, Job oldJob, Job newJob) : GameEventBase
+{
+    public Pawn Pawn { get; } = pawn;
+    public Job OldJob { get; } = oldJob;
+    public Job NewJob { get; } = newJob;
+}
+
+public class MentalStateEndedEvent(Pawn pawn, MentalState mentalState) : GameEventBase
+{
+    public Pawn Pawn { get; } = pawn;
+    public MentalState MentalState { get; } = mentalState;
+}
+
 public class LightningStrikeEvent(IntVec3 strikeLoc, Map map, float radius) : GameEventBase
 {
     public IntVec3 StrikeLoc { get; } = strikeLoc;
@@ -85,19 +109,19 @@ public class GameEventListener
 
     public static void Publish<T>(T evt) where T : GameEventBase
     {
-        try
+        if (!listeners.TryGetValue(typeof(T), out var list))
+            return;
+
+        foreach (var listener in list.Cast<Action<T>>())
         {
-            if (listeners.TryGetValue(typeof(T), out var list))
+            try
             {
-                foreach (var listener in list.Cast<Action<T>>())
-                {
-                    listener(evt);
-                }
+                listener(evt);
             }
-        }
-        catch (Exception ex)
-        {
-            Log.Error($"[PawnHistory] Failed after firing {evt.GetType().Name}\n\n{ex}");
+            catch (Exception ex)
+            {
+                Log.Error($"[PawnHistory] Failed after firing {DebugUtility.Dump(evt)}\n{ex}");
+            }
         }
     }
 }

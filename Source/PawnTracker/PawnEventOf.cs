@@ -3,6 +3,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
 
+#pragma warning disable CS0649
 [DefOf]
 internal class PawnEventDefOf
 {
@@ -18,5 +19,8 @@ internal class PawnEventDefOf
     public static PawnEventDef TradeCaravanLeft;
     public static PawnEventDef VisitorArrived;
     public static PawnEventDef TravelGroupArrived;
+    public static PawnEventDef MentalBreak;
+    public static PawnEventDef MentalBreakViolence;
     public static PawnEventDef LightningStriked;
 }
+#pragma warning restore CS0649

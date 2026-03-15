@@ -64,23 +64,14 @@ internal class PermanentDamageRecorder : RecorderBase
     private void HandleSurgicalCutEvent(Pawn pawn, Hediff hediff, BodyPartRecord part)
     {
         var eventDef = PawnEventDefOf.BodyPartLost;
-        var rules = new List<Rule>();
-        var constants = new Dictionary<string, string>();
         var doctor = GetOperatingDoctor(pawn);
         var removeIntent = PartRemovalIntent(pawn, part, out Hediff badHediff);
-
-        if (badHediff != null)
-            rules.Add(new Rule_String("HEDIFF", badHediff.LabelBase.ToLower().Colorize(badHediff.LabelColor)));
-
-        rules.Add(new Rule_String("DOCTOR", doctor.NameShortColored.Resolve()));
-        rules.Add(new Rule_String("PART", part.Label.Colorize(hediff.LabelColor)));
-        constants.Add("intent", removeIntent.ToString());
-
-        var desc = eventDef.ResolveDescription(new DescriptionParams("bodyPartLostSurgery", pawn)
-        {
-            ExtraRules = rules,
-            ExtraConstants = constants,
-        });
+        var desc = eventDef.ResolveDescription("bodyPartLostSurgery", pawn)
+            .AddRule("DOCTOR", doctor)
+            .AddRule("PART", part.Label.Colorize(hediff.LabelColor))
+            .AddRule("HEDIFF", badHediff)
+            .AddConstant("intent", removeIntent)
+            .Resolve();
         AddRecord(new HistoryRecord(eventDef, pawn, desc, [doctor]));
     }
 
@@ -88,64 +79,44 @@ internal class PermanentDamageRecorder : RecorderBase
     private void HandleDestroyPartEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo)
     {
         var instigator = dinfo?.Instigator as Pawn;
-        var weapon = dinfo?.Weapon?.label ?? dinfo?.Def.label;
+        var weapon = dinfo?.Weapon.race != null ? dinfo?.Tool?.label /* body part like fist/teeth */ : dinfo?.Weapon?.label;
         var eventDef = PawnEventDefOf.BodyPartLost;
-        var rules = new List<Rule>();
-        var constants = new Dictionary<string, string>();
-
-        rules.Add(new Rule_String("PART", part.Label.Colorize(hediff.LabelColor)));
-        rules.Add(new Rule_String("HEDIFF", hediff.LabelBase.ToLower().Colorize(hediff.LabelColor))); // <destroyedLabel>
+        var descBuilder = eventDef.ResolveDescription("bodyPartLost", pawn)
+            .AddRule("PART", part.Label.Colorize(hediff.LabelColor))
+            .AddRule("HEDIFF", hediff) // <destroyedLabel>
+            .AddRule("WEAPON", weapon)
+            .AddConstantIf(weapon != null, "hasWeapon", "true");
 
         if (dinfo?.Instigator is Pawn)
         {
-            rules.Add(new Rule_String("INSTIGATOR", instigator.NameShortColored.Resolve()));
-            constants.Add("hasInstigator", "true");
+            descBuilder
+                .AddRule("INSTIGATOR", instigator)
+                .AddConstant("hasInstigator", "true");
         }
 
-        if (weapon != null)
-        {
-            rules.Add(new Rule_String("WEAPON", weapon));
-            constants.Add("hasWeapon", "true");
-        }
-
-        var desc = eventDef.ResolveDescription(new DescriptionParams("bodyPartLost", pawn)
-        {
-            ExtraRules = rules,
-            ExtraConstants = constants,
-        });
-        System.Diagnostics.Debugger.Break();
-        AddRecord(new HistoryRecord(eventDef, pawn, desc, [instigator]));
+        AddRecord(new HistoryRecord(eventDef, pawn, descBuilder.Resolve(), [instigator]));
     }
 
     private void HandleScarredPartEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo)
     {
         var instigator = dinfo?.Instigator as Pawn;
-        var weapon = dinfo?.Weapon?.label ?? dinfo?.Def.label;
+        var weapon = dinfo?.Weapon.race != null ? dinfo?.Tool?.label /* body part like fist/teeth */ : dinfo?.Weapon?.label;
         var eventDef = PawnEventDefOf.BodyPartPermanentlyDamaged;
-        var rules = new List<Rule>();
-        var constants = new Dictionary<string, string>();
-
-        rules.Add(new Rule_String("PART", part.Label.Colorize(hediff.LabelColor)));
-        rules.Add(new Rule_String("HEDIFF", hediff.LabelBase.ToLower().Colorize(hediff.LabelColor))); // <permanentLabel>
+        var descBuilder = eventDef.ResolveDescription("bodyPartPermanentlyDamaged", pawn)
+            .IncludePawnGrammar()
+            .AddRule("PART", part.Label.Colorize(hediff.LabelColor))
+            .AddRule("HEDIFF", hediff) // <permanentLabel>
+            .AddRule("WEAPON", weapon)
+            .AddConstantIf(weapon != null, "hasWeapon", "true");
 
         if (dinfo?.Instigator is Pawn)
         {
-            rules.Add(new Rule_String("INSTIGATOR", instigator.NameShortColored.Resolve()));
-            constants.Add("hasInstigator", "true");
-        }
-        if (weapon != null)
-        {
-            rules.Add(new Rule_String("WEAPON", weapon));
-            constants.Add("hasWeapon", "true");
+            descBuilder
+                .AddRule("INSTIGATOR", instigator)
+                .AddConstant("hasInstigator", "true");
         }
 
-        var desc = eventDef.ResolveDescription(new DescriptionParams("bodyPartPermanentlyDamaged", pawn)
-        {
-            AddRulesForPawn = true,
-            ExtraRules = rules,
-            ExtraConstants = constants,
-        });
-        AddRecord(new HistoryRecord(eventDef, pawn, desc, [instigator]));
+        AddRecord(new HistoryRecord(eventDef, pawn, descBuilder.Resolve(), [instigator]));
     }
 
     public static Pawn GetOperatingDoctor(Pawn patient)

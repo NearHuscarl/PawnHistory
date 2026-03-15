@@ -27,23 +27,29 @@ namespace PawnHistory.Source.PawnTracker;
 // Events:
 // Mental breaks, reason
 // Skill level up/down
+// Relative dead
 // Crawling to safety
+// Catching fire: handle with permanent/missing hediffs.
 // Craft a legendary item
 // Permanent injury
 // + From combat
 // - From other curcumstances: scarification ritual, anomaly ritual, healing wound `.ispermanent = true`
+// Mental break
+// + Base game
+// - DLC breaks
 // Raid type: seige with a different icon
 // Ideology convert, belief reduced
 // Pawn.Notify_PassedToWorld() event?
 // TaleRecorder.RecordTale()
 // Search for <IncidentDef>
+// HistoryEventDefOf.cs
 
 // Create a filter in WorldPawn window (All/Alive/Dead)
 // - Add a column to see the history of dead AND destroyed pawn. Concerned dead&destoryed pawn will open a dedicated history window.
 
 // Bug:
-// -- Human fist kill -> wrong message
 // -- kill record POV is wrong for the killer
+// -- Exception when killing in dev mode, in KillOrDown handler
 
 // TODO: handle another related pawn in BattleLogEntry_RangedImpact
 

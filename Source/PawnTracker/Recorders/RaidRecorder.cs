@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using Verse.Grammar;
+using static RimWorld.PsychicRitualRoleDef;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -32,19 +33,13 @@ internal class RaidRecorder : RecorderBase
         {
             var rules = new List<Rule>();
             var constants = new Dictionary<string, string>();
+            var desc = eventDef.ResolveDescription("raidFriendly", pawn)
+                .WithFaction(faction)
+                .WithOthers(pawns)
+                .AddConstantIf(hostileFaction != null, "hostileFaction", "true") // not manhunter/insect
+                .AddRule("HOSTILEFACTION", hostileFaction)
+                .Resolve();
 
-            if (hostileFaction != null) // not manhunter/insect
-            {
-                rules.Add(new Rule_String("HOSTILEFACTION", hostileFaction.NameColored.Resolve()));
-                constants.Add("hostileFaction", "true");
-            }
-
-            var desc = eventDef.ResolveDescription(new DescriptionParams("raidFriendly", pawn, faction)
-            {
-                RelatedPawns = pawns,
-                ExtraRules = rules,
-                ExtraConstants = constants,
-            });
             AddRecord(new HistoryRecord(eventDef, pawn, desc));
         }
     }
@@ -75,14 +70,11 @@ internal class RaidRecorder : RecorderBase
 
         foreach (var pawn in pawns)
         {
-            var desc = eventDef.ResolveDescription(new DescriptionParams("raid", pawn, faction)
-            {
-                RelatedPawns = pawns,
-                ExtraConstants = new()
-                {
-                    { "raidProperty", raidProperty.ToString() },
-                }
-            });
+            var desc = eventDef.ResolveDescription("raid", pawn)
+                .WithFaction(faction)
+                .WithOthers(pawns)
+                .AddConstant("raidProperty", raidProperty)
+                .Resolve();
             AddRecord(new HistoryRecord(eventDef, pawn, desc));
         }
     }

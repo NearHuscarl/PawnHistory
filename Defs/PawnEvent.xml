@@ -73,6 +73,19 @@
 		<rulePackDef>PawnEvent_TravelGroupArrived</rulePackDef>
 		<icon>EventIcons/TravelGroup</icon>
 	</PawnEventDef>
+
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>MentalBreak</defName>
+		<label>mental break</label>
+		<rulePackDef>PawnEvent_MentalBreak</rulePackDef>
+		<icon>Ui/Icons/ColonistBar/MentalStateNonAggro</icon>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>MentalBreakViolence</defName>
+		<label>violent mental break</label>
+		<rulePackDef>PawnEvent_MentalBreak</rulePackDef>
+		<icon>Ui/Icons/ColonistBar/MentalStateAggro</icon>
+	</PawnEventDef>
 	
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>LightningStriked</defName>

@@ -39,13 +39,10 @@ internal class CaravanRecorder : RecorderBase
 
         foreach (var pawn in pawns)
         {
-            var desc = eventDef.ResolveDescription(new DescriptionParams("tradeCaravanArrived", pawn, lord.faction)
-            {
-                ExtraRules =
-                [
-                    new Rule_String("TRADERKIND", traderKind),
-                ],
-            });
+            var desc = eventDef.ResolveDescription("tradeCaravanArrived", pawn)
+                .WithFaction(lord.faction)
+                .AddRule("TRADERKIND", traderKind)
+                .Resolve();
             AddRecord(new HistoryRecord(eventDef, pawn, desc));
         }
     }
@@ -84,19 +81,13 @@ internal class CaravanRecorder : RecorderBase
             var eventDef = PawnEventDefOf.TradeCaravanLeft;
 
             foreach (var pawn in pawns)
-            {
-                var desc = eventDef.ResolveDescription(new DescriptionParams("tradeCaravanLeft", pawn, lord.faction)
-                {
-                    RelatedPawns = pawns,
-                    ExtraRules =
-                    [
-                        new Rule_String("TRADERKIND", traderKind),
-                    ],
-                    ExtraConstants = new()
-                    {
-                        { "reason", reason.ToString() },
-                    }
-                });
+            {     
+                var desc = eventDef.ResolveDescription("tradeCaravanLeft", pawn)
+                    .WithFaction(lord.faction)
+                    .WithOthers(pawns)
+                    .AddRule("TRADERKIND", traderKind)
+                    .AddConstant("reason", reason)
+                    .Resolve();
                 AddRecord(new HistoryRecord(eventDef, pawn, desc));
             }
         }
