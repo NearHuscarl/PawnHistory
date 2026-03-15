@@ -68,6 +68,12 @@ public class MentalBreakStartedEvent(Pawn pawn, string reason, MentalBreakWorker
     public MentalBreakWorker MentalBreakWorker { get; } = mentalBreakWorker;
 }
 
+public class PrisonBreakStartedEvent(Pawn initiator, List<Pawn> escapingPrisoners) : GameEventBase
+{
+    public Pawn Initiator { get; } = initiator;
+    public List<Pawn> EscapingPrisoners { get; } = escapingPrisoners;
+}
+
 public class MentalBreakStartEvent(Pawn pawn, string reason, MentalBreakWorker mentalBreakWorker) : MentalBreakStartedEvent(pawn, reason, mentalBreakWorker) { }
 
 public class JobStartedEvent(Pawn pawn, Job oldJob, Job newJob) : GameEventBase

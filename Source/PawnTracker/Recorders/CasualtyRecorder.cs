@@ -1,8 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System.Linq;
-using System.Numerics;
-using System.Security.Cryptography;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
@@ -53,8 +51,10 @@ internal class CasualtyRecorder : RecorderBase
         // log entry is not associated with any active battle. Non-combat dead needs to be handled manually (e.g. BloodLoss, ToxicBuildup...)
         if (combatLogText == null)
         {
-            var reason = e.CulpritHediff.label.Colorize(e.CulpritHediff.defaultLabelColor);
-            desc = eventDef.description.Formatted(e.Subject.NameShortColored.Named("PAWN"), reason.Named("REASON")).Resolve();
+            desc = eventDef.ResolveDescription(e.Casualty.ToString(), e.Subject)
+                .AddRule("HEDIFF", e.CulpritHediff)
+                .AddConstantIf(e.CulpritHediff != null, "reason", "true")
+                .Resolve();
         }
         else
             desc = $"{combatLogText} {transitionText}";

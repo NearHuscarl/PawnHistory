@@ -13,44 +13,13 @@ public class HistoryDescriptionBuilder(PawnEventDef eventDef, string rootKeyword
     public string RootKeyword { get; } = rootKeyword;
     public Pawn Pawn { get; } = pawn;
 
-    private Faction faction;
-    private string otherText;
-    private (Pawn pawn, string symbol) rulesForPawn;
     private bool includePawnRules;
     private readonly List<Rule> extraRules = [];
     private readonly Dictionary<string, string> extraConstants = [];
 
-    public HistoryDescriptionBuilder WithFaction(Faction faction)
-    {
-        this.faction = faction;
-        return this;
-    }
-
-    public HistoryDescriptionBuilder WithOthers(List<Pawn> others)
-    {
-        var otherCount = others.Count - 1;
-        var otherTag = Faction.OfPlayer.HostileTo(others[0]?.Faction) ? TagType.Threat : TagType.ColonistCount;
-        
-        otherText = otherCount switch
-        {
-            0 => "",
-            1 => $" and {(otherCount + " other").ApplyTag(otherTag).Resolve()}",
-            _ => $" and {(otherCount + " others").ApplyTag(otherTag).Resolve()}",
-        };
-
-        return this;
-    }
-
     public HistoryDescriptionBuilder IncludePawnGrammar(bool include = true)
     {
         includePawnRules = include;
-        return this;
-    }
-
-    public HistoryDescriptionBuilder RulesForPawn(string pawnSymbol, Pawn pawn)
-    {
-        rulesForPawn.pawn = pawn;
-        rulesForPawn.symbol = pawnSymbol;
         return this;
     }
 
@@ -86,6 +55,12 @@ public class HistoryDescriptionBuilder(PawnEventDef eventDef, string rootKeyword
         return AddRule(keyword, hediff.LabelBase.ToLower().Colorize(hediff.LabelColor));
     }
 
+    public HistoryDescriptionBuilder AddRule(string keyword, HediffDef hediffDef)
+    {
+        if (hediffDef == null) return this;
+        return AddRule(keyword, hediffDef.label.Colorize(hediffDef.defaultLabelColor));
+    }
+
     public HistoryDescriptionBuilder AddRuleIf(bool condition, string keyword, object value)
     {
         if (!condition || value == null) return this;
@@ -99,6 +74,12 @@ public class HistoryDescriptionBuilder(PawnEventDef eventDef, string rootKeyword
             TaggedString v => AddRule(keyword, v),
             _ => AddRule(keyword, value.ToString())
         };
+    }
+
+    public HistoryDescriptionBuilder AddRules(IEnumerable<Rule> rules)
+    {
+        extraRules.AddRange(rules);
+        return this;
     }
 
     public HistoryDescriptionBuilder AddConstant(string key, object value)
@@ -129,18 +110,41 @@ public class HistoryDescriptionBuilder(PawnEventDef eventDef, string rootKeyword
         if (includePawnRules)
             request.Rules.AddRange(GrammarUtility.RulesForPawn("PAWN", Pawn));
 
-        if (rulesForPawn.pawn != null)
-            request.Rules.AddRange(GrammarUtility.RulesForPawn(rulesForPawn.symbol, rulesForPawn.pawn));
-
-        if (faction != null)
-            request.Rules.Add(new Rule_String("FACTION", faction.NameColored.Resolve()));
-
-        if (otherText != null)
-            request.Rules.Add(new Rule_String("OTHERS", otherText));
-        
         request.Rules.AddRange(extraRules);
         request.Constants.AddRange(extraConstants);
 
         return GrammarResolver.Resolve(RootKeyword, request);
+    }
+}
+
+public static class HistoryDescriptionBuilderExtensions
+{
+    public static HistoryDescriptionBuilder WithFaction(this HistoryDescriptionBuilder builder, Faction faction)
+    {
+        if (faction == null)
+            return builder;
+
+        return builder.AddRule("FACTION", faction.NameColored.Resolve());
+    }
+
+    public static HistoryDescriptionBuilder RulesForPawn(this HistoryDescriptionBuilder builder, string pawnSymbol, Pawn pawn)
+    {
+        if (pawn == null)
+            return builder;
+
+        return builder.AddRules(GrammarUtility.RulesForPawn(pawnSymbol, pawn));
+    }
+
+    public static HistoryDescriptionBuilder WithOthers(this HistoryDescriptionBuilder builder, List<Pawn> pawns)
+    {
+        var otherCount = pawns.Count - 1;
+        var otherTag = Faction.OfPlayer.HostileTo(pawns[0]?.Faction) ? TagType.Threat : TagType.ColonistCount;
+        var otherText = otherCount switch
+        {
+            1 => (otherCount + " other").ApplyTag(otherTag).Resolve(),
+            _ => (otherCount + " others").ApplyTag(otherTag).Resolve(),
+        };
+
+        return builder.AddRule("Others", otherText).AddConstant("OtherCount", otherCount);
     }
 }

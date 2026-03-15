@@ -20,9 +20,15 @@
 		<icon>Things/Mote/BattleSymbols/SkullTarget</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>Death</defName>
+		<label>death</label>
+		<rulePackDef>PawnEvent_Casualty</rulePackDef>
+		<icon>Things/Mote/BattleSymbols/Skull</icon>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>Downed</defName>
 		<label>downed</label>
-		<description>{PAWN} was incapacitated due to {REASON}.</description>
+		<rulePackDef>PawnEvent_Casualty</rulePackDef>
 		<icon>Things/Mote/BattleSymbols/Downed</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
@@ -30,12 +36,6 @@
 		<label>anesthetized</label>
 		<description>{PAWN} was put under {ANESTHETIC}.</description>
 		<icon>EventIcons/Sleep</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
-		<defName>Death</defName>
-		<label>death</label>
-		<description>{PAWN} died because of {REASON}.</description>
-		<icon>Things/Mote/BattleSymbols/Skull</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>BodyPartLost</defName>
@@ -81,12 +81,18 @@
 		<icon>Ui/Icons/ColonistBar/MentalStateNonAggro</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
-		<defName>MentalBreakViolence</defName>
+		<defName>MentalBreakViolent</defName>
 		<label>violent mental break</label>
 		<rulePackDef>PawnEvent_MentalBreak</rulePackDef>
 		<icon>Ui/Icons/ColonistBar/MentalStateAggro</icon>
 	</PawnEventDef>
-	
+
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>PrisonBreak</defName>
+		<label>prison break</label>
+		<rulePackDef>PawnEvent_PrisonBreak</rulePackDef>
+		<icon>Things/Mote/SpeechSymbols/SparkJailbreak</icon>
+	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>LightningStriked</defName>
 		<label>hit by lightning strike</label>

@@ -1,16 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
+	<RulePackDef>
+		<defName>PawnEvent_Common</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>AndOthers(OtherCount==0)-></li>
+				<li>AndOthers(OtherCount>=1)-> and [Others]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+	
     <RulePackDef>
         <defName>PawnEvent_Raid</defName>
+		<include>
+			<li>PawnEvent_Common</li>
+		</include>
         <rulePack>
             <rulesStrings>
-				<li>raid(raidProperty==None)      ->[PAWN][OTHERS] from [FACTION] raided the colony.</li>
-				<li>raid(raidProperty==Breacher)  ->[PAWN][OTHERS] from [FACTION] raided the colony using breaching tactics.</li>
-				<li>raid(raidProperty==Sapper)    ->[PAWN][OTHERS] from [FACTION] raided the colony using sapper tactics.</li>
-				<li>raid(raidProperty==Siege)     ->[PAWN][OTHERS] from [FACTION] besieged the colony.</li>
-				<li>raid(raidProperty==CenterDrop)->[PAWN][OTHERS] from [FACTION] raided the colony by dropping directly into it.</li>
-				<li>raidFriendly(hostileFaction==)    ->[PAWN][OTHERS] from [FACTION] came to aid the colony.</li>
-				<li>raidFriendly(hostileFaction==true)->[PAWN][OTHERS] from [FACTION] came to aid the colony against [HOSTILEFACTION].</li>
+				<li>raid(raidProperty==None)      ->[PAWN][AndOthers] from [FACTION] raided the colony.</li>
+				<li>raid(raidProperty==Breacher)  ->[PAWN][AndOthers] from [FACTION] raided the colony using breaching tactics.</li>
+				<li>raid(raidProperty==Sapper)    ->[PAWN][AndOthers] from [FACTION] raided the colony using sapper tactics.</li>
+				<li>raid(raidProperty==Siege)     ->[PAWN][AndOthers] from [FACTION] besieged the colony.</li>
+				<li>raid(raidProperty==CenterDrop)->[PAWN][AndOthers] from [FACTION] raided the colony by dropping directly into it.</li>
+				<li>raidFriendly(hostileFaction==)    ->[PAWN][AndOthers] from [FACTION] came to aid the colony.</li>
+				<li>raidFriendly(hostileFaction==true)->[PAWN][AndOthers] from [FACTION] came to aid the colony against [HOSTILEFACTION].</li>
 			</rulesStrings>
         </rulePack>
     </RulePackDef>
@@ -36,6 +49,18 @@
 				<li>bodyPartPermanentlyDamaged(hasInstigator==true)            ->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART] by [INSTIGATOR]'s [WEAPON].</li>
 				<li>bodyPartPermanentlyDamaged(hasInstigator==,hasWeapon==true)->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART] by [WEAPON].</li>
 				<li>bodyPartPermanentlyDamaged(hasInstigator==,hasWeapon==)    ->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_Casualty</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>Downed(reason==)    ->[PAWN] was incapacitated.</li>
+				<li>Downed(reason==true)->[PAWN] was incapacitated due to [HEDIFF].</li>
+				<li>Killed(reason==)    ->[PAWN] died.</li>
+				<li>Killed(reason==true)->[PAWN] died because of [HEDIFF].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -108,6 +133,21 @@
 				<li>mentalBreak(name==CorpseObsession)     ->[PAWN] became obsessed with corpses. [PAWN_pronoun] was going to find and present [TARGET]'s corpse for all to see. [REASON]</li>
 				<li>mentalBreak(name==MurderousRage)       ->[PAWN] flew into a murderous rage and decided to kill [TARGET]. [REASON]</li>
 				<li>mentalBreakDefault                     ->[INGAMEDESC]. [REASON]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_PrisonBreak</defName>
+		<include>
+			<li>PawnEvent_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>WithOthers(OtherCount==0)   -></li>
+				<li>WithOthers(OtherCount>=1)   -> with [Others]</li>
+				<li>prisonBreak(initiator==true)->[PAWN] started a prison break. [PAWN_pronoun] broke the locks open and tried to escape[WithOthers].</li>
+				<li>prisonBreak(initiator==)    ->[PAWN][AndOthers] joined [INITIATOR]'s prison break and tried to escape.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

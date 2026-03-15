@@ -66,7 +66,7 @@ internal class MentalBreakRecorder : RecorderBase
         target ??= TryFindTarget(pawn.MentalState);
 
         var mentalState = pawn.MentalState; // mentalState could be null in some MentalBreak
-        var eventDef = mentalState?.def.category == MentalStateCategory.Aggro ? PawnEventDefOf.MentalBreakViolence : PawnEventDefOf.MentalBreak;
+        var eventDef = mentalState?.def.category == MentalStateCategory.Aggro ? PawnEventDefOf.MentalBreakViolent : PawnEventDefOf.MentalBreak;
         var hasCustomDescription = HasCustomDescription(mentalBreak, eventDef);
         var rootKeyword = hasCustomDescription ? "mentalBreak" : "mentalBreakDefault";
         var concerns = new List<Thing>() { mentalState?.causedByPawn, target };
@@ -144,11 +144,9 @@ internal class MentalBreakRecorder : RecorderBase
     private static string ParseReason(string fullReason)
     {
         var thisHappenedBecauseOfPoorMood = "MentalStateReason_Mood".Translate().ToString();
-        if (thisHappenedBecauseOfPoorMood.EndsWith("."))
-            thisHappenedBecauseOfPoorMood = thisHappenedBecauseOfPoorMood[..^1];
 
         if (fullReason.NullOrEmpty())
-            return debugShowReason ? $"{thisHappenedBecauseOfPoorMood}: {GetMockedReason().Colorize(NeedsCardUtility.MoodColorNegative)}" : "";
+            return debugShowReason ? $"{thisHappenedBecauseOfPoorMood.Trim('.')}: {GetMockedReason().Colorize(NeedsCardUtility.MoodColorNegative)}" : "";
 
         var theFinalStrawWas = "FinalStraw".Translate("{0}").ToString();
         var template = $"{thisHappenedBecauseOfPoorMood}\n\n{theFinalStrawWas}";
@@ -162,7 +160,7 @@ internal class MentalBreakRecorder : RecorderBase
         if (fullReason.StartsWith(prefix) && fullReason.EndsWith(suffix))
         {
             var reason = fullReason.Substring(prefix.Length, fullReason.Length - prefix.Length - suffix.Length);
-            return $"{thisHappenedBecauseOfPoorMood}: {reason.Colorize(NeedsCardUtility.MoodColorNegative)}";
+            return $"{thisHappenedBecauseOfPoorMood.Trim('.')}: {reason.Colorize(NeedsCardUtility.MoodColorNegative)}";
         }
 
         return fullReason;

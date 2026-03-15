@@ -47,13 +47,25 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Defs\RulePacks_Event.xml" />
+    <Compile Include="Source\DebugTools\DebugActionLord.cs" />
+    <Compile Include="Source\DebugTools\DebugUtility.cs" />
+    <Compile Include="Source\DebugTools\NearDebugActionAttribute.cs" />
+    <Compile Include="Source\DebugTools\NearDebugOutputAttribute.cs" />
+    <Compile Include="Source\DebugTools\ReloadableAttribute.cs" />
     <Compile Include="Source\Helper\LangUtility.cs" />
     <Compile Include="Source\PawnTracker\CompProperties_History.cs" />
     <Compile Include="Source\PawnTracker\CompHistory.cs" />
-    <Compile Include="Source\DebugTools.cs" />
+    <Compile Include="Source\DebugTools\DebugOutputsHistoryRecords.cs" />
     <Compile Include="Source\Helper\HediffHelper.cs" />
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
-    <Compile Include="Source\PawnTracker\Harmony\WeatherEvent_LightningStrike_DoStrike_Patch.cs" />
+    <Compile Include="Source\PawnTracker\Harmony\MentalBreakWorker_TryStart_Patch.cs" />
+    <Compile Include="Source\PawnTracker\Harmony\PrisonBreakUtility_StartPrisonBreak_Patch.cs" />
+    <Compile Include="Source\PawnTracker\Harmony\RecoverFromState_RecoverFromState_Patch.cs" />
+    <Compile Include="Source\PawnTracker\Harmony\Pawn_JobTracker_StartJob_Patch.cs" />
+    <Compile Include="Source\PawnTracker\Harmony\BattleLog_Add_Patch.cs" />
+    <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\RebellionRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\MentalBreakRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\CaravanRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\LightningStrikeRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\FactionArrivalRecorder.cs" />
@@ -61,7 +73,7 @@
     <Compile Include="Source\PawnTracker\Recorders\HediffRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RaidRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RecorderBase.cs" />
-    <Compile Include="Source\PawnTracker\Harmony\BattleLog_Add_Patch.cs" />
+    <Compile Include="Source\PawnTracker\Harmony\WeatherEvent_LightningStrike_DoStrike_Patch.cs" />
     <Compile Include="Source\PawnTracker\Harmony\LordMaker_MakeNewLord_Patch.cs" />
     <Compile Include="Source\PawnTracker\Harmony\Transition_CheckSignal_Patch.cs" />
     <Compile Include="Source\PawnTracker\Harmony\Pawn_HealthTracker_AddHediff_Patch.cs" />
@@ -76,7 +88,7 @@
     <Compile Include="Source\PawnTracker\PawnTracker.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RecorderManager.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PermanentDamageRecorder.cs" />
-    <Compile Include="Source\PawnTracker\ThingUtility.cs" />
+    <Compile Include="Source\Helper\ThingUtility.cs" />
     <Compile Include="Source\WorldPawn\InfoCard.cs" />
     <Compile Include="Source\WorldPawn\PawnColumnWorker_Health.cs" />
     <Compile Include="Source\WorldPawn\PawnColumnWorker_Bio.cs" />

@@ -20,7 +20,8 @@ internal class PawnEventDefOf
     public static PawnEventDef VisitorArrived;
     public static PawnEventDef TravelGroupArrived;
     public static PawnEventDef MentalBreak;
-    public static PawnEventDef MentalBreakViolence;
+    public static PawnEventDef MentalBreakViolent;
+    public static PawnEventDef PrisonBreak;
     public static PawnEventDef LightningStriked;
 }
 #pragma warning restore CS0649

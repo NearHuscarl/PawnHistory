@@ -12,11 +12,11 @@ public class HistoryRecord : IExposable
     /// Empty constructor is required so Scribe can instantiate it
     /// </summary>
     public HistoryRecord() => date = GenTicks.TicksAbs;
-    public HistoryRecord(PawnEventDef eventDef, Pawn pawn, TaggedString resolvedDesc, List<Thing> concerns = null) : this()
+    public HistoryRecord(PawnEventDef eventDef, Pawn pawn, TaggedString resolvedDesc, IEnumerable<Thing> concerns = null) : this()
     {
         this.eventDef = eventDef;
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
-        this.resolvedDesc = resolvedDesc;
+        this.resolvedDesc = resolvedDesc.Resolve();
         this.concerns = new List<Thing> { pawn }.Concat(concerns ?? []).Where(p => p != null).Concat(pawn).Distinct().ToList();
         
         CurrentPawnToJumpTo = 0;
@@ -24,7 +24,7 @@ public class HistoryRecord : IExposable
 
     public PawnEventDef eventDef;
     public int date;
-    public TaggedString resolvedDesc;
+    public string resolvedDesc;
     public Pawn pawn;
     public List<Thing> concerns;
     public int CurrentPawnToJumpTo { get; private set; }
