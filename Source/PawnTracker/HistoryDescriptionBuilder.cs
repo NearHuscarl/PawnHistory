@@ -61,6 +61,14 @@ public class HistoryDescriptionBuilder(PawnEventDef eventDef, string rootKeyword
         return AddRule(keyword, hediffDef.label.Colorize(hediffDef.defaultLabelColor));
     }
 
+    public HistoryDescriptionBuilder AddRule(string keyword, Hediff hediff, BodyPartRecord bodyPart)
+    {
+        if (bodyPart == null)
+            return AddRule(keyword, hediff);
+
+        return AddRule(keyword, hediff.def.PrettyTextForPart(bodyPart));
+    }
+
     public HistoryDescriptionBuilder AddRuleIf(bool condition, string keyword, object value)
     {
         if (!condition || value == null) return this;

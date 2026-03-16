@@ -23,4 +23,11 @@ internal static class LangUtility
 
         return "NH_PH_PawnList_Many".Translate(n1, n2, count - 2);
     }
+
+    public static string ReplaceFirst(this string text, string search, string replace)
+    {
+        int pos = text.IndexOf(search);
+        if (pos < 0) return text;
+        return text[..pos] + replace + text[(pos + search.Length)..];
+    }
 }

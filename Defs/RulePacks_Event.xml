@@ -57,10 +57,14 @@
 		<defName>PawnEvent_Casualty</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>Downed(reason==)    ->[PAWN] was incapacitated.</li>
-				<li>Downed(reason==true)->[PAWN] was incapacitated due to [HEDIFF].</li>
-				<li>Killed(reason==)    ->[PAWN] died.</li>
-				<li>Killed(reason==true)->[PAWN] died because of [HEDIFF].</li>
+				<li>Downed(reason==)    ->was incapacitated</li>
+				<li>Downed(reason==true)->was incapacitated due to [Hediff]</li>
+				<li>Died(reason==)      ->died</li>
+				<li>Died(reason==true)  ->died because of [Hediff]</li>
+				<li>RelativePov         ->[PAWN]'s [Relation], [Subject],</li>
+				
+				<li>DownedEntry         ->[PAWN] [Downed].</li>
+				<li>KilledEntry         ->[PAWN] [Died].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

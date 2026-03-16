@@ -11,6 +11,7 @@ internal class PawnEventDefOf
     public static PawnEventDef RaidFriendly;
     public static PawnEventDef Kill;
     public static PawnEventDef Death;
+    public static PawnEventDef RelativeDeath;
     public static PawnEventDef Downed;
     public static PawnEventDef Anesthetized;
     public static PawnEventDef BodyPartLost;

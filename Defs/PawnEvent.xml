@@ -26,6 +26,12 @@
 		<icon>Things/Mote/BattleSymbols/Skull</icon>
 	</PawnEventDef>
 	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+		<defName>RelativeDeath</defName>
+		<label>relative death</label>
+		<rulePackDef>PawnEvent_Casualty</rulePackDef>
+		<icon>EventIcons/RelativeDeath</icon>
+	</PawnEventDef>
+	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
 		<defName>Downed</defName>
 		<label>downed</label>
 		<rulePackDef>PawnEvent_Casualty</rulePackDef>
