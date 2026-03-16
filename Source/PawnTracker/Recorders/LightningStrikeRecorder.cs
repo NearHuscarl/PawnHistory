@@ -12,11 +12,11 @@ internal class LightningStrikeRecorder : RecorderBase
 
     public override void Register()
     {
-        GameEventListener.Subscribe<LightningStrikeEvent>(e =>
+        GameEventBus.Subscribe<LightningStrikeEvent>(e =>
         {
             strikes.Add((e.Map, e.StrikeLoc, Find.TickManager.TicksGame, e.Radius));
         });
-        GameEventListener.Subscribe<HediffPostAddEvent>(e =>
+        GameEventBus.Subscribe<HediffPostAddEvent>(e =>
         {
             strikes.RemoveAll(s => Find.TickManager.TicksGame - s.tick > 10);
 
@@ -57,12 +57,11 @@ internal class LightningStrikeRecorder : RecorderBase
 
     private void HandleLightningHitEvent(Pawn pawn, Hediff hediff, BodyPartRecord part)
     {
-        var eventDef = PawnEventDefOf.LightningStriked;
-        var desc = eventDef.description.Formatted(
-            pawn.NameShortColored.Named("PAWN"),
-            pawn.Possessive().Named("POSSESSIVE"),
-            part.Label.Colorize(hediff.LabelColor).Named("PART")
-        ).Resolve();
+        var eventDef = HistoryRecordDefOf.LightningStriked;
+        var desc = eventDef.ResolveDescription(pawn)
+            .AddRule("POSSESSIVE", pawn.Possessive())
+            .AddRule("PART", part.Label.Colorize(hediff.LabelColor))
+            .Resolve();
 
         AddRecord(new HistoryRecord(eventDef, pawn, desc));
     }

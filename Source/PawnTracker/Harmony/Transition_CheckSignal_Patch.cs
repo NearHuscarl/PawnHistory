@@ -41,7 +41,7 @@ public static class Transition_CheckSignal_Patch
         if (currentToil == nextToil)
             return;
 
-        GameEventListener.Publish(new LordToilChangeEvent(currentToil, nextToil, trigger, lord));
+        GameEventBus.Publish(new LordToilChangeEvent(currentToil, nextToil, trigger, lord));
     }
 }
 

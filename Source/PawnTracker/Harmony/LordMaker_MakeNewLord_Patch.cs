@@ -32,6 +32,6 @@ public static class LordMaker_MakeNewLord_Patch
     public static void OnLordJobStart(Lord __instance)
     {
         var lord = __instance;
-        GameEventListener.Publish(new LordToilChangeEvent(null, lord.Graph.StartingToil, null, lord));
+        GameEventBus.Publish(new LordToilChangeEvent(null, lord.Graph.StartingToil, null, lord));
     }
 }

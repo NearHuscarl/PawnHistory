@@ -81,10 +81,10 @@
     <Compile Include="Source\PawnTracker\HistoryRecord.cs" />
     <Compile Include="Source\PawnTracker\ITab_Pawn_History.cs" />
     <Compile Include="Source\PawnTracker\PawnEventDefExtension.cs" />
-    <Compile Include="Source\PawnTracker\PawnEventOf.cs" />
-    <Compile Include="Source\PawnTracker\GameEventListener.cs" />
+    <Compile Include="Source\PawnTracker\HistoryRecordDefOf.cs" />
+    <Compile Include="Source\PawnTracker\GameEventBus.cs" />
     <Compile Include="Source\PawnTracker\Harmony\IncidentWorker_Raid_TryGenerateRaidInfo_Patch.cs" />
-    <Compile Include="Source\PawnTracker\PawnEventDef.cs" />
+    <Compile Include="Source\PawnTracker\HistoryRecordDef.cs" />
     <Compile Include="Source\PawnTracker\PawnTracker.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RecorderManager.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PermanentDamageRecorder.cs" />

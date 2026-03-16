@@ -1,5 +1,4 @@
-﻿using LudeonTK;
-using PawnHistory.Source.DebugTools;
+﻿using PawnHistory.Source.DebugTools;
 using PawnHistory.Source.Helper;
 using RimWorld;
 using System;
@@ -23,14 +22,14 @@ internal class MentalBreakRecorder : RecorderBase
 
     public override void Register()
     {
-        GameEventListener.Subscribe<MentalBreakStartEvent>(e =>
+        GameEventBus.Subscribe<MentalBreakStartEvent>(e =>
         {
             if (!ShouldRecord(e.Pawn)) return;
             if (e.MentalBreakWorker is not MentalBreakWorker_RunWild) return;
 
             HandleMentalBreaksEvent(e.Pawn, e.MentalBreakWorker.def, e.Reason);
         });
-        GameEventListener.Subscribe<MentalBreakStartedEvent>(e =>
+        GameEventBus.Subscribe<MentalBreakStartedEvent>(e =>
         {
             if (!ShouldRecord(e.Pawn)) return;
             if (e.MentalBreakWorker is MentalBreakWorker_RunWild) return;
@@ -40,7 +39,7 @@ internal class MentalBreakRecorder : RecorderBase
             else
                 HandleMentalBreaksEvent(e.Pawn, e.MentalBreakWorker.def, e.Reason);
         });
-        GameEventListener.Subscribe<JobStartedEvent>(e =>
+        GameEventBus.Subscribe<JobStartedEvent>(e =>
         {
             var mentalState = e.Pawn.MentalState;
 
@@ -56,7 +55,7 @@ internal class MentalBreakRecorder : RecorderBase
                 HandleMentalBreaksEvent(e.Pawn, ongoingState.mentalBreak, ongoingState.reason, e.NewJob.targetA.Pawn);
             }
         });
-        GameEventListener.Subscribe<MentalStateEndedEvent>(e => OnGoingMentalStates.Remove(e.Pawn));
+        GameEventBus.Subscribe<MentalStateEndedEvent>(e => OnGoingMentalStates.Remove(e.Pawn));
     }
 
     private static readonly Dictionary<Pawn, (MentalBreakDef mentalBreak, string reason, bool hasRecord)> OnGoingMentalStates = [];
@@ -66,7 +65,7 @@ internal class MentalBreakRecorder : RecorderBase
         target ??= TryFindTarget(pawn.MentalState);
 
         var mentalState = pawn.MentalState; // mentalState could be null in some MentalBreak
-        var eventDef = mentalState?.def.category == MentalStateCategory.Aggro ? PawnEventDefOf.MentalBreakViolent : PawnEventDefOf.MentalBreak;
+        var eventDef = mentalState?.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
         var hasCustomDescription = HasCustomDescription(mentalBreak, eventDef);
         var rootKeyword = hasCustomDescription ? "mentalBreak" : "mentalBreakDefault";
         var concerns = new List<Thing>() { mentalState?.causedByPawn, target };
@@ -117,9 +116,9 @@ internal class MentalBreakRecorder : RecorderBase
         AddRecord(new HistoryRecord(eventDef, pawn, descBuilder.Resolve(), concerns));
     }
 
-    private static bool HasCustomDescription(MentalBreakDef mentalBreak, PawnEventDef eventDef)
+    private static bool HasCustomDescription(MentalBreakDef mentalBreak, HistoryRecordDef eventDef)
     {
-        return eventDef.rulePackDef.RulesPlusIncludes.Any(rule =>
+        return eventDef.descriptionMaker.RulesPlusIncludes.Any(rule =>
             rule.keyword == "mentalBreak" &&
             rule.constantConstraints != null &&
             rule.constantConstraints.Any(c => c.key == "name" && c.value == mentalBreak.defName)

@@ -7,12 +7,10 @@ internal class HediffRecorder : RecorderBase
 {
     public override void Register()
     {
-        GameEventListener.Subscribe<HediffPostAddEvent>(e =>
+        GameEventBus.Subscribe<HediffPostAddEvent>(e =>
         {
             var pawn = e.Pawn;
             var hediff = e.Hediff;
-            var part = e.Part;
-            var dinfo = e.Dinfo;
 
             if (!ShouldRecord(pawn))
                 return;
@@ -24,11 +22,10 @@ internal class HediffRecorder : RecorderBase
 
     private void HandleAnesthetizedEvent(Pawn pawn, Hediff hediff)
     {
-        var desc = PawnEventDefOf.Anesthetized.description.Formatted(
-            pawn.NameShortColored.Named("PAWN"),
-            hediff.LabelBase.Colorize(hediff.LabelColor).Named("ANESTHETIC")
-        ).Resolve();
+        var desc = HistoryRecordDefOf.Anesthetized.ResolveDescription(pawn)
+            .AddRule("ANESTHETIC", hediff)
+            .Resolve();
 
-        AddRecord(new HistoryRecord(PawnEventDefOf.Anesthetized, pawn, desc));
+        AddRecord(new HistoryRecord(HistoryRecordDefOf.Anesthetized, pawn, desc));
     }
 }

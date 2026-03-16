@@ -96,7 +96,7 @@ public class LightningStrikeEvent(IntVec3 strikeLoc, Map map, float radius) : Ga
     public float Radius { get; } = radius;
 }
 
-public class GameEventListener
+public class GameEventBus
 {
     private static readonly Dictionary<Type, List<Delegate>> listeners = [];
 

@@ -7,7 +7,7 @@ internal class RebellionRecorder : RecorderBase
 {
     public override void Register()
     {
-        GameEventListener.Subscribe<PrisonBreakStartedEvent>(e =>
+        GameEventBus.Subscribe<PrisonBreakStartedEvent>(e =>
         {
             if (!ShouldRecord(e.Initiator)) return;
 
@@ -17,7 +17,7 @@ internal class RebellionRecorder : RecorderBase
 
     private void HandlePrisonBreakEvent(PrisonBreakStartedEvent e)
     {
-        var eventDef = PawnEventDefOf.PrisonBreak;
+        var eventDef = HistoryRecordDefOf.PrisonBreak;
         var others = e.EscapingPrisoners.Where(p => p != e.Initiator).ToList();
         var concerns = e.EscapingPrisoners.Cast<Thing>();
 

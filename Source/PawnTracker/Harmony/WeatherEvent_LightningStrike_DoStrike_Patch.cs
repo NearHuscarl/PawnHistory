@@ -13,6 +13,6 @@ public static class WeatherEvent_LightningStrike_DoStrike_Patch
 
     public static void Postfix(IntVec3 strikeLoc, Map map, ref Mesh boltMesh)
     {
-        GameEventListener.Publish(new LightningStrikeEvent(strikeLoc, map, StrikeRadius));
+        GameEventBus.Publish(new LightningStrikeEvent(strikeLoc, map, StrikeRadius));
     }
 }

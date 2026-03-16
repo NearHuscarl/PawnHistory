@@ -10,13 +10,26 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 internal class CasualtyRecorder : RecorderBase
 {
     [NearDebugAction]
+    public static void EveryoneOnFire()
+    {
+        var pawns = Find.CurrentMap.mapPawns.AllPawnsSpawned
+            .Where(p => p != null && p.relations != null && p.RaceProps?.Humanlike == true)
+            .ToList();
+
+        foreach (var pawn in pawns)
+            FireUtility.TryAttachFire(pawn, 1.75f, null);
+
+        Messages.Message("Everyone is now on fire!", MessageTypeDefOf.NeutralEvent);
+    }
+
+    [NearDebugAction]
     public static void OneBigFamily()
     {
         var pawns = Find.CurrentMap.mapPawns.AllPawnsSpawned
             .Where(p => p != null && p.relations != null && p.RaceProps?.Humanlike == true)
             .ToList();
 
-        if (pawns == null || pawns.Count < 2)
+        if (pawns.Count < 2)
             return;
 
         var possibleRelations = DefDatabase<PawnRelationDef>.AllDefsListForReading.Where(def => def != null && def.defName != "Bond").ToList();
@@ -50,7 +63,7 @@ internal class CasualtyRecorder : RecorderBase
 
     public override void Register()
     {
-        GameEventListener.Subscribe<CasualtyLogAddedEvent>(e =>
+        GameEventBus.Subscribe<CasualtyLogAddedEvent>(e =>
         {
             // We intercept BattleLog.Add() but it runs before DamageWorker.AssociateWithLog() which is required to populate bodyPart data so we can get the
             // exact in-game combat log. But since DamageWorker.AssociateWithLog() is not always used we need to pick BattleLog.Add and fallback.
@@ -76,9 +89,9 @@ internal class CasualtyRecorder : RecorderBase
             return;
 
         var isKillLog = e.Casualty == CasualtyType.Killed;
-        var eventDef = isKillLog ? PawnEventDefOf.Death : PawnEventDefOf.Downed;
+        var eventDef = isKillLog ? HistoryRecordDefOf.Death : HistoryRecordDefOf.Downed;
 
-        if (!isKillLog && CompHistoryManager.GetComp(e.Subject).records.LastOrDefault()?.eventDef == PawnEventDefOf.Death)
+        if (!isKillLog && CompHistoryManager.GetComp(e.Subject).records.LastOrDefault()?.def == HistoryRecordDefOf.Death)
         {
             Log.Warning($"[PawnHistory] Received downed transition from {e.Subject.NameShortColored}, but they were already dead. Skipping..");
             return;
@@ -86,13 +99,15 @@ internal class CasualtyRecorder : RecorderBase
 
         var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Subject);
         string desc;
-        // log entry is not associated with any active battle. Non-combat dead needs to be handled manually (e.g. BloodLoss, ToxicBuildup...)
+        // combatLogText is null when:
+        // - Log entry is not associated with any active battle. Non-combat dead needs to be handled manually (e.g. BloodLoss, ToxicBuildup...)
+        // - LastDamageEntry may not match any current hediff if the same hediff was linked to an earlier combat log entry.
         if (combatLogText == null)
         {
-            var hediffInt = e.Subject.health.hediffSet.hediffs.FirstOrDefault(h => h.def == e.CulpritHediff);
+            var hediffInt = e.Subject.health.hediffSet.hediffs.Where(h => h.def == e.CulpritHediff).OrderBy(h => h.ageTicks).FirstOrDefault();
             var rootKeyword = isKillLog ? "KilledEntry" : "DownedEntry";
             desc = eventDef.ResolveDescription(rootKeyword, e.Subject)
-                .AddRule("Hediff", hediffInt, hediffInt.Part)
+                .AddRule("Hediff", hediffInt, hediffInt?.Part)
                 .AddConstantIf(e.CulpritHediff != null, "reason", "true")
                 .Resolve();
         }
@@ -107,7 +122,7 @@ internal class CasualtyRecorder : RecorderBase
 
     private void HandleRelativeDeathEvent(Pawn deceased, Pawn initiator, Pawn originalTarget, string combatLogText, string transitionText, string deathDesc)
     {
-        var eventDef = PawnEventDefOf.RelativeDeath;
+        var eventDef = HistoryRecordDefOf.RelativeDeath;
         var deceasedName = deceased.NameShortColored.Resolve();
 
         foreach (var relative in deceased.relations.PotentiallyRelatedPawns)
@@ -115,7 +130,6 @@ internal class CasualtyRecorder : RecorderBase
             if (relative == null || !RecorderManager.ShouldRecord(relative))
                 continue;
 
-            // Get the specific relation (Sister, Father, Husband, etc.)
             var relationDef = relative.GetMostImportantRelation(deceased);
             if (relationDef == null) continue;
 
@@ -140,6 +154,6 @@ internal class CasualtyRecorder : RecorderBase
 
         var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Initiator);
         var desc = $"{combatLogText} {transitionText}";
-        AddRecord(new HistoryRecord(PawnEventDefOf.Kill, e.Initiator, desc, [e.Subject, originalTarget]));
+        AddRecord(new HistoryRecord(HistoryRecordDefOf.Kill, e.Initiator, desc, [e.Subject, originalTarget]));
     }
 }

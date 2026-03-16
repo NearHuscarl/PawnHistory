@@ -14,6 +14,6 @@ public static class Pawn_JobTracker_StartJob_Patch
         var pawn = PawnRef(__instance);
         var oldJob = __instance.curJob;
 
-        GameEventListener.Publish(new JobStartedEvent(pawn, oldJob, newJob));
+        GameEventBus.Publish(new JobStartedEvent(pawn, oldJob, newJob));
     }
 }

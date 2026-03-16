@@ -12,9 +12,9 @@ public class HistoryRecord : IExposable
     /// Empty constructor is required so Scribe can instantiate it
     /// </summary>
     public HistoryRecord() => date = GenTicks.TicksAbs;
-    public HistoryRecord(PawnEventDef eventDef, Pawn pawn, TaggedString resolvedDesc, IEnumerable<Thing> concerns = null) : this()
+    public HistoryRecord(HistoryRecordDef def, Pawn pawn, TaggedString resolvedDesc, IEnumerable<Thing> concerns = null) : this()
     {
-        this.eventDef = eventDef;
+        this.def = def;
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
         this.resolvedDesc = resolvedDesc.Resolve();
         this.concerns = new List<Thing> { pawn }.Concat(concerns ?? []).Where(p => p != null).Concat(pawn).Distinct().ToList();
@@ -22,7 +22,7 @@ public class HistoryRecord : IExposable
         CurrentPawnToJumpTo = 0;
     }
 
-    public PawnEventDef eventDef;
+    public HistoryRecordDef def;
     public int date;
     public string resolvedDesc;
     public Pawn pawn;
@@ -31,7 +31,7 @@ public class HistoryRecord : IExposable
 
     public Texture2D GetIcon()
     {
-        return ContentFinder<Texture2D>.Get(eventDef.icon);
+        return ContentFinder<Texture2D>.Get(def.icon);
     }
 
     public TaggedString GetDescription()
@@ -53,7 +53,7 @@ public class HistoryRecord : IExposable
 
     public void ExposeData()
     {
-        Scribe_Defs.Look(ref eventDef, "eventDef");
+        Scribe_Defs.Look(ref def, "def");
         Scribe_Values.Look(ref date, "date");
         Scribe_Values.Look(ref resolvedDesc, "d");
         Scribe_References.Look(ref pawn, "pawn", saveDestroyedThings: true);

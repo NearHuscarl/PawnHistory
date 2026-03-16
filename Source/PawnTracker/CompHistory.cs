@@ -22,7 +22,7 @@ public class CompHistory : ThingComp
             // remove corrupted records during development.
             if (record.pawn == null)
             {
-                Log.Error($"HistoryRecord.pawn = null. {record.eventDef}, {record.date}. WHY!?");
+                Log.Error($"HistoryRecord.pawn = null. {record.def}, {record.date}. WHY!?");
                 records.Remove(record);
             }
         }

@@ -39,12 +39,12 @@ internal class Pawn_HealthTracker_AddHediff_Patch
     {
         var pawn = PawnRef(__instance);
         var part = hediff.Part;
-        GameEventListener.Publish(new HediffPreAddEvent(pawn, hediff, part, dinfo));
+        GameEventBus.Publish(new HediffPreAddEvent(pawn, hediff, part, dinfo));
     }
 
     static void Postfix(Pawn_HealthTracker __instance, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo, DamageResult result)
     {
         var pawn = PawnRef(__instance);
-        GameEventListener.Publish(new HediffPostAddEvent(pawn, hediff, hediff.Part, dinfo));
+        GameEventBus.Publish(new HediffPostAddEvent(pawn, hediff, hediff.Part, dinfo));
     }
 }

@@ -15,6 +15,6 @@ public static class PrisonBreakUtility_StartPrisonBreak_Patch
 {
     public static void Postfix(Pawn initiator, string letterText, string letterLabel, LetterDef letterDef, List<Pawn> escapingPrisoners)
     {
-        GameEventListener.Publish(new PrisonBreakStartedEvent(initiator, escapingPrisoners));
+        GameEventBus.Publish(new PrisonBreakStartedEvent(initiator, escapingPrisoners));
     }
 }

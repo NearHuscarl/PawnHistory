@@ -11,7 +11,7 @@ internal class RaidRecorder : RecorderBase
 {
     public override void Register()
     {
-        GameEventListener.Subscribe<RaidEvent>(e =>
+        GameEventBus.Subscribe<RaidEvent>(e =>
         {
             var pawns = e.Pawns.Where(ShouldRecord).ToList();
 
@@ -24,7 +24,7 @@ internal class RaidRecorder : RecorderBase
 
     private void HandleRaidFriendlyStartedEvent(List<Pawn> pawns, Faction faction)
     {
-        var eventDef = PawnEventDefOf.RaidFriendly;
+        var eventDef = HistoryRecordDefOf.RaidFriendly;
         var hostileFaction = pawns[0].MapHeld.lordManager.lords
             .FirstOrDefault(l => l.faction != null && l.faction.HostileTo(faction))
             ?.faction;
@@ -66,7 +66,7 @@ internal class RaidRecorder : RecorderBase
         else if (raidStrategy.defName.StartsWith("Siege"))
             raidProperty = RaidProperty.Siege;
 
-        var eventDef = PawnEventDefOf.Raid;
+        var eventDef = HistoryRecordDefOf.Raid;
 
         foreach (var pawn in pawns)
         {

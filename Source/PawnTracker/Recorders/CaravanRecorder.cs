@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using Verse.AI.Group;
-using Verse.Grammar;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -11,7 +10,7 @@ internal class CaravanRecorder : RecorderBase
 {
     public override void Register()
     {
-        GameEventListener.Subscribe<LordToilChangeEvent>(e =>
+        GameEventBus.Subscribe<LordToilChangeEvent>(e =>
         {
             var lord = e.Lord;
             var currentToil = e.CurrentToil;
@@ -33,7 +32,7 @@ internal class CaravanRecorder : RecorderBase
 
     private void HandleCaravanTradeArrivedEvents(Lord lord, List<Pawn> pawns)
     {
-        var eventDef = PawnEventDefOf.TradeCaravanArrived;
+        var eventDef = HistoryRecordDefOf.TradeCaravanArrived;
         var trader = pawns.FirstOrDefault(p => p.trader != null);
         var traderKind = trader?.trader?.traderKind?.label ?? "trader";
 
@@ -41,7 +40,7 @@ internal class CaravanRecorder : RecorderBase
         {
             var desc = eventDef.ResolveDescription("tradeCaravanArrived", pawn)
                 .WithFaction(lord.faction)
-                .AddRule("TRADERKIND", traderKind)
+                .AddRule("TraderKind", traderKind)
                 .Resolve();
             AddRecord(new HistoryRecord(eventDef, pawn, desc));
         }
@@ -78,14 +77,14 @@ internal class CaravanRecorder : RecorderBase
             || nextToil is LordToil_ExitMap
             || nextToil is LordToil_ExitMapTraderFighting)
         {
-            var eventDef = PawnEventDefOf.TradeCaravanLeft;
+            var eventDef = HistoryRecordDefOf.TradeCaravanLeft;
 
             foreach (var pawn in pawns)
             {     
                 var desc = eventDef.ResolveDescription("tradeCaravanLeft", pawn)
                     .WithFaction(lord.faction)
                     .WithOthers(pawns)
-                    .AddRule("TRADERKIND", traderKind)
+                    .AddRule("TraderKind", traderKind)
                     .AddConstant("reason", reason)
                     .Resolve();
                 AddRecord(new HistoryRecord(eventDef, pawn, desc));

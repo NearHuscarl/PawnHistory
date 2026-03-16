@@ -15,6 +15,6 @@ public static class IncidentWorker_Raid_TryGenerateRaidInfo_Patch
         if (!__result)
             return; // cannot spawn a raid due to internal error
 
-        GameEventListener.Publish(new RaidEvent(pawns, parms.faction, parms.raidStrategy, parms.raidArrivalMode, isFriendly: __instance is IncidentWorker_RaidFriendly));
+        GameEventBus.Publish(new RaidEvent(pawns, parms.faction, parms.raidStrategy, parms.raidArrivalMode, isFriendly: __instance is IncidentWorker_RaidFriendly));
     }
 }

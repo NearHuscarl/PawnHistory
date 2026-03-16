@@ -29,6 +29,6 @@ public static class BattleLog_Add_Patch
         var damageResultEntry = battle.Entries.Skip(transitionIndex + 1).FirstOrDefault(e => e is LogEntry_DamageResult && e.Concerns(subject)) as LogEntry_DamageResult;
         var culpritHediff = CulpritHediffRef(transitionEntry);
 
-        GameEventListener.Publish(new CasualtyLogAddedEvent(battle, transitionEntry, damageResultEntry, initiator, subject, casualtyType, culpritHediff));
+        GameEventBus.Publish(new CasualtyLogAddedEvent(battle, transitionEntry, damageResultEntry, initiator, subject, casualtyType, culpritHediff));
     }
 }

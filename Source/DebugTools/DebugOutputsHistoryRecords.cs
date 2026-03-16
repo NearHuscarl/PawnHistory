@@ -37,7 +37,7 @@ public static class DebugOutputsHistoryRecords
                 DebugTables.MakeTablesDialog(compHistory.records,
                     new TableDataGetter<HistoryRecord>("Timestamp", r => r.date),
                     new TableDataGetter<HistoryRecord>("Date", r => compHistory.GetShortDate(r)),
-                    new TableDataGetter<HistoryRecord>("label", r => r.eventDef.label),
+                    new TableDataGetter<HistoryRecord>("label", r => r.def.label),
                     new TableDataGetter<HistoryRecord>("description", r => r.GetDescription()),
                     new TableDataGetter<HistoryRecord>("concerns", r => string.Join(", ", r.concerns.Select(c =>
                     {

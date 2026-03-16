@@ -34,7 +34,7 @@
             <rulesStrings>
                 <li>bodyPartLost(hasInstigator==true, hasWeapon==true)->[PAWN]'s [PART] was [HEDIFF] by [INSTIGATOR]'s [WEAPON].</li>
                 <li>bodyPartLost(hasInstigator==true, hasWeapon==)    ->[PAWN]'s [PART] was [HEDIFF] by [INSTIGATOR].</li>
-                <li>bodyPartLost(hasInstigator==,hasWeapon==true)     ->[PAWN]'s [PART] was [HEDIFF] by a [WEAPON].</li>
+                <li>bodyPartLost(hasInstigator==,hasWeapon==true)     ->[PAWN]'s [PART] was [HEDIFF] by [WEAPON].</li>
                 <li>bodyPartLost(hasInstigator==,hasWeapon==)         ->[PAWN]'s [PART] was [HEDIFF].</li>
                 <li>bodyPartLostSurgery(intent==Harvest)              ->[PAWN]'s [PART] was harvested by [DOCTOR].</li>
                 <li>bodyPartLostSurgery(intent==Amputate)             ->[PAWN]'s [PART] was amputated by [DOCTOR] due to [HEDIFF].</li>
@@ -73,7 +73,7 @@
 		<defName>PawnEvent_TradeCaravanArrived</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>tradeCaravanArrived->[PAWN] arrived as part of a [TRADERKIND] caravan from [FACTION].</li>
+				<li>tradeCaravanArrived->[PAWN] arrived as part of a [TraderKind] caravan from [FACTION].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -82,12 +82,12 @@
 		<defName>PawnEvent_TradeCaravanLeft</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>tradeCaravanLeft(reason==Timeout)             ->[PAWN] from [TRADERKIND] of [FACTION] began to leave the colony.</li>
-				<li>tradeCaravanLeft(reason==DangerousTemperature)->[PAWN] from [TRADERKIND] of [FACTION] began to leave the colony because of dangerous temperature.</li>
-				<li>tradeCaravanLeft(reason==AnomalousWeather)    ->[PAWN] from [TRADERKIND] of [FACTION] began to leave the colony because of anomalous weather.</li>
-				<li>tradeCaravanLeft(reason==Trapped)             ->[PAWN] from [TRADERKIND] of [FACTION] attempted to leave because the caravan became trapped inside.</li>
-				<li>tradeCaravanLeft(reason==TraderLost)          ->[PAWN] from [TRADERKIND] of [FACTION] began to leave the colony after their trader or caravan animal was incapacitated.</li>
-				<li>tradeCaravanLeft(reason==PawnLost)            ->[PAWN] from [TRADERKIND] of [FACTION] began to leave the colony after some of their members were lost.</li>
+				<li>tradeCaravanLeft(reason==Timeout)             ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony.</li>
+				<li>tradeCaravanLeft(reason==DangerousTemperature)->[PAWN] from [TraderKind] of [FACTION] began to leave the colony because of dangerous temperature.</li>
+				<li>tradeCaravanLeft(reason==AnomalousWeather)    ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony because of anomalous weather.</li>
+				<li>tradeCaravanLeft(reason==Trapped)             ->[PAWN] from [TraderKind] of [FACTION] attempted to leave because the caravan became trapped inside.</li>
+				<li>tradeCaravanLeft(reason==TraderLost)          ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony after their trader or caravan animal was incapacitated.</li>
+				<li>tradeCaravanLeft(reason==PawnLost)            ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony after some of their members were lost.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

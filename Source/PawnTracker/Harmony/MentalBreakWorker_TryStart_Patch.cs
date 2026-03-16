@@ -12,12 +12,12 @@ public static class MentalBreakWorker_TryStart_Patch
 {
     static void Prefix(MentalBreakWorker __instance, Pawn pawn, string reason, bool causedByMood)
     {
-        GameEventListener.Publish(new MentalBreakStartEvent(pawn, reason, __instance));
+        GameEventBus.Publish(new MentalBreakStartEvent(pawn, reason, __instance));
     }
     static void Postfix(MentalBreakWorker __instance, bool __result, Pawn pawn, string reason, bool causedByMood)
     {
         if (!__result) return; // break didn't start
-        GameEventListener.Publish(new MentalBreakStartedEvent(pawn, reason, __instance));
+        GameEventBus.Publish(new MentalBreakStartedEvent(pawn, reason, __instance));
     }
 
     static IEnumerable<MethodBase> TargetMethods()

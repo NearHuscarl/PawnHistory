@@ -1,108 +1,108 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <Defs>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Raid</defName>
 		<label>raid</label>
-		<rulePackDef>PawnEvent_Raid</rulePackDef>
+		<descriptionMaker>PawnEvent_Raid</descriptionMaker>
 		<icon>Ui/Commands/AttackSettlement</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>RaidFriendly</defName>
 		<label>friendlies arrived</label>
-		<rulePackDef>PawnEvent_Raid</rulePackDef>
+		<descriptionMaker>PawnEvent_Raid</descriptionMaker>
 		<icon>Ui/Commands/CallAid</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Kill</defName>
 		<label>kill</label>
 		<description>{PAWN} killed something.</description>
 		<icon>Things/Mote/BattleSymbols/SkullTarget</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Death</defName>
 		<label>death</label>
-		<rulePackDef>PawnEvent_Casualty</rulePackDef>
+		<descriptionMaker>PawnEvent_Casualty</descriptionMaker>
 		<icon>Things/Mote/BattleSymbols/Skull</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>RelativeDeath</defName>
 		<label>relative death</label>
-		<rulePackDef>PawnEvent_Casualty</rulePackDef>
+		<descriptionMaker>PawnEvent_Casualty</descriptionMaker>
 		<icon>EventIcons/RelativeDeath</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Downed</defName>
 		<label>downed</label>
-		<rulePackDef>PawnEvent_Casualty</rulePackDef>
+		<descriptionMaker>PawnEvent_Casualty</descriptionMaker>
 		<icon>Things/Mote/BattleSymbols/Downed</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Anesthetized</defName>
 		<label>anesthetized</label>
 		<description>{PAWN} was put under {ANESTHETIC}.</description>
 		<icon>EventIcons/Sleep</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BodyPartLost</defName>
 		<label>body part lost</label>
-		<rulePackDef>PawnEvent_BodyPartLost</rulePackDef>
+		<descriptionMaker>PawnEvent_BodyPartLost</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BodyPartPermanentlyDamaged</defName>
 		<label>body part permanently damaged</label>
-		<rulePackDef>PawnEvent_BodyPartPermanentlyDamaged</rulePackDef>
+		<descriptionMaker>PawnEvent_BodyPartPermanentlyDamaged</descriptionMaker>
 		<icon>EventIcons/Scars</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TradeCaravanArrived</defName>
 		<label>trade caravan arrived</label>
-		<rulePackDef>PawnEvent_TradeCaravanArrived</rulePackDef>
+		<descriptionMaker>PawnEvent_TradeCaravanArrived</descriptionMaker>
 		<icon>Ui/Commands/SellableItems</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TradeCaravanLeft</defName>
 		<label>trade caravan left</label>
-		<rulePackDef>PawnEvent_TradeCaravanLeft</rulePackDef>
+		<descriptionMaker>PawnEvent_TradeCaravanLeft</descriptionMaker>
 		<icon>Ui/Commands/ForceCaravanToDepart</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>VisitorArrived</defName>
 		<label>visitor arrived</label>
-		<rulePackDef>PawnEvent_VisitorArrived</rulePackDef>
+		<descriptionMaker>PawnEvent_VisitorArrived</descriptionMaker>
 		<icon>EventIcons/VisitorArrived</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TravelGroupArrived</defName>
 		<label>travel group passing by</label>
-		<rulePackDef>PawnEvent_TravelGroupArrived</rulePackDef>
+		<descriptionMaker>PawnEvent_TravelGroupArrived</descriptionMaker>
 		<icon>EventIcons/TravelGroup</icon>
-	</PawnEventDef>
+	</HistoryRecordDef>
 
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>MentalBreak</defName>
 		<label>mental break</label>
-		<rulePackDef>PawnEvent_MentalBreak</rulePackDef>
+		<descriptionMaker>PawnEvent_MentalBreak</descriptionMaker>
 		<icon>Ui/Icons/ColonistBar/MentalStateNonAggro</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>MentalBreakViolent</defName>
 		<label>violent mental break</label>
-		<rulePackDef>PawnEvent_MentalBreak</rulePackDef>
+		<descriptionMaker>PawnEvent_MentalBreak</descriptionMaker>
 		<icon>Ui/Icons/ColonistBar/MentalStateAggro</icon>
-	</PawnEventDef>
+	</HistoryRecordDef>
 
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonBreak</defName>
 		<label>prison break</label>
-		<rulePackDef>PawnEvent_PrisonBreak</rulePackDef>
+		<descriptionMaker>PawnEvent_PrisonBreak</descriptionMaker>
 		<icon>Things/Mote/SpeechSymbols/SparkJailbreak</icon>
-	</PawnEventDef>
-	<PawnEventDef Class="PawnHistory.Source.PawnTracker.PawnEventDef">
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>LightningStriked</defName>
 		<label>hit by lightning strike</label>
 		<description>{PAWN} was struck by lightning, burning {POSSESSIVE} {PART}.</description>
 		<icon>EventIcons/Flashstorm</icon>
-	</PawnEventDef>
+	</HistoryRecordDef>
 </Defs>

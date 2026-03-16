@@ -7,15 +7,16 @@ using Verse.Grammar;
 
 namespace PawnHistory.Source.PawnTracker;
 
-public class HistoryDescriptionBuilder(PawnEventDef eventDef, string rootKeyword, Pawn pawn)
+public class HistoryDescriptionBuilder(HistoryRecordDef eventDef, string rootKeyword, Pawn pawn)
 {
-    public PawnEventDef EventDef { get; } = eventDef;
+    public HistoryRecordDef EventDef { get; } = eventDef;
     public string RootKeyword { get; } = rootKeyword;
     public Pawn Pawn { get; } = pawn;
 
     private bool includePawnRules;
     private readonly List<Rule> extraRules = [];
     private readonly Dictionary<string, string> extraConstants = [];
+    private readonly Dictionary<string, object> namedArgs = [];
 
     public HistoryDescriptionBuilder IncludePawnGrammar(bool include = true)
     {
@@ -26,15 +27,18 @@ public class HistoryDescriptionBuilder(PawnEventDef eventDef, string rootKeyword
     public HistoryDescriptionBuilder AddRule(string keyword, string value)
     {
         if (value == null) return this;
-        extraRules.Add(new Rule_String(keyword, value));
+
+        if (EventDef.descriptionMaker != null)
+            extraRules.Add(new Rule_String(keyword, value));
+        else
+            namedArgs[keyword] = value;
         return this;
     }
 
     public HistoryDescriptionBuilder AddRule(string keyword, TaggedString value)
     {
         if (value == null) return this;
-        extraRules.Add(new Rule_String(keyword, value.Resolve()));
-        return this;
+        return AddRule(keyword, value.Resolve());
     }
 
     public HistoryDescriptionBuilder AddRule(string keyword, Pawn pawn)
@@ -104,15 +108,31 @@ public class HistoryDescriptionBuilder(PawnEventDef eventDef, string rootKeyword
 
     public string Resolve()
     {
-        if (EventDef.rulePackDef == null)
+        if (EventDef.descriptionMaker == null)
         {
-            Log.Error($"PawnEventDef '{EventDef.defName}' has null rulePackDef while resolving '{RootKeyword}'.");
-            return EventDef.description ?? EventDef.defName;
+            if (EventDef.description == null)
+            {
+                Log.Error($"PawnEventDef '{EventDef.defName}' does not have description defined in either rulePackDef or description.");
+                return "ERR: No description found";
+            }
+
+            List<NamedArgument> args = [Pawn.NameShortColored.Named("PAWN")];
+
+            foreach (var kvp in namedArgs)
+                args.Add(kvp.Value.Named(kvp.Key));
+
+            return EventDef.description.Formatted(args).Resolve();
+        }
+
+        if (RootKeyword == null)
+        {
+            Log.Error($"Error when resolving '{EventDef.defName}' description: RootKeyword is null.");
+            return "ERR: RootKeyword=null";
         }
 
         var request = new GrammarRequest();
 
-        request.Includes.Add(EventDef.rulePackDef);
+        request.Includes.Add(EventDef.descriptionMaker);
         request.Rules.Add(new Rule_String("PAWN", Pawn.NameShortColored.Resolve()));
 
         if (includePawnRules)

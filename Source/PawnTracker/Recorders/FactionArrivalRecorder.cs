@@ -10,7 +10,7 @@ internal class FactionArrivalRecorder : RecorderBase
 {
     public override void Register()
     {
-        GameEventListener.Subscribe<LordToilChangeEvent>(e =>
+        GameEventBus.Subscribe<LordToilChangeEvent>(e =>
         {
             var lord = e.Lord;
             var currentToil = e.CurrentToil;
@@ -26,7 +26,7 @@ internal class FactionArrivalRecorder : RecorderBase
 
     private void HandleVisitStartedEvents(Lord lord, List<Pawn> pawns)
     {
-        var eventDef = PawnEventDefOf.VisitorArrived;
+        var eventDef = HistoryRecordDefOf.VisitorArrived;
 
         foreach (var pawn in pawns)
         {
@@ -40,7 +40,7 @@ internal class FactionArrivalRecorder : RecorderBase
 
     private void HandleTravelerGroupStartedEvents(Lord lord, List<Pawn> pawns)
     {
-        var eventDef = PawnEventDefOf.TravelGroupArrived;
+        var eventDef = HistoryRecordDefOf.TravelGroupArrived;
 
         foreach (var pawn in pawns)
         {

@@ -25,16 +25,18 @@ namespace PawnHistory.Source.PawnTracker;
 // - rimworld\assets-odyssey\Assets\data\odyssey\textures
 
 // Events:
-// Mental breaks, reason
 // Skill level up/down
-// Relative dead
 // Crawling to safety
+// Social gathering: Party, wedding, ritual...
+// Social fight
+// Birthday event
+// Panic Flee
 // Catching fire: handle with permanent/missing hediffs.
 // Craft a legendary item
 // Permanent injury
 // + From combat
 // - From other curcumstances: scarification ritual, anomaly ritual, healing wound `.ispermanent = true`
-// Mental break
+// Mental breaks
 // + Base game
 // - DLC breaks
 // Raid type: seige with a different icon
