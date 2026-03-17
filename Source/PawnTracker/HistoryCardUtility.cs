@@ -96,7 +96,7 @@ public class HistoryCardUtility
 
             GUI.color = Color.white; Text.Font = GameFont.Tiny; Text.Anchor = TextAnchor.MiddleLeft;
             var descCell = new Rect(colWidthDate + colWidthIcon + colGap, row.y, colWidthDesc, row.height);
-            Widgets.Label(descCell, record.GetDescription());
+            Widgets.Label(descCell, record.description);
 
             var ticksAgo = GenTicks.TicksAbs - record.date;
             var dateAgoText = $"Occurred {ticksAgo.ToStringTicksToPeriod()} ago";

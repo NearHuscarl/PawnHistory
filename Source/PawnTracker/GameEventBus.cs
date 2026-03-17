@@ -89,6 +89,13 @@ public class MentalStateEndedEvent(Pawn pawn, MentalState mentalState) : GameEve
     public MentalState MentalState { get; } = mentalState;
 }
 
+public class SocialFightStartedEvent(PlayLogEntry_Interaction interactionEntry, Pawn initiator, Pawn recipient) : GameEventBase
+{
+    public PlayLogEntry_Interaction InteractionEntry { get; } = interactionEntry;
+    public Pawn Initiator { get; } = initiator;
+    public Pawn Recipient { get; } = recipient;
+}
+
 public class LightningStrikeEvent(IntVec3 strikeLoc, Map map, float radius) : GameEventBase
 {
     public IntVec3 StrikeLoc { get; } = strikeLoc;

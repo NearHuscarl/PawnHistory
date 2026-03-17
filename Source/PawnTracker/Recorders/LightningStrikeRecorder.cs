@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using PawnHistory.Source.PawnTracker.Test;
+using RimWorld;
 using System.Collections.Generic;
 using Verse;
 
@@ -28,10 +29,6 @@ internal class LightningStrikeRecorder : RecorderBase
             if (!ShouldRecord(pawn))
                 return;
 
-            // handled by PermanentDamageRecorder
-            if (hediff.IsPermanent() || hediff.def == HediffDefOf.MissingBodyPart || pawn.health.hediffSet.PartIsMissing(part))
-                return;
-
             // not a lightning strike
             if (dinfo?.Def != DamageDefOf.Flame)
                 return;
@@ -57,12 +54,21 @@ internal class LightningStrikeRecorder : RecorderBase
 
     private void HandleLightningHitEvent(Pawn pawn, Hediff hediff, BodyPartRecord part)
     {
-        var eventDef = HistoryRecordDefOf.LightningStriked;
-        var desc = eventDef.ResolveDescription(pawn)
+        var recordDef = HistoryRecordDefOf.LightningStriked;
+        var desc = recordDef.ResolveDescription(pawn)
             .AddRule("POSSESSIVE", pawn.Possessive())
             .AddRule("PART", part.Label.Colorize(hediff.LabelColor))
             .Resolve();
 
-        AddRecord(new HistoryRecord(eventDef, pawn, desc));
+        AddRecord(recordDef, pawn, desc);
+    }
+
+    public override void Test(TestScenario scenario)
+    {
+        scenario.Pawn(10)
+            .WithPosition(Find.CurrentMap.Center, 8)
+            .ThatMatches(ShouldRecord)
+            .Do(p => Find.CurrentMap.weatherManager.eventHandler.AddEvent(new WeatherEvent_LightningStrike(Find.CurrentMap, p.Position)))
+            .Create();
     }
 }

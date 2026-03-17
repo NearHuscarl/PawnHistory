@@ -38,7 +38,7 @@ public static class DebugOutputsHistoryRecords
                     new TableDataGetter<HistoryRecord>("Timestamp", r => r.date),
                     new TableDataGetter<HistoryRecord>("Date", r => compHistory.GetShortDate(r)),
                     new TableDataGetter<HistoryRecord>("label", r => r.def.label),
-                    new TableDataGetter<HistoryRecord>("description", r => r.GetDescription()),
+                    new TableDataGetter<HistoryRecord>("description", r => r.description),
                     new TableDataGetter<HistoryRecord>("concerns", r => string.Join(", ", r.concerns.Select(c =>
                     {
                         if (c == null) return "null";

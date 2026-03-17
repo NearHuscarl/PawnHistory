@@ -94,18 +94,24 @@
 
 	<RulePackDef>
 		<defName>PawnEvent_VisitorArrived</defName>
+		<include>
+			<li>PawnEvent_Common</li>
+		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>visitorArrived->[PAWN][OTHERS] from [FACTION] arrived to visit the colony.</li>
+				<li>visitorArrived->[PAWN][AndOthers] from [FACTION] arrived to visit the colony.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
 
 	<RulePackDef>
 		<defName>PawnEvent_TravelGroupArrived</defName>
+		<include>
+			<li>PawnEvent_Common</li>
+		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>travelGroupArrived->[PAWN][OTHERS] from [FACTION] passed by the colony.</li>
+				<li>travelGroupArrived->[PAWN][AndOthers] from [FACTION] passed by the colony.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -126,7 +132,6 @@
 				<li>mentalBreak(name==Wander_Psychotic)    ->[PAWN] wandered around in a psychotic state. [REASON]</li>
 				<li>mentalBreak(name==Wander_Sad)          ->[PAWN] broke down and wandered around in sadness. [REASON]</li>
 				<li>mentalBreak(name==Wander_OwnRoom)      ->[PAWN] hid in [PAWN_possessive] room. [REASON]</li>
-				<li>mentalBreak(name==Catatonic)           ->[PAWN] suffered a total mental breakdown and entered a catatonic state. [PAWN_pronoun] would recover in several days. [REASON]</li>
 				<li>mentalBreak(name==Tantrum)             ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash up random furniture, items and structures. [REASON]</li>
 				<li>mentalBreak(name==TargetedTantrum)     ->[PAWN] had a tantrum. [PAWN_pronoun] was going to destroy [THING]. [REASON]</li>
 				<li>mentalBreak(name==BedroomTantrum)      ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash things in [PAWN_possessive] room. [REASON]</li>

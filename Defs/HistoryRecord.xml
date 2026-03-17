@@ -92,6 +92,11 @@
 		<descriptionMaker>PawnEvent_MentalBreak</descriptionMaker>
 		<icon>Ui/Icons/ColonistBar/MentalStateAggro</icon>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>SocialFight</defName>
+		<label>social fight</label>
+		<icon>Ui/Icons/ColonistBar/MentalStateAggro</icon>
+	</HistoryRecordDef>
 
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonBreak</defName>

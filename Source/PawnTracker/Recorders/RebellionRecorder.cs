@@ -17,13 +17,13 @@ internal class RebellionRecorder : RecorderBase
 
     private void HandlePrisonBreakEvent(PrisonBreakStartedEvent e)
     {
-        var eventDef = HistoryRecordDefOf.PrisonBreak;
+        var recordDef = HistoryRecordDefOf.PrisonBreak;
         var others = e.EscapingPrisoners.Where(p => p != e.Initiator).ToList();
         var concerns = e.EscapingPrisoners.Cast<Thing>();
 
         foreach (var pawn in e.EscapingPrisoners)
         {
-            var builder = eventDef.ResolveDescription("prisonBreak", pawn)
+            var builder = recordDef.ResolveDescription("prisonBreak", pawn)
                 .AddConstantIf(pawn == e.Initiator, "initiator", "true")
                 .IncludePawnGrammar(pawn == e.Initiator)
                 .AddRuleIf(pawn != e.Initiator, "INITIATOR", e.Initiator);
@@ -33,7 +33,7 @@ internal class RebellionRecorder : RecorderBase
             else
                 builder.WithOthers(others);
 
-            AddRecord(new HistoryRecord(eventDef, pawn, builder.Resolve(), concerns));
+            AddRecord(recordDef, pawn, builder.Resolve(), concerns);
         }
     }
 }

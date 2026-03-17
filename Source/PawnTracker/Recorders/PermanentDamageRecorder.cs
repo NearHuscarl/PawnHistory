@@ -63,16 +63,16 @@ internal class PermanentDamageRecorder : RecorderBase
     // Must be called in PreAdd to retrieve the bad hediff, as MissingBodyPart hediff will remove it at the end of AddHediff().
     private void HandleSurgicalCutEvent(Pawn pawn, Hediff hediff, BodyPartRecord part)
     {
-        var eventDef = HistoryRecordDefOf.BodyPartLost;
+        var recordDef = HistoryRecordDefOf.BodyPartLost;
         var doctor = GetOperatingDoctor(pawn);
         var removeIntent = PartRemovalIntent(pawn, part, out Hediff badHediff);
-        var desc = eventDef.ResolveDescription("bodyPartLostSurgery", pawn)
+        var desc = recordDef.ResolveDescription("bodyPartLostSurgery", pawn)
             .AddRule("DOCTOR", doctor)
             .AddRule("PART", part.Label.Colorize(hediff.LabelColor))
             .AddRule("HEDIFF", badHediff)
             .AddConstant("intent", removeIntent)
             .Resolve();
-        AddRecord(new HistoryRecord(eventDef, pawn, desc, [doctor]));
+        AddRecord(recordDef, pawn, desc, [doctor]);
     }
 
     // Must be called in postfix because hediff.label does not exist in prefix.
@@ -80,8 +80,8 @@ internal class PermanentDamageRecorder : RecorderBase
     {
         var instigator = dinfo?.Instigator as Pawn;
         var weapon = dinfo?.Weapon?.race != null ? dinfo?.Tool?.label /* body part like fist/teeth */ : dinfo?.Weapon?.label;
-        var eventDef = HistoryRecordDefOf.BodyPartLost;
-        var descBuilder = eventDef.ResolveDescription("bodyPartLost", pawn)
+        var recordDef = HistoryRecordDefOf.BodyPartLost;
+        var descBuilder = recordDef.ResolveDescription("bodyPartLost", pawn)
             .AddRule("PART", part.Label.Colorize(hediff.LabelColor))
             .AddRule("HEDIFF", hediff) // <destroyedLabel>
             .AddRule("WEAPON", weapon)
@@ -94,15 +94,15 @@ internal class PermanentDamageRecorder : RecorderBase
                 .AddConstant("hasInstigator", "true");
         }
 
-        AddRecord(new HistoryRecord(eventDef, pawn, descBuilder.Resolve(), [instigator]));
+        AddRecord(recordDef, pawn, descBuilder.Resolve(), [instigator]);
     }
 
     private void HandleScarredPartEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo)
     {
         var instigator = dinfo?.Instigator as Pawn;
         var weapon = dinfo?.Weapon?.race != null ? dinfo?.Tool?.label /* body part like fist/teeth */ : dinfo?.Weapon?.label;
-        var eventDef = HistoryRecordDefOf.BodyPartPermanentlyDamaged;
-        var descBuilder = eventDef.ResolveDescription("bodyPartPermanentlyDamaged", pawn)
+        var recordDef = HistoryRecordDefOf.BodyPartPermanentlyDamaged;
+        var descBuilder = recordDef.ResolveDescription("bodyPartPermanentlyDamaged", pawn)
             .IncludePawnGrammar()
             .AddRule("PART", part.Label.Colorize(hediff.LabelColor))
             .AddRule("HEDIFF", hediff) // <permanentLabel>
@@ -116,7 +116,7 @@ internal class PermanentDamageRecorder : RecorderBase
                 .AddConstant("hasInstigator", "true");
         }
 
-        AddRecord(new HistoryRecord(eventDef, pawn, descBuilder.Resolve(), [instigator]));
+        AddRecord(recordDef, pawn, descBuilder.Resolve(), [instigator]);
     }
 
     public static Pawn GetOperatingDoctor(Pawn patient)

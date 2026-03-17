@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using PawnHistory.Source.PawnTracker.Test;
+using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -26,29 +27,40 @@ internal class FactionArrivalRecorder : RecorderBase
 
     private void HandleVisitStartedEvents(Lord lord, List<Pawn> pawns)
     {
-        var eventDef = HistoryRecordDefOf.VisitorArrived;
+        var recordDef = HistoryRecordDefOf.VisitorArrived;
 
         foreach (var pawn in pawns)
         {
-            var desc = eventDef.ResolveDescription("visitorArrived", pawn)
+            var desc = recordDef.ResolveDescription("visitorArrived", pawn)
                 .WithFaction(lord.faction)
                 .WithOthers(pawns)
                 .Resolve();
-            AddRecord(new HistoryRecord(eventDef, pawn, desc));
+            AddRecord(recordDef, pawn, desc);
         }
     }
 
     private void HandleTravelerGroupStartedEvents(Lord lord, List<Pawn> pawns)
     {
-        var eventDef = HistoryRecordDefOf.TravelGroupArrived;
+        var recordDef = HistoryRecordDefOf.TravelGroupArrived;
 
         foreach (var pawn in pawns)
         {
-            var desc = eventDef.ResolveDescription("travelGroupArrived", pawn)
+            var desc = recordDef.ResolveDescription("travelGroupArrived", pawn)
                 .WithFaction(lord.faction)
                 .WithOthers(pawns)
                 .Resolve();
-            AddRecord(new HistoryRecord(eventDef, pawn, desc));
+            AddRecord(recordDef, pawn, desc);
         }
+    }
+
+    public override void Test(TestScenario scenario)
+    {
+        scenario.CreateIncident(IncidentDefOf.VisitorGroup).PawnCount(1).Execute();
+        scenario.CreateIncident(IncidentDefOf.VisitorGroup).PawnCount(2).Execute();
+        scenario.CreateIncident(IncidentDefOf.VisitorGroup).PawnCount(3).Execute();
+
+        scenario.CreateIncident(IncidentDefOf.TravelerGroup).PawnCount(1).Execute();
+        scenario.CreateIncident(IncidentDefOf.TravelerGroup).PawnCount(2).Execute();
+        scenario.CreateIncident(IncidentDefOf.TravelerGroup).PawnCount(3).Execute();
     }
 }

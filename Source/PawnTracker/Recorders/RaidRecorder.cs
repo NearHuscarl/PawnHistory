@@ -24,7 +24,7 @@ internal class RaidRecorder : RecorderBase
 
     private void HandleRaidFriendlyStartedEvent(List<Pawn> pawns, Faction faction)
     {
-        var eventDef = HistoryRecordDefOf.RaidFriendly;
+        var recordDef = HistoryRecordDefOf.RaidFriendly;
         var hostileFaction = pawns[0].MapHeld.lordManager.lords
             .FirstOrDefault(l => l.faction != null && l.faction.HostileTo(faction))
             ?.faction;
@@ -33,14 +33,14 @@ internal class RaidRecorder : RecorderBase
         {
             var rules = new List<Rule>();
             var constants = new Dictionary<string, string>();
-            var desc = eventDef.ResolveDescription("raidFriendly", pawn)
+            var desc = recordDef.ResolveDescription("raidFriendly", pawn)
                 .WithFaction(faction)
                 .WithOthers(pawns)
                 .AddConstantIf(hostileFaction != null, "hostileFaction", "true") // not manhunter/insect
                 .AddRule("HOSTILEFACTION", hostileFaction)
                 .Resolve();
 
-            AddRecord(new HistoryRecord(eventDef, pawn, desc));
+            AddRecord(recordDef, pawn, desc);
         }
     }
 
@@ -66,16 +66,16 @@ internal class RaidRecorder : RecorderBase
         else if (raidStrategy.defName.StartsWith("Siege"))
             raidProperty = RaidProperty.Siege;
 
-        var eventDef = HistoryRecordDefOf.Raid;
+        var recordDef = HistoryRecordDefOf.Raid;
 
         foreach (var pawn in pawns)
         {
-            var desc = eventDef.ResolveDescription("raid", pawn)
+            var desc = recordDef.ResolveDescription("raid", pawn)
                 .WithFaction(faction)
                 .WithOthers(pawns)
                 .AddConstant("raidProperty", raidProperty)
                 .Resolve();
-            AddRecord(new HistoryRecord(eventDef, pawn, desc));
+            AddRecord(recordDef, pawn, desc);
         }
     }
 }

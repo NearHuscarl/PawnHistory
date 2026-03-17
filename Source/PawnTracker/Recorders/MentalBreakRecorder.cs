@@ -1,25 +1,19 @@
 ﻿using PawnHistory.Source.DebugTools;
 using PawnHistory.Source.Helper;
+using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Analytics;
 using Verse;
 using Verse.AI;
+using Verse.Noise;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
 internal class MentalBreakRecorder : RecorderBase
 {
-    private static bool debugShowReason = false;
-
-    [NearDebugAction]
-    public static void ForceDisplayMentalBreakReason()
-    {
-        debugShowReason = !debugShowReason;
-        Log.Message($"[MentalBreakRecorder] Force display reason is now: {debugShowReason}");
-    }
-
     public override void Register()
     {
         GameEventBus.Subscribe<MentalBreakStartEvent>(e =>
@@ -65,11 +59,11 @@ internal class MentalBreakRecorder : RecorderBase
         target ??= TryFindTarget(pawn.MentalState);
 
         var mentalState = pawn.MentalState; // mentalState could be null in some MentalBreak
-        var eventDef = mentalState?.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
-        var hasCustomDescription = HasCustomDescription(mentalBreak, eventDef);
+        var recordDef = mentalState?.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
+        var hasCustomDescription = HasCustomDescription(mentalBreak, recordDef);
         var rootKeyword = hasCustomDescription ? "mentalBreak" : "mentalBreakDefault";
         var concerns = new List<Thing>() { mentalState?.causedByPawn, target };
-        var descBuilder = eventDef.ResolveDescription(rootKeyword, pawn)
+        var descBuilder = recordDef.ResolveDescription(rootKeyword, pawn)
             .WithFaction(pawn.Faction)
             .IncludePawnGrammar()
             .AddRule("REASON", ParseReason(reason))
@@ -113,12 +107,12 @@ internal class MentalBreakRecorder : RecorderBase
             descBuilder.AddRule("INGAMEDESC", inGameDesc);
         }
 
-        AddRecord(new HistoryRecord(eventDef, pawn, descBuilder.Resolve(), concerns));
+        AddRecord(recordDef, pawn, descBuilder.Resolve(), concerns);
     }
 
-    private static bool HasCustomDescription(MentalBreakDef mentalBreak, HistoryRecordDef eventDef)
+    private static bool HasCustomDescription(MentalBreakDef mentalBreak, HistoryRecordDef recordDef)
     {
-        return eventDef.descriptionMaker.RulesPlusIncludes.Any(rule =>
+        return recordDef.descriptionMaker.RulesPlusIncludes.Any(rule =>
             rule.keyword == "mentalBreak" &&
             rule.constantConstraints != null &&
             rule.constantConstraints.Any(c => c.key == "name" && c.value == mentalBreak.defName)
@@ -145,7 +139,7 @@ internal class MentalBreakRecorder : RecorderBase
         var thisHappenedBecauseOfPoorMood = "MentalStateReason_Mood".Translate().ToString();
 
         if (fullReason.NullOrEmpty())
-            return debugShowReason ? $"{thisHappenedBecauseOfPoorMood.Trim('.')}: {GetMockedReason().Colorize(NeedsCardUtility.MoodColorNegative)}" : "";
+            return "";
 
         var theFinalStrawWas = "FinalStraw".Translate("{0}").ToString();
         var template = $"{thisHappenedBecauseOfPoorMood}\n\n{theFinalStrawWas}";
@@ -165,17 +159,61 @@ internal class MentalBreakRecorder : RecorderBase
         return fullReason;
     }
 
-    private static string GetMockedReason()
+    public override void Test(TestScenario scenario)
     {
-        var randomNegativeThought = DefDatabase<ThoughtDef>.AllDefs
-            .Where(t => t.stages != null && t.stages.Any(s => s != null && s.baseMoodEffect < 0))
-            .RandomElementWithFallback();
+        scenario.Thing()
+            .BuildRoom(6, 6, tag: "Prison")
+            .AsPrison(prisonerCount: 2) // Jailbreaker
+            .Execute();
 
-        var fakeReason = randomNegativeThought != null
-            ? randomNegativeThought.stages[0].label
-            : "[Unknown Debug Reason]";
+        scenario.Thing()
+            .BuildRoom(MapBuilder.Beside("Prison", Rot4.North, 5, 5), "Grave")
+            .WithGrave() // CorpseObsession
+            .Execute();
 
-        Log.Message($"[PawnHistory] Mental Break had no reason. Injected: {fakeReason}");
-        return fakeReason;
+        scenario.Thing()
+            .BuildRoom(MapBuilder.Beside("Prison", Rot4.East, 7, 7), "Bedroom")
+            .AsBarrack(bedCount: 2) // BedroomTantrum
+            .WithThing(ThingDefOf.GoJuice) // Binging_DrugExtreme
+            .WithThing(ThingDefOf.Beer) // Binging_DrugMajor
+            .Execute();
+
+        scenario.Thing()
+            .BuildRoom(MapBuilder.Beside("Prison", Rot4.South, 18, 7), "Freezer")
+            .WithThing(ThingDefOf.MealFine, 300) // Binging_Food
+            .Execute();
+
+        scenario.Thing()
+            .BuildRoom(MapBuilder.Beside("Prison", Rot4.West, 5, 5), "Common")
+            .Execute();
+
+        scenario.Pawn()
+            .AsColonyAnimal() // Slaughterer
+            .CreateSingle();
+
+        var mentalBreaks = DefDatabase<MentalBreakDef>.AllDefs.ToList();
+
+        var pawns = scenario.Pawn(mentalBreaks.Count)
+            .ThatMatches(ShouldRecord)
+            .WithPosition(TestScenario.TaggedRooms["Prison"].CenterCell, 4)
+            .Do(p => p.story?.traits?.allTraits.Clear())
+            .Do(p => p.story?.traits?.GainTrait(new Trait(TraitDefOf.Pyromaniac))) // FireStartingSpree
+            .Do((p, i) =>
+            {
+                if (mentalBreaks[i].defName == "BedroomTantrum" || mentalBreaks[i].defName.Contains("Wander_OwnRoom"))
+                {
+                    var bed = p.Map.listerBuildings.AllBuildingsColonistOfClass<Building_Bed>()
+                        .FirstOrDefault(b => TestScenario.TaggedRooms["Bedroom"].Contains(b.Position) && b.AnyUnownedSleepingSlot);
+                    if (bed != null)
+                        p.ownership.ClaimBedIfNonMedical(bed);
+                }
+            })
+            .Create();
+
+        TickDelayManager.Delay(10, () =>
+        {
+            for (var i = 0; i < pawns.Count; i++)
+                scenario.StartMentalBreak(pawns[i], mentalBreaks[i]);
+        });
     }
 }

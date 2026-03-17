@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using PawnHistory.Source.DebugTools;
+using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System;
 using System.Linq;
@@ -9,55 +10,6 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 internal class CasualtyRecorder : RecorderBase
 {
-    [NearDebugAction]
-    public static void EveryoneOnFire()
-    {
-        var pawns = Find.CurrentMap.mapPawns.AllPawnsSpawned
-            .Where(p => p != null && p.relations != null && p.RaceProps?.Humanlike == true)
-            .ToList();
-
-        foreach (var pawn in pawns)
-            FireUtility.TryAttachFire(pawn, 1.75f, null);
-
-        Messages.Message("Everyone is now on fire!", MessageTypeDefOf.NeutralEvent);
-    }
-
-    [NearDebugAction]
-    public static void OneBigFamily()
-    {
-        var pawns = Find.CurrentMap.mapPawns.AllPawnsSpawned
-            .Where(p => p != null && p.relations != null && p.RaceProps?.Humanlike == true)
-            .ToList();
-
-        if (pawns.Count < 2)
-            return;
-
-        var possibleRelations = DefDatabase<PawnRelationDef>.AllDefsListForReading.Where(def => def != null && def.defName != "Bond").ToList();
-
-        foreach (var pawn in pawns)
-        {
-            var other = pawns.Where(p => p != pawn).RandomElementWithFallback(null);
-            if (other == null)
-                continue;
-
-            var relation = possibleRelations.RandomElement();
-
-            if (pawn.relations.DirectRelationExists(relation, other))
-                continue;
-
-            try
-            {
-                pawn.relations.AddDirectRelation(relation, other);
-            }
-            catch (Exception ex)
-            {
-                Log.Warning($"OneBigFamily: Failed to add relation {relation.defName} between {pawn} and {other}: {ex}");
-            }
-        }
-
-        Messages.Message("Everyone is now related to one random person on map!", MessageTypeDefOf.NeutralEvent);
-    }
-
     static readonly AccessTools.FieldRef<BattleLogEntry_RangedImpact, Pawn> OriginalTargetPawnRef =
         AccessTools.FieldRefAccess<BattleLogEntry_RangedImpact, Pawn>("originalTargetPawn");
 
@@ -89,7 +41,7 @@ internal class CasualtyRecorder : RecorderBase
             return;
 
         var isKillLog = e.Casualty == CasualtyType.Killed;
-        var eventDef = isKillLog ? HistoryRecordDefOf.Death : HistoryRecordDefOf.Downed;
+        var recordDef = isKillLog ? HistoryRecordDefOf.Death : HistoryRecordDefOf.Downed;
 
         if (!isKillLog && CompHistoryManager.GetComp(e.Subject).records.LastOrDefault()?.def == HistoryRecordDefOf.Death)
         {
@@ -106,7 +58,7 @@ internal class CasualtyRecorder : RecorderBase
         {
             var hediffInt = e.Subject.health.hediffSet.hediffs.Where(h => h.def == e.CulpritHediff).OrderBy(h => h.ageTicks).FirstOrDefault();
             var rootKeyword = isKillLog ? "KilledEntry" : "DownedEntry";
-            desc = eventDef.ResolveDescription(rootKeyword, e.Subject)
+            desc = recordDef.ResolveDescription(rootKeyword, e.Subject)
                 .AddRule("Hediff", hediffInt, hediffInt?.Part)
                 .AddConstantIf(e.CulpritHediff != null, "reason", "true")
                 .Resolve();
@@ -114,7 +66,7 @@ internal class CasualtyRecorder : RecorderBase
         else
             desc = $"{combatLogText} {transitionText}";
 
-        AddRecord(new HistoryRecord(eventDef, e.Subject, desc, [e.Initiator, originalTarget]));
+        AddRecord(recordDef, e.Subject, desc, [e.Initiator, originalTarget]);
 
         if (isKillLog)
             HandleRelativeDeathEvent(e.Subject, e.Initiator, originalTarget, combatLogText, transitionText, desc);
@@ -122,7 +74,7 @@ internal class CasualtyRecorder : RecorderBase
 
     private void HandleRelativeDeathEvent(Pawn deceased, Pawn initiator, Pawn originalTarget, string combatLogText, string transitionText, string deathDesc)
     {
-        var eventDef = HistoryRecordDefOf.RelativeDeath;
+        var recordDef = HistoryRecordDefOf.RelativeDeath;
         var deceasedName = deceased.NameShortColored.Resolve();
 
         foreach (var relative in deceased.relations.PotentiallyRelatedPawns)
@@ -133,7 +85,7 @@ internal class CasualtyRecorder : RecorderBase
             var relationDef = relative.GetMostImportantRelation(deceased);
             if (relationDef == null) continue;
 
-            var relativePov = eventDef.ResolveDescription("RelativePov", relative)
+            var relativePov = recordDef.ResolveDescription("RelativePov", relative)
                 .AddRule("Relation", relationDef.GetGenderSpecificLabel(deceased))
                 .AddRule("Subject", deceased)
                 .Resolve();
@@ -143,7 +95,7 @@ internal class CasualtyRecorder : RecorderBase
                 ? transitionText.ReplaceFirst(deceasedName, relativePov) + " " + combatLogText
                 : deathDesc.ReplaceFirst(deceasedName, relativePov);
 
-            AddRecord(new HistoryRecord(eventDef, relative, desc, [deceased, initiator, originalTarget]));
+            AddRecord(recordDef, relative, desc, [deceased, initiator, originalTarget]);
         }
     }
 
@@ -154,6 +106,20 @@ internal class CasualtyRecorder : RecorderBase
 
         var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Initiator);
         var desc = $"{combatLogText} {transitionText}";
-        AddRecord(new HistoryRecord(HistoryRecordDefOf.Kill, e.Initiator, desc, [e.Subject, originalTarget]));
+        AddRecord(HistoryRecordDefOf.Kill, e.Initiator, desc, [e.Subject, originalTarget]);
+    }
+
+    public override void Test(TestScenario scenario)
+    {
+        scenario.Pawn(15)
+            .WithKind(PawnKindDefOf.PirateBoss)
+            .ThatMatches(ShouldRecord)
+            .FullHeal()
+            .WithRandomRelations(5)
+            .MakeHostile()
+            .Create();
+
+        DebugViewSettings.neverForceNormalSpeed = true;
+        Find.TickManager.CurTimeSpeed = TimeSpeed.Ultrafast;
     }
 }

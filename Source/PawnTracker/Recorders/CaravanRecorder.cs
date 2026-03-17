@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using PawnHistory.Source.PawnTracker.Test;
+using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -32,17 +33,17 @@ internal class CaravanRecorder : RecorderBase
 
     private void HandleCaravanTradeArrivedEvents(Lord lord, List<Pawn> pawns)
     {
-        var eventDef = HistoryRecordDefOf.TradeCaravanArrived;
+        var recordDef = HistoryRecordDefOf.TradeCaravanArrived;
         var trader = pawns.FirstOrDefault(p => p.trader != null);
         var traderKind = trader?.trader?.traderKind?.label ?? "trader";
 
         foreach (var pawn in pawns)
         {
-            var desc = eventDef.ResolveDescription("tradeCaravanArrived", pawn)
+            var desc = recordDef.ResolveDescription("tradeCaravanArrived", pawn)
                 .WithFaction(lord.faction)
                 .AddRule("TraderKind", traderKind)
                 .Resolve();
-            AddRecord(new HistoryRecord(eventDef, pawn, desc));
+            AddRecord(recordDef, pawn, desc);
         }
     }
 
@@ -77,18 +78,23 @@ internal class CaravanRecorder : RecorderBase
             || nextToil is LordToil_ExitMap
             || nextToil is LordToil_ExitMapTraderFighting)
         {
-            var eventDef = HistoryRecordDefOf.TradeCaravanLeft;
+            var recordDef = HistoryRecordDefOf.TradeCaravanLeft;
 
             foreach (var pawn in pawns)
             {     
-                var desc = eventDef.ResolveDescription("tradeCaravanLeft", pawn)
+                var desc = recordDef.ResolveDescription("tradeCaravanLeft", pawn)
                     .WithFaction(lord.faction)
                     .WithOthers(pawns)
                     .AddRule("TraderKind", traderKind)
                     .AddConstant("reason", reason)
                     .Resolve();
-                AddRecord(new HistoryRecord(eventDef, pawn, desc));
+                AddRecord(recordDef, pawn, desc);
             }
         }
+    }
+
+    public override void Test(TestScenario scenario)
+    {
+        scenario.CreateIncident(IncidentDefOf.TraderCaravanArrival).PawnCount(4).Execute();
     }
 }

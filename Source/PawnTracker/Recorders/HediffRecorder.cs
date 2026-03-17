@@ -1,4 +1,6 @@
-﻿using RimWorld;
+﻿using PawnHistory.Source.PawnTracker.Test;
+using RimWorld;
+using System.Linq;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
@@ -26,6 +28,16 @@ internal class HediffRecorder : RecorderBase
             .AddRule("ANESTHETIC", hediff)
             .Resolve();
 
-        AddRecord(new HistoryRecord(HistoryRecordDefOf.Anesthetized, pawn, desc));
+        AddRecord(HistoryRecordDefOf.Anesthetized, pawn, desc);
+    }
+
+    public override void Test(TestScenario scenario)
+    {
+        var patient = scenario.Pawn()
+            .ThatMatches(ShouldRecord)
+            .ThatMatches(p => p.health.hediffSet.hediffs.All(h => h.def != HediffDefOf.Anesthetic))
+            .Do(p => p.health.AddHediff(HediffDefOf.Anesthetic))
+            .CreateSingle();
+        scenario.OpenHistoryRecordTab(patient);
     }
 }
