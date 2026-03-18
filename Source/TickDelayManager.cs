@@ -4,27 +4,73 @@ using Verse;
 
 namespace PawnHistory.Source;
 
+#pragma warning disable CS9113 // Parameter is unread.
 public class TickDelayManager(Game game) : GameComponent
+#pragma warning restore CS9113 // Parameter is unread.
 {
-    private readonly List<(int tick, Action action)> queue = [];
-
-    public static void Delay(int ticks, Action action)
+    public class ScheduledAction
     {
-        var comp = Current.Game.GetComponent<TickDelayManager>();
-        comp.queue.Add((Find.TickManager.TicksGame + ticks, action));
+        public int ExecuteTick;
+        public int Interval;
+        public Action Action;
+        public bool Repeat;
+        public bool Cancelled;
     }
+
+    private static readonly List<ScheduledAction> actions = [];
 
     public override void GameComponentTick()
     {
-        var current = Find.TickManager.TicksGame;
+        var currentTick = Find.TickManager.TicksGame;
 
-        for (var i = queue.Count - 1; i >= 0; i--)
+        for (var i = actions.Count - 1; i >= 0; i--)
         {
-            if (queue[i].tick <= current)
+            var a = actions[i];
+
+            if (a.Cancelled)
             {
-                queue[i].action?.Invoke();
-                queue.RemoveAt(i);
+                actions.RemoveAt(i);
+                continue;
+            }
+
+            if (currentTick >= a.ExecuteTick)
+            {
+                a.Action?.Invoke();
+
+                if (a.Repeat && !a.Cancelled)
+                    a.ExecuteTick = currentTick + a.Interval;
+                else
+                    actions.RemoveAt(i);
             }
         }
+    }
+
+    public static void Delay(int ticks, Action action)
+    {
+        actions.Add(new ScheduledAction
+        {
+            ExecuteTick = Find.TickManager.TicksGame + ticks,
+            Action = action,
+            Repeat = false
+        });
+    }
+
+    public static ScheduledAction Interval(int interval, Action action)
+    {
+        var a = new ScheduledAction
+        {
+            ExecuteTick = Find.TickManager.TicksGame + interval,
+            Interval = interval,
+            Action = action,
+            Repeat = true
+        };
+
+        actions.Add(a);
+        return a;
+    }
+
+    public static void Cancel(ScheduledAction action)
+    {
+        action?.Cancelled = true;
     }
 }

@@ -1,4 +1,5 @@
-﻿using PawnHistory.Source.PawnTracker.Test;
+﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
 using Verse;
@@ -13,11 +14,11 @@ internal class LightningStrikeRecorder : RecorderBase
 
     public override void Register()
     {
-        GameEventBus.Subscribe<LightningStrikeEvent>(e =>
+        GameEventBus.Subscribe<LightningStrikedEvent>(e =>
         {
             strikes.Add((e.Map, e.StrikeLoc, Find.TickManager.TicksGame, e.Radius));
         });
-        GameEventBus.Subscribe<HediffPostAddEvent>(e =>
+        GameEventBus.Subscribe<HediffAddedEvent>(e =>
         {
             strikes.RemoveAll(s => Find.TickManager.TicksGame - s.tick > 10);
 

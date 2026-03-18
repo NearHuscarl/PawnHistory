@@ -1,9 +1,9 @@
-﻿using RimWorld;
+﻿using PawnHistory.Source.PawnTracker.Events;
+using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using Verse.Grammar;
-using static RimWorld.PsychicRitualRoleDef;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -11,7 +11,7 @@ internal class RaidRecorder : RecorderBase
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<RaidEvent>(e =>
+        GameEventBus.Subscribe<RaidStartedEvent>(e =>
         {
             var pawns = e.Pawns.Where(ShouldRecord).ToList();
 

@@ -1,4 +1,5 @@
-﻿using PawnHistory.Source.PawnTracker.Test;
+﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
 using Verse;

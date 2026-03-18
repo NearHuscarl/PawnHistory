@@ -43,29 +43,57 @@ public static class RecorderManager
 
             foreach (var method in methods)
             {
-                // Check if method starts with "Test" and accepts exactly one TestScenario parameter
-                if (method.Name.StartsWith("Test"))
-                {
-                    var parameters = method.GetParameters();
-                    if (parameters.Length == 1 && parameters[0].ParameterType == typeof(TestScenario))
-                    {
-                        var label = (method.Name == "Test")
-                            ? buttonName
-                            : $"{buttonName}_{method.Name.ReplaceFirst("Test", "")}";
+                if (!method.Name.StartsWith("Test"))
+                    continue;
 
-                        actionNodes.Add(new DebugActionNode(label, DebugActionType.Action, () =>
+                var parameters = method.GetParameters();
+                var label = (method.Name == "Test")
+                    ? buttonName
+                    : $"{buttonName}_{method.Name.ReplaceFirst("Test", "")}";
+
+                // CASE 1: Standard Test(TestScenario scenario)
+                if (parameters.Length == 1 && parameters[0].ParameterType == typeof(TestScenario))
+                {
+                    actionNodes.Add(new DebugActionNode(label, DebugActionType.Action, () =>
+                    {
+                        try
                         {
                             TestScenario.ClearAll();
-                            try
+                            method.Invoke(recorder, [testScenario]);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"[PawnHistory] Failed to run recorder test {label}\n\n{ex}");
+                        }
+                    }));
+                }
+                // CASE 2: Parameterized Test(TestScenario scenario, int count)
+                else if (parameters.Length == 2 && parameters[0].ParameterType == typeof(TestScenario) && parameters[1].ParameterType == typeof(int))
+                {
+                    var parentNode = new DebugActionNode(label, DebugActionType.Action, () =>
+                    {
+                        var options = new List<DebugMenuOption>();
+                        int[] counts = [1, 2, 3, 5, 10];
+
+                        foreach (int count in counts)
+                        {
+                            options.Add(new DebugMenuOption($"{parameters[1].Name}: {count}", DebugMenuOptionMode.Action, () =>
                             {
-                                method.Invoke(recorder, [testScenario]);
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Error($"[PawnHistory] Failed to run recorder test {label}\n\n{ex}");
-                            }
-                        }));
-                    }
+                                try
+                                {
+                                    TestScenario.ClearAll();
+                                    method.Invoke(recorder, [testScenario, count]);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Error($"[PawnHistory] Failed to run recorder test {label}\n\n{ex}");
+                                }
+                            }));
+                        }
+                        Find.WindowStack.Add(new Dialog_DebugOptionListLister(options));
+                    });
+
+                    actionNodes.Add(parentNode);
                 }
             }
         }

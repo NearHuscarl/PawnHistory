@@ -4,6 +4,23 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
+public enum CasualtyType
+{
+    Killed,
+    Downed,
+}
+
+public class CasualtyLogAddedEvent(Battle battle, BattleLogEntry_StateTransition transitionEntry, LogEntry_DamageResult lastDamageEntry, Pawn initiator, Pawn subject, CasualtyType casualty, HediffDef culpritHediff) : GameEventBase
+{
+    public Battle Battle { get; } = battle;
+    public BattleLogEntry_StateTransition TransitionEntry { get; } = transitionEntry;
+    public LogEntry_DamageResult LastDamageEntry { get; } = lastDamageEntry;
+    public Pawn Initiator { get; } = initiator;
+    public Pawn Subject { get; } = subject;
+    public CasualtyType Casualty { get; } = casualty;
+    public HediffDef CulpritHediff { get; } = culpritHediff;
+}
+
 [HarmonyPatch(typeof(BattleLog), nameof(BattleLog.Add))]
 public static class BattleLog_Add_Patch
 {

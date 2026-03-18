@@ -1,4 +1,5 @@
-﻿using PawnHistory.Source.PawnTracker.Test;
+﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,14 +54,12 @@ internal class FactionArrivalRecorder : RecorderBase
         }
     }
 
-    public override void Test(TestScenario scenario)
+    public void TestVisitorGroup(TestScenario scenario, int pawnCount)
     {
-        scenario.CreateIncident(IncidentDefOf.VisitorGroup).PawnCount(1).Execute();
-        scenario.CreateIncident(IncidentDefOf.VisitorGroup).PawnCount(2).Execute();
-        scenario.CreateIncident(IncidentDefOf.VisitorGroup).PawnCount(3).Execute();
-
-        scenario.CreateIncident(IncidentDefOf.TravelerGroup).PawnCount(1).Execute();
-        scenario.CreateIncident(IncidentDefOf.TravelerGroup).PawnCount(2).Execute();
-        scenario.CreateIncident(IncidentDefOf.TravelerGroup).PawnCount(3).Execute();
+        scenario.CreateIncident(IncidentDefOf.VisitorGroup).PawnCount(pawnCount).Execute();
+    }
+    public void TestTravelerGroup(TestScenario scenario, int pawnCount)
+    {
+        scenario.CreateIncident(IncidentDefOf.TravelerGroup).PawnCount(pawnCount).Execute();
     }
 }

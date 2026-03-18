@@ -4,6 +4,13 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
+public class SocialFightStartedEvent(PlayLogEntry_Interaction interactionEntry, Pawn initiator, Pawn recipient) : GameEventBase
+{
+    public PlayLogEntry_Interaction InteractionEntry { get; } = interactionEntry;
+    public Pawn Initiator { get; } = initiator;
+    public Pawn Recipient { get; } = recipient;
+}
+
 [HarmonyPatch(typeof(PlayLog), nameof(PlayLog.Add))]
 internal class PlayLog_Add_Patch
 {

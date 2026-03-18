@@ -1,14 +1,12 @@
-﻿using PawnHistory.Source.DebugTools;
-using PawnHistory.Source.Helper;
+﻿using PawnHistory.Source.Helper;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.Analytics;
 using Verse;
 using Verse.AI;
-using Verse.Noise;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -157,6 +155,35 @@ internal class MentalBreakRecorder : RecorderBase
         }
 
         return fullReason;
+    }
+
+    public void TestNaturalBreak(TestScenario scenario)
+    {
+        var pawn = scenario.Pawn()
+            .ThatMatches(ShouldRecord)
+            .WithFaction(Faction.OfPlayer)
+            .CreateSingle();
+
+        Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
+
+        var interval = TickDelayManager.Interval(200, () =>
+        {
+            pawn.needs.mood.CurLevel = 0;
+            pawn.needs.food.CurLevel = 0;
+            pawn.needs.joy.CurLevel = 0;
+            pawn.needs.beauty.CurLevel = 0;
+            pawn.needs.comfort.CurLevel = 0;
+            pawn.needs.rest.CurLevel = 0.05f;
+        });
+
+        // MentalBreaker.CurrentDesiredMoodBreakIntensity -> only allows mental break after 2000 ticks
+        TickDelayManager.Delay(2500, () =>
+        {
+            pawn.jobs?.EndCurrentJob(JobCondition.InterruptForced); // wake the fuck up
+            pawn.mindState.mentalBreaker.TryDoRandomMoodCausedMentalBreak();
+            TickDelayManager.Cancel(interval);
+            Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
+        });
     }
 
     public override void Test(TestScenario scenario)

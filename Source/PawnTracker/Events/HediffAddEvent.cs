@@ -6,6 +6,22 @@ using static Verse.DamageWorker;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
+public class HediffAddEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo) : GameEventBase
+{
+    public Pawn Pawn { get; } = pawn;
+    public Hediff Hediff { get; } = hediff;
+    public BodyPartRecord Part { get; } = part;
+    public DamageInfo? Dinfo { get; } = dinfo;
+}
+
+public class HediffAddedEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo) : GameEventBase
+{
+    public Pawn Pawn { get; } = pawn;
+    public Hediff Hediff { get; } = hediff;
+    public BodyPartRecord Part { get; } = part;
+    public DamageInfo? Dinfo { get; } = dinfo;
+}
+
 [HarmonyPatch(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.AddHediff), [typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo?), typeof(DamageResult)])]
 internal class Pawn_HealthTracker_AddHediff_Patch
 {
@@ -39,12 +55,12 @@ internal class Pawn_HealthTracker_AddHediff_Patch
     {
         var pawn = PawnRef(__instance);
         var part = hediff.Part;
-        GameEventBus.Publish(new HediffPreAddEvent(pawn, hediff, part, dinfo));
+        GameEventBus.Publish(new HediffAddEvent(pawn, hediff, part, dinfo));
     }
 
     static void Postfix(Pawn_HealthTracker __instance, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo, DamageResult result)
     {
         var pawn = PawnRef(__instance);
-        GameEventBus.Publish(new HediffPostAddEvent(pawn, hediff, hediff.Part, dinfo));
+        GameEventBus.Publish(new HediffAddedEvent(pawn, hediff, hediff.Part, dinfo));
     }
 }

@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using PawnHistory.Source.PawnTracker.Events;
+using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -15,7 +16,7 @@ internal class PermanentDamageRecorder : RecorderBase
         // - Normal: PreAddHediff(hediff) > PostAddHediff(hediff)
         // - If a hediff causes missing part: PreAddHediff(SurgicalCut) > PreAddHediff(MissingBodyPart) > PostAddHediff(MissingBodyPart) > PostAddHediff(SurgicalCut)
         // Reference: DamageWorker_AddInjury.FinalizeAndAddInjury()
-        GameEventBus.Subscribe<HediffPreAddEvent>(e =>
+        GameEventBus.Subscribe<HediffAddEvent>(e =>
         {
             var pawn = e.Pawn;
             var hediff = e.Hediff;
@@ -29,7 +30,7 @@ internal class PermanentDamageRecorder : RecorderBase
                 HandleSurgicalCutEvent(pawn, hediff, part);
         });
 
-        GameEventBus.Subscribe<HediffPostAddEvent>(e =>
+        GameEventBus.Subscribe<HediffAddedEvent>(e =>
         {
             var pawn = e.Pawn;
             var hediff = e.Hediff;

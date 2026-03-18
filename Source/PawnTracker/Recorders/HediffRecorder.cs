@@ -1,4 +1,5 @@
-﻿using PawnHistory.Source.PawnTracker.Test;
+﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Linq;
 using Verse;
@@ -9,7 +10,7 @@ internal class HediffRecorder : RecorderBase
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<HediffPostAddEvent>(e =>
+        GameEventBus.Subscribe<HediffAddedEvent>(e =>
         {
             var pawn = e.Pawn;
             var hediff = e.Hediff;

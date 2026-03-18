@@ -4,6 +4,13 @@ using Verse.AI;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
+public class JobStartedEvent(Pawn pawn, Job oldJob, Job newJob) : GameEventBase
+{
+    public Pawn Pawn { get; } = pawn;
+    public Job OldJob { get; } = oldJob;
+    public Job NewJob { get; } = newJob;
+}
+
 [HarmonyPatch(typeof(Pawn_JobTracker), nameof(Pawn_JobTracker.StartJob))]
 public static class Pawn_JobTracker_StartJob_Patch
 {

@@ -26,6 +26,8 @@ namespace PawnHistory.Source.PawnTracker;
 
 // Events:
 // Skill level up/down
+// - Reason: Become a __ (lvl x) at social after selling [1st expensive item], [2nd expensive item] and x others
+// - Reason: Become a __ (lvl x) at doctor after doing x surgeries
 // Crawling to safety
 // Social gathering: Party, wedding, ritual...
 // Social fight
