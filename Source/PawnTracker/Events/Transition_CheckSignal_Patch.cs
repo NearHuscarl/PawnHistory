@@ -5,7 +5,7 @@ using System.Reflection.Emit;
 using Verse;
 using Verse.AI.Group;
 
-namespace PawnHistory.Source.PawnTracker.Harmony;
+namespace PawnHistory.Source.PawnTracker.Events;
 
 [HarmonyPatch(typeof(Transition), nameof(Transition.CheckSignal))]
 public static class Transition_CheckSignal_Patch

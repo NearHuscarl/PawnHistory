@@ -1,13 +1,11 @@
-﻿using PawnHistory.Source.PawnTracker;
-using Verse;
+﻿using Verse;
 
-namespace PawnHistory.Source.PawnTracker
+namespace PawnHistory.Source.PawnTracker;
+
+public class HistoryRecordDef : Def
 {
-    public class HistoryRecordDef : Def
-    {
-        public string icon;
-        public RulePackDef descriptionMaker;
-    }
+    public string icon;
+    public RulePackDef descriptionMaker;
 }
 
 public static class HistoryRecordDefExtension

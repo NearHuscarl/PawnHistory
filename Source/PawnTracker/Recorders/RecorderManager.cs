@@ -38,14 +38,35 @@ public static class RecorderManager
         {
             var type = recorder.GetType();
             var testMethod = type.GetMethod("Test", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var buttonName = type.Name.Replace("Recorder", "");
+            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
-            if (testMethod != null)
+            foreach (var method in methods)
             {
-                actionNodes.Add(new DebugActionNode(type.Name.Replace("Recorder", ""), DebugActionType.Action, () =>
+                // Check if method starts with "Test" and accepts exactly one TestScenario parameter
+                if (method.Name.StartsWith("Test"))
                 {
-                    TestScenario.ClearAll();
-                    recorder.Test(testScenario);
-                }));
+                    var parameters = method.GetParameters();
+                    if (parameters.Length == 1 && parameters[0].ParameterType == typeof(TestScenario))
+                    {
+                        var label = (method.Name == "Test")
+                            ? buttonName
+                            : $"{buttonName}_{method.Name.ReplaceFirst("Test", "")}";
+
+                        actionNodes.Add(new DebugActionNode(label, DebugActionType.Action, () =>
+                        {
+                            TestScenario.ClearAll();
+                            try
+                            {
+                                method.Invoke(recorder, [testScenario]);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error($"[PawnHistory] Failed to run recorder test {label}\n\n{ex}");
+                            }
+                        }));
+                    }
+                }
             }
         }
 

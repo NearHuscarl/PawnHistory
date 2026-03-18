@@ -2,7 +2,7 @@
 using Verse;
 using Verse.AI;
 
-namespace PawnHistory.Source.PawnTracker.Harmony;
+namespace PawnHistory.Source.PawnTracker.Events;
 
 [HarmonyPatch(typeof(Pawn_JobTracker), nameof(Pawn_JobTracker.StartJob))]
 public static class Pawn_JobTracker_StartJob_Patch

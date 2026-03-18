@@ -36,6 +36,8 @@ public class MapBuilder
         };
 
         GenDebug.ClearArea(rect, map);
+        foreach (var cell in rect)
+            map.zoneManager.ZoneAt(cell)?.RemoveCell(cell);
 
         foreach (var cell in rect.EdgeCells)
         {
@@ -131,7 +133,7 @@ public class MapBuilder
         return this;
     }
 
-    public MapBuilder AsPrison(int prisonerCount)
+    public MapBuilder AsPrison(int prisonerCount, List<Pawn> prisoners = null)
     {
         actions.Add(_ =>
         {
@@ -145,7 +147,7 @@ public class MapBuilder
                 bed.SetFaction(Faction.OfPlayer);
                 bed.ForPrisoners = true;
             }
-            new PawnBuilder(prisonerCount).HumanLike().AsPrisoner().WithPosition(rect.CenterCell).Create();
+            prisoners?.AddRange(new PawnBuilder(prisonerCount).HumanLike().AsPrisoner().WithPosition(rect.CenterCell).Create());
         });
         return this;
     }

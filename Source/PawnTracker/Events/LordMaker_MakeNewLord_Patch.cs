@@ -5,7 +5,7 @@ using System.Reflection.Emit;
 using UnityEngine;
 using Verse.AI.Group;
 
-namespace PawnHistory.Source.PawnTracker.Harmony;
+namespace PawnHistory.Source.PawnTracker.Events;
 
 [HarmonyPatch(typeof(LordMaker), nameof(LordMaker.MakeNewLord))]
 public static class LordMaker_MakeNewLord_Patch

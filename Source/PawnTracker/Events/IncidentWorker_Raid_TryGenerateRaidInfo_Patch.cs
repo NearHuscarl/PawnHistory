@@ -5,7 +5,7 @@ using System.Linq;
 using Verse;
 using Verse.Grammar;
 
-namespace PawnHistory.Source.PawnTracker.Harmony;
+namespace PawnHistory.Source.PawnTracker.Events;
 
 [HarmonyPatch(typeof(IncidentWorker_Raid), nameof(IncidentWorker_Raid.TryGenerateRaidInfo))]
 public static class IncidentWorker_Raid_TryGenerateRaidInfo_Patch

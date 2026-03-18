@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using Verse.AI;
 
-namespace PawnHistory.Source.PawnTracker.Harmony;
+namespace PawnHistory.Source.PawnTracker.Events;
 
 [HarmonyPatch(typeof(MentalState), nameof(MentalState.RecoverFromState))]
 static class RecoverFromState_RecoverFromState_Patch

@@ -55,13 +55,12 @@ public class PawnBuilder(int count = 1)
         return this;
     }
 
-    public PawnBuilder AsColonyAnimal()
+    public PawnBuilder Animal()
     {
-        var animalKinds = DefDatabase<PawnKindDef>.AllDefs.Where(k => k.RaceProps?.Animal ?? false).ToList();
+        var animalKinds = DefDatabase<PawnKindDef>.AllDefs.Where(k => k.RaceProps?.Animal ?? false);
         kind = animalKinds.RandomElement();
 
-        return WithKind(animalKinds.RandomElement())
-            .WithFaction(Faction.OfPlayer);
+        return WithKind(animalKinds.RandomElement());
     }
 
     public PawnBuilder Do(Action<Pawn, int, List<Pawn>> processor)

@@ -188,14 +188,15 @@ internal class MentalBreakRecorder : RecorderBase
             .Execute();
 
         scenario.Pawn()
-            .AsColonyAnimal() // Slaughterer
+            .Animal() // Slaughterer
+            .WithFaction(Faction.OfPlayer)
             .CreateSingle();
 
         var mentalBreaks = DefDatabase<MentalBreakDef>.AllDefs.ToList();
 
         var pawns = scenario.Pawn(mentalBreaks.Count)
             .ThatMatches(ShouldRecord)
-            .WithPosition(TestScenario.TaggedRooms["Prison"].CenterCell, 4)
+            .WithPosition(TestScenario.TaggedRooms["Common"].CenterCell, 4)
             .Do(p => p.story?.traits?.allTraits.Clear())
             .Do(p => p.story?.traits?.GainTrait(new Trait(TraitDefOf.Pyromaniac))) // FireStartingSpree
             .Do((p, i) =>

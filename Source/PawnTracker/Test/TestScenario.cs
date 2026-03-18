@@ -45,7 +45,7 @@ public class TestScenario
     public void StartMentalBreak(Pawn pawn, MentalBreakDef def)
     {
         var randomNegativeThought = DefDatabase<ThoughtDef>.AllDefs
-            .Where(t => t.stages != null && t.stages.Any(s => s != null && s.baseMoodEffect < 0))
+            .Where(t => t.stages != null && t.stages.Any(s => s != null && s.baseMoodEffect < 0) && (!t.label.NullOrEmpty() || !t.stages.First().label.NullOrEmpty()))
             .RandomElementWithFallback();
         var reason = "MentalStateReason_Mood".Translate() + "\n\n" + "FinalStraw".Translate((NamedArgument)randomNegativeThought.LabelCap);
 

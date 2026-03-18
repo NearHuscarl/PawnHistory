@@ -157,6 +157,7 @@
 				<li>WithOthers(OtherCount>=1)   -> with [Others]</li>
 				<li>prisonBreak(initiator==true)->[PAWN] started a prison break. [PAWN_pronoun] broke the locks open and tried to escape[WithOthers].</li>
 				<li>prisonBreak(initiator==)    ->[PAWN][AndOthers] joined [INITIATOR]'s prison break and tried to escape.</li>
+				<li>jailbreaker(initiator==)    ->[Reason] As a result, [PAWN][AndOthers] started a prison break.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

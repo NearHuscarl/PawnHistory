@@ -5,7 +5,7 @@ using System.Reflection;
 using Verse;
 using Verse.AI;
 
-namespace PawnHistory.Source.PawnTracker.Harmony;
+namespace PawnHistory.Source.PawnTracker.Events;
 
 [HarmonyPatch]
 public static class MentalBreakWorker_TryStart_Patch

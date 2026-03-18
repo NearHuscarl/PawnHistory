@@ -3,7 +3,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace PawnHistory.Source.PawnTracker.Harmony;
+namespace PawnHistory.Source.PawnTracker.Events;
 
 [HarmonyPatch(typeof(WeatherEvent_LightningStrike), nameof(WeatherEvent_LightningStrike.DoStrike))]
 public static class WeatherEvent_LightningStrike_DoStrike_Patch

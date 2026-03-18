@@ -2,7 +2,7 @@
 using System.Linq;
 using Verse;
 
-namespace PawnHistory.Source.PawnTracker.Harmony;
+namespace PawnHistory.Source.PawnTracker.Events;
 
 [HarmonyPatch(typeof(BattleLog), nameof(BattleLog.Add))]
 public static class BattleLog_Add_Patch

@@ -25,5 +25,7 @@ internal class HistoryRecordDefOf
     public static HistoryRecordDef SocialFight;
     public static HistoryRecordDef PrisonBreak;
     public static HistoryRecordDef LightningStriked;
+
+    static HistoryRecordDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(HistoryRecordDefOf));
 }
 #pragma warning restore CS0649
