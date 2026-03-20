@@ -1,4 +1,5 @@
 ﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,5 +78,29 @@ internal class RaidRecorder : RecorderBase
                 .Resolve();
             AddRecord(recordDef, pawn, desc);
         }
+    }
+
+    [DebugValues(70, 100, 140, 500)]
+    public void Test(TestScenario scenario, int point)
+    {
+        scenario.Incident(IncidentDefOf.RaidEnemy).Point(point).Execute();
+    }
+
+    public void TestSiege(TestScenario scenario)
+    {
+        scenario.Siege().Point(500).Execute();
+    }
+
+    public void TestCenterDrop(TestScenario scenario)
+    {
+        scenario.Incident(IncidentDefOf.RaidEnemy).Point(500).RaidArrivalMode(PawnsArrivalModeDefOf.CenterDrop).Execute();
+    }
+
+    [DebugValues(70, 100, 140, 500)]
+    public void TestFriendly(TestScenario scenario, int point)
+    {
+        scenario.RaidFriendly()
+            .Point(point)
+            .Execute();
     }
 }

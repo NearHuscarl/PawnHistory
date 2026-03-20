@@ -40,19 +40,31 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Anesthetized</defName>
 		<label>anesthetized</label>
-		<description>{PAWN} was put under {ANESTHETIC}.</description>
+		<description>{PAWN} was put under {Anesthetic}.</description>
 		<icon>EventIcons/Sleep</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>BodyPartLost</defName>
-		<label>body part lost</label>
-		<descriptionMaker>PawnEvent_BodyPartLost</descriptionMaker>
+		<defName>BodyPartDestroyed</defName>
+		<label>body part destroyed</label>
+		<descriptionMaker>PawnEvent_BodyPartDestroyed</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>BodyPartPermanentlyDamaged</defName>
-		<label>body part permanently damaged</label>
-		<descriptionMaker>PawnEvent_BodyPartPermanentlyDamaged</descriptionMaker>
+		<defName>BotchedSurgery</defName>
+		<label>botched surgery</label>
+		<descriptionMaker>PawnEvent_BotchedSurgery</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>BodyPartRemoved</defName>
+		<label>body part removed</label>
+		<descriptionMaker>PawnEvent_BodyPartRemoved</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>BodyPartScarred</defName>
+		<label>body part scarred</label>
+		<descriptionMaker>PawnEvent_BodyPartScarred</descriptionMaker>
 		<icon>EventIcons/Scars</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">

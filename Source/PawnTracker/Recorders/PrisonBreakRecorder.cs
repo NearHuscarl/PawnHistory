@@ -1,4 +1,5 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+﻿using PawnHistory.Source.Helper;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
@@ -88,11 +89,7 @@ internal class PrisonBreakRecorder : RecorderBase
         var pawn = scenario.Pawn()
             .WithPosition(TestScenario.TaggedRooms["Prison"].OutsideOf())
             .ThatMatches(ShouldRecord)
+            .Do(p => p.StartMentalBreakWithMadeupThought(jailbreakerBreak))
             .CreateSingle();
-
-        TickDelayManager.Delay(10, () =>
-        {
-            scenario.StartMentalBreak(pawn, jailbreakerBreak);
-        });
     }
 }

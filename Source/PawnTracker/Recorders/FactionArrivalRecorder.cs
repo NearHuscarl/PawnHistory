@@ -54,12 +54,15 @@ internal class FactionArrivalRecorder : RecorderBase
         }
     }
 
-    public void TestVisitorGroup(TestScenario scenario, int pawnCount)
+    [DebugValues(70, 100, 140, 200)]
+    public void TestVisitorGroup(TestScenario scenario, int point)
     {
-        scenario.CreateIncident(IncidentDefOf.VisitorGroup).PawnCount(pawnCount).Execute();
+        scenario.Incident(IncidentDefOf.VisitorGroup).Point(point).Execute();
     }
-    public void TestTravelerGroup(TestScenario scenario, int pawnCount)
+
+    [DebugValues(70, 100, 140, 200)]
+    public void TestTravelerGroup(TestScenario scenario, int point)
     {
-        scenario.CreateIncident(IncidentDefOf.TravelerGroup).PawnCount(pawnCount).Execute();
+        scenario.Incident(IncidentDefOf.TravelerGroup).Point(point).Execute();
     }
 }

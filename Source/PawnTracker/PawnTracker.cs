@@ -33,6 +33,7 @@ namespace PawnHistory.Source.PawnTracker;
 // Social fight
 // Birthday event
 // Panic Flee
+// Botch surgery
 // Catching fire: handle with permanent/missing hediffs.
 // Craft a legendary item
 // Permanent injury

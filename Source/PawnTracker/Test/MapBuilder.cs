@@ -115,7 +115,7 @@ public class MapBuilder
         return this;
     }
 
-    public MapBuilder AsHospital(int bedCount)
+    public MapBuilder AsHospital(int bedCount, List<Building_Bed> beds = null)
     {
         actions.Add(center =>
         {
@@ -128,9 +128,10 @@ public class MapBuilder
                 var bed = (Building_Bed)GenSpawn.Spawn(ThingMaker.MakeThing(ThingDefOf.Bed, ThingDefOf.Steel), cell, map);
                 bed.SetFaction(Faction.OfPlayer);
                 bed.Medical = true;
+                beds?.Add(bed);
             }
         });
-        return this;
+        return WithThing(ThingDefOf.MedicineUltratech, 30);
     }
 
     public MapBuilder AsPrison(int prisonerCount, List<Pawn> prisoners = null)
@@ -147,10 +148,13 @@ public class MapBuilder
                 bed.SetFaction(Faction.OfPlayer);
                 bed.ForPrisoners = true;
             }
-            prisoners?.AddRange(new PawnBuilder(prisonerCount).HumanLike().AsPrisoner().WithPosition(rect.CenterCell).Create());
+            var pawns = new PawnBuilder(prisonerCount).HumanLike().AsPrisoner().WithPosition(rect.CenterCell).Create();
+            prisoners?.AddRange(pawns);
         });
         return this;
     }
+
+    public MapBuilder WithThing(string defName, int totalCount = 10) => WithThing(DefDatabase<ThingDef>.GetNamed(defName), totalCount);
 
     public MapBuilder WithThing(ThingDef thingDef, int totalCount = 10)
     {

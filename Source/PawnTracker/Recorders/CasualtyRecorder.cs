@@ -2,6 +2,7 @@
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
+using System.Drawing;
 using System.Linq;
 using Verse;
 
@@ -58,7 +59,7 @@ internal class CasualtyRecorder : RecorderBase
             var hediffInt = e.Subject.health.hediffSet.hediffs.Where(h => h.def == e.CulpritHediff).OrderBy(h => h.ageTicks).FirstOrDefault();
             var rootKeyword = isKillLog ? "KilledEntry" : "DownedEntry";
             desc = recordDef.ResolveDescription(rootKeyword, e.Subject)
-                .AddRule("Hediff", hediffInt, hediffInt?.Part)
+                .AddRule("HediffInPart", hediffInt, hediffInt?.Part, addSubsymbols: true)
                 .AddConstantIf(e.CulpritHediff != null, "reason", "true")
                 .Resolve();
         }
@@ -110,12 +111,18 @@ internal class CasualtyRecorder : RecorderBase
 
     public override void Test(TestScenario scenario)
     {
-        scenario.Pawn(15)
-            .WithKind(PawnKindDefOf.PirateBoss)
+        var friends = scenario.RaidFriendly()
+            .Point(600)
+            .Execute();
+
+        var enemies = scenario.Incident(IncidentDefOf.RaidEnemy)
+            .Point(500)
+            .Execute();
+
+        scenario.Pawn(friends.Concat(enemies))
             .ThatMatches(ShouldRecord)
             .FullHeal()
-            .WithRandomRelations(5)
-            .MakeHostile()
+            .SetRandomRelations(5)
             .Create();
 
         DebugViewSettings.neverForceNormalSpeed = true;

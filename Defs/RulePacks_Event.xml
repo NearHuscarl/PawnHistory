@@ -29,26 +29,64 @@
     </RulePackDef>
 
     <RulePackDef>
-        <defName>PawnEvent_BodyPartLost</defName>
+        <defName>PawnEvent_BodyPartDestroyed</defName>
         <rulePack>
             <rulesStrings>
-                <li>bodyPartLost(hasInstigator==true, hasWeapon==true)->[PAWN]'s [PART] was [HEDIFF] by [INSTIGATOR]'s [WEAPON].</li>
-                <li>bodyPartLost(hasInstigator==true, hasWeapon==)    ->[PAWN]'s [PART] was [HEDIFF] by [INSTIGATOR].</li>
-                <li>bodyPartLost(hasInstigator==,hasWeapon==true)     ->[PAWN]'s [PART] was [HEDIFF] by [WEAPON].</li>
-                <li>bodyPartLost(hasInstigator==,hasWeapon==)         ->[PAWN]'s [PART] was [HEDIFF].</li>
-                <li>bodyPartLostSurgery(intent==Harvest)              ->[PAWN]'s [PART] was harvested by [DOCTOR].</li>
-                <li>bodyPartLostSurgery(intent==Amputate)             ->[PAWN]'s [PART] was amputated by [DOCTOR] due to [HEDIFF].</li>
+                <li>bodyPartDestroyed(hasInstigator==true, hasWeapon==true)->[PAWN]'s [PART] was [Destroyed] by [INSTIGATOR]'s [WEAPON].</li>
+                <li>bodyPartDestroyed(hasInstigator==true, hasWeapon==)    ->[PAWN]'s [PART] was [Destroyed] by [INSTIGATOR].</li>
+                <li>bodyPartDestroyed(hasInstigator==,hasWeapon==true)     ->[PAWN]'s [PART] was [Destroyed] by [WEAPON].</li>
+                <li>bodyPartDestroyed(hasInstigator==,hasWeapon==)         ->[PAWN]'s [PART] was [Destroyed].</li>
             </rulesStrings>
         </rulePack>
     </RulePackDef>
 
 	<RulePackDef>
-		<defName>PawnEvent_BodyPartPermanentlyDamaged</defName>
+		<defName>PawnEvent_BodyPartRemoved</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>bodyPartPermanentlyDamaged(hasInstigator==true)            ->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART] by [INSTIGATOR]'s [WEAPON].</li>
-				<li>bodyPartPermanentlyDamaged(hasInstigator==,hasWeapon==true)->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART] by [WEAPON].</li>
-				<li>bodyPartPermanentlyDamaged(hasInstigator==,hasWeapon==)    ->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART].</li>
+				<li>bodyPartRemoved(intent==Harvest)   ->[PAWN]'s [Part] was harvested by [Doctor].</li>
+				<li>bodyPartRemoved(intent==Amputate)  ->[PAWN]'s [Part] was amputated by [Doctor] due to [BadHediff].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_BodyPartScarred</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>bodyPartScarred(hasInstigator==true)            ->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART] by [INSTIGATOR]'s [WEAPON].</li>
+				<li>bodyPartScarred(hasInstigator==,hasWeapon==true)->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART] by [WEAPON].</li>
+				<li>bodyPartScarred(hasInstigator==,hasWeapon==)    ->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_BodyPartImplanted</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>bodyPartImplanted(hasDoctor==)    ->[PAWN]'s [ReplacedPart] was replaced with [ImplantHediff].</li>
+				<li>bodyPartImplanted(hasDoctor==true)->[PAWN]'s [ReplacedPart] was replaced with [ImplantHediff] by [Doctor].</li>
+				<li>bodyPartImplanted(hasDoctor==true)->[PAWN] received a [ImplantHediff] in their [ReplacedPart], installed by [Doctor].</li>
+				<li>bodyPartImplanted(hasDoctor==true)->[Doctor] installed [ImplantHediff] in [PAWN]'s [ReplacedPart].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_BotchedSurgery</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>OtherPart->other part</li>
+				<li>NewInjuries(injuryCount==0)->nothing (this is a bug)</li>
+				<li>NewInjuries(injuryCount==1)->a wound in [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
+				<li>NewInjuries(injuryCount>=2)->multiple wounds in [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
+				
+				<li>Severity(failedType==Minor)-> clumsily</li>
+				<li>Severity(failedType==Major)-> catastrophically</li>
+				<li>Severity(failedType==Death)-> fatally</li>
+				<li>Severity(failedType==Sterilized)-> hilariously</li>
+				<li>botchedSurgery->[Doctor][Severity] botched [Op_indefinite] on [PAWN]'s [Part], causing [NewInjuries].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -58,9 +96,9 @@
 		<rulePack>
 			<rulesStrings>
 				<li>Downed(reason==)    ->was incapacitated</li>
-				<li>Downed(reason==true)->was incapacitated due to [Hediff]</li>
+				<li>Downed(reason==true)->was incapacitated due to [HediffInPart_indefinite]</li>
 				<li>Died(reason==)      ->died</li>
-				<li>Died(reason==true)  ->died because of [Hediff]</li>
+				<li>Died(reason==true)  ->died because of [HediffInPart_indefinite]</li>
 				<li>RelativePov         ->[PAWN]'s [Relation], [Subject],</li>
 				
 				<li>DownedEntry         ->[PAWN] [Downed].</li>

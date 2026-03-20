@@ -14,8 +14,10 @@ internal class HistoryRecordDefOf
     public static HistoryRecordDef RelativeDeath;
     public static HistoryRecordDef Downed;
     public static HistoryRecordDef Anesthetized;
-    public static HistoryRecordDef BodyPartLost;
-    public static HistoryRecordDef BodyPartPermanentlyDamaged;
+    public static HistoryRecordDef BodyPartDestroyed;
+    public static HistoryRecordDef BodyPartRemoved;
+    public static HistoryRecordDef BodyPartScarred;
+    public static HistoryRecordDef BotchedSurgery;
     public static HistoryRecordDef TradeCaravanArrived;
     public static HistoryRecordDef TradeCaravanLeft;
     public static HistoryRecordDef VisitorArrived;

@@ -72,10 +72,13 @@ public static class RecorderManager
                 {
                     var parentNode = new DebugActionNode(label, DebugActionType.Action, () =>
                     {
-                        var options = new List<DebugMenuOption>();
-                        int[] counts = [1, 2, 3, 5, 10];
+                        var attr = method.GetCustomAttribute<DebugValuesAttribute>()
+                           ?? parameters[1].GetCustomAttribute<DebugValuesAttribute>();
 
-                        foreach (int count in counts)
+                        int[] presets = attr?.Values ?? [1, 2, 3, 5, 10];
+                        var options = new List<DebugMenuOption>();
+
+                        foreach (int count in presets)
                         {
                             options.Add(new DebugMenuOption($"{parameters[1].Name}: {count}", DebugMenuOptionMode.Action, () =>
                             {

@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using PawnHistory.Source.Helper;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,12 +25,16 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, string rootKe
         return this;
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, string value)
+    public HistoryDescriptionBuilder AddRule(string keyword, string value, bool addSubsymbols = false)
     {
         if (value == null) return this;
 
         if (HistoryRecordDef.descriptionMaker != null)
+        {
             extraRules.Add(new Rule_String(keyword, value));
+            if (addSubsymbols)
+                extraRules.AddRange(LangUtility.RulesForString(keyword, value));
+        }
         else
             namedArgs[keyword] = value;
         return this;
@@ -53,24 +58,24 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, string rootKe
         return AddRule(keyword, faction.NameColored.Resolve());
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, Hediff hediff)
+    public HistoryDescriptionBuilder AddRule(string keyword, Hediff hediff, bool addSubsymbols = false)
     {
         if (hediff == null) return this;
-        return AddRule(keyword, hediff.LabelBase.ToLower().Colorize(hediff.LabelColor));
+        return AddRule(keyword, hediff.LabelBase.ToLower().Colorize(hediff.LabelColor), addSubsymbols);
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, HediffDef hediffDef)
+    public HistoryDescriptionBuilder AddRule(string keyword, HediffDef hediffDef, bool addSubsymbols = false)
     {
         if (hediffDef == null) return this;
-        return AddRule(keyword, hediffDef.label.Colorize(hediffDef.defaultLabelColor));
+        return AddRule(keyword, hediffDef.label.Colorize(hediffDef.defaultLabelColor), addSubsymbols);
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, Hediff hediff, BodyPartRecord bodyPart)
+    public HistoryDescriptionBuilder AddRule(string keyword, Hediff hediff, BodyPartRecord bodyPart, bool addSubsymbols = false)
     {
         if (bodyPart == null)
-            return AddRule(keyword, hediff);
+            return AddRule(keyword, hediff, addSubsymbols);
 
-        return AddRule(keyword, hediff.def.PrettyTextForPart(bodyPart));
+        return AddRule(keyword, hediff.def.PrettyTextForPart(bodyPart), addSubsymbols);
     }
 
     public HistoryDescriptionBuilder AddRuleIf(bool condition, string keyword, object value)

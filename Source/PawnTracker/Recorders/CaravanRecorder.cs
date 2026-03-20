@@ -96,6 +96,21 @@ internal class CaravanRecorder : RecorderBase
 
     public override void Test(TestScenario scenario)
     {
-        scenario.CreateIncident(IncidentDefOf.TraderCaravanArrival).PawnCount(4).Execute();
+        scenario.Incident(IncidentDefOf.TraderCaravanArrival).Point(400).Execute();
+    }
+
+    public void TestTraderLost(TestScenario scenario)
+    {
+        var pawns = scenario.Incident(IncidentDefOf.TraderCaravanArrival).Point(400).Execute();
+
+        TickDelayManager.Delay(200, () =>
+        {
+            var trader = pawns.FirstOrDefault(p => p.trader != null);
+            if (trader != null)
+            {
+                HealthUtility.DamageUntilDead(trader);
+                scenario.OpenHistoryRecordTab(trader);
+            }
+        });
     }
 }

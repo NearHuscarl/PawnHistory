@@ -88,7 +88,7 @@ internal class MentalBreakRecorder : RecorderBase
                 var room = target.GetRoom();
                 var allPrisonersInRoom = room.ContainedThings<Pawn>().Where(p => p.IsPrisoner).ToList();
                 concerns.AddRange(allPrisonersInRoom);
-                descBuilder.AddRule("PRISONERS", LangUtility.FormatPawnList(allPrisonersInRoom));
+                descBuilder.AddRule("PRISONERS", LangUtility.FormatList(allPrisonersInRoom));
             }
         }
         else
@@ -236,12 +236,7 @@ internal class MentalBreakRecorder : RecorderBase
                         p.ownership.ClaimBedIfNonMedical(bed);
                 }
             })
+            .Do((p, i) => p.StartMentalBreakWithMadeupThought(mentalBreaks[i]))
             .Create();
-
-        TickDelayManager.Delay(10, () =>
-        {
-            for (var i = 0; i < pawns.Count; i++)
-                scenario.StartMentalBreak(pawns[i], mentalBreaks[i]);
-        });
     }
 }

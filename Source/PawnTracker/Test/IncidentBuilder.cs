@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using PawnHistory.Source.DebugTools;
+using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -19,9 +20,21 @@ public class IncidentBuilder
         parms.forced = true;
     }
 
-    public IncidentBuilder PawnCount(int count)
+    public IncidentBuilder Point(int point)
     {
-        parms.pawnCount = count;
+        parms.points = point;
+        return this;
+    }
+
+    public IncidentBuilder RaidStrategy(RaidStrategyDef raidStrategy)
+    {
+        parms.raidStrategy = raidStrategy;
+        return this;
+    }
+
+    public IncidentBuilder RaidArrivalMode(PawnsArrivalModeDef pawnsArrivalModeDef)
+    {
+        parms.raidArrivalMode = pawnsArrivalModeDef;
         return this;
     }
 
@@ -41,7 +54,7 @@ public class IncidentBuilder
 
         if (!def.Worker.TryExecute(parms))
         {
-            Log.Warning($"Incident {def.defName} failed to execute.");
+            Log.Warning($"Incident {def.defName} failed to execute. {DebugUtility.Format(parms)}");
             return [];
         }
 
