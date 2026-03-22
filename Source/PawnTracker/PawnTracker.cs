@@ -31,9 +31,11 @@ namespace PawnHistory.Source.PawnTracker;
 // Crawling to safety
 // Social gathering: Party, wedding, ritual...
 // Social fight
+// + Base
+// - Ideology
 // Birthday event
 // Panic Flee
-// Botch surgery
+// Botched surgery
 // Catching fire: handle with permanent/missing hediffs.
 // Craft a legendary item
 // Permanent injury

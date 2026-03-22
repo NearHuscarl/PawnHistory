@@ -17,6 +17,7 @@ internal class HistoryRecordDefOf
     public static HistoryRecordDef BodyPartDestroyed;
     public static HistoryRecordDef BodyPartRemoved;
     public static HistoryRecordDef BodyPartScarred;
+    public static HistoryRecordDef BodyPartImplanted;
     public static HistoryRecordDef BotchedSurgery;
     public static HistoryRecordDef TradeCaravanArrived;
     public static HistoryRecordDef TradeCaravanLeft;

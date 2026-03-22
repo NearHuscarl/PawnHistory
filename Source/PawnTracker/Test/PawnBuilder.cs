@@ -169,16 +169,17 @@ public class PawnBuilder(int count = 1)
         return res;
     }
 
-    public PawnBuilder AddHediff(HediffDef def, BodyPartDef partDef = null, float severity = 0.5f)
+    public PawnBuilder AddHediff(HediffDef def, BodyPartDef partDef = null, Action<Hediff> hediffCreated = null, int partIndex = 0)
     {
         return Do(pawn =>
         {
-            var part = partDef != null ? pawn.RaceProps.body.GetPartsWithDef(partDef).FirstOrDefault() : null;
+            var parts = partDef != null ? pawn.RaceProps.body.GetPartsWithDef(partDef).ToList() : null;
+            var part = parts[partIndex];
             var hediff = HediffMaker.MakeHediff(def, pawn, part);
 
-            hediff.Severity = severity;
             hediff.SetVisible();
             pawn.health.AddHediff(hediff, part);
+            hediffCreated?.Invoke(hediff);
         });
     }
 
@@ -258,13 +259,12 @@ public class PawnBuilder(int count = 1)
         });
     }
 
-    public PawnBuilder DoSurgery(Pawn patient, Building_Bed bed, RecipeDef recipe, BodyPartDef partDef, bool instant = false)
+    public PawnBuilder DoSurgery(Pawn patient, Building_Bed bed, RecipeDef recipe, BodyPartDef partDef, bool instant = false, int partIndex = 0)
     {
         return DoOnce(doctor =>
         {
-            var part = patient.RaceProps.body.GetPartsWithDef(partDef)
-                .First(p => !patient.health.hediffSet.PartIsMissing(p));
-
+            var parts = patient.RaceProps.body.GetPartsWithDef(partDef).ToList();
+            var part = parts[partIndex];
             var bill = new Bill_Medical(recipe, []);
             patient.BillStack.AddBill(bill);
             bill.Part = part;

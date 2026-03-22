@@ -1,59 +1,29 @@
-﻿using PawnHistory.Source.DebugTools;
-using PawnHistory.Source.Helper;
+﻿using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
-using System.Linq;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class BodyPartRemovedRecorder : RecorderBase
+internal class Surgery_RemoveBodyPartRecorder : SurgeryRecorder
 {
-    enum SurgeryFailedType
-    {
-        Minor,
-        Major,
-        Death,
-        Sterilized,
-    }
-
     public override void Register()
     {
-        GameEventBus.Subscribe<BodyPartRemoveEvent>(e =>
+        GameEventBus.Subscribe<SurgeryRemoveBodyPartEvent>(e =>
         {
             if (!ShouldRecord(e.Patient))
                 return;
 
             if (e.Outcome.failure)
-                HandleBotchSurgeryEvent(e);
+                HandleBotchSurgeryEvent(e, e.Intent.ToString().ToLowerInvariant());
             else
                 HandleBodyPartRemovedEvent(e);
         });
     }
 
-    private void HandleBotchSurgeryEvent(BodyPartRemoveEvent e)
-    {
-        var recordDef = HistoryRecordDefOf.BotchedSurgery;
-        var operation = e.Intent.ToString().ToLowerInvariant();
-        var injuredParts = e.NewInjuries.Select(h => h.Part).Distinct().ToList();
-        var bloodloss = e.Patient.GetBloodlossText();
-        var failedType = GetSurgeryFailedType(e.Outcome, e.Patient);
-        var desc = recordDef.ResolveDescription("botchedSurgery", e.Patient)
-            .IncludePawnGrammar()
-            .AddRule("Doctor", e.Doctor)
-            .AddRule("Op", operation, addSubsymbols: true)
-            .AddRule("Part", e.Part.Label)
-            .AddConstant("failedType", failedType)
-            .AddRule("InjuredParts", LangUtility.FormatList(injuredParts, p => p.Label, "NH_PH_OtherPart".Translate()))
-            .AddRule("Bloodloss", e.Patient.Dead ? "" : bloodloss)
-            .AddConstant("injuryCount", e.NewInjuries.Count)
-            .Resolve();
-        AddRecord(recordDef, e.Patient, desc, [e.Doctor]);
-    }
-
-    private void HandleBodyPartRemovedEvent(BodyPartRemoveEvent e)
+    private void HandleBodyPartRemovedEvent(SurgeryRemoveBodyPartEvent e)
     {
         var recordDef = HistoryRecordDefOf.BodyPartRemoved;
         var desc = recordDef.ResolveDescription("bodyPartRemoved", e.Patient)
@@ -63,18 +33,6 @@ internal class BodyPartRemovedRecorder : RecorderBase
             .AddConstant("intent", e.Intent)
             .Resolve();
         AddRecord(recordDef, e.Patient, desc, [e.Doctor]);
-    }
-
-    private SurgeryFailedType GetSurgeryFailedType(SurgeryOutcome outcome, Pawn pawn)
-    {
-        if (outcome is SurgeryOutcome_Death || pawn.Dead /* non-fatal failure could make a pawn dead */)
-            return SurgeryFailedType.Death;
-        else if (outcome is SurgeryOutcome_FailureWithHediff fwh && fwh.failedHediff == HediffDefOf.Sterilized)
-            return SurgeryFailedType.Sterilized;
-        else if (outcome.totalDamage > 50)
-            return SurgeryFailedType.Major;
-        else
-            return SurgeryFailedType.Minor;
     }
 
     public void TestFail(TestScenario scenario)
@@ -93,8 +51,10 @@ internal class BodyPartRemovedRecorder : RecorderBase
         scenario.Pawn()
             .Colonist()
             .SetDoctor(isBadDoctor: true)
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Arm)
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Eye)
+            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Arm, partIndex: 0)
+            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Arm, partIndex: 1)
+            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Eye, partIndex: 0)
+            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Eye, partIndex: 1)
             .AddHediff("SmokeleafHigh", BodyPartDefOf.Torso)
             .DoSurgery(patient, beds[0], RecipeDefOf.RemoveBodyPart, BodyPartDefOf.Lung, instant: true)
             .CreateSingle();
@@ -132,7 +92,7 @@ internal class BodyPartRemovedRecorder : RecorderBase
         var patient = scenario.Pawn()
             .Colonist()
             .FullHeal()
-            .AddHediff(HediffDefOf.WoundInfection, BodyPartDefOf.Leg, 0.8f)
+            .AddHediff(HediffDefOf.WoundInfection, BodyPartDefOf.Leg, h => h.Severity = 0.8f)
             .CreateSingle();
 
         scenario.Pawn()
