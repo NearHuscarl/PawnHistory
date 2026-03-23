@@ -18,7 +18,7 @@ internal class SurgeryRecorder : RecorderBase
 
     public override void Register() { }
 
-    protected void HandleBotchSurgeryEvent(SurgeryEvent e, string surgery /* TODO: localization */)
+    protected void HandleBotchSurgeryEvent(SurgeryEvent e, string botched)
     {
         var recordDef = HistoryRecordDefOf.BotchedSurgery;
         var injuredParts = e.NewInjuries.Select(h => h.Part).Distinct().ToList();
@@ -27,11 +27,10 @@ internal class SurgeryRecorder : RecorderBase
         var desc = recordDef.ResolveDescription("botchedSurgery", e.Patient)
             .IncludePawnGrammar()
             .AddRule("Doctor", e.Doctor)
-            .AddRule("Surgery", Find.ActiveLanguageWorker.WithIndefiniteArticlePostProcessed(surgery))
-            .AddRule("Part", e.Part.Label)
-            .AddConstant("outcomeType", outcomeType)
+            .AddRule("BotchedSurgery", botched)
             .AddRule("InjuredParts", LangUtility.FormatList(injuredParts, p => p.Label, "NH_PH_OtherPart".Translate()))
             .AddRule("Bloodloss", e.Patient.Dead ? "" : bloodloss)
+            .AddConstant("outcomeType", outcomeType)
             .AddConstant("injuryCount", e.NewInjuries.Count)
             .Resolve();
         AddRecord(HistoryRecordDefOf.BotchedSurgery, e.Patient, desc, [e.Doctor]);

@@ -25,12 +25,14 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, string rootKe
         return this;
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, string value, bool addSubsymbols = false)
+    public HistoryDescriptionBuilder AddRule(string keyword, string value, bool addSubsymbols = false, bool replaceIfExist = false)
     {
         if (value == null) return this;
 
         if (HistoryRecordDef.descriptionMaker != null)
         {
+            if (replaceIfExist)
+                extraRules.RemoveAll(r => r.keyword.StartsWith(keyword));
             extraRules.Add(new Rule_String(keyword, value));
             if (addSubsymbols)
                 extraRules.AddRange(LangUtility.RulesForString(keyword, value));
@@ -40,42 +42,50 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, string rootKe
         return this;
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, TaggedString value)
+    public HistoryDescriptionBuilder AddRule(string keyword, TaggedString value, bool replaceIfExist = false)
     {
         if (value == null) return this;
-        return AddRule(keyword, value.Resolve());
+        return AddRule(keyword, value.Resolve(), replaceIfExist);
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, Pawn pawn)
+    public HistoryDescriptionBuilder AddRule(string keyword, Pawn pawn, bool replaceIfExist = false)
     {
         if (pawn == null) return this;
-        return AddRule(keyword, pawn.NameShortColored.Resolve());
+        return AddRule(keyword, pawn.NameShortColored.Resolve(), replaceIfExist);
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, Faction faction)
+    public HistoryDescriptionBuilder AddRule(string keyword, Faction faction, bool replaceIfExist = false)
     {
         if (faction == null) return this;
-        return AddRule(keyword, faction.NameColored.Resolve());
+        return AddRule(keyword, faction.NameColored.Resolve(), replaceIfExist);
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, Hediff hediff, bool addSubsymbols = false)
+    public HistoryDescriptionBuilder AddRule(string keyword, Hediff hediff, bool addSubsymbols = false, bool replaceIfExist = false)
     {
         if (hediff == null) return this;
-        return AddRule(keyword, hediff.LabelBase.ToLower().Colorize(hediff.LabelColor), addSubsymbols);
+        return AddRule(keyword, hediff.LabelBase.ToLower().Colorize(hediff.LabelColor), addSubsymbols, replaceIfExist);
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, HediffDef hediffDef, bool addSubsymbols = false)
+    public HistoryDescriptionBuilder AddRule(string keyword, HediffDef hediffDef, bool addSubsymbols = false, bool replaceIfExist = false)
     {
         if (hediffDef == null) return this;
-        return AddRule(keyword, hediffDef.label.Colorize(hediffDef.defaultLabelColor), addSubsymbols);
+        return AddRule(keyword, hediffDef.label.Colorize(hediffDef.defaultLabelColor), addSubsymbols, replaceIfExist);
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, Hediff hediff, BodyPartRecord bodyPart, bool addSubsymbols = false)
+    public HistoryDescriptionBuilder AddRule(string keyword, Hediff hediff, BodyPartRecord bodyPart, bool addSubsymbols = false, bool replaceIfExist = false)
     {
         if (bodyPart == null)
-            return AddRule(keyword, hediff, addSubsymbols);
+            return AddRule(keyword, hediff, addSubsymbols, replaceIfExist);
 
-        return AddRule(keyword, hediff.def.PrettyTextForPart(bodyPart), addSubsymbols);
+        return AddRule(keyword, hediff.def.PrettyTextForPart(bodyPart), addSubsymbols, replaceIfExist);
+    }
+
+    public HistoryDescriptionBuilder AddRule(string keyword, BodyPartRecord part, bool addSubsymbols = false, bool replaceIfExist = false)
+    {
+        if (part == null) return this;
+        // Label = left middle toe
+        // LabelShort = toe
+        return AddRule(keyword, part.Label, addSubsymbols, replaceIfExist);
     }
 
     public HistoryDescriptionBuilder AddRuleIf(bool condition, string keyword, object value)

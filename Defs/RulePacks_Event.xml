@@ -44,16 +44,16 @@
 		<defName>PawnEvent_BotchedSurgery</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>NewInjuries(injuryCount==0)->nothing (this is a bug)</li>
-				<li>NewInjuries(injuryCount==1)->a wound in [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
-				<li>NewInjuries(injuryCount>=2)->multiple wounds in [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
+				<li>NewInjuries(injuryCount==0)->no injuries (a bug)</li>
+				<li>NewInjuries(injuryCount==1)->a wound on [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
+				<li>NewInjuries(injuryCount>=2)->multiple wounds on [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
 
-				<li>Severity(outcomeType==Minor)->clumsily</li>
+				<li>Severity(outcomeType==Minor)->slightly</li>
 				<li>Severity(outcomeType==Major)->catastrophically</li>
 				<li>Severity(outcomeType==Death)->fatally</li>
 				<li>Severity(outcomeType==Sterilized)->hilariously</li>
 
-				<li>botchedSurgery->[Doctor] [Severity] botched [Surgery] on [PAWN]'s [Part], causing [NewInjuries].</li>
+				<li>botchedSurgery->[Doctor] [Severity] [BotchedSurgery], causing [NewInjuries].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -64,6 +64,9 @@
 			<rulesStrings>
 				<li>bodyPartRemoved(intent==Harvest)   ->[PAWN]'s [Part] was harvested by [Doctor].</li>
 				<li>bodyPartRemoved(intent==Amputate)  ->[PAWN]'s [Part] was amputated by [Doctor] due to [BadHediff].</li>
+
+				<li>BotchedSurgery(intent==Amputate)->botched an amputation on [PAWN]'s [Part]</li>
+				<li>BotchedSurgery(intent==Harvest) ->botched a harvest on [PAWN]'s [Part]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -73,6 +76,21 @@
 		<rulePack>
 			<rulesStrings>
 				<li>bodyPartImplanted->[Doctor] installed [ImplantHediff_indefinite] in [PAWN]'s [EnhancedPart].</li>
+				
+				<li>BotchedSurgery->botched the implantation of [ImplantHediff_indefinite] on [PAWN]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_BodyPartInstalled</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>bodyPartInstalled(type==install)->[Doctor] installed [AddedPart_indefinite] on [PAWN].</li>
+				<li>bodyPartInstalled(type==replace)->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedPart_indefinite].</li>
+				<li>bodyPartInstalled(type==fix)    ->[Doctor] installed a healthy [AddedPart] on [PAWN] to treat [BadHediff].</li>
+
+				<li>BotchedSurgery->botched the installation of [AddedPart_indefinite] on [PAWN]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

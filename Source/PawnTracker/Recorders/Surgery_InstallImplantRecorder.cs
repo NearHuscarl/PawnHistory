@@ -1,7 +1,5 @@
 ﻿using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
-using RimWorld;
-using System.Collections.Generic;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
@@ -14,8 +12,11 @@ internal class Surgery_InstallImplantRecorder : SurgeryRecorder
         {
             if (e.Outcome.failure)
             {
-                var h = e.HediffToAdd.label.ToLowerInvariant().Colorize(e.HediffToAdd.defaultLabelColor);
-                HandleBotchSurgeryEvent(e, $"{h} implantation");
+                var botched = HistoryRecordDefOf.BodyPartImplanted.ResolveDescription("BotchedSurgery", e.Patient)
+                    .AddRule("ImplantHediff", e.HediffToAdd, addSubsymbols: true)
+                    .Resolve()
+                    .ToLower();
+                HandleBotchSurgeryEvent(e, botched);
             }
             else
                 HandleBodyPartImplantedEvent(e);
@@ -31,17 +32,16 @@ internal class Surgery_InstallImplantRecorder : SurgeryRecorder
         var desc = recordDef.ResolveDescription("bodyPartImplanted", e.Patient)
             .AddRule("Doctor", e.Doctor)
             .AddRule("ImplantHediff", e.HediffToAdd, addSubsymbols: true)
-            .AddRule("EnhancedPart", e.Part.LabelShort)
+            .AddRule("EnhancedPart", e.Part)
             .Resolve();
         AddRecord(recordDef, e.Patient, desc, [e.Doctor]);
     }
 
     public override void Test(TestScenario scenario)
     {
-        var beds = new List<Building_Bed>();
         scenario.Thing()
             .BuildRoom(6, 6, tag: "Hospital")
-            .AsHospital(bedCount: 2, beds)
+            .AsHospital(bedCount: 2)
             .WithThing("Joywire", 1)
             .Execute();
 
@@ -53,16 +53,15 @@ internal class Surgery_InstallImplantRecorder : SurgeryRecorder
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, beds[0], DefDatabase<RecipeDef>.GetNamed("InstallJoywire"), DefDatabase<BodyPartDef>.GetNamed("Brain"))
+            .DoSurgery(patient, DefDatabase<RecipeDef>.GetNamed("InstallJoywire"), DefDatabase<BodyPartDef>.GetNamed("Brain"))
             .CreateSingle();
     }
 
     public void TestFail(TestScenario scenario)
     {
-        var beds = new List<Building_Bed>();
         scenario.Thing()
             .BuildRoom(6, 6, tag: "Hospital")
-            .AsHospital(bedCount: 2, beds)
+            .AsHospital(bedCount: 2)
             .WithThing("Joywire", 1)
             .Execute();
 
@@ -73,12 +72,7 @@ internal class Surgery_InstallImplantRecorder : SurgeryRecorder
         scenario.Pawn()
             .Colonist()
             .SetDoctor(isBadDoctor: true)
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Arm, partIndex: 0)
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Arm, partIndex: 1)
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Eye, partIndex: 0)
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Eye, partIndex: 1)
-            .AddHediff("SmokeleafHigh", BodyPartDefOf.Torso)
-            .DoSurgery(patient, beds[0], DefDatabase<RecipeDef>.GetNamed("InstallJoywire"), DefDatabase<BodyPartDef>.GetNamed("Brain"), instant: true)
+            .DoSurgery(patient, DefDatabase<RecipeDef>.GetNamed("InstallJoywire"), DefDatabase<BodyPartDef>.GetNamed("Brain"), instant: true)
             .CreateSingle();
     }
 }

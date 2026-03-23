@@ -20,7 +20,7 @@ public static class HediffHelper
         return $"{labelNoun.ToLower()} ({h.LabelInBrackets})".Colorize(h.LabelColor);
     }
 
-    public static bool IsImplant(this Hediff h)
+    public static bool IsInstalledBodyPart(this Hediff h)
     {
         return h.def.addedPartProps != null;
     }

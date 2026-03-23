@@ -2,12 +2,11 @@
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
-using System.Collections.Generic;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class Surgery_RemoveBodyPartRecorder : SurgeryRecorder
+internal class Surgery_RemovePartRecorder : SurgeryRecorder
 {
     public override void Register()
     {
@@ -17,7 +16,14 @@ internal class Surgery_RemoveBodyPartRecorder : SurgeryRecorder
                 return;
 
             if (e.Outcome.failure)
-                HandleBotchSurgeryEvent(e, e.Intent.ToString().ToLowerInvariant());
+            {
+                var botched = HistoryRecordDefOf.BodyPartRemoved.ResolveDescription("BotchedSurgery", e.Patient)
+                    .AddRule("Part", e.Part)
+                    .AddConstant("intent", e.Intent)
+                    .Resolve()
+                    .ToLower();
+                HandleBotchSurgeryEvent(e, botched);
+            }
             else
                 HandleBodyPartRemovedEvent(e);
         });
@@ -35,37 +41,11 @@ internal class Surgery_RemoveBodyPartRecorder : SurgeryRecorder
         AddRecord(recordDef, e.Patient, desc, [e.Doctor]);
     }
 
-    public void TestFail(TestScenario scenario)
-    {
-        var beds = new List<Building_Bed>();
-        scenario.Thing()
-            .BuildRoom(6, 6, tag: "Hospital")
-            .AsHospital(bedCount: 2, beds)
-            .Execute();
-
-        var patient = scenario.Pawn()
-            .Colonist()
-            .FullHeal()
-            .CreateSingle();
-
-        scenario.Pawn()
-            .Colonist()
-            .SetDoctor(isBadDoctor: true)
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Arm, partIndex: 0)
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Arm, partIndex: 1)
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Eye, partIndex: 0)
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Eye, partIndex: 1)
-            .AddHediff("SmokeleafHigh", BodyPartDefOf.Torso)
-            .DoSurgery(patient, beds[0], RecipeDefOf.RemoveBodyPart, BodyPartDefOf.Lung, instant: true)
-            .CreateSingle();
-    }
-
     public void TestHarvest(TestScenario scenario)
     {
-        var beds = new List<Building_Bed>();
         scenario.Thing()
             .BuildRoom(6, 6, tag: "Hospital")
-            .AsHospital(bedCount: 2, beds)
+            .AsHospital(bedCount: 2)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -77,16 +57,15 @@ internal class Surgery_RemoveBodyPartRecorder : SurgeryRecorder
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, beds[0], RecipeDefOf.RemoveBodyPart, BodyPartDefOf.Lung)
+            .DoSurgery(patient, RecipeDefOf.RemoveBodyPart, BodyPartDefOf.Lung)
             .CreateSingle();
     }
 
     public void TestAmputate(TestScenario scenario)
     {
-        var beds = new List<Building_Bed>();
         scenario.Thing()
             .BuildRoom(6, 6, tag: "Hospital")
-            .AsHospital(bedCount: 2, beds)
+            .AsHospital(bedCount: 2)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -99,7 +78,26 @@ internal class Surgery_RemoveBodyPartRecorder : SurgeryRecorder
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, beds[0], RecipeDefOf.RemoveBodyPart, BodyPartDefOf.Leg)
+            .DoSurgery(patient, RecipeDefOf.RemoveBodyPart, BodyPartDefOf.Leg)
+            .CreateSingle();
+    }
+
+    public void TestFail(TestScenario scenario)
+    {
+        scenario.Thing()
+            .BuildRoom(6, 6, tag: "Hospital")
+            .AsHospital(bedCount: 2)
+            .Execute();
+
+        var patient = scenario.Pawn()
+            .Colonist()
+            .FullHeal()
+            .CreateSingle();
+
+        scenario.Pawn()
+            .Colonist()
+            .SetDoctor(isBadDoctor: true)
+            .DoSurgery(patient, RecipeDefOf.RemoveBodyPart, BodyPartDefOf.Lung, instant: true)
             .CreateSingle();
     }
 }

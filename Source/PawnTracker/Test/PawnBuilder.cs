@@ -249,9 +249,17 @@ public class PawnBuilder(int count = 1)
                 var archotechArm = DefDatabase<HediffDef>.GetNamed("ArchotechArm");
 
                 foreach (var arm in arms)
-                {
                     pawn.health.AddHediff(archotechArm, arm);
-                }
+            }
+            else
+            {
+                var arms = pawn.RaceProps.body.GetPartsWithDef(BodyPartDefOf.Arm).ToList();
+                var eyes = pawn.RaceProps.body.GetPartsWithDef(BodyPartDefOf.Eye).ToList();
+                var torso = pawn.RaceProps.body.GetPartsWithDef(BodyPartDefOf.Torso).FirstOrDefault();
+
+                foreach (var part in arms.Concat(eyes))
+                    pawn.health.AddHediff(HediffDefOf.MissingBodyPart, part);
+                pawn.health.AddHediff(DefDatabase<HediffDef>.GetNamed("SmokeleafHigh"), torso);
             }
 
             pawn.inventory.innerContainer.TryAdd(ThingMaker.MakeThing(ThingDefOf.MedicineUltratech), 4);
@@ -259,7 +267,7 @@ public class PawnBuilder(int count = 1)
         });
     }
 
-    public PawnBuilder DoSurgery(Pawn patient, Building_Bed bed, RecipeDef recipe, BodyPartDef partDef, bool instant = false, int partIndex = 0)
+    public PawnBuilder DoSurgery(Pawn patient, RecipeDef recipe, BodyPartDef partDef, bool instant = false, int partIndex = 0)
     {
         return DoOnce(doctor =>
         {
@@ -278,6 +286,7 @@ public class PawnBuilder(int count = 1)
             // Surgery is slooow
             Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
 
+            var bed = RestUtility.FindPatientBedFor(patient);
             patient.jobs.TryTakeOrderedJob(JobMaker.MakeJob(JobDefOf.LayDown, bed), JobTag.SatisfyingNeeds);
 
             var job = JobMaker.MakeJob(JobDefOf.DoBill, patient, bed);

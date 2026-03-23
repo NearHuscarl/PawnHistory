@@ -4,17 +4,12 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-internal class SurgeryInstallImplantEvent(Pawn patient, Pawn doctor, HediffDef hediffToAdd, BodyPartRecord part) : SurgeryEvent(patient, doctor, part)
+internal class SurgeryInstallImplantEvent(Pawn patient, Pawn doctor, BodyPartRecord part, HediffDef hediffToAdd) : SurgeryEvent(patient, doctor, part)
 {
     public HediffDef HediffToAdd { get; } = hediffToAdd;
 }
 
 class InstallImplantContext : SurgeryContext<SurgeryInstallImplantEvent> { }
-
-// Call order:
-// Recipe_InstallImplant.ApplyOnPawn() prefix
-// SurgeryOutcomeEffectDef.GetOutcome()
-// Recipe_InstallImplant.ApplyOnPawn() postfix
 
 [HarmonyPatch(typeof(Recipe_InstallImplant), nameof(Recipe_InstallImplant.ApplyOnPawn))]
 internal class Recipe_InstallImplant_ApplyOnPawn_Patch
@@ -23,7 +18,7 @@ internal class Recipe_InstallImplant_ApplyOnPawn_Patch
     {
         var hediffToAdd = __instance.recipe.addsHediff;
 
-        InstallImplantContext.SurgeryRecipe_PreApplyOnPawn(pawn, () => new SurgeryInstallImplantEvent(pawn, billDoer, hediffToAdd, part));
+        InstallImplantContext.SurgeryRecipe_PreApplyOnPawn(pawn, () => new SurgeryInstallImplantEvent(pawn, billDoer, part, hediffToAdd));
     }
 
     static void Postfix(Pawn pawn)

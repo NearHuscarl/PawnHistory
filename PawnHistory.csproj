@@ -60,6 +60,7 @@
     <Compile Include="Source\DebugTools\DebugOutputsHistoryRecords.cs" />
     <Compile Include="Source\Helper\HediffUtility.cs" />
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
+    <Compile Include="Source\PawnTracker\Events\SurgeryInstallNaturalPartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallImplantEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\MentalBreakStartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryRemoveBodyPartEvent.cs" />
@@ -71,8 +72,9 @@
     <Compile Include="Source\PawnTracker\Events\SurgeryEvent.cs" />
     <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\SurgeryRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\Surgery_InstallPartRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\Surgery_InstallImplantRecorder.cs" />
-    <Compile Include="Source\PawnTracker\Recorders\Surgery_RemoveBodyPartRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\Surgery_RemovePartRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\BodyPartScarredRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PrisonBreakRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\MentalBreakRecorder.cs" />
