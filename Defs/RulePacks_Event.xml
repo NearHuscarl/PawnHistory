@@ -266,4 +266,31 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_ReadBook</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_SinglePawn.xml#ReadBook-->
+				<li>circumstance_phrase->while relaxing in [PAWN_possessive] favorite reading nook</li>
+				<li>circumstance_phrase->with a cup of tea by [PAWN_possessive] side</li>
+				<li>circumstance_phrase->under the soft glow of a reading lamp</li>
+				
+				<li>image->[PAWN_nameDef] closed [Book] for the last time, a satisfied smile gracing [PAWN_possessive] face [circumstance_phrase]</li>
+				<li>image->[PAWN_nameDef] turned the pages of [Book], absorbing the knowledge within [circumstance_phrase]</li>
+				<li>image->[PAWN_nameDef] placed [Book] back on the shelf, a sense of accomplishment radiating from [PAWN_objective] [circumstance_phrase]</li>
+				<li>image->[PAWN_nameDef] sitted in quiet contemplation, reflecting on the profound truths within [Book] [circumstance_phrase]</li>
+				
+				<!-- too long
+				<li>desc_sentence->[PAWN_nameDef] was surrounded by [PAWN_possessive] notes on [Book].</li>
+				<li>desc_sentence->[PAWN_nameDef]'s eyes sparkled with newfound wisdom.</li>
+				<li>desc_sentence->[PAWN_nameDef] was forever changed by the teachings of [Book].</li>
+				<li>desc_sentence->There was a sense that some secrets are yet to be uncovered.</li>
+				-->
+
+				<!--<li>readbook->[image]. [desc_sentence]</li>-->
+				<li>readbook->[image].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>

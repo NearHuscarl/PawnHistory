@@ -127,13 +127,6 @@
 		<label>social fight</label>
 		<icon>Ui/Icons/ColonistBar/MentalStateAggro</icon>
 	</HistoryRecordDef>
-	
-	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>WalkNaked</defName>
-		<label>naked walking</label>
-		<descriptionMaker>PawnEvent_WalkNaked</descriptionMaker>
-		<icon>Things/Pawn/Wounds/WoundMechA</icon>
-	</HistoryRecordDef>
 
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonBreak</defName>
@@ -146,5 +139,20 @@
 		<label>hit by lightning strike</label>
 		<description>{PAWN} was struck by lightning, burning {POSSESSIVE} {PART}.</description>
 		<icon>EventIcons/Flashstorm</icon>
+	</HistoryRecordDef>
+
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>WalkNaked</defName>
+		<label>naked walking</label>
+		<descriptionMaker>PawnEvent_WalkNaked</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<importance>Minor</importance>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>ReadBook</defName>
+		<label>reading book</label>
+		<descriptionMaker>PawnEvent_ReadBook</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<importance>Minor</importance>
 	</HistoryRecordDef>
 </Defs>

@@ -2,10 +2,17 @@
 
 namespace PawnHistory.Source.PawnTracker;
 
+public enum RecordImportance
+{
+    Minor,
+    Major,
+}
+
 public class HistoryRecordDef : Def
 {
     public string icon;
     public RulePackDef descriptionMaker;
+    public RecordImportance importance = RecordImportance.Major;
 }
 
 public static class HistoryRecordDefExtension

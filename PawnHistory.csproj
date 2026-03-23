@@ -60,7 +60,7 @@
     <Compile Include="Source\DebugTools\DebugOutputsHistoryRecords.cs" />
     <Compile Include="Source\Helper\HediffUtility.cs" />
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
-    <Compile Include="Source\PawnTracker\Events\WalkNakedEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\TaleRecordedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallArtificialPartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallNaturalPartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallImplantEvent.cs" />
@@ -73,6 +73,8 @@
     <Compile Include="Source\PawnTracker\Events\CasualtyLogAddedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryEvent.cs" />
     <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\HistoryTaleRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\ReadBookRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WalkNakedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\SurgeryRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\Surgery_ModPartRecorder.cs" />
