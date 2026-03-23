@@ -19,6 +19,8 @@ internal class Recipe_RemoveBodyPart_ApplyOnPawn_Patch
 {
     static void Prefix(Pawn pawn, BodyPartRecord part, Pawn billDoer)
     {
+        if (billDoer == null) return; // not surgery related
+
         var intent = HealthUtility.PartRemovalIntent(pawn, part);
         var badHediff = pawn.GetMostDangerousHediff(part);
 

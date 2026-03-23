@@ -19,6 +19,8 @@ internal class Recipe_InstallNaturalBodyPart_ApplyOnPawn_Patch
 {
     static void Prefix(Recipe_InstallNaturalBodyPart __instance, Pawn pawn, BodyPartRecord part, Pawn billDoer)
     {
+        if (billDoer == null) return; // not surgery related
+
         var hediffs = pawn.health.hediffSet.hediffs.Where(h => h.Part == part);
         var hediffToRemove = hediffs.FirstOrDefault(h => h is Hediff_MissingPart || h.IsInstalledBodyPart());
         var badHediff = pawn.GetMostDangerousHediff(part);

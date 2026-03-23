@@ -16,6 +16,7 @@ internal class Recipe_InstallImplant_ApplyOnPawn_Patch
 {
     static void Prefix(Recipe_InstallImplant __instance, Pawn pawn, BodyPartRecord part, Pawn billDoer)
     {
+        if (billDoer == null) return; // not surgery related
         var hediffToAdd = __instance.recipe.addsHediff;
 
         InstallImplantContext.SurgeryRecipe_PreApplyOnPawn(pawn, () => new SurgeryInstallImplantEvent(pawn, billDoer, part, hediffToAdd));

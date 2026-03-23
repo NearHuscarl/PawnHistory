@@ -21,6 +21,8 @@ internal class Recipe_InstallArtificialBodyPart_ApplyOnPawn_Patch
 {
     static void Prefix(Recipe_InstallArtificialBodyPart __instance, Pawn pawn, BodyPartRecord part, Pawn billDoer)
     {
+        if (billDoer == null) return; // not surgery related
+
         var recipe = __instance.recipe;
         var hediffToAdd = recipe.addsHediff;
         var hediffs = pawn.health.hediffSet.hediffs.Where(h => h.Part == part);

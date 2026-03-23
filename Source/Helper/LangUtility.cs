@@ -56,4 +56,34 @@ internal static class LangUtility
             yield return new Rule_String(prefix + "indefinite", Find.ActiveLanguageWorker.WithIndefiniteArticle(text));
         }
     }
+
+    private static string Normalize(string s)
+    {
+        return new string([.. s
+            .ToLowerInvariant()
+            .Where(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))]);
+    }
+
+    private static HashSet<string> Tokenize(string s)
+    {
+        return [.. Normalize(s).Split(' ', StringSplitOptions.RemoveEmptyEntries)];
+    }
+
+    public static bool IsTooSimilar(string sentence1, string sentence2, float threshold = 0.5f)
+    {
+        if (string.IsNullOrEmpty(sentence1) || string.IsNullOrEmpty(sentence2))
+            return false;
+
+        var setA = Tokenize(sentence1);
+        var setB = Tokenize(sentence2);
+
+        if (setA.Count == 0 || setB.Count == 0)
+            return false;
+
+        var common = setA.Intersect(setB).Count();
+        var minSize = Math.Min(setA.Count, setB.Count);
+        var overlap = (float)common / minSize;
+
+        return overlap >= threshold;
+    }
 }

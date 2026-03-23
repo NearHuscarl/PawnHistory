@@ -230,4 +230,40 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_WalkNaked</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_SinglePawn.xml#WalkedNaked-->
+				<li>nude_action->pranced</li>
+				<li>nude_action->frolicked</li>
+				<li>nude_action->gambolled</li>
+				<li>nude_action->walked</li>
+				<li>nude_action->strutted [PAWN_possessive] stuff</li>
+				<li>nude_action->sashayed</li>
+				<li>nude_action->tiptoed</li>
+				<li>nude_action->promenaded</li>
+				<li>nude_action->surveyed the area</li>
+
+				<li>circumstance_phrase->with a sense of purpose</li>
+				<li>circumstance_phrase->with no hint of shame</li>
+				<li>circumstance_phrase->while others looked on</li>
+				<li>circumstance_phrase->for no apparent reason</li>
+				<li>circumstance_phrase->while confused animals looked on</li>
+
+				<li>image->[PAWN_nameDef] [nude_action] while in a state of nature [circumstance_phrase]</li>
+				<li>image->[PAWN_nameDef] [nude_action] in the nude [circumstance_phrase]</li>
+				<li>image->[PAWN_nameDef] [nude_action], naked, [circumstance_phrase]</li>
+				<li>image->[PAWN_nameDef] [nude_action] without any clothes on [circumstance_phrase]</li>
+				
+				<li>desc_sentence->[PAWN_pronoun] was visibly aroused.</li>
+				<li>desc_sentence->[PAWN_pronoun] was covered in unexplained moisture.</li>
+				<li>desc_sentence->[PAWN_pronoun] was breathing heavily for no obvious reason.</li>
+				<li>desc_sentence->[PAWN_pronoun] was fondling a shrub.</li>
+
+				<li>walkNaked->[image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>

@@ -10,6 +10,19 @@ public abstract class RecorderBase
 
     public abstract void Register();
 
+    protected IEnumerable<HistoryRecord> GeRecordsOfType(Pawn pawn, HistoryRecordDef def, int limit = 100)
+    {
+        var records = CompHistoryManager.GetComp(pawn).records;
+
+        for (var i = records.Count - 1; i >= 0; i--)
+        {
+            if (records.Count - 1 - i > limit)
+                break;
+            if (records[i].def == def)
+                yield return records[i];
+        }
+    }
+
     protected void AddRecord(HistoryRecordDef def, Pawn pawn, TaggedString resolvedDesc, IEnumerable<Thing> concerns = null)
     {
         CompHistoryManager.GetComp(pawn).records.Add(new HistoryRecord(def, pawn, resolvedDesc, concerns));

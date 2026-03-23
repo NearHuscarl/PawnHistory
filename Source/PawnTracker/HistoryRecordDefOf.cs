@@ -28,6 +28,7 @@ internal class HistoryRecordDefOf
     public static HistoryRecordDef MentalBreak;
     public static HistoryRecordDef MentalBreakViolent;
     public static HistoryRecordDef SocialFight;
+    public static HistoryRecordDef WalkNaked;
     public static HistoryRecordDef PrisonBreak;
     public static HistoryRecordDef LightningStriked;
 

@@ -344,6 +344,24 @@ public class PawnBuilder(int count = 1)
 
 static class PawnBuilderExtension
 {
+    public static PawnBuilder StripNaked(this PawnBuilder builder)
+    {
+        return builder.Do(pawn =>
+        {
+            if (pawn?.apparel == null)
+                return;
+
+            var worn = pawn.apparel.WornApparel.ToList();
+
+            foreach (var apparel in worn)
+            {
+                pawn.apparel.Remove(apparel);
+                if (pawn.Spawned)
+                    GenPlace.TryPlaceThing(apparel, pawn.Position, pawn.Map, ThingPlaceMode.Near);
+            }
+        });
+    }
+
     public static PawnBuilder WeakenParts(this PawnBuilder builder, HashSet<BodyPartDef> weakenParts, bool oneSide = false)
     {
         var bruise = DefDatabase<HediffDef>.GetNamed("Bruise");
