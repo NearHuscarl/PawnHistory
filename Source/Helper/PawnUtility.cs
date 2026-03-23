@@ -28,6 +28,19 @@ internal static class PawnUtility
             Log.Warning($"[PawnHistory] Failed to force mental break {def.defName} on {pawn.LabelShort}");
     }
 
+    private static float GetDangerScore(Hediff h)
+    {
+        if (h.def.lethalSeverity <= 0f)
+            return h.Severity / 1f / 3; // not lethal
+
+        return h.Severity / h.def.lethalSeverity;
+    }
+
+    public static Hediff GetMostDangerousHediff(this Pawn pawn, BodyPartRecord part)
+    {
+        return pawn.health.hediffSet.hediffs.Where(h => h.Visible && h.Part == part && h.def.isBad).OrderByDescending(GetDangerScore).FirstOrDefault();
+    }
+
     /// <summary>
     /// Copied from HealthCardUtility.DrawHediffListing()
     /// </summary>

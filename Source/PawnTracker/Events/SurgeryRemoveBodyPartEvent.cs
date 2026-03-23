@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using PawnHistory.Source.Helper;
 using RimWorld;
 using System.Linq;
 using Verse;
@@ -19,17 +20,9 @@ internal class Recipe_RemoveBodyPart_ApplyOnPawn_Patch
     static void Prefix(Pawn pawn, BodyPartRecord part, Pawn billDoer)
     {
         var intent = HealthUtility.PartRemovalIntent(pawn, part);
-        var badHediff = GetBadHediff(pawn, part);
+        var badHediff = pawn.GetMostDangerousHediff(part);
 
         RemoveContext.SurgeryRecipe_PreApplyOnPawn(pawn, () => new SurgeryRemoveBodyPartEvent(pawn, billDoer, part, intent, badHediff));
-    }
-
-    /// <summary>
-    /// Copied from HealthUtility.PartRemovalIntent(), but return the target part's hediff
-    /// </summary>
-    private static Hediff GetBadHediff(Pawn pawn, BodyPartRecord part)
-    {
-        return pawn.health.hediffSet.hediffs.FirstOrDefault(h => h.Visible && h.Part == part && h.def.isBad);
     }
 
     static void Postfix(Pawn pawn)

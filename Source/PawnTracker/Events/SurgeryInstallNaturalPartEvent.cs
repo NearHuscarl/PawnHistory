@@ -17,11 +17,11 @@ class InstallNaturalPartContext : SurgeryContext<SurgeryInstallNaturalPartEvent>
 [HarmonyPatch(typeof(Recipe_InstallNaturalBodyPart), nameof(Recipe_InstallNaturalBodyPart.ApplyOnPawn))]
 internal class Recipe_InstallNaturalBodyPart_ApplyOnPawn_Patch
 {
-    static void Prefix(Pawn pawn, BodyPartRecord part, Pawn billDoer)
+    static void Prefix(Recipe_InstallNaturalBodyPart __instance, Pawn pawn, BodyPartRecord part, Pawn billDoer)
     {
         var hediffs = pawn.health.hediffSet.hediffs.Where(h => h.Part == part);
         var hediffToRemove = hediffs.FirstOrDefault(h => h is Hediff_MissingPart || h.IsInstalledBodyPart());
-        var badHediff = GetBadHediff(pawn, part);
+        var badHediff = pawn.GetMostDangerousHediff(part);
 
         InstallNaturalPartContext.SurgeryRecipe_PreApplyOnPawn(pawn, () => new SurgeryInstallNaturalPartEvent(pawn, billDoer, part, hediffToRemove, badHediff));
     }
@@ -29,11 +29,6 @@ internal class Recipe_InstallNaturalBodyPart_ApplyOnPawn_Patch
     static void Postfix(Pawn pawn)
     {
         InstallNaturalPartContext.SurgeryRecipe_PostApplyOnPawn(pawn);
-    }
-
-    private static Hediff GetBadHediff(Pawn pawn, BodyPartRecord part)
-    {
-        return pawn.health.hediffSet.hediffs.FirstOrDefault(h => h.Visible && h.Part == part && h.def.isBad);
     }
 }
 

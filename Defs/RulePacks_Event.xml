@@ -86,11 +86,27 @@
 		<defName>PawnEvent_BodyPartInstalled</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>bodyPartInstalled(type==install)->[Doctor] installed [AddedPart_indefinite] on [PAWN].</li>
-				<li>bodyPartInstalled(type==replace)->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedPart_indefinite].</li>
-				<li>bodyPartInstalled(type==fix)    ->[Doctor] installed a healthy [AddedPart] on [PAWN] to treat [BadHediff].</li>
+				<li>bodyPartInstalled(type==Install)->[Doctor] installed [AddedPart_indefinite] on [PAWN].</li>
+				<li>bodyPartInstalled(type==Replace)->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedPart_indefinite].</li>
+				<li>bodyPartInstalled(type==Fix)    ->[Doctor] installed a healthy [AddedPart] on [PAWN] to treat [BadHediff].</li>
 
 				<li>BotchedSurgery->botched the installation of [AddedPart_indefinite] on [PAWN]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_BodyPartModded</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>ViolationNote(isViolation==True) ->, violating [PAWN_possessive] body</li>
+				<li>ViolationNote(isViolation==False)-></li>
+				
+				<li>bodyPartModded(type==Install)->[Doctor] installed [AddedHediff_indefinite] on [PAWN][ViolationNote].</li>
+				<li>bodyPartModded(type==Replace)->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedHediff_indefinite][ViolationNote].</li>
+				<li>bodyPartModded(type==Fix)    ->[Doctor] installed a [AddedHediff] on [PAWN] to treat [BadHediff][ViolationNote].</li>
+
+				<li>BotchedSurgery->botched the installation of [AddedHediff_indefinite] on [PAWN]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

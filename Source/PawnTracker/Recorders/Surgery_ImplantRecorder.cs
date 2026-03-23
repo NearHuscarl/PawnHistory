@@ -4,7 +4,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class Surgery_InstallImplantRecorder : SurgeryRecorder
+internal class Surgery_ImplantRecorder : SurgeryRecorder
 {
     public override void Register()
     {

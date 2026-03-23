@@ -68,6 +68,12 @@
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>BodyPartModded</defName>
+		<label>artifical body part installed</label>
+		<descriptionMaker>PawnEvent_BodyPartModded</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BotchedSurgery</defName>
 		<label>botched surgery</label>
 		<descriptionMaker>PawnEvent_BotchedSurgery</descriptionMaker>
