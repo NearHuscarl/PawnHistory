@@ -75,6 +75,7 @@
     <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HistoryTaleRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\ReadBookRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\StripRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WalkNakedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\SurgeryRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\Surgery_ModPartRecorder.cs" />

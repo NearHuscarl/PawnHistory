@@ -24,7 +24,7 @@ internal class SurgeryRecorder : RecorderBase
         var injuredParts = e.NewInjuries.Select(h => h.Part).Distinct().ToList();
         var bloodloss = e.Patient.GetBloodlossText();
         var outcomeType = GetSurgeryOutcomeType(e.Outcome, e.Patient);
-        var desc = recordDef.ResolveDescription("botchedSurgery", e.Patient)
+        var desc = recordDef.Description("botchedSurgery", e.Patient)
             .IncludePawnGrammar()
             .AddRule("Doctor", e.Doctor)
             .AddRule("BotchedSurgery", botched)

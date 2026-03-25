@@ -1,5 +1,6 @@
 ﻿using PawnHistory.Source.Helper;
 using RimWorld;
+using System;
 using System.Linq;
 using Verse;
 
@@ -7,6 +8,9 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 internal class HistoryTaleRecorder : RecorderBase
 {
+    protected bool skipDateCheck = false;
+    protected bool skipOverlapCheck = false;
+
     protected float DaysToRecordAgain { get; set; } = 1f;
 
     public override void Register() { }
@@ -21,15 +25,19 @@ internal class HistoryTaleRecorder : RecorderBase
         if (IsTooSoonToRecordAgain(recentRecords.FirstOrDefault()))
         {
             Log.Message($"[PawnHistory] Skipped recording {pawn}'s {recordDef.defName} event | TooSoon");
-            return false;
+            if (!skipDateCheck) return false;
         }
 
-        if (recentRecords.Any(r => LangUtility.IsTooSimilar(description, r.description, 0.7f)))
+        foreach (var record in recentRecords)
         {
-            Log.Message($"[PawnHistory] Skipped recording {pawn}'s {recordDef.defName} event | TooSimilar | \"{description}\"");
-            return false;
-        }
+            var overlapScore = LangUtility.GetOverlapScore(description, record.description);
+            if (overlapScore < 0.7f)
+                continue;
 
+            Log.Message($"[PawnHistory] Skipped recording {pawn}'s {recordDef.defName} event | TooSimilar({overlapScore})\n\n{description}\n\n{record.description}");
+            if (!skipOverlapCheck) return false;
+        }
+        
         return true;
     }
 

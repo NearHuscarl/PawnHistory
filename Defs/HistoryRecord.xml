@@ -155,4 +155,11 @@
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<importance>Minor</importance>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Stripped</defName>
+		<label>stripped</label>
+		<descriptionMaker>PawnEvent_Stripped</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<importance>Minor</importance>
+	</HistoryRecordDef>
 </Defs>

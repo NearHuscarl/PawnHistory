@@ -14,7 +14,7 @@ internal class Surgery_ModPartRecorder : SurgeryRecorder
         {
             if (e.Outcome.failure)
             {
-                var botched = HistoryRecordDefOf.BodyPartModded.ResolveDescription("BotchedSurgery", e.Patient)
+                var botched = HistoryRecordDefOf.BodyPartModded.Description("BotchedSurgery", e.Patient)
                     .AddRule("AddedHediff", e.Part, addSubsymbols: true)
                     .Resolve()
                     .ToLower();
@@ -47,7 +47,7 @@ internal class Surgery_ModPartRecorder : SurgeryRecorder
             return;
 
         var recordDef = HistoryRecordDefOf.BodyPartModded;
-        var desc = recordDef.ResolveDescription("bodyPartModded", e.Patient)
+        var desc = recordDef.Description("bodyPartModded", e.Patient)
             .IncludePawnGrammar()
             .AddRule("Doctor", e.Doctor)
             .AddRule("RemovedPart", e.Part)

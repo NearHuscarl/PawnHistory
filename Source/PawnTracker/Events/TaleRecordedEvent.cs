@@ -20,6 +20,9 @@ public static class TaleRecorder_RecordTale_Patch
         if (__result == null)
             return;
 
+        if (args.Length == 0 || args[0] is not Pawn)
+            return;
+
         var pawn = (Pawn)args[0];
         GameEventBus.Publish(new TaleRecordedEvent(__result, pawn, [.. args.Skip(1)]));
     }

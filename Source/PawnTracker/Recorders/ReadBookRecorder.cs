@@ -1,7 +1,6 @@
 ﻿using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
-using System.Security.Cryptography;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
@@ -23,9 +22,10 @@ internal class ReadBookRecorder : HistoryTaleRecorder
     {
         var recordDef = HistoryRecordDefOf.ReadBook;
         var book = e.Params[0] as Book;
-        var desc = recordDef.ResolveDescription("readbook", e.Pawn)
+        var bookTitle = book.Title.ApplyTag(TagType.Reward);
+        var desc = recordDef.Description("readbook", e.Pawn)
             .IncludePawnGrammar()
-            .AddRule("Book", book.Title.ApplyTag(TagType.Reward))
+            .AddRule("Book", bookTitle)
             .Resolve();
 
         if (!ShouldRecordTale(e.Pawn, recordDef, desc))
@@ -45,7 +45,27 @@ internal class ReadBookRecorder : HistoryTaleRecorder
 
             TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
             TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
+        }
+    }
+
+    public void TestSkipValidation(TestScenario scenario)
+    {
+        skipDateCheck = true;
+        var pawns = scenario.Pawn(15).Colonist().Create();
+
+        foreach (var pawn in pawns)
+        {
+            var book = BookUtility.MakeBook(ArtGenerationContext.Colony);
+            GenPlace.TryPlaceThing(book, pawn.Position, pawn.Map, ThingPlaceMode.Near);
+
+            TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
+            TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
+            TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
+            TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
+            TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
             TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
         }
+        skipDateCheck = false;
+        skipOverlapCheck = false;
     }
 }

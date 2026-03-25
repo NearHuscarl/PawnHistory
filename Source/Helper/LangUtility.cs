@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Verse;
 using Verse.Grammar;
@@ -57,9 +58,19 @@ internal static class LangUtility
         }
     }
 
+    public static string StripColorTags(string input)
+    {
+        return Regex.Replace(input, "<color=.*?>", string.Empty, RegexOptions.Compiled).Replace("</color>", string.Empty);
+    }
+
+    public static string StripTaggedContent(string s)
+    {
+        return Regex.Replace(s, "<[^>]+>[^<]*<\\/[^>]+>", string.Empty, RegexOptions.Compiled);
+    }
+
     private static string Normalize(string s)
     {
-        return new string([.. s
+        return new string([.. StripTaggedContent(s)
             .ToLowerInvariant()
             .Where(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))]);
     }
@@ -69,21 +80,19 @@ internal static class LangUtility
         return [.. Normalize(s).Split(' ', StringSplitOptions.RemoveEmptyEntries)];
     }
 
-    public static bool IsTooSimilar(string sentence1, string sentence2, float threshold = 0.5f)
+    public static float GetOverlapScore(string sentence1, string sentence2)
     {
         if (string.IsNullOrEmpty(sentence1) || string.IsNullOrEmpty(sentence2))
-            return false;
+            return 0f;
 
         var setA = Tokenize(sentence1);
         var setB = Tokenize(sentence2);
 
         if (setA.Count == 0 || setB.Count == 0)
-            return false;
+            return 0f;
 
         var common = setA.Intersect(setB).Count();
-        var minSize = Math.Min(setA.Count, setB.Count);
-        var overlap = (float)common / minSize;
-
-        return overlap >= threshold;
+        var union = setA.Union(setB).Count();
+        return (float)common / union;
     }
 }

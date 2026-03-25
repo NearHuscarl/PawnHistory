@@ -35,7 +35,7 @@ internal class BodyPartScarredRecorder : RecorderBase
         var instigator = dinfo?.Instigator as Pawn;
         var weapon = dinfo?.Weapon?.race != null ? dinfo?.Tool?.label /* body part like fist/teeth */ : dinfo?.Weapon?.label;
         var recordDef = HistoryRecordDefOf.BodyPartScarred;
-        var descBuilder = recordDef.ResolveDescription("bodyPartScarred", pawn)
+        var descBuilder = recordDef.Description("bodyPartScarred", pawn)
             .IncludePawnGrammar()
             .AddRule("PART", part.Label.Colorize(hediff.LabelColor))
             .AddRule("HEDIFF", hediff) // <permanentLabel>

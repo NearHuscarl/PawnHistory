@@ -32,6 +32,7 @@ internal class HistoryRecordDefOf
     public static HistoryRecordDef LightningStriked;
     public static HistoryRecordDef WalkNaked;
     public static HistoryRecordDef ReadBook;
+    public static HistoryRecordDef Stripped;
 
     static HistoryRecordDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(HistoryRecordDefOf));
 }

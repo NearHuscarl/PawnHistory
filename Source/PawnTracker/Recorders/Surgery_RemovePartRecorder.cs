@@ -17,7 +17,7 @@ internal class Surgery_RemovePartRecorder : SurgeryRecorder
 
             if (e.Outcome.failure)
             {
-                var botched = HistoryRecordDefOf.BodyPartRemoved.ResolveDescription("BotchedSurgery", e.Patient)
+                var botched = HistoryRecordDefOf.BodyPartRemoved.Description("BotchedSurgery", e.Patient)
                     .AddRule("Part", e.Part)
                     .AddConstant("intent", e.Intent)
                     .Resolve()
@@ -32,7 +32,7 @@ internal class Surgery_RemovePartRecorder : SurgeryRecorder
     private void HandleBodyPartRemovedEvent(SurgeryRemoveBodyPartEvent e)
     {
         var recordDef = HistoryRecordDefOf.BodyPartRemoved;
-        var desc = recordDef.ResolveDescription("bodyPartRemoved", e.Patient)
+        var desc = recordDef.Description("bodyPartRemoved", e.Patient)
             .AddRule("Doctor", e.Doctor)
             .AddRule("Part", e.Part.Label.Colorize(HediffDefOf.MissingBodyPart.defaultLabelColor))
             .AddRule("BadHediff", e.BadHediff?.LabelNounFull())

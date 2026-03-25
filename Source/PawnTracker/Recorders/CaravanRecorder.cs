@@ -40,7 +40,7 @@ internal class CaravanRecorder : RecorderBase
 
         foreach (var pawn in pawns)
         {
-            var desc = recordDef.ResolveDescription("tradeCaravanArrived", pawn)
+            var desc = recordDef.Description("tradeCaravanArrived", pawn)
                 .WithFaction(lord.faction)
                 .AddRule("TraderKind", traderKind)
                 .Resolve();
@@ -83,7 +83,7 @@ internal class CaravanRecorder : RecorderBase
 
             foreach (var pawn in pawns)
             {     
-                var desc = recordDef.ResolveDescription("tradeCaravanLeft", pawn)
+                var desc = recordDef.Description("tradeCaravanLeft", pawn)
                     .WithFaction(lord.faction)
                     .WithOthers(pawns)
                     .AddRule("TraderKind", traderKind)

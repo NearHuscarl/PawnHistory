@@ -1,7 +1,6 @@
 ﻿using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
-using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -21,7 +20,7 @@ internal class WalkNakedRecorder : HistoryTaleRecorder
     private void HandleWalkNakedEvent(TaleRecordedEvent e)
     {
         var recordDef = HistoryRecordDefOf.WalkNaked;
-        var desc = recordDef.ResolveDescription("walkNaked", e.Pawn)
+        var desc = recordDef.Description("walkNaked", e.Pawn)
             .IncludePawnGrammar()
             .Resolve();
 

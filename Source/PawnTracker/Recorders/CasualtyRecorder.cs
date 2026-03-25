@@ -58,7 +58,7 @@ internal class CasualtyRecorder : RecorderBase
         {
             var hediffInt = e.Subject.health.hediffSet.hediffs.Where(h => h.def == e.CulpritHediff).OrderBy(h => h.ageTicks).FirstOrDefault();
             var rootKeyword = isKillLog ? "KilledEntry" : "DownedEntry";
-            desc = recordDef.ResolveDescription(rootKeyword, e.Subject)
+            desc = recordDef.Description(rootKeyword, e.Subject)
                 .AddRule("HediffInPart", hediffInt, hediffInt?.Part, addSubsymbols: true)
                 .AddConstantIf(e.CulpritHediff != null, "reason", "true")
                 .Resolve();
@@ -85,7 +85,7 @@ internal class CasualtyRecorder : RecorderBase
             var relationDef = relative.GetMostImportantRelation(deceased);
             if (relationDef == null) continue;
 
-            var relativePov = recordDef.ResolveDescription("RelativePov", relative)
+            var relativePov = recordDef.Description("RelativePov", relative)
                 .AddRule("Relation", relationDef.GetGenderSpecificLabel(deceased))
                 .AddRule("Subject", deceased)
                 .Resolve();

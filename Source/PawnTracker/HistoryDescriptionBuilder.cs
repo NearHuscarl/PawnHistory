@@ -3,6 +3,8 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using UnityEngine;
 using Verse;
 using Verse.Grammar;
 
@@ -48,16 +50,25 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, string rootKe
         return AddRule(keyword, value.Resolve(), replaceIfExist);
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, Pawn pawn, bool replaceIfExist = false)
+    public HistoryDescriptionBuilder AddRule(string keyword, Pawn pawn, bool addSubsymbols = false, bool replaceIfExist = false)
     {
         if (pawn == null) return this;
-        return AddRule(keyword, pawn.NameShortColored.Resolve(), replaceIfExist);
+
+        AddRule(keyword, pawn.NameShortColored.Resolve(), replaceIfExist);
+
+        if (addSubsymbols)
+            return AddRules(GrammarUtility.RulesForPawn(keyword, pawn));
+        return this;
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, Faction faction, bool replaceIfExist = false)
+    public HistoryDescriptionBuilder AddRule(string keyword, Faction faction, bool addSubsymbols = false, bool replaceIfExist = false)
     {
         if (faction == null) return this;
-        return AddRule(keyword, faction.NameColored.Resolve(), replaceIfExist);
+        
+        AddRule(keyword, faction.NameColored.Resolve(), replaceIfExist);
+        if (addSubsymbols)
+            return AddRules(GrammarUtility.RulesForFaction(keyword, faction));
+        return this;
     }
 
     public HistoryDescriptionBuilder AddRule(string keyword, Hediff hediff, bool addSubsymbols = false, bool replaceIfExist = false)
@@ -168,14 +179,6 @@ public static class HistoryDescriptionBuilderExtensions
             return builder;
 
         return builder.AddRule("FACTION", faction.NameColored.Resolve());
-    }
-
-    public static HistoryDescriptionBuilder RulesForPawn(this HistoryDescriptionBuilder builder, string pawnSymbol, Pawn pawn)
-    {
-        if (pawn == null)
-            return builder;
-
-        return builder.AddRules(GrammarUtility.RulesForPawn(pawnSymbol, pawn));
     }
 
     public static HistoryDescriptionBuilder WithOthers(this HistoryDescriptionBuilder builder, List<Pawn> pawns)

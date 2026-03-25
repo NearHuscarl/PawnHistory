@@ -1,5 +1,8 @@
 ﻿using PawnHistory.Source.DebugTools;
+using PawnHistory.Source.Helper;
 using RimWorld;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -17,7 +20,7 @@ public class HistoryCardUtility
 
     private static float headerHeight;
 
-    private static float rowHeight;
+    private static float minRowHeight;
     private static float colGap;
     private static float colWidthDate;
     private static float colWidthIcon;
@@ -43,7 +46,7 @@ public class HistoryCardUtility
 
         headerHeight = 25f;
 
-        rowHeight = 32f;
+        minRowHeight = 32f;
         colGap = 5f;
         colWidthDate = 90f;
         colWidthIcon = 20f;
@@ -52,6 +55,20 @@ public class HistoryCardUtility
 
         scrollWidth = 16f;
         scrollPosition = Vector2.zero;
+    }
+
+    private static readonly Dictionary<HistoryRecord, float> cachedHeights = [];
+    private static float GetRowHeight(HistoryRecord record)
+    {
+        Text.Font = GameFont.Tiny;
+
+        if (!cachedHeights.TryGetValue(record, out var h))
+        {
+            var textHeight = Text.CalcHeight(LangUtility.StripColorTags(record.description), colWidthDesc);
+            h = Mathf.Max(textHeight, minRowHeight);
+            cachedHeights[record] = h;
+        }
+        return h;
     }
 
     public static void DrawHistoryCard(Rect tabRect, Pawn pawn, CompHistory comp)
@@ -75,14 +92,17 @@ public class HistoryCardUtility
         // --- SCROLL VIEW ---
         var tableY = filterHeight + gap + headerHeight;
         var outRect = new Rect(0, tableY, inRect.width, inRect.height - tableY);
-        var viewRect = new Rect(0, 0, inRect.width - scrollWidth, rowHeight * comp.records.Count);
+        var totalHeight = comp.records.Sum(GetRowHeight);
+        var viewRect = new Rect(0, 0, inRect.width - scrollWidth, totalHeight);
+        var curY = totalHeight;
 
         Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
-        for (int i = comp.records.Count - 1; i >= 0; i--)
+        for (int i = 0; i < comp.records.Count; i++)
         {
-            var rowIndex = comp.records.Count - 1 - i; // display in reversed order
             var record = comp.records[i];
-            var row = new Rect(0, rowHeight * rowIndex, viewRect.width, rowHeight);
+            var rowHeight = GetRowHeight(record);
+            curY -= rowHeight;
+            var row = new Rect(0, curY, viewRect.width, rowHeight);
             if (i % 2 == 0) Widgets.DrawHighlight(row);
 
             var dateCell = new Rect(row.x + cellPx, row.y, colWidthDate, row.height);
@@ -101,10 +121,14 @@ public class HistoryCardUtility
             var ticksAgo = GenTicks.TicksAbs - record.date;
             var dateAgoText = $"Occurred {ticksAgo.ToStringTicksToPeriod()} ago";
             TooltipHandler.TipRegion(descCell, dateAgoText);
-            if (Widgets.ButtonInvisible(row, record.concerns.Count > 0))
+            if (Mouse.IsOver(row) && Event.current.type == EventType.MouseDown && Event.current.button == 0)
             {
-                var thing = record.GetThingToJumpTo();
-                CameraJumper.TryJumpAndSelect(thing);
+                CameraJumper.TryJumpAndSelect(record.GetThingToJumpTo());
+            }
+            else if (Mouse.IsOver(descCell) && Event.current.type == EventType.MouseDown && Event.current.button == 1)
+            {
+                GUIUtility.systemCopyBuffer = LangUtility.StripColorTags(record.description);
+                Messages.Message("Record is copied to clipboard.", MessageTypeDefOf.NeutralEvent);
             }
         }
         Widgets.EndScrollView();

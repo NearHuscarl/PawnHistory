@@ -61,12 +61,11 @@ internal class MentalBreakRecorder : RecorderBase
         var hasCustomDescription = HasCustomDescription(mentalBreak, recordDef);
         var rootKeyword = hasCustomDescription ? "mentalBreak" : "mentalBreakDefault";
         var concerns = new List<Thing>() { mentalState?.causedByPawn, target };
-        var descBuilder = recordDef.ResolveDescription(rootKeyword, pawn)
+        var descBuilder = recordDef.Description(rootKeyword, pawn)
             .WithFaction(pawn.Faction)
             .IncludePawnGrammar()
             .AddRule("REASON", ParseReason(reason))
-            .RulesForPawn("TARGET", target)
-            .AddRule("TARGET", target);
+            .AddRule("TARGET", target, addSubsymbols: true);
 
         if (hasCustomDescription)
         {

@@ -115,9 +115,9 @@
 		<defName>PawnEvent_BodyPartScarred</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>bodyPartScarred(hasInstigator==true)            ->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART] by [INSTIGATOR]'s [WEAPON].</li>
-				<li>bodyPartScarred(hasInstigator==,hasWeapon==true)->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART] by [WEAPON].</li>
-				<li>bodyPartScarred(hasInstigator==,hasWeapon==)    ->[PAWN_label] has a [HEDIFF] in [PAWN_possessive] [PART].</li>
+				<li>bodyPartScarred(hasInstigator==true)            ->[PAWN_label] had a [HEDIFF] in [PAWN_possessive] [PART] by [INSTIGATOR]'s [WEAPON].</li>
+				<li>bodyPartScarred(hasInstigator==,hasWeapon==true)->[PAWN_label] had a [HEDIFF] in [PAWN_possessive] [PART] by [WEAPON].</li>
+				<li>bodyPartScarred(hasInstigator==,hasWeapon==)    ->[PAWN_label] had a [HEDIFF] in [PAWN_possessive] [PART].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -281,15 +281,39 @@
 				<li>image->[PAWN_nameDef] placed [Book] back on the shelf, a sense of accomplishment radiating from [PAWN_objective] [circumstance_phrase]</li>
 				<li>image->[PAWN_nameDef] sitted in quiet contemplation, reflecting on the profound truths within [Book] [circumstance_phrase]</li>
 				
-				<!-- too long
 				<li>desc_sentence->[PAWN_nameDef] was surrounded by [PAWN_possessive] notes on [Book].</li>
 				<li>desc_sentence->[PAWN_nameDef]'s eyes sparkled with newfound wisdom.</li>
 				<li>desc_sentence->[PAWN_nameDef] was forever changed by the teachings of [Book].</li>
 				<li>desc_sentence->There was a sense that some secrets are yet to be uncovered.</li>
-				-->
 
-				<!--<li>readbook->[image]. [desc_sentence]</li>-->
-				<li>readbook->[image].</li>
+				<li>readbook->[image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_Stripped</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_Job.xml#Stripped-->
+				<li>circumstance_phrase->with a sense of purpose</li>
+				<li>circumstance_phrase->with no hint of shame</li>
+				<li>circumstance_phrase->while others look on</li>
+				<li>circumstance_phrase->for no apparent reason</li>
+				<li>circumstance_phrase->while confused animals look on</li>
+				
+				<li>desc_sentence->[STRIPPED_nameDef] was visibly aroused.</li>
+				<li>desc_sentence->[STRIPPED_nameDef] was covered in unexplained moisture.</li>
+				<li>desc_sentence->[STRIPPED_nameDef] was breathing heavily for no obvious reason.</li>
+				<li>desc_sentence->[STRIPPED_nameDef] was fondling a shrub.</li>
+				<li>desc_sentence->[STRIPPED_nameDef] wore only a [AdjectiveAngsty] expression.</li>
+				
+				<li>image->[PAWN_nameDef] disrobed [STRIPPED_nameDef] in public [circumstance_phrase]</li>
+				<li>image->[PAWN_nameDef] removed the clothes of [STRIPPED_nameDef] [circumstance_phrase]</li>
+				<li>image->[PAWN_nameDef] held an armful of [Apparel]s while standing next to [STRIPPED_nameDef], who was completely naked [circumstance_phrase]</li>
+				<li>image->[PAWN_nameDef] waited patiently as [STRIPPED_nameDef] removed [STRIPPED_possessive] clothes [circumstance_phrase]</li>
+				
+				<li>stripped->[image]. [desc_sentence]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
