@@ -6,6 +6,12 @@ namespace PawnHistory.Source.Helper;
 
 internal static class PawnUtility
 {
+    // GrammarResolverSimple.cs -> "nameDef"
+    // TODO: test with shambler, shambler past colonist..
+    public static string NameDef(this Pawn pawn) => pawn.Name != null
+        ? Find.ActiveLanguageWorker.WithDefiniteArticle(pawn.Name.ToStringShort, pawn.gender, name: true).ApplyTag(TagType.Name).Resolve()
+        : pawn.KindLabelDefinite();
+
     public static Pawn GetOperatingDoctor(this Pawn patient)
     {
         var comp = patient.CurrentBed()?.GetComp<CompAssignableToPawn_Bed>();

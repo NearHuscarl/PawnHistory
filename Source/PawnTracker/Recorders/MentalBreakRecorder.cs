@@ -59,22 +59,20 @@ internal class MentalBreakRecorder : RecorderBase
         var mentalState = pawn.MentalState; // mentalState could be null in some MentalBreak
         var recordDef = mentalState?.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
         var hasCustomDescription = HasCustomDescription(mentalBreak, recordDef);
-        var rootKeyword = hasCustomDescription ? "mentalBreak" : "mentalBreakDefault";
         var concerns = new List<Thing>() { mentalState?.causedByPawn, target };
-        var descBuilder = recordDef.Description(rootKeyword, pawn)
+        var descBuilder = recordDef.Description(pawn)
             .WithFaction(pawn.Faction)
             .IncludePawnGrammar()
             .AddRule("REASON", ParseReason(reason))
-            .AddRule("TARGET", target, addSubsymbols: true);
+            .AddRule("TARGET", target, addSubsymbols: true)
+            .AddConstant("name", hasCustomDescription ? mentalBreak.defName : "Default");
 
+        // Reasons to override mental state's description:
+        // - Too long to fit in history record (RunWild, GiveUpExit)
+        // - Change to past tense as this is a history mod.
+        // - Some mental break messages are in strange places rather than from MentalBreakDef
         if (hasCustomDescription)
         {
-            // Reasons to override mental state's description:
-            // - Too long to fit in history record (RunWild, GiveUpExit)
-            // - Change to past tense as this is a history mod.
-            // - Some mental break messages are in strange places rather than from MentalBreakDef
-            descBuilder.AddConstant("name", mentalBreak.defName);
-
             if (mentalState is MentalState_BingingDrug bd)
                 descBuilder.AddRule("DRUG", bd.chemical.label);
             else if (mentalState is MentalState_TargetedTantrum tt)
@@ -110,9 +108,9 @@ internal class MentalBreakRecorder : RecorderBase
     private static bool HasCustomDescription(MentalBreakDef mentalBreak, HistoryRecordDef recordDef)
     {
         return recordDef.descriptionMaker.RulesPlusIncludes.Any(rule =>
-            rule.keyword == "mentalBreak" &&
+            rule.keyword == "entry" &&
             rule.constantConstraints != null &&
-            rule.constantConstraints.Any(c => c.key == "name" && c.value == mentalBreak.defName)
+            rule.constantConstraints.Any(c => c.key == "name" && c.value == mentalBreak.defName && c.value != "Default")
             );
     }
 

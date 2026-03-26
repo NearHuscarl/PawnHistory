@@ -1,4 +1,5 @@
 ﻿using LudeonTK;
+using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,7 @@ public static class DebugOutputsHistoryRecords
                     new TableDataGetter<HistoryRecord>("concerns", r => string.Join(", ", r.concerns.Select(c =>
                     {
                         if (c == null) return "null";
-                        if (c is Pawn p) return p.NameShortColored.Resolve();
+                        if (c is Pawn p) return p.NameDef();
                         return c.Label;
                     }))),
                     new TableDataGetter<HistoryRecord>("currentPawnToJumpTo", r => r.CurrentPawnToJumpTo)

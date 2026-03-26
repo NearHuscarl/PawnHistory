@@ -109,6 +109,12 @@
 		<descriptionMaker>PawnEvent_TravelGroupArrived</descriptionMaker>
 		<icon>EventIcons/TravelGroup</icon>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>ManInBlackJoin</defName>
+		<label>man in black joining</label>
+		<descriptionMaker>PawnEvent_ManInBlackJoin</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
 
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>MentalBreak</defName>

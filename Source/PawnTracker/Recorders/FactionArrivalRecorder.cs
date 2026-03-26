@@ -32,7 +32,7 @@ internal class FactionArrivalRecorder : RecorderBase
 
         foreach (var pawn in pawns)
         {
-            var desc = recordDef.Description("visitorArrived", pawn)
+            var desc = recordDef.Description(pawn)
                 .WithFaction(lord.faction)
                 .WithOthers(pawns)
                 .Resolve();
@@ -46,7 +46,7 @@ internal class FactionArrivalRecorder : RecorderBase
 
         foreach (var pawn in pawns)
         {
-            var desc = recordDef.Description("travelGroupArrived", pawn)
+            var desc = recordDef.Description(pawn)
                 .WithFaction(lord.faction)
                 .WithOthers(pawns)
                 .Resolve();

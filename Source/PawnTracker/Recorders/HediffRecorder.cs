@@ -25,9 +25,9 @@ internal class HediffRecorder : RecorderBase
 
     private void HandleAnesthetizedEvent(Pawn pawn, Hediff hediff)
     {
-        var desc = HistoryRecordDefOf.Anesthetized.ResolveDescription(pawn)
+        var desc = HistoryRecordDefOf.Anesthetized.Description(pawn)
             .AddRule("Anesthetic", hediff)
-            .Resolve();
+            .Format();
 
         AddRecord(HistoryRecordDefOf.Anesthetized, pawn, desc);
     }

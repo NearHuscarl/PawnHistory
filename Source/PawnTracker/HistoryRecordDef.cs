@@ -17,13 +17,8 @@ public class HistoryRecordDef : Def
 
 public static class HistoryRecordDefExtension
 {
-    public static HistoryDescriptionBuilder Description(this HistoryRecordDef recordDef, string rootKeyword, Pawn pawn)
+    public static HistoryDescriptionBuilder Description(this HistoryRecordDef recordDef, Pawn pawn)
     {
-        return new HistoryDescriptionBuilder(recordDef, rootKeyword, pawn);
-    }
-
-    public static HistoryDescriptionBuilder ResolveDescription(this HistoryRecordDef recordDef, Pawn pawn)
-    {
-        return new HistoryDescriptionBuilder(recordDef, null, pawn);
+        return new HistoryDescriptionBuilder(recordDef, pawn);
     }
 }

@@ -17,13 +17,13 @@
 		</include>
         <rulePack>
             <rulesStrings>
-				<li>raid(raidProperty==None)      ->[PAWN][AndOthers] from [FACTION] raided the colony.</li>
-				<li>raid(raidProperty==Breacher)  ->[PAWN][AndOthers] from [FACTION] raided the colony using breaching tactics.</li>
-				<li>raid(raidProperty==Sapper)    ->[PAWN][AndOthers] from [FACTION] raided the colony using sapper tactics.</li>
-				<li>raid(raidProperty==Siege)     ->[PAWN][AndOthers] from [FACTION] besieged the colony.</li>
-				<li>raid(raidProperty==CenterDrop)->[PAWN][AndOthers] from [FACTION] raided the colony by dropping directly into it.</li>
-				<li>raidFriendly(hostileFaction==)    ->[PAWN][AndOthers] from [FACTION] came to aid the colony.</li>
-				<li>raidFriendly(hostileFaction==true)->[PAWN][AndOthers] from [FACTION] came to aid the colony against [HOSTILEFACTION].</li>
+				<li>entry(raidProperty==None)      ->[PAWN][AndOthers] from [FACTION] raided the colony.</li>
+				<li>entry(raidProperty==Breacher)  ->[PAWN][AndOthers] from [FACTION] raided the colony using breaching tactics.</li>
+				<li>entry(raidProperty==Sapper)    ->[PAWN][AndOthers] from [FACTION] raided the colony using sapper tactics.</li>
+				<li>entry(raidProperty==Siege)     ->[PAWN][AndOthers] from [FACTION] besieged the colony.</li>
+				<li>entry(raidProperty==CenterDrop)->[PAWN][AndOthers] from [FACTION] raided the colony by dropping directly into it.</li>
+				<li>entryFriendly(hostileFaction==)    ->[PAWN][AndOthers] from [FACTION] came to aid the colony.</li>
+				<li>entryFriendly(hostileFaction==true)->[PAWN][AndOthers] from [FACTION] came to aid the colony against [HOSTILEFACTION].</li>
 			</rulesStrings>
         </rulePack>
     </RulePackDef>
@@ -32,10 +32,10 @@
         <defName>PawnEvent_BodyPartDestroyed</defName>
         <rulePack>
             <rulesStrings>
-                <li>bodyPartDestroyed(hasInstigator==True, hasDmgSource==True) ->[PAWN]'s [Part] was [Destroyed] by [Instigator]'s [DmgSource].</li>
-                <li>bodyPartDestroyed(hasInstigator==True, hasDmgSource==False)->[PAWN]'s [Part] was [Destroyed] by [Instigator].</li>
-                <li>bodyPartDestroyed(hasInstigator==False,hasDmgSource==True) ->[PAWN]'s [Part] was [Destroyed] by [DmgSource].</li>
-                <li>bodyPartDestroyed(hasInstigator==False,hasDmgSource==False)->[PAWN]'s [Part] was [Destroyed].</li>
+                <li>entry(hasInstigator==True, hasDmgSource==True) ->[PAWN]'s [Part] was [Destroyed] by [Instigator]'s [DmgSource].</li>
+                <li>entry(hasInstigator==True, hasDmgSource==False)->[PAWN]'s [Part] was [Destroyed] by [Instigator].</li>
+                <li>entry(hasInstigator==False,hasDmgSource==True) ->[PAWN]'s [Part] was [Destroyed] by [DmgSource].</li>
+                <li>entry(hasInstigator==False,hasDmgSource==False)->[PAWN]'s [Part] was [Destroyed].</li>
             </rulesStrings>
         </rulePack>
     </RulePackDef>
@@ -53,7 +53,7 @@
 				<li>Severity(outcomeType==Death)->fatally</li>
 				<li>Severity(outcomeType==Sterilized)->hilariously</li>
 
-				<li>botchedSurgery->[Doctor] [Severity] [BotchedSurgery], causing [NewInjuries].</li>
+				<li>entry->[Doctor] [Severity] [BotchedSurgery], causing [NewInjuries].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -62,8 +62,8 @@
 		<defName>PawnEvent_BodyPartRemoved</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>bodyPartRemoved(intent==Harvest)   ->[PAWN]'s [Part] was harvested by [Doctor].</li>
-				<li>bodyPartRemoved(intent==Amputate)  ->[PAWN]'s [Part] was amputated by [Doctor] due to [BadHediff].</li>
+				<li>entry(intent==Harvest)   ->[PAWN]'s [Part] was harvested by [Doctor].</li>
+				<li>entry(intent==Amputate)  ->[PAWN]'s [Part] was amputated by [Doctor] due to [BadHediff].</li>
 
 				<li>BotchedSurgery(intent==Amputate)->botched an amputation on [PAWN]'s [Part]</li>
 				<li>BotchedSurgery(intent==Harvest) ->botched a harvest on [PAWN]'s [Part]</li>
@@ -75,7 +75,7 @@
 		<defName>PawnEvent_BodyPartImplanted</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>bodyPartImplanted->[Doctor] installed [ImplantHediff_indefinite] in [PAWN]'s [EnhancedPart].</li>
+				<li>entry->[Doctor] installed [ImplantHediff_indefinite] in [PAWN]'s [EnhancedPart].</li>
 				
 				<li>BotchedSurgery->botched the implantation of [ImplantHediff_indefinite] on [PAWN]</li>
 			</rulesStrings>
@@ -86,9 +86,9 @@
 		<defName>PawnEvent_BodyPartInstalled</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>bodyPartInstalled(type==Install)->[Doctor] installed [AddedPart_indefinite] on [PAWN].</li>
-				<li>bodyPartInstalled(type==Replace)->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedPart_indefinite].</li>
-				<li>bodyPartInstalled(type==Fix)    ->[Doctor] installed a healthy [AddedPart] on [PAWN] to treat [BadHediff].</li>
+				<li>entry(type==Install)->[Doctor] installed [AddedPart_indefinite] on [PAWN].</li>
+				<li>entry(type==Replace)->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedPart_indefinite].</li>
+				<li>entry(type==Fix)    ->[Doctor] installed a healthy [AddedPart] on [PAWN] to treat [BadHediff].</li>
 
 				<li>BotchedSurgery->botched the installation of [AddedPart_indefinite] on [PAWN]</li>
 			</rulesStrings>
@@ -102,9 +102,9 @@
 				<li>ViolationNote(isViolation==True) ->, violating [PAWN_possessive] body</li>
 				<li>ViolationNote(isViolation==False)-></li>
 				
-				<li>bodyPartModded(type==Install)->[Doctor] installed [AddedHediff_indefinite] on [PAWN][ViolationNote].</li>
-				<li>bodyPartModded(type==Replace)->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedHediff_indefinite][ViolationNote].</li>
-				<li>bodyPartModded(type==Fix)    ->[Doctor] installed a [AddedHediff] on [PAWN] to treat [BadHediff][ViolationNote].</li>
+				<li>entry(type==Install)->[Doctor] installed [AddedHediff_indefinite] on [PAWN][ViolationNote].</li>
+				<li>entry(type==Replace)->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedHediff_indefinite][ViolationNote].</li>
+				<li>entry(type==Fix)    ->[Doctor] installed a [AddedHediff] on [PAWN] to treat [BadHediff][ViolationNote].</li>
 
 				<li>BotchedSurgery->botched the installation of [AddedHediff_indefinite] on [PAWN]</li>
 			</rulesStrings>
@@ -119,8 +119,8 @@
 				<li>InBodyPart(hasInstigator==False,hasDmgSource==True) ->in [PAWN_possessive] [Part] by [DmgSource]</li>
 				<li>InBodyPart(hasInstigator==False,hasDmgSource==False)->in [PAWN_possessive] [Part]</li>
 
-				<li>bodyPartScarred(reason==InstantDamage)->[PAWN_nameDef] had [Hediff_indefinite] [InBodyPart].</li>
-				<li>bodyPartScarred(reason==PostHeal)     ->[PAWN_nameDef] recovered with [Hediff_indefinite] [InBodyPart].</li>
+				<li>entry(reason==InstantDamage)->[PAWN] had [Hediff_indefinite] [InBodyPart].</li>
+				<li>entry(reason==PostHeal)     ->[PAWN] recovered with [Hediff_indefinite] [InBodyPart].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -133,10 +133,10 @@
 				<li>Downed(reason==true)->was incapacitated due to [HediffInPart_indefinite]</li>
 				<li>Died(reason==)      ->died</li>
 				<li>Died(reason==true)  ->died because of [HediffInPart_indefinite]</li>
-				<li>RelativePov         ->[PAWN]'s [Relation], [Subject],</li>
 				
-				<li>DownedEntry         ->[PAWN] [Downed].</li>
-				<li>KilledEntry         ->[PAWN] [Died].</li>
+				<li>relativePov->[PAWN]'s [Relation], [Subject],</li>
+				<li>downedEntry->[PAWN] [Downed].</li>
+				<li>killedEntry->[PAWN] [Died].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -145,7 +145,7 @@
 		<defName>PawnEvent_TradeCaravanArrived</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>tradeCaravanArrived->[PAWN] arrived as part of a [TraderKind] caravan from [FACTION].</li>
+				<li>entry->[PAWN] arrived as part of a [TraderKind] caravan from [FACTION].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -154,12 +154,12 @@
 		<defName>PawnEvent_TradeCaravanLeft</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>tradeCaravanLeft(reason==Timeout)             ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony.</li>
-				<li>tradeCaravanLeft(reason==DangerousTemperature)->[PAWN] from [TraderKind] of [FACTION] began to leave the colony because of dangerous temperature.</li>
-				<li>tradeCaravanLeft(reason==AnomalousWeather)    ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony because of anomalous weather.</li>
-				<li>tradeCaravanLeft(reason==Trapped)             ->[PAWN] from [TraderKind] of [FACTION] attempted to leave because the caravan became trapped inside.</li>
-				<li>tradeCaravanLeft(reason==TraderLost)          ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony after their trader or caravan animal was incapacitated.</li>
-				<li>tradeCaravanLeft(reason==PawnLost)            ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony after some of their members were lost.</li>
+				<li>entry(reason==Timeout)             ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony.</li>
+				<li>entry(reason==DangerousTemperature)->[PAWN] from [TraderKind] of [FACTION] began to leave the colony because of dangerous temperature.</li>
+				<li>entry(reason==AnomalousWeather)    ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony because of anomalous weather.</li>
+				<li>entry(reason==Trapped)             ->[PAWN] from [TraderKind] of [FACTION] attempted to leave because the caravan became trapped inside.</li>
+				<li>entry(reason==TraderLost)          ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony after their trader or caravan animal was incapacitated.</li>
+				<li>entry(reason==PawnLost)            ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony after some of their members were lost.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -171,7 +171,7 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>visitorArrived->[PAWN][AndOthers] from [FACTION] arrived to visit the colony.</li>
+				<li>entry->[PAWN][AndOthers] from [FACTION] arrived to visit the colony.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -183,7 +183,18 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>travelGroupArrived->[PAWN][AndOthers] from [FACTION] passed by the colony.</li>
+				<li>entry->[PAWN][AndOthers] from [FACTION] passed by the colony.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_ManInBlackJoin</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>RelClause(hasRelation==True) ->. [PAWN_pronoun] is [Other]'s [Relation]</li>
+				<li>RelClause(hasRelation==False)-></li>
+				<li>entry->Sensing trouble, a mysterious [PAWN_kind] named [PAWN] arrived[RelClause]. Would [PAWN_pronoun] be able to set things right in these parts?</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -192,28 +203,28 @@
 		<defName>PawnEvent_MentalBreak</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>mentalBreak(name==Berserk)             ->[PAWN] went berserk. [PAWN_pronoun] was going to attack anyone [PAWN_pronoun] sees. [REASON]</li>
-				<li>mentalBreak(name==FireStartingSpree)   ->[PAWN] was on a fire starting spree. [PAWN_pronoun] wandered around for a while, randomly starting fires. [REASON]</li>
-				<li>mentalBreak(name==Catatonic)           ->[PAWN] suffered a total mental breakdown and entered a catatonic state for several days. [REASON]</li>
-				<li>mentalBreak(name==Jailbreaker)         ->[PAWN] had a mental breakdown and was going to induce [PRISONERS] to escape. [REASON]</li>
-				<li>mentalBreak(name==RunWild)             ->[PAWN] was fed up with civilization. [PAWN_pronoun] decided to leave [FACTION] to live with the animals in the wild. [REASON]</li>
-				<li>mentalBreak(name==GiveUpExit)          ->[PAWN] gave up on this community. [PAWN_pronoun] decided to leave and pursue a better life elsewhere. [REASON]</li>
-				<li>mentalBreak(name==Binging_DrugExtreme) ->[PAWN] binged on [DRUG] during an extreme mental break. [REASON]</li>
-				<li>mentalBreak(name==Binging_DrugMajor)   ->[PAWN] binged on [DRUG] during a major mental break. [REASON]</li>
-				<li>mentalBreak(name==Binging_Food)        ->[PAWN] pigged out on food. [REASON]</li>
-				<li>mentalBreak(name==Wander_Psychotic)    ->[PAWN] wandered around in a psychotic state. [REASON]</li>
-				<li>mentalBreak(name==Wander_Sad)          ->[PAWN] broke down and wandered around in sadness. [REASON]</li>
-				<li>mentalBreak(name==Wander_OwnRoom)      ->[PAWN] hid in [PAWN_possessive] room. [REASON]</li>
-				<li>mentalBreak(name==Tantrum)             ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash up random furniture, items and structures. [REASON]</li>
-				<li>mentalBreak(name==TargetedTantrum)     ->[PAWN] had a tantrum. [PAWN_pronoun] was going to destroy [THING]. [REASON]</li>
-				<li>mentalBreak(name==BedroomTantrum)      ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash things in [PAWN_possessive] room. [REASON]</li>
-				<li>mentalBreak(name==SadisticRage)        ->[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. [REASON]</li>
-				<li>mentalBreak(name==InsultingSpree)      ->[PAWN] was on an insulting spree. [PAWN_pronoun] was going to wander around, randomly insulting others. [REASON]</li>
-				<li>mentalBreak(name==Slaughterer)         ->[PAWN] had a mental breakdown and was going to vent [PAWN_possessive] anger by slaughtering [TARGET]. [REASON]</li>
-				<li>mentalBreak(name==TargetedInsultingSpree)  ->[PAWN] fixated [PAWN_possessive] rage on [TARGET]. [PAWN_pronoun] was going to follow [TARGET_objective] around, hurling insults. [REASON]</li>
-				<li>mentalBreak(name==CorpseObsession)     ->[PAWN] became obsessed with corpses. [PAWN_pronoun] was going to find and present [TARGET]'s corpse for all to see. [REASON]</li>
-				<li>mentalBreak(name==MurderousRage)       ->[PAWN] flew into a murderous rage and decided to kill [TARGET]. [REASON]</li>
-				<li>mentalBreakDefault                     ->[INGAMEDESC]. [REASON]</li>
+				<li>entry(name==Berserk)             ->[PAWN] went berserk. [PAWN_pronoun] was going to attack anyone [PAWN_pronoun] sees. [REASON]</li>
+				<li>entry(name==FireStartingSpree)   ->[PAWN] was on a fire starting spree. [PAWN_pronoun] wandered around for a while, randomly starting fires. [REASON]</li>
+				<li>entry(name==Catatonic)           ->[PAWN] suffered a total mental breakdown and entered a catatonic state for several days. [REASON]</li>
+				<li>entry(name==Jailbreaker)         ->[PAWN] had a mental breakdown and was going to induce [PRISONERS] to escape. [REASON]</li>
+				<li>entry(name==RunWild)             ->[PAWN] was fed up with civilization. [PAWN_pronoun] decided to leave [FACTION] to live with the animals in the wild. [REASON]</li>
+				<li>entry(name==GiveUpExit)          ->[PAWN] gave up on this community. [PAWN_pronoun] decided to leave and pursue a better life elsewhere. [REASON]</li>
+				<li>entry(name==Binging_DrugExtreme) ->[PAWN] binged on [DRUG] during an extreme mental break. [REASON]</li>
+				<li>entry(name==Binging_DrugMajor)   ->[PAWN] binged on [DRUG] during a major mental break. [REASON]</li>
+				<li>entry(name==Binging_Food)        ->[PAWN] pigged out on food. [REASON]</li>
+				<li>entry(name==Wander_Psychotic)    ->[PAWN] wandered around in a psychotic state. [REASON]</li>
+				<li>entry(name==Wander_Sad)          ->[PAWN] broke down and wandered around in sadness. [REASON]</li>
+				<li>entry(name==Wander_OwnRoom)      ->[PAWN] hid in [PAWN_possessive] room. [REASON]</li>
+				<li>entry(name==Tantrum)             ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash up random furniture, items and structures. [REASON]</li>
+				<li>entry(name==TargetedTantrum)     ->[PAWN] had a tantrum. [PAWN_pronoun] was going to destroy [THING]. [REASON]</li>
+				<li>entry(name==BedroomTantrum)      ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash things in [PAWN_possessive] room. [REASON]</li>
+				<li>entry(name==SadisticRage)        ->[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. [REASON]</li>
+				<li>entry(name==InsultingSpree)      ->[PAWN] was on an insulting spree. [PAWN_pronoun] was going to wander around, randomly insulting others. [REASON]</li>
+				<li>entry(name==Slaughterer)         ->[PAWN] had a mental breakdown and was going to vent [PAWN_possessive] anger by slaughtering [TARGET]. [REASON]</li>
+				<li>entry(name==TargetedInsultingSpree)  ->[PAWN] fixated [PAWN_possessive] rage on [TARGET]. [PAWN_pronoun] was going to follow [TARGET_objective] around, hurling insults. [REASON]</li>
+				<li>entry(name==CorpseObsession)     ->[PAWN] became obsessed with corpses. [PAWN_pronoun] was going to find and present [TARGET]'s corpse for all to see. [REASON]</li>
+				<li>entry(name==MurderousRage)       ->[PAWN] flew into a murderous rage and decided to kill [TARGET]. [REASON]</li>
+				<li>entry(name==Default)             ->[INGAMEDESC]. [REASON]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -227,8 +238,9 @@
 			<rulesStrings>
 				<li>WithOthers(OtherCount==0)   -></li>
 				<li>WithOthers(OtherCount>=1)   -> with [Others]</li>
-				<li>prisonBreak(initiator==true)->[PAWN] started a prison break. [PAWN_pronoun] broke the locks open and tried to escape[WithOthers].</li>
-				<li>prisonBreak(initiator==)    ->[PAWN][AndOthers] joined [INITIATOR]'s prison break and tried to escape.</li>
+				<li>entry(initiator==true)->[PAWN] started a prison break. [PAWN_pronoun] broke the locks open and tried to escape[WithOthers].</li>
+				<li>entry(initiator==)    ->[PAWN][AndOthers] joined [INITIATOR]'s prison break and tried to escape.</li>
+
 				<li>jailbreaker(initiator==)    ->[Reason] As a result, [PAWN][AndOthers] started a prison break.</li>
 			</rulesStrings>
 		</rulePack>
@@ -255,17 +267,17 @@
 				<li>circumstance_phrase->for no apparent reason</li>
 				<li>circumstance_phrase->while confused animals looked on</li>
 
-				<li>image->[PAWN_nameDef] [nude_action] while in a state of nature [circumstance_phrase]</li>
-				<li>image->[PAWN_nameDef] [nude_action] in the nude [circumstance_phrase]</li>
-				<li>image->[PAWN_nameDef] [nude_action], naked, [circumstance_phrase]</li>
-				<li>image->[PAWN_nameDef] [nude_action] without any clothes on [circumstance_phrase]</li>
+				<li>image->[PAWN] [nude_action] while in a state of nature [circumstance_phrase]</li>
+				<li>image->[PAWN] [nude_action] in the nude [circumstance_phrase]</li>
+				<li>image->[PAWN] [nude_action], naked, [circumstance_phrase]</li>
+				<li>image->[PAWN] [nude_action] without any clothes on [circumstance_phrase]</li>
 				
 				<li>desc_sentence->[PAWN_pronoun] was visibly aroused.</li>
 				<li>desc_sentence->[PAWN_pronoun] was covered in unexplained moisture.</li>
 				<li>desc_sentence->[PAWN_pronoun] was breathing heavily for no obvious reason.</li>
 				<li>desc_sentence->[PAWN_pronoun] was fondling a shrub.</li>
 
-				<li>walkNaked->[image]. [desc_sentence]</li>
+				<li>entry->[image]. [desc_sentence]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -279,17 +291,17 @@
 				<li>circumstance_phrase->with a cup of tea by [PAWN_possessive] side</li>
 				<li>circumstance_phrase->under the soft glow of a reading lamp</li>
 				
-				<li>image->[PAWN_nameDef] closed [Book] for the last time, a satisfied smile gracing [PAWN_possessive] face [circumstance_phrase]</li>
-				<li>image->[PAWN_nameDef] turned the pages of [Book], absorbing the knowledge within [circumstance_phrase]</li>
-				<li>image->[PAWN_nameDef] placed [Book] back on the shelf, a sense of accomplishment radiating from [PAWN_objective] [circumstance_phrase]</li>
-				<li>image->[PAWN_nameDef] sitted in quiet contemplation, reflecting on the profound truths within [Book] [circumstance_phrase]</li>
+				<li>image->[PAWN] closed [Book] for the last time, a satisfied smile gracing [PAWN_possessive] face [circumstance_phrase]</li>
+				<li>image->[PAWN] turned the pages of [Book], absorbing the knowledge within [circumstance_phrase]</li>
+				<li>image->[PAWN] placed [Book] back on the shelf, a sense of accomplishment radiating from [PAWN_objective] [circumstance_phrase]</li>
+				<li>image->[PAWN] sitted in quiet contemplation, reflecting on the profound truths within [Book] [circumstance_phrase]</li>
 				
-				<li>desc_sentence->[PAWN_nameDef] was surrounded by [PAWN_possessive] notes on [Book].</li>
-				<li>desc_sentence->[PAWN_nameDef]'s eyes sparkled with newfound wisdom.</li>
-				<li>desc_sentence->[PAWN_nameDef] was forever changed by the teachings of [Book].</li>
+				<li>desc_sentence->[PAWN] was surrounded by [PAWN_possessive] notes on [Book].</li>
+				<li>desc_sentence->[PAWN]'s eyes sparkled with newfound wisdom.</li>
+				<li>desc_sentence->[PAWN] was forever changed by the teachings of [Book].</li>
 				<li>desc_sentence->There was a sense that some secrets are yet to be uncovered.</li>
 
-				<li>readbook->[image]. [desc_sentence]</li>
+				<li>entry->[image]. [desc_sentence]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -305,18 +317,18 @@
 				<li>circumstance_phrase->for no apparent reason</li>
 				<li>circumstance_phrase->while confused animals look on</li>
 				
-				<li>desc_sentence->[STRIPPED_nameDef] was visibly aroused.</li>
-				<li>desc_sentence->[STRIPPED_nameDef] was covered in unexplained moisture.</li>
-				<li>desc_sentence->[STRIPPED_nameDef] was breathing heavily for no obvious reason.</li>
-				<li>desc_sentence->[STRIPPED_nameDef] was fondling a shrub.</li>
-				<li>desc_sentence->[STRIPPED_nameDef] wore only a [AdjectiveAngsty] expression.</li>
+				<li>desc_sentence->[STRIPPED] was visibly aroused.</li>
+				<li>desc_sentence->[STRIPPED] was covered in unexplained moisture.</li>
+				<li>desc_sentence->[STRIPPED] was breathing heavily for no obvious reason.</li>
+				<li>desc_sentence->[STRIPPED] was fondling a shrub.</li>
+				<li>desc_sentence->[STRIPPED] wore only a [AdjectiveAngsty] expression.</li>
 				
-				<li>image->[PAWN_nameDef] disrobed [STRIPPED_nameDef] in public [circumstance_phrase]</li>
-				<li>image->[PAWN_nameDef] removed the clothes of [STRIPPED_nameDef] [circumstance_phrase]</li>
-				<li>image->[PAWN_nameDef] held an armful of [Apparel]s while standing next to [STRIPPED_nameDef], who was completely naked [circumstance_phrase]</li>
-				<li>image->[PAWN_nameDef] waited patiently as [STRIPPED_nameDef] removed [STRIPPED_possessive] clothes [circumstance_phrase]</li>
+				<li>image->[PAWN] disrobed [STRIPPED] in public [circumstance_phrase]</li>
+				<li>image->[PAWN] removed the clothes of [STRIPPED] [circumstance_phrase]</li>
+				<li>image->[PAWN] held an armful of [Apparel]s while standing next to [STRIPPED], who was completely naked [circumstance_phrase]</li>
+				<li>image->[PAWN] waited patiently as [STRIPPED] removed [STRIPPED_possessive] clothes [circumstance_phrase]</li>
 				
-				<li>stripped->[image]. [desc_sentence]</li>
+				<li>entry->[image]. [desc_sentence]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

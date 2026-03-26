@@ -17,7 +17,7 @@ class InstallNaturalPartContext : SurgeryContext<SurgeryInstallNaturalPartEvent>
 [HarmonyPatch(typeof(Recipe_InstallNaturalBodyPart), nameof(Recipe_InstallNaturalBodyPart.ApplyOnPawn))]
 internal class Recipe_InstallNaturalBodyPart_ApplyOnPawn_Patch
 {
-    static void Prefix(Recipe_InstallNaturalBodyPart __instance, Pawn pawn, BodyPartRecord part, Pawn billDoer)
+    static void Prefix(Pawn pawn, BodyPartRecord part, Pawn billDoer)
     {
         if (billDoer == null) return; // not surgery related
 

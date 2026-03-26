@@ -26,8 +26,7 @@ internal class StripRecorder : HistoryTaleRecorder
     {
         var recordDef = HistoryRecordDefOf.Stripped;
         var strippedPawn = e.Params[0] as Pawn;
-        var desc = recordDef.Description("stripped", e.Pawn)
-            .IncludePawnGrammar()
+        var desc = recordDef.Description(e.Pawn)
             .AddRule("STRIPPED", strippedPawn, addSubsymbols: true)
             .Resolve();
 

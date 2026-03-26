@@ -12,9 +12,9 @@ internal class Surgery_ImplantRecorder : SurgeryRecorder
         {
             if (e.Outcome.failure)
             {
-                var botched = HistoryRecordDefOf.BodyPartImplanted.Description("BotchedSurgery", e.Patient)
+                var botched = HistoryRecordDefOf.BodyPartImplanted.Description(e.Patient)
                     .AddRule("ImplantHediff", e.HediffToAdd, addSubsymbols: true)
-                    .Resolve()
+                    .Resolve("BotchedSurgery")
                     .ToLower();
                 HandleBotchSurgeryEvent(e, botched);
             }
@@ -29,7 +29,7 @@ internal class Surgery_ImplantRecorder : SurgeryRecorder
             return;
 
         var recordDef = HistoryRecordDefOf.BodyPartImplanted;
-        var desc = recordDef.Description("bodyPartImplanted", e.Patient)
+        var desc = recordDef.Description(e.Patient)
             .AddRule("Doctor", e.Doctor)
             .AddRule("ImplantHediff", e.HediffToAdd, addSubsymbols: true)
             .AddRule("EnhancedPart", e.Part)

@@ -11,7 +11,7 @@ namespace PawnHistory.Source.Helper;
 
 internal static class LangUtility
 {
-    public static TaggedString FormatList(List<Pawn> pawns) => FormatList(pawns, p => p.NameShortColored.Resolve());
+    public static TaggedString FormatList(List<Pawn> pawns) => FormatList(pawns, p => p.NameDef());
 
     public static TaggedString FormatList<T>(List<T> items, Func<T, string> toString = null, string otherText = null)
     {
@@ -31,7 +31,7 @@ internal static class LangUtility
         return "NH_PH_List_Many".Translate(n1, n2, count - 2, Find.ActiveLanguageWorker.Pluralize(otherText));
     }
 
-    public static string ReplaceFirst(this string text, string search, string replace)
+    public static string ReplaceFirstMatch(this string text, string search, string replace)
     {
         int pos = text.IndexOf(search);
         if (pos < 0) return text;

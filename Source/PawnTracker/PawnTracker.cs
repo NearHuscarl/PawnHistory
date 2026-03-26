@@ -34,14 +34,15 @@ namespace PawnHistory.Source.PawnTracker;
 // Social fight
 // + Base
 // - Ideology
-// Birthday event
 // Panic Flee
-// Botched surgery
+// Scarred body part
+// + Instant from injury damage
+// + Post heal
+// - Birthday event
+// - Scarfication ritual
+// Birthday event
 // Catching fire: handle with permanent/missing hediffs.
 // Craft a legendary item
-// Permanent injury
-// + From combat
-// - From other curcumstances: scarification ritual, anomaly ritual, healing wound `.ispermanent = true`
 // Mental breaks
 // + Base game
 // - DLC breaks

@@ -20,7 +20,7 @@ internal class WalkNakedRecorder : HistoryTaleRecorder
     private void HandleWalkNakedEvent(TaleRecordedEvent e)
     {
         var recordDef = HistoryRecordDefOf.WalkNaked;
-        var desc = recordDef.Description("walkNaked", e.Pawn)
+        var desc = recordDef.Description(e.Pawn)
             .IncludePawnGrammar()
             .Resolve();
 

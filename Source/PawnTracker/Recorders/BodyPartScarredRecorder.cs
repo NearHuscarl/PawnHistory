@@ -30,7 +30,7 @@ internal class BodyPartScarredRecorder : RecorderBase
         var instigator = e.Instigator as Pawn;
         var dmgSource = hediff.GetDamageSource();
         var recordDef = HistoryRecordDefOf.BodyPartScarred;
-        var descBuilder = recordDef.Description("bodyPartScarred", pawn)
+        var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
             .AddRule("Part", part.Label.Colorize(hediff.LabelColor))
             .AddRule("Hediff", hediff, addSubsymbols: true) // <permanentLabel>
@@ -38,9 +38,10 @@ internal class BodyPartScarredRecorder : RecorderBase
             .AddConstant("hasInstigator", instigator != null)
             .AddRule("DmgSource", dmgSource)
             .AddConstant("hasDmgSource", dmgSource != null)
-            .AddConstant("reason", e.Reason);
+            .AddConstant("reason", e.Reason)
+            .Resolve();
 
-        AddRecord(recordDef, pawn, descBuilder.Resolve(), [instigator]);
+        AddRecord(recordDef, pawn, desc, [instigator]);
     }
 
     public void TestInjury(TestScenario scenario)

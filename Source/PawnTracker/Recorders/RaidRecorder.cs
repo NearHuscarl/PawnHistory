@@ -34,12 +34,12 @@ internal class RaidRecorder : RecorderBase
         {
             var rules = new List<Rule>();
             var constants = new Dictionary<string, string>();
-            var desc = recordDef.Description("raidFriendly", pawn)
+            var desc = recordDef.Description(pawn)
                 .WithFaction(faction)
                 .WithOthers(pawns)
                 .AddConstantIf(hostileFaction != null, "hostileFaction", "true") // not manhunter/insect
                 .AddRule("HOSTILEFACTION", hostileFaction)
-                .Resolve();
+                .Resolve("entryFriendly");
 
             AddRecord(recordDef, pawn, desc);
         }
@@ -71,7 +71,7 @@ internal class RaidRecorder : RecorderBase
 
         foreach (var pawn in pawns)
         {
-            var desc = recordDef.Description("raid", pawn)
+            var desc = recordDef.Description(pawn)
                 .WithFaction(faction)
                 .WithOthers(pawns)
                 .AddConstant("raidProperty", raidProperty)

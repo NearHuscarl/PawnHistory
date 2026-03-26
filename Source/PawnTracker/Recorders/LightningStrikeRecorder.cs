@@ -56,10 +56,10 @@ internal class LightningStrikeRecorder : RecorderBase
     private void HandleLightningHitEvent(Pawn pawn, Hediff hediff, BodyPartRecord part)
     {
         var recordDef = HistoryRecordDefOf.LightningStriked;
-        var desc = recordDef.ResolveDescription(pawn)
+        var desc = recordDef.Description(pawn)
             .AddRule("POSSESSIVE", pawn.Possessive())
             .AddRule("PART", part.Label.Colorize(hediff.LabelColor))
-            .Resolve();
+            .Format();
 
         AddRecord(recordDef, pawn, desc);
     }

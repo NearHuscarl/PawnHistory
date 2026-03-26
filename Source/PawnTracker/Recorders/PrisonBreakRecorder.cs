@@ -31,7 +31,7 @@ internal class PrisonBreakRecorder : RecorderBase
 
         foreach (var pawn in e.EscapingPrisoners)
         {
-            var builder = recordDef.Description("prisonBreak", pawn)
+            var builder = recordDef.Description(pawn)
                 .AddConstantIf(pawn == e.Initiator, "initiator", "true")
                 .IncludePawnGrammar(pawn == e.Initiator)
                 .AddRuleIf(pawn != e.Initiator, "INITIATOR", e.Initiator);
@@ -52,10 +52,10 @@ internal class PrisonBreakRecorder : RecorderBase
 
         foreach (var pawn in e.EscapingPrisoners)
         {
-            var desc = recordDef.Description("jailbreaker", pawn)
+            var desc = recordDef.Description(pawn)
                 .WithOthers(e.EscapingPrisoners)
                 .AddRule("Reason", e.LogEntryText)
-                .Resolve();
+                .Resolve("jailbreaker");
 
             AddRecord(recordDef, pawn, desc, concerns);
         }

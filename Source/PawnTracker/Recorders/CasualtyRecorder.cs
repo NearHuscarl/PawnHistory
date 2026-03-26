@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
@@ -57,11 +58,11 @@ internal class CasualtyRecorder : RecorderBase
         if (combatLogText == null)
         {
             var hediffInt = e.Subject.health.hediffSet.hediffs.Where(h => h.def == e.CulpritHediff).OrderBy(h => h.ageTicks).FirstOrDefault();
-            var rootKeyword = isKillLog ? "KilledEntry" : "DownedEntry";
-            desc = recordDef.Description(rootKeyword, e.Subject)
+            var rootKeyword = isKillLog ? "killedEntry" : "downedEntry";
+            desc = recordDef.Description(e.Subject)
                 .AddRule("HediffInPart", hediffInt, hediffInt?.Part, addSubsymbols: true)
                 .AddConstantIf(e.CulpritHediff != null, "reason", "true")
-                .Resolve();
+                .Resolve(rootKeyword);
         }
         else
             desc = $"{combatLogText} {transitionText}";
@@ -75,7 +76,7 @@ internal class CasualtyRecorder : RecorderBase
     private void HandleRelativeDeathEvent(Pawn deceased, Pawn initiator, Pawn originalTarget, string combatLogText, string transitionText, string deathDesc)
     {
         var recordDef = HistoryRecordDefOf.RelativeDeath;
-        var deceasedName = deceased.NameShortColored.Resolve();
+        var deceasedName = deceased.NameDef();
 
         foreach (var relative in deceased.relations.PotentiallyRelatedPawns)
         {
@@ -85,15 +86,15 @@ internal class CasualtyRecorder : RecorderBase
             var relationDef = relative.GetMostImportantRelation(deceased);
             if (relationDef == null) continue;
 
-            var relativePov = recordDef.Description("RelativePov", relative)
+            var relativePov = recordDef.Description(relative)
                 .AddRule("Relation", relationDef.GetGenderSpecificLabel(deceased))
                 .AddRule("Subject", deceased)
-                .Resolve();
+                .Resolve("relativePov");
 
             // "A died" -> "C's brother, A, died"
             var desc = combatLogText != null
-                ? transitionText.ReplaceFirst(deceasedName, relativePov) + " " + combatLogText
-                : deathDesc.ReplaceFirst(deceasedName, relativePov);
+                ? transitionText.ReplaceFirstMatch(deceasedName, relativePov) + " " + combatLogText
+                : deathDesc.ReplaceFirstMatch(deceasedName, relativePov);
 
             AddRecord(recordDef, relative, desc, [deceased, initiator, originalTarget]);
         }

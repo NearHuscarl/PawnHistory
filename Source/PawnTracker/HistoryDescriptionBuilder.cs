@@ -10,10 +10,9 @@ using Verse.Grammar;
 
 namespace PawnHistory.Source.PawnTracker;
 
-public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, string rootKeyword, Pawn pawn)
+public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn)
 {
     public HistoryRecordDef HistoryRecordDef { get; } = recordDef;
-    public string RootKeyword { get; } = rootKeyword;
     public Pawn Pawn { get; } = pawn;
 
     private bool includePawnRules;
@@ -54,7 +53,7 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, string rootKe
     {
         if (pawn == null) return this;
 
-        AddRule(keyword, pawn.NameShortColored.Resolve(), replaceIfExist);
+        AddRule(keyword, pawn.NameDef(), replaceIfExist);
 
         if (addSubsymbols)
             return AddRules(GrammarUtility.RulesForPawn(keyword, pawn));
@@ -132,25 +131,25 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, string rootKe
         return this;
     }
 
-    public string Resolve()
+    public string Format()
     {
-        if (HistoryRecordDef.descriptionMaker == null)
+        if (HistoryRecordDef.description == null)
         {
-            if (HistoryRecordDef.description == null)
-            {
-                Log.Error($"PawnEventDef '{HistoryRecordDef.defName}' does not have description defined in either rulePackDef or description.");
-                return "ERR: No description found";
-            }
-
-            List<NamedArgument> args = [Pawn.NameShortColored.Named("PAWN")];
-
-            foreach (var kvp in namedArgs)
-                args.Add(kvp.Value.Named(kvp.Key));
-
-            return HistoryRecordDef.description.Formatted(args).Resolve();
+            Log.Error($"PawnEventDef '{HistoryRecordDef.defName}' does not have description defined in either rulePackDef or description.");
+            return "ERR: No description found";
         }
 
-        if (RootKeyword == null)
+        List<NamedArgument> args = [Pawn.NameDef().Named("PAWN")];
+
+        foreach (var kvp in namedArgs)
+            args.Add(kvp.Value.Named(kvp.Key));
+
+        return HistoryRecordDef.description.Formatted(args).Resolve();
+    }
+
+    public string Resolve(string rootKeyword = "entry")
+    {
+        if (rootKeyword == null)
         {
             Log.Error($"Error when resolving '{HistoryRecordDef.defName}' description: RootKeyword is null.");
             return "ERR: RootKeyword=null";
@@ -159,7 +158,7 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, string rootKe
         var request = new GrammarRequest();
 
         request.Includes.Add(HistoryRecordDef.descriptionMaker);
-        request.Rules.Add(new Rule_String("PAWN", Pawn.NameShortColored.Resolve()));
+        request.Rules.Add(new Rule_String("PAWN", Pawn.NameDef()));
 
         if (includePawnRules)
             request.Rules.AddRange(GrammarUtility.RulesForPawn("PAWN", Pawn));
@@ -167,7 +166,7 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, string rootKe
         request.Rules.AddRange(extraRules);
         request.Constants.AddRange(extraConstants);
 
-        return GrammarResolver.Resolve(RootKeyword, request);
+        return GrammarResolver.Resolve(rootKeyword, request);
     }
 }
 

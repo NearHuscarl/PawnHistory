@@ -50,15 +50,16 @@ internal class BodyPartDestroyedRecorder : RecorderBase
         var instigator = dinfo?.Instigator as Pawn;
         var dmgSource = dinfo?.GetDamageSource();
         var recordDef = HistoryRecordDefOf.BodyPartDestroyed;
-        var descBuilder = recordDef.Description("bodyPartDestroyed", pawn)
+        var desc = recordDef.Description(pawn)
             .AddRule("Part", part.Label.Colorize(hediff.LabelColor))
             .AddRule("Destroyed", hediff) // <destroyedLabel>
             .AddRule("Instigator", instigator)
             .AddConstant("hasInstigator", instigator != null)
             .AddRule("DmgSource", dmgSource)
-            .AddConstant("hasDmgSource", dmgSource != null);
+            .AddConstant("hasDmgSource", dmgSource != null)
+            .Resolve();
 
-        AddRecord(recordDef, pawn, descBuilder.Resolve(), [instigator]);
+        AddRecord(recordDef, pawn, desc, [instigator]);
     }
 
     // hasInstigator==true,hasDmgSource==true

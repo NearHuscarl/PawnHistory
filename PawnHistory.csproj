@@ -62,6 +62,7 @@
     <Compile Include="Source\Helper\HediffUtility.cs" />
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
     <Compile Include="Source\PawnTracker\Events\BodyPartScarredEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\WandererJoinedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\TaleRecordedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallArtificialPartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallNaturalPartEvent.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Source\PawnTracker\Events\SurgeryEvent.cs" />
     <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HistoryTaleRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\ManInBlackJoinRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\ReadBookRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\StripRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WalkNakedRecorder.cs" />
