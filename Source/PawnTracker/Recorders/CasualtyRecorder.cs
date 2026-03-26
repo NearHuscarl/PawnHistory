@@ -123,7 +123,7 @@ internal class CasualtyRecorder : RecorderBase
             .ThatMatches(ShouldRecord)
             .FullHeal()
             .SetRandomRelations(5)
-            .Create();
+            .Execute();
 
         DebugViewSettings.neverForceNormalSpeed = true;
         Find.TickManager.CurTimeSpeed = TimeSpeed.Ultrafast;

@@ -39,7 +39,7 @@ internal class StripRecorder : HistoryTaleRecorder
 
     public override void Test(TestScenario scenario)
     {
-        var pawns = scenario.Pawn(15).Colonist().Create();
+        var pawns = scenario.Pawn(15).Colonist().Execute();
 
         for (var i = 0; i < pawns.Count; i++)
         {

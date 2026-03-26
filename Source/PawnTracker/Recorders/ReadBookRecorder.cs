@@ -36,7 +36,7 @@ internal class ReadBookRecorder : HistoryTaleRecorder
 
     public override void Test(TestScenario scenario)
     {
-        var pawns = scenario.Pawn(15).Colonist().Create();
+        var pawns = scenario.Pawn(15).Colonist().Execute();
 
         foreach (var pawn in pawns)
         {
@@ -51,7 +51,7 @@ internal class ReadBookRecorder : HistoryTaleRecorder
     public void TestSkipValidation(TestScenario scenario)
     {
         skipDateCheck = true;
-        var pawns = scenario.Pawn(15).Colonist().Create();
+        var pawns = scenario.Pawn(15).Colonist().Execute();
 
         foreach (var pawn in pawns)
         {

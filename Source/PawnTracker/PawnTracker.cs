@@ -6,9 +6,10 @@ namespace PawnHistory.Source.PawnTracker;
 
 // Features:
 // - Display history record
-//   - Colorize names and important information
+//   - Colorized names and important information
 //   - Tooltip
-//   - Click to jump to related pawns
+//   - Left Click to jump to related pawns
+//   - Right Click to copy description to clipboard
 //   - Some icons
 
 // Icon References (AssetRipper)

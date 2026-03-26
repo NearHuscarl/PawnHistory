@@ -49,12 +49,14 @@ internal static class LangUtility
         {
             if (!prefix.NullOrEmpty())
                 prefix += "_";
-            
+
+            var rawText = StripColorTags(text);
+
             yield return new Rule_String(prefix + "plural", Find.ActiveLanguageWorker.Pluralize(text));
-            yield return new Rule_String(prefix + "pluralDef", Find.ActiveLanguageWorker.WithDefiniteArticle(Find.ActiveLanguageWorker.Pluralize(text)));
-            yield return new Rule_String(prefix + "pluralIndef", Find.ActiveLanguageWorker.WithIndefiniteArticle(Find.ActiveLanguageWorker.Pluralize(text)));
-            yield return new Rule_String(prefix + "definite", Find.ActiveLanguageWorker.WithDefiniteArticle(text));
-            yield return new Rule_String(prefix + "indefinite", Find.ActiveLanguageWorker.WithIndefiniteArticle(text));
+            yield return new Rule_String(prefix + "pluralDef", Find.ActiveLanguageWorker.WithDefiniteArticlePostProcessed(Find.ActiveLanguageWorker.Pluralize(rawText)).Replace(rawText, text));
+            yield return new Rule_String(prefix + "pluralIndef", Find.ActiveLanguageWorker.WithIndefiniteArticlePostProcessed(Find.ActiveLanguageWorker.Pluralize(rawText)).Replace(rawText, text));
+            yield return new Rule_String(prefix + "definite", Find.ActiveLanguageWorker.WithDefiniteArticlePostProcessed(rawText).Replace(rawText, text));
+            yield return new Rule_String(prefix + "indefinite", Find.ActiveLanguageWorker.WithIndefiniteArticlePostProcessed(rawText).Replace(rawText, text));
         }
     }
 

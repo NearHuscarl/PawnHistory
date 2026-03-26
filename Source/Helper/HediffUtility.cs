@@ -1,6 +1,8 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Verse;
@@ -23,6 +25,42 @@ public static class HediffHelper
     public static bool IsInstalledBodyPart(this Hediff h)
     {
         return h.def.addedPartProps != null;
+    }
+
+    private static string FormatDamageSource(ThingDef sourceDef, BodyPartGroupDef sourceBodyPartGroup, string sourceToolLabel, string sourceLabel)
+    {
+        // pawn (fist, bite, etc.), returns "right fist" rather than "human fist"
+        if (sourceDef?.race != null)
+            return sourceBodyPartGroup?.label ?? sourceToolLabel;
+
+        // weapon
+        if (!sourceToolLabel.NullOrEmpty())
+            return "SourceToolLabel".Translate((NamedArgument)sourceLabel, (NamedArgument)sourceToolLabel).Resolve();
+
+        if (sourceBodyPartGroup != null)
+            return "SourceToolLabel".Translate((NamedArgument)sourceLabel, (NamedArgument)sourceBodyPartGroup.LabelShort).Resolve();
+
+        return sourceLabel;
+    }
+
+    // Reference: Hediff_Injury.LabelInBrackets
+    public static string GetDamageSource(this Hediff h) => FormatDamageSource(h.sourceDef, h.sourceBodyPartGroup, h.sourceToolLabel, h.sourceLabel);
+
+    // Reference: DamageWorker_AddInjury.FinalizeAndAddInjury
+    public static string GetDamageSource(this DamageInfo dinfo)
+    {
+        var sourceDef = dinfo.Weapon;
+        var sourceBodyPartGroup = dinfo.WeaponBodyPartGroup;
+        var sourceToolLabel = dinfo.Tool?.labelNoLocation ?? dinfo.Tool?.label;
+
+        string sourceLabel;
+
+        if (dinfo.Instigator is Pawn instigator && instigator.IsMutant && dinfo.Weapon == ThingDefOf.Human)
+            sourceLabel = instigator.mutant.Def.label;
+        else
+            sourceLabel = dinfo.Weapon?.label ?? "";
+
+        return FormatDamageSource(sourceDef, sourceBodyPartGroup, sourceToolLabel, sourceLabel);
     }
 
     public static IEnumerable<Hediff> VisibleHediffs(Pawn pawn)

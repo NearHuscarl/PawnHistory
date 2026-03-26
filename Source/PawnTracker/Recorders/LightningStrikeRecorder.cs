@@ -70,6 +70,6 @@ internal class LightningStrikeRecorder : RecorderBase
             .WithPosition(Find.CurrentMap.Center, 8)
             .ThatMatches(ShouldRecord)
             .Do(p => Find.CurrentMap.weatherManager.eventHandler.AddEvent(new WeatherEvent_LightningStrike(Find.CurrentMap, p.Position)))
-            .Create();
+            .Execute();
     }
 }

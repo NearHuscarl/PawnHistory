@@ -36,9 +36,6 @@ public class HistoryCardUtility
     [NearDebugAction]
     private static void ReloadLayoutConfig()
     {
-        //var pawns = DebugTools.AllPawns();
-        //System.Diagnostics.Debugger.Break();
-
         containerPadding = 8f;
         gap = 10f;
 
@@ -121,6 +118,12 @@ public class HistoryCardUtility
             var ticksAgo = GenTicks.TicksAbs - record.date;
             var dateAgoText = $"Occurred {ticksAgo.ToStringTicksToPeriod()} ago";
             TooltipHandler.TipRegion(descCell, dateAgoText);
+
+            if (Mouse.IsOver(row))
+            {
+                foreach (var target in record.concerns)
+                    TargetHighlighter.Highlight(target);
+            }
             if (Mouse.IsOver(row) && Event.current.type == EventType.MouseDown && Event.current.button == 0)
             {
                 CameraJumper.TryJumpAndSelect(record.GetThingToJumpTo());

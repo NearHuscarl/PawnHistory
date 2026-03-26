@@ -41,7 +41,7 @@ internal class SocialFightRecorder : RecorderBase
                 .ThatMatches(ShouldRecord)
                 .GroupTogether()
                 .Do((p, i, pawns) => p.interactions.TryInteractWith(pawns[(i + 1) % pawns.Count], InteractionDefOf.Insult))
-                .Create();
+                .Execute();
         }
         finally
         {

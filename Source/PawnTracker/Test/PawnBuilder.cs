@@ -122,7 +122,7 @@ public class PawnBuilder(int count = 1)
 
     public Pawn CreateSingle(bool reusePawns = true)
     {
-        return Create(reusePawns).FirstOrDefault();
+        return Execute(reusePawns).FirstOrDefault();
     }
 
     private List<Pawn> SourcePawns(bool reusePawns)
@@ -153,7 +153,7 @@ public class PawnBuilder(int count = 1)
         return pawns;
     }
 
-    public List<Pawn> Create(bool reusePawns = true)
+    public List<Pawn> Execute(bool reusePawns = true)
     {
         var res = pawns ?? SourcePawns(reusePawns);
 
@@ -194,6 +194,24 @@ public class PawnBuilder(int count = 1)
         var hediffDef = DefDatabase<HediffDef>.GetNamed(defName);
         var partDef = DefDatabase<BodyPartDef>.GetNamed(partDefName);
         return AddHediff(hediffDef, partDef);
+    }
+
+    public PawnBuilder TendInjuries(float quality = 1f)
+    {
+        return Do(pawn =>
+        {
+            if (pawn.Dead) return;
+
+            var injuries = pawn.health.hediffSet.hediffs
+                .OfType<Hediff_Injury>()
+                .Where(h => h.TendableNow())
+                .ToList();
+
+            foreach (var injury in injuries)
+            {
+                injury.Tended(quality, quality);
+            }
+        });
     }
 
     public PawnBuilder Heal()
@@ -344,6 +362,24 @@ public class PawnBuilder(int count = 1)
 
 static class PawnBuilderExtension
 {
+    public static PawnBuilder EquipWeapon(this PawnBuilder builder, string weaponDefName, Func<Pawn, int, bool> ShouldEquip = null)
+    {
+        return builder.EquipWeapon(DefDatabase<ThingDef>.GetNamed(weaponDefName), ShouldEquip);
+    }
+    public static PawnBuilder EquipWeapon(this PawnBuilder builder, ThingDef weaponDef, Func<Pawn, int, bool> ShouldEquip = null)
+    {
+        return builder.Do((pawn, i) =>
+        {
+            if (pawn.Dead || (ShouldEquip?.Invoke(pawn, i) ?? false)) return;
+
+            var weapon = ThingMaker.MakeThing(weaponDef);
+
+            pawn.equipment ??= new Pawn_EquipmentTracker(pawn);
+            pawn.equipment.DestroyEquipment(pawn.equipment.Primary);
+            pawn.equipment.AddEquipment((ThingWithComps)weapon);
+        });
+    }
+
     public static PawnBuilder StripNaked(this PawnBuilder builder)
     {
         return builder.Do(pawn =>

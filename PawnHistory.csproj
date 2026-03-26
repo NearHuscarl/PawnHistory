@@ -51,6 +51,7 @@
     <Compile Include="Source\DebugTools\DebugUtility.cs" />
     <Compile Include="Source\DebugTools\NearDebugActionAttribute.cs" />
     <Compile Include="Source\DebugTools\NearDebugOutputAttribute.cs" />
+    <Compile Include="Source\DebugTools\NearDebugSettings.cs" />
     <Compile Include="Source\DebugTools\ReloadableAttribute.cs" />
     <Compile Include="Source\Helper\LangUtility.cs" />
     <Compile Include="Source\Helper\PawnUtility.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Source\DebugTools\DebugOutputsHistoryRecords.cs" />
     <Compile Include="Source\Helper\HediffUtility.cs" />
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
+    <Compile Include="Source\PawnTracker\Events\BodyPartScarredEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\TaleRecordedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallArtificialPartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallNaturalPartEvent.cs" />

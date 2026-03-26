@@ -32,7 +32,7 @@ internal class WalkNakedRecorder : HistoryTaleRecorder
 
     public override void Test(TestScenario scenario)
     {
-        var pawns = scenario.Pawn(15).Colonist().StripNaked().Create();
+        var pawns = scenario.Pawn(15).Colonist().StripNaked().Execute();
 
         foreach (var pawn in pawns)
         {

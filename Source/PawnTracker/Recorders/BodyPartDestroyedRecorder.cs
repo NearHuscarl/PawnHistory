@@ -1,4 +1,5 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+﻿using PawnHistory.Source.Helper;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
@@ -47,25 +48,20 @@ internal class BodyPartDestroyedRecorder : RecorderBase
     private void HandleDestroyPartEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo)
     {
         var instigator = dinfo?.Instigator as Pawn;
-        var weapon = dinfo?.Weapon?.race != null ? dinfo?.Tool?.label /* body part like fist/teeth */ : dinfo?.Weapon?.label;
+        var dmgSource = dinfo?.GetDamageSource();
         var recordDef = HistoryRecordDefOf.BodyPartDestroyed;
         var descBuilder = recordDef.Description("bodyPartDestroyed", pawn)
-            .AddRule("PART", part.Label.Colorize(hediff.LabelColor))
+            .AddRule("Part", part.Label.Colorize(hediff.LabelColor))
             .AddRule("Destroyed", hediff) // <destroyedLabel>
-            .AddRule("WEAPON", weapon)
-            .AddConstantIf(weapon != null, "hasWeapon", "true");
-
-        if (dinfo?.Instigator is Pawn)
-        {
-            descBuilder
-                .AddRule("INSTIGATOR", instigator)
-                .AddConstant("hasInstigator", "true");
-        }
+            .AddRule("Instigator", instigator)
+            .AddConstant("hasInstigator", instigator != null)
+            .AddRule("DmgSource", dmgSource)
+            .AddConstant("hasDmgSource", dmgSource != null);
 
         AddRecord(recordDef, pawn, descBuilder.Resolve(), [instigator]);
     }
 
-    // hasInstigator==true,hasWeapon==true
+    // hasInstigator==true,hasDmgSource==true
     public override void Test(TestScenario scenario)
     {
         HashSet<BodyPartDef> nonVitalParts =
@@ -91,11 +87,15 @@ internal class BodyPartDestroyedRecorder : RecorderBase
         scenario.Pawn(pawns1.Concat(pawns2))
             .AddHediff("Painstopper", "Brain")
             .AddHediff("GoJuiceHigh", "Brain")
+            .EquipWeapon("Weapon_GrenadeFrag", (_, i) => i % 2 == 0)
             .WeakenParts(nonVitalParts, oneSide: true)
-            .Create();
+            .Execute();
+
+        DebugViewSettings.neverForceNormalSpeed = true;
+        Find.TickManager.CurTimeSpeed = TimeSpeed.Ultrafast;
     }
 
-    // hasInstigator==,hasWeapon==
+    // hasInstigator==,hasDmgSource==
     public void TestBurn(TestScenario scenario)
     {
         HashSet<BodyPartDef> nonVitalParts =
@@ -116,7 +116,7 @@ internal class BodyPartDestroyedRecorder : RecorderBase
             .AddHediff("Painstopper", "Brain")
             .AddHediff("GoJuiceHigh", "Brain")
             .WeakenParts(nonVitalParts, true)
-            .Create();
+            .Execute();
 
         Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
 

@@ -32,10 +32,10 @@
         <defName>PawnEvent_BodyPartDestroyed</defName>
         <rulePack>
             <rulesStrings>
-                <li>bodyPartDestroyed(hasInstigator==true, hasWeapon==true)->[PAWN]'s [PART] was [Destroyed] by [INSTIGATOR]'s [WEAPON].</li>
-                <li>bodyPartDestroyed(hasInstigator==true, hasWeapon==)    ->[PAWN]'s [PART] was [Destroyed] by [INSTIGATOR].</li>
-                <li>bodyPartDestroyed(hasInstigator==,hasWeapon==true)     ->[PAWN]'s [PART] was [Destroyed] by [WEAPON].</li>
-                <li>bodyPartDestroyed(hasInstigator==,hasWeapon==)         ->[PAWN]'s [PART] was [Destroyed].</li>
+                <li>bodyPartDestroyed(hasInstigator==True, hasDmgSource==True) ->[PAWN]'s [Part] was [Destroyed] by [Instigator]'s [DmgSource].</li>
+                <li>bodyPartDestroyed(hasInstigator==True, hasDmgSource==False)->[PAWN]'s [Part] was [Destroyed] by [Instigator].</li>
+                <li>bodyPartDestroyed(hasInstigator==False,hasDmgSource==True) ->[PAWN]'s [Part] was [Destroyed] by [DmgSource].</li>
+                <li>bodyPartDestroyed(hasInstigator==False,hasDmgSource==False)->[PAWN]'s [Part] was [Destroyed].</li>
             </rulesStrings>
         </rulePack>
     </RulePackDef>
@@ -115,9 +115,12 @@
 		<defName>PawnEvent_BodyPartScarred</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>bodyPartScarred(hasInstigator==true)            ->[PAWN_label] had a [HEDIFF] in [PAWN_possessive] [PART] by [INSTIGATOR]'s [WEAPON].</li>
-				<li>bodyPartScarred(hasInstigator==,hasWeapon==true)->[PAWN_label] had a [HEDIFF] in [PAWN_possessive] [PART] by [WEAPON].</li>
-				<li>bodyPartScarred(hasInstigator==,hasWeapon==)    ->[PAWN_label] had a [HEDIFF] in [PAWN_possessive] [PART].</li>
+				<li>InBodyPart(hasInstigator==True)                     ->in [PAWN_possessive] [Part] by [Instigator]'s [DmgSource]</li>
+				<li>InBodyPart(hasInstigator==False,hasDmgSource==True) ->in [PAWN_possessive] [Part] by [DmgSource]</li>
+				<li>InBodyPart(hasInstigator==False,hasDmgSource==False)->in [PAWN_possessive] [Part]</li>
+
+				<li>bodyPartScarred(reason==InstantDamage)->[PAWN_nameDef] had [Hediff_indefinite] [InBodyPart].</li>
+				<li>bodyPartScarred(reason==PostHeal)     ->[PAWN_nameDef] recovered with [Hediff_indefinite] [InBodyPart].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

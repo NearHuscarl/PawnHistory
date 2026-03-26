@@ -236,6 +236,6 @@ internal class MentalBreakRecorder : RecorderBase
                 }
             })
             .Do((p, i) => p.StartMentalBreakWithMadeupThought(mentalBreaks[i]))
-            .Create();
+            .Execute();
     }
 }
