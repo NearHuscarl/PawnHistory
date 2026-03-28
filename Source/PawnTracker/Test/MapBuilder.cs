@@ -134,13 +134,14 @@ public class MapBuilder
         return WithThing(ThingDefOf.MedicineUltratech, 30);
     }
 
-    public MapBuilder AsPrison(int prisonerCount, List<Pawn> prisoners = null)
+    public MapBuilder AsPrison(int prisonerCount, int bedCount = 0, List<Pawn> prisoners = null)
     {
         actions.Add(_ =>
         {
+            if (bedCount == 0) bedCount = prisonerCount;
             var rect = TestScenario.LastRoomRect;
             var interior = rect.ContractedBy(1);
-            var cells = interior.Cells.Where(c => c.x % 2 == 0 && c.z > interior.minZ).Take(prisonerCount);
+            var cells = interior.Cells.Where(c => c.x % 2 == 0 && c.z > interior.minZ).Take(bedCount);
 
             foreach (var cell in cells)
             {

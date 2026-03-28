@@ -39,6 +39,10 @@ public class TickDelayManager(Game game) : GameComponent
                 {
                     a.Action?.Invoke();
                 }
+                catch (Exception e)
+                {
+                    Log.Error($"Error while executing action {a.Action}, {e}");
+                }
                 finally
                 {
                     if (a.Repeat && !a.Cancelled)

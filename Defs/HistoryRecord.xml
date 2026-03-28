@@ -151,9 +151,15 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>SocialFight</defName>
 		<label>social fight</label>
-		<icon>Ui/Icons/ColonistBar/MentalStateAggro</icon>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 	</HistoryRecordDef>
 
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PrisonerCaptured</defName>
+		<label>prisoner captured</label>
+		<descriptionMaker>PawnEvent_PrisonerCaptured</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonBreak</defName>
 		<label>prison break</label>

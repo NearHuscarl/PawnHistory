@@ -273,6 +273,44 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_PrisonerCaptured</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>circumstance_phrase->as [Prisoner_pronoun] writhed on the ground</li>
+				<li>circumstance_phrase->as [Prisoner_pronoun] twisted in pain</li>
+				<li>circumstance_phrase->with professional efficiency</li>
+				<li>circumstance_phrase->roughly and amateurishly</li>
+				<li>circumstance_phrase->with obviously excessive force</li>
+				<li>circumstance_phrase->with obvious pleasure</li>
+				<li>circumstance_phrase->while smiling with dominance</li>
+				
+				<li>image->[Captor] captured [Prisoner] [circumstance_phrase]</li>
+				<li>image->[Captor] tied [Prisoner]'s hands [circumstance_phrase]</li>
+				<li>image->[Captor] smacked [Prisoner] [circumstance_phrase]</li>
+				<li>image->[Captor] dragged [Prisoner] away in restraints [circumstance_phrase]</li>
+				<li>image->[Captor] roughed up [Prisoner] [circumstance_phrase]</li>
+				<li>image->[Captor] forced [Prisoner] into captivity [circumstance_phrase]</li>
+				
+				<li>desc_sentence->[Captor] looked into [Prisoner_possessive] eyes with a sense of dominance.</li>
+				<li>desc_sentence->[Prisoner] was injured and seemed to be in pain.</li>
+				<li>desc_sentence->[Prisoner] looked resigned to [Prisoner_possessive] fate.</li>
+				<li>desc_sentence->[Prisoner] snarled with the fury of defeat.</li>
+				<li>desc_sentence->[Captor] slapped [Prisoner] to subdue [Prisoner_objective].</li>
+				<li>desc_sentence->[Captor] twisted [Prisoner_possessive] ear.</li>
+				<li>desc_sentence->[Captor] held [Prisoner_objective] in a joint lock.</li>
+				<li>desc_sentence->[Captor] spat into [Prisoner_possessive] face.</li>
+				<li>desc_sentence->[Captor] laughed as tears welled up in [Prisoner_possessive] eyes.</li>
+				<li>desc_sentence->[Captor] kicked [Prisoner_objective] for no obvious reason.</li>
+
+				<li>contextClause->[Prisoner], a member of [HostileFaction], was put into [RoomQuality_indefinite] prison</li>
+
+				<li>entry->[image]. [contextClause].</li>
+				<li>entry->[image]. [desc_sentence] [contextClause].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_PrisonBreak</defName>
 		<include>
 			<li>PawnEvent_Common</li>

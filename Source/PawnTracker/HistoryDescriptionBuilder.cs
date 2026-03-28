@@ -10,10 +10,11 @@ using Verse.Grammar;
 
 namespace PawnHistory.Source.PawnTracker;
 
-public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn)
+public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, string keyword = null)
 {
     public HistoryRecordDef HistoryRecordDef { get; } = recordDef;
     public Pawn Pawn { get; } = pawn;
+    public string Keyword { get; } = keyword ?? "PAWN";
 
     private bool includePawnRules;
     private readonly List<Rule> extraRules = [];
@@ -139,7 +140,7 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn)
             return "ERR: No description found";
         }
 
-        List<NamedArgument> args = [Pawn.NameDef().Named("PAWN")];
+        List<NamedArgument> args = [Pawn.NameDef().Named(Keyword)];
 
         foreach (var kvp in namedArgs)
             args.Add(kvp.Value.Named(kvp.Key));
@@ -158,10 +159,10 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn)
         var request = new GrammarRequest();
 
         request.Includes.Add(HistoryRecordDef.descriptionMaker);
-        request.Rules.Add(new Rule_String("PAWN", Pawn.NameDef()));
+        request.Rules.Add(new Rule_String(Keyword, Pawn.NameDef()));
 
         if (includePawnRules)
-            request.Rules.AddRange(GrammarUtility.RulesForPawn("PAWN", Pawn));
+            request.Rules.AddRange(GrammarUtility.RulesForPawn(Keyword, Pawn));
 
         request.Rules.AddRange(extraRules);
         request.Constants.AddRange(extraConstants);

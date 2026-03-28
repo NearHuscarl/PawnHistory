@@ -52,6 +52,8 @@ namespace PawnHistory.Source.PawnTracker;
 // TaleRecorder.RecordTale()
 // Search for <IncidentDef>
 // HistoryEventDefOf.cs
+// - Guest transition: Prisoner/Slave/Guest
+//  - "SetGuestStatus("
 
 // Create a filter in WorldPawn window (All/Alive/Dead)
 // - Add a column to see the history of dead AND destroyed pawn. Concerned dead&destoryed pawn will open a dedicated history window.

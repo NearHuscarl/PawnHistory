@@ -3,6 +3,7 @@ using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Verse;
@@ -16,7 +17,7 @@ public class PawnBuilder(int count = 1)
     private PawnKindDef kind = null;
     private List<Pawn> pawns = null;
     private Faction faction;
-    private GuestStatus guestStatus;
+    private GuestStatus? guestStatus;
     private readonly List<Predicate<Pawn>> filters = [];
     private readonly List<Action<Pawn, int, List<Pawn>>> processors = [];
     private int count = count;
@@ -145,8 +146,8 @@ public class PawnBuilder(int count = 1)
 
             GenSpawn.Spawn(pawn, spawnPos, Find.CurrentMap);
 
-            if (pawn.Faction != Faction.OfPlayer)
-                pawn.guest?.SetGuestStatus(Faction.OfPlayer, guestStatus);
+            if (guestStatus.HasValue)
+                pawn.guest?.SetGuestStatus(Faction.OfPlayer, guestStatus.Value);
             pawns.Add(pawn);
         }
 
@@ -377,6 +378,18 @@ static class PawnBuilderExtension
             pawn.equipment ??= new Pawn_EquipmentTracker(pawn);
             pawn.equipment.DestroyEquipment(pawn.equipment.Primary);
             pawn.equipment.AddEquipment((ThingWithComps)weapon);
+        });
+    }
+
+    public static PawnBuilder Capture(this PawnBuilder builder, Pawn captured)
+    {
+        return builder.DoOnce(captor =>
+        {
+            CaptureUtility.TryGetBed(captor, captured, out Thing bed);
+            var job = JobMaker.MakeJob(JobDefOf.Capture, captured, bed);
+            job.count = 1;
+            job.playerForced = true;
+            captor.jobs.StartJob(job, JobCondition.InterruptForced);
         });
     }
 

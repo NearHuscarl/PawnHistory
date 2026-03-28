@@ -68,7 +68,7 @@ internal class PrisonBreakRecorder : RecorderBase
 
         scenario.Thing()
             .BuildRoom(8, 8, tag: "Prison")
-            .AsPrison(prisonerCount, prisoners)
+            .AsPrison(prisonerCount, prisoners: prisoners)
             .Execute();
 
         TickDelayManager.Delay(100, () =>
@@ -83,7 +83,7 @@ internal class PrisonBreakRecorder : RecorderBase
 
         scenario.Thing()
             .BuildRoom(8, 8, tag: "Prison")
-            .AsPrison(prisonerCount, prisoners)
+            .AsPrison(prisonerCount, prisoners: prisoners)
             .Execute();
 
         var jailbreakerBreak = DefDatabase<MentalBreakDef>.GetNamed("Jailbreaker");
