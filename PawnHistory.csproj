@@ -63,6 +63,7 @@
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
     <Compile Include="Source\PawnTracker\Events\BodyPartScarredEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\JoinedLordEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\ScenarioStartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\WandererJoinedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\TaleRecordedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallArtificialPartEvent.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Source\PawnTracker\Events\CasualtyLogAddedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryEvent.cs" />
     <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\NewArrivalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PartyRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HistoryTaleRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\ManInBlackJoinRecorder.cs" />

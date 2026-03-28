@@ -21,14 +21,13 @@ internal class CaravanRecorder : RecorderBase
             var pawns = lord.ownedPawns.Where(ShouldRecord).ToList();
             var isStartingLord = currentToil == null;
 
-            //Log.Message($"{lord.LordJob}: {currentToil}->{nextToil} trigger={trigger?.GetType().Name}");
             if (lord.LordJob is not LordJob_TradeWithColony)
                 return;
 
             if (isStartingLord)
                 HandleCaravanTradeArrivedEvents(lord, pawns);
             if (!isStartingLord)
-                HandleCaravanTradeLeftEvents(nextToil, lord, pawns, trigger);
+                HandleCaravanTradeLeftEvents(nextToil, lord, pawns, trigger, e.Signal);
         });
     }
 
@@ -36,12 +35,12 @@ internal class CaravanRecorder : RecorderBase
     {
         var recordDef = HistoryRecordDefOf.TradeCaravanArrived;
         var trader = pawns.FirstOrDefault(p => p.trader != null);
-        var traderKind = trader?.trader?.traderKind?.label ?? "trader";
+        var traderKind = trader?.trader?.traderKind?.label ?? "caravan";
 
         foreach (var pawn in pawns)
         {
             var desc = recordDef.Description(pawn)
-                .WithFaction(lord.faction)
+                .AddRule("Faction", lord.faction)
                 .AddRule("TraderKind", traderKind)
                 .Resolve();
             AddRecord(recordDef, pawn, desc);
@@ -55,14 +54,18 @@ internal class CaravanRecorder : RecorderBase
         AnomalousWeather,
         Trapped,
         TraderLost,
+        PackAnimalLost,
         PawnLost,
     }
 
-    private void HandleCaravanTradeLeftEvents(LordToil nextToil, Lord lord, List<Pawn> pawns, Trigger trigger)
+    private void HandleCaravanTradeLeftEvents(LordToil nextToil, Lord lord, List<Pawn> pawns, Trigger trigger, TriggerSignal? signal)
     {
-        var trader = pawns.FirstOrDefault(p => p.trader != null);
-        var traderKind = trader?.trader?.traderKind?.label ?? "trader";
+        if (nextToil is not LordToil_ExitMapAndEscortCarriers && nextToil is not LordToil_ExitMap && nextToil is not LordToil_ExitMapTraderFighting)
+            return;
+
         var reason = CaravanLeftReason.Timeout;
+        var trader = pawns.FirstOrDefault(p => p.trader != null);
+        Pawn packAnimal = null;
 
         if (trigger is Trigger_PawnExperiencingDangerousTemperatures)
             reason = CaravanLeftReason.DangerousTemperature;
@@ -71,32 +74,61 @@ internal class CaravanRecorder : RecorderBase
         else if (trigger is Trigger_PawnCannotReachMapEdge)
             reason = CaravanLeftReason.Trapped;
         else if (trigger is Trigger_ImportantTraderCaravanPeopleLost)
-            reason = CaravanLeftReason.TraderLost;
+        {
+            if (signal?.Pawn.GetTraderCaravanRole() == TraderCaravanRole.Trader)
+            {
+                reason = CaravanLeftReason.TraderLost;
+                trader = signal?.Pawn;
+            }
+            else if (signal?.Pawn.RaceProps.packAnimal ?? false)
+            {
+                reason = CaravanLeftReason.PackAnimalLost;
+                packAnimal = signal?.Pawn;
+            }
+        }
         else if (trigger is Trigger_PawnLost || trigger is Trigger_FractionPawnsLost)
             reason = CaravanLeftReason.PawnLost;
 
-        if (nextToil is LordToil_ExitMapAndEscortCarriers
-            || nextToil is LordToil_ExitMap
-            || nextToil is LordToil_ExitMapTraderFighting)
-        {
-            var recordDef = HistoryRecordDefOf.TradeCaravanLeft;
+        var traderKind = trader?.trader?.traderKind?.label ?? "trader";
+        var recordDef = HistoryRecordDefOf.TradeCaravanLeft;
 
-            foreach (var pawn in pawns)
-            {     
-                var desc = recordDef.Description(pawn)
-                    .WithFaction(lord.faction)
-                    .WithOthers(pawns)
-                    .AddRule("TraderKind", traderKind)
-                    .AddConstant("reason", reason)
-                    .Resolve();
-                AddRecord(recordDef, pawn, desc);
-            }
+        foreach (var pawn in pawns)
+        {
+            var desc = recordDef.Description(pawn)
+                .IncludePawnGrammar()
+                .WithOthers(pawns)
+                .AddRule("Faction", lord.faction)
+                .AddRule("Trader", trader)
+                .AddRule("PackAnimal", packAnimal, addSubsymbols: true)
+                .AddRule("TraderKind", traderKind)
+                .AddConstant("reason", reason)
+                .Resolve();
+            AddRecord(recordDef, pawn, desc, [signal?.Pawn]);
         }
     }
 
-    public override void Test(TestScenario scenario)
+    public void TestFractionLost(TestScenario scenario)
     {
-        scenario.Incident(IncidentDefOf.TraderCaravanArrival).Point(400).Execute();
+        var pawns = scenario.Incident(IncidentDefOf.TraderCaravanArrival).Point(400).Execute();
+
+        TickDelayManager.Delay(200, () =>
+        {
+            pawns.Where(p => !p.RaceProps.packAnimal && p.trader == null)
+                .ToList()
+                .ForEach(p => HealthUtility.DamageUntilDead(p));
+        });
+    }
+
+    public void TestAnimalLost(TestScenario scenario)
+    {
+        var pawns = scenario.Incident(IncidentDefOf.TraderCaravanArrival).Point(400).Execute();
+
+        TickDelayManager.Delay(200, () =>
+        {
+            var animal = pawns.FirstOrDefault(p => p.RaceProps.packAnimal);
+            if (animal != null)
+                HealthUtility.DamageUntilDead(animal);
+        });
     }
 
     public void TestTraderLost(TestScenario scenario)

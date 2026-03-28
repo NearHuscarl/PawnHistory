@@ -85,6 +85,13 @@
 		<descriptionMaker>PawnEvent_BodyPartScarred</descriptionMaker>
 		<icon>EventIcons/Scars</icon>
 	</HistoryRecordDef>
+
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>NewArrival</defName>
+		<label>new arrival</label>
+		<descriptionMaker>PawnEvent_NewArrival</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TradeCaravanArrived</defName>
 		<label>trade caravan arrived</label>

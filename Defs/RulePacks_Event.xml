@@ -136,7 +136,7 @@
 				<li>Downed(reason==true)->was incapacitated due to [HediffInPart_indefinite]</li>
 				<li>Died(reason==)      ->died</li>
 				<li>Died(reason==true)  ->died because of [HediffInPart_indefinite]</li>
-				
+
 				<li>relativePov->[PAWN]'s [Relation], [Subject],</li>
 				<li>downedEntry->[PAWN] [Downed].</li>
 				<li>killedEntry->[PAWN] [Died].</li>
@@ -145,10 +145,24 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_NewArrival</defName>
+		<include>
+			<li>PawnEvent_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(method==Standing)->[PAWN] arrived on foot[WithOthers] to start a new settlement.</li>
+				<li>entry(method==DropPods)->[PAWN] crash-landed in a drop pod[WithOthers] to start a new settlement.</li>
+				<li>entry(method==Gravship)->[PAWN] landed in a gravship[WithOthers] to start a new settlement.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_TradeCaravanArrived</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>entry->[PAWN] arrived as part of a [TraderKind] caravan from [FACTION].</li>
+				<li>entry->[PAWN] arrived as part of a [TraderKind] caravan from [Faction].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -157,12 +171,13 @@
 		<defName>PawnEvent_TradeCaravanLeft</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(reason==Timeout)             ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony.</li>
-				<li>entry(reason==DangerousTemperature)->[PAWN] from [TraderKind] of [FACTION] began to leave the colony because of dangerous temperature.</li>
-				<li>entry(reason==AnomalousWeather)    ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony because of anomalous weather.</li>
-				<li>entry(reason==Trapped)             ->[PAWN] from [TraderKind] of [FACTION] attempted to leave because the caravan became trapped inside.</li>
-				<li>entry(reason==TraderLost)          ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony after their trader or caravan animal was incapacitated.</li>
-				<li>entry(reason==PawnLost)            ->[PAWN] from [TraderKind] of [FACTION] began to leave the colony after some of their members were lost.</li>
+				<li>entry(reason==Timeout)             ->[PAWN] from [TraderKind] of [Faction] began to leave the colony.</li>
+				<li>entry(reason==DangerousTemperature)->[PAWN] from [TraderKind] of [Faction] began to leave the colony because of dangerous temperature.</li>
+				<li>entry(reason==AnomalousWeather)    ->[PAWN] from [TraderKind] of [Faction] began to leave the colony because of anomalous weather.</li>
+				<li>entry(reason==Trapped)             ->[PAWN] from [TraderKind] of [Faction] attempted to leave because the caravan became trapped inside.</li>
+				<li>entry(reason==TraderLost)          ->[PAWN] from [TraderKind] of [Faction] began to leave the colony after [PAWN_possessive] trader [Trader] was incapacitated.</li>
+				<li>entry(reason==PackAnimalLost)      ->[PAWN] from [TraderKind] of [Faction] began to leave the colony after [PackAnimal_indefinite] was incapacitated.</li>
+				<li>entry(reason==PawnLost)            ->[PAWN] from [TraderKind] of [Faction] began to leave the colony after many of [PAWN_possessive] members were lost.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -209,8 +224,8 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(isOrganizer==True) ->[PAWN] hosted a party for everyone, gaining recreation and social energy.</li>
-				<li>entry(isOrganizer==False)->[PAWN] attended [Organizer]'s party[WithOthers], gaining recreation and social energy.</li>
+				<li>entry(isOrganizer==True) ->[PAWN] threw a party for the colony.</li>
+				<li>entry(isOrganizer==False)->[PAWN] attended [Organizer]'s party[WithOthers].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
