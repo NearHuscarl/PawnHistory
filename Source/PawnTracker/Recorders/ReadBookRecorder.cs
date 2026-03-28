@@ -22,7 +22,7 @@ internal class ReadBookRecorder : HistoryTaleRecorder
     {
         var recordDef = HistoryRecordDefOf.ReadBook;
         var book = e.Params[0] as Book;
-        var bookTitle = book.Title.ApplyTag(TagType.Reward);
+        var bookTitle = book.Title.Colorize(ColoredText.SubtleGrayColor);
         var desc = recordDef.Description(e.Pawn)
             .IncludePawnGrammar()
             .AddRule("Book", bookTitle)

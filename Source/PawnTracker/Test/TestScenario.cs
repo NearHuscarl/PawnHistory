@@ -19,6 +19,7 @@ public class TestScenario
 
     public PawnBuilder Pawn(int count = 1) => new(count);
     public PawnBuilder Pawn(IEnumerable<Pawn> pawns) => new PawnBuilder().WithPawns(pawns);
+    public GatheringBuilder Incident(GatheringDef def) => new(def);
     public IncidentBuilder Incident(IncidentDef def) => new(def);
     public IncidentBuilder Incident(string defName) => new(DefDatabase<IncidentDef>.GetNamed(defName));
     public MapBuilder Thing(IntVec3? pos = null) => new(pos);

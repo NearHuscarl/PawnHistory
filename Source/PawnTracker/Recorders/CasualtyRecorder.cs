@@ -3,7 +3,6 @@ using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
-using System.Drawing;
 using System.Linq;
 using Verse;
 
@@ -80,7 +79,7 @@ internal class CasualtyRecorder : RecorderBase
 
         foreach (var relative in deceased.relations.PotentiallyRelatedPawns)
         {
-            if (relative == null || !RecorderManager.ShouldRecord(relative))
+            if (!RecorderManager.ShouldRecord(relative))
                 continue;
 
             var relationDef = relative.GetMostImportantRelation(deceased);

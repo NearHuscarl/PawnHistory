@@ -5,12 +5,13 @@ using Verse.AI.Group;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class LordToilChangeEvent(LordToil currentToil, LordToil nextToil, Trigger trigger, Lord lord) : GameEventBase
+public class LordToilChangeEvent(LordToil currentToil, LordToil nextToil, Trigger trigger, Lord lord, TriggerSignal? signal = null) : GameEventBase
 {
     public LordToil CurrentToil { get; } = currentToil;
     public LordToil NextToil { get; } = nextToil;
     public Trigger Trigger { get; } = trigger;
     public Lord Lord { get; } = lord;
+    public TriggerSignal? Signal { get; } = signal;
 }
 
 [HarmonyPatch(typeof(LordMaker), nameof(LordMaker.MakeNewLord))]
@@ -58,8 +59,9 @@ public static class Transition_CheckSignal_Patch
             {
                 // insert before Execute(lord)
                 yield return new CodeInstruction(OpCodes.Ldarg_0); // __instance
-                yield return new CodeInstruction(OpCodes.Ldloc_1); // index1
+                yield return new CodeInstruction(OpCodes.Ldloc_0); // index1
                 yield return new CodeInstruction(OpCodes.Ldarg_1); // lord
+                yield return new CodeInstruction(OpCodes.Ldarg_2); // signal (TriggerSignal)
                 yield return new CodeInstruction(OpCodes.Call, hookMethod);
             }
 
@@ -67,7 +69,7 @@ public static class Transition_CheckSignal_Patch
         }
     }
 
-    public static void OnTransitionChange(Transition __instance, int index1, Lord lord)
+    public static void OnTransitionChange(Transition __instance, int index1, Lord lord, TriggerSignal signal)
     {
         var trigger = __instance.triggers[index1];
         var currentToil = lord.CurLordToil;
@@ -76,6 +78,6 @@ public static class Transition_CheckSignal_Patch
         if (currentToil == nextToil)
             return;
 
-        GameEventBus.Publish(new LordToilChangeEvent(currentToil, nextToil, trigger, lord));
+        GameEventBus.Publish(new LordToilChangeEvent(currentToil, nextToil, trigger, lord, signal));
     }
 }

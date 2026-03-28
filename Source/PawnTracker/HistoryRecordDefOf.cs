@@ -26,6 +26,8 @@ internal class HistoryRecordDefOf
     public static HistoryRecordDef VisitorArrived;
     public static HistoryRecordDef TravelGroupArrived;
     public static HistoryRecordDef ManInBlackJoin;
+    public static HistoryRecordDef JoinedParty;
+    public static HistoryRecordDef PartyCancelled;
     public static HistoryRecordDef MentalBreak;
     public static HistoryRecordDef MentalBreakViolent;
     public static HistoryRecordDef SocialFight;

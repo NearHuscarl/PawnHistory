@@ -62,6 +62,7 @@
     <Compile Include="Source\Helper\HediffUtility.cs" />
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
     <Compile Include="Source\PawnTracker\Events\BodyPartScarredEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\JoinedLordEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\WandererJoinedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\TaleRecordedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallArtificialPartEvent.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Source\PawnTracker\Events\CasualtyLogAddedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryEvent.cs" />
     <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\PartyRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HistoryTaleRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\ManInBlackJoinRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\ReadBookRecorder.cs" />
@@ -112,6 +114,7 @@
     <Compile Include="Source\Helper\ThingUtility.cs" />
     <Compile Include="Source\PawnTracker\Recorders\SocialFightRecorder.cs" />
     <Compile Include="Source\PawnTracker\Test\CellRectExtensions.cs" />
+    <Compile Include="Source\PawnTracker\Test\GatheringBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\IncidentBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\MapBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\PawnBuilder.cs" />

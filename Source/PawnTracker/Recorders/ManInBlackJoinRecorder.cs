@@ -1,8 +1,6 @@
 ﻿using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
-using System.Linq;
-using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -24,20 +22,15 @@ internal class ManInBlackJoinRecorder : RecorderBase
     private void HandleManInBlackJoinEvent(WandererJoinEvent e)
     {
         var recordDef = HistoryRecordDefOf.ManInBlackJoin;
-        var rel = e.Pawn.relations.PotentiallyRelatedPawns
-            .Where(p => ShouldRecord(p) && p.IsColonist && !p.wasLeftBehindStartingPawn)
-            .Select(p => new { Pawn = p, Relation = p.GetMostImportantRelation(e.Pawn) })
-            .Where(x => x.Relation != null)
-            .OrderByDescending(x => x.Relation.importance)
-            .FirstOrDefault();
-
+        var relative = PawnRelationUtility.GetMostImportantColonyRelative(e.Pawn);
+        var relation = relative?.GetMostImportantRelation(e.Pawn)?.GetGenderSpecificLabel(e.Pawn);
         var desc = recordDef.Description(e.Pawn)
             .IncludePawnGrammar()
-            .AddRule("Other", rel?.Pawn, addSubsymbols: true)
-            .AddRule("Relation", rel?.Relation.GetGenderSpecificLabel(e.Pawn))
-            .AddConstant("hasRelation", rel != null)
+            .AddRule("Other", relative, addSubsymbols: true)
+            .AddRule("Relation", relation)
+            .AddConstant("hasRelation", relative != null)
             .Resolve();
-        AddRecord(recordDef, e.Pawn, desc, [rel?.Pawn]);
+        AddRecord(recordDef, e.Pawn, desc, [relative]);
     }
 
     public override void Test(TestScenario scenario)

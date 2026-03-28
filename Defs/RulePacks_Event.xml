@@ -6,6 +6,9 @@
 			<rulesStrings>
 				<li>AndOthers(OtherCount==0)-></li>
 				<li>AndOthers(OtherCount>=1)-> and [Others]</li>
+				
+				<li>WithOthers(OtherCount==0)-></li>
+				<li>WithOthers(OtherCount>=1)-> with [Others]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -200,6 +203,31 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_JoinedParty</defName>
+		<include>
+			<li>PawnEvent_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(isOrganizer==True) ->[PAWN] hosted a party for everyone, gaining recreation and social energy.</li>
+				<li>entry(isOrganizer==False)->[PAWN] attended [Organizer]'s party[WithOthers], gaining recreation and social energy.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_PartyCancelled</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(reason==Unknown)      ->[Organizer]'s party was cancelled.</li>
+				<li>entry(reason==PawnKilled)   ->[Organizer]'s party was cancelled after [DeadPawn] died.</li>
+				<li>entry(reason==OrganizerLeft)->[Organizer]'s party was cancelled after [Organizer_pronoun] left.</li>
+				<li>entry(reason==DangerousMap) ->[Organizer]'s party was cancelled due to nearby threats.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_MentalBreak</defName>
 		<rulePack>
 			<rulesStrings>
@@ -236,10 +264,8 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>WithOthers(OtherCount==0)   -></li>
-				<li>WithOthers(OtherCount>=1)   -> with [Others]</li>
-				<li>entry(initiator==true)->[PAWN] started a prison break. [PAWN_pronoun] broke the locks open and tried to escape[WithOthers].</li>
-				<li>entry(initiator==)    ->[PAWN][AndOthers] joined [INITIATOR]'s prison break and tried to escape.</li>
+				<li>entry(initiator==True) ->[PAWN] started a prison break. [PAWN_pronoun] broke the locks open and tried to escape[WithOthers].</li>
+				<li>entry(initiator==False)->[PAWN][AndOthers] joined [Initiator]'s prison break and tried to escape.</li>
 
 				<li>jailbreaker(initiator==)    ->[Reason] As a result, [PAWN][AndOthers] started a prison break.</li>
 			</rulesStrings>

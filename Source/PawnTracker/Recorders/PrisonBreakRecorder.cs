@@ -26,20 +26,21 @@ internal class PrisonBreakRecorder : RecorderBase
     private void HandlePrisonBreakEvent(PrisonBreakStartedEvent e)
     {
         var recordDef = HistoryRecordDefOf.PrisonBreak;
-        var others = e.EscapingPrisoners.Where(p => p != e.Initiator).ToList();
+        var joiners = e.EscapingPrisoners.Where(p => p != e.Initiator).ToList();
         var concerns = e.EscapingPrisoners.Cast<Thing>();
 
         foreach (var pawn in e.EscapingPrisoners)
         {
+            if (!ShouldRecord(pawn)) continue;
+
             var builder = recordDef.Description(pawn)
-                .AddConstantIf(pawn == e.Initiator, "initiator", "true")
-                .IncludePawnGrammar(pawn == e.Initiator)
-                .AddRuleIf(pawn != e.Initiator, "INITIATOR", e.Initiator);
+                .AddConstant("initiator", pawn == e.Initiator)
+                .IncludePawnGrammar(pawn == e.Initiator);
 
             if (pawn == e.Initiator)
                 builder.WithOthers(e.EscapingPrisoners);
             else
-                builder.WithOthers(others);
+                builder.WithOthers(joiners).AddRule("Initiator", e.Initiator);
 
             AddRecord(recordDef, pawn, builder.Resolve(), concerns);
         }

@@ -115,6 +115,19 @@
 		<descriptionMaker>PawnEvent_ManInBlackJoin</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 	</HistoryRecordDef>
+	
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>JoinedParty</defName>
+		<label>party started</label>
+		<descriptionMaker>PawnEvent_JoinedParty</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PartyCancelled</defName>
+		<label>party cancelled</label>
+		<descriptionMaker>PawnEvent_PartyCancelled</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
 
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>MentalBreak</defName>

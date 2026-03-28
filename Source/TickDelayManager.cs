@@ -35,12 +35,17 @@ public class TickDelayManager(Game game) : GameComponent
 
             if (currentTick >= a.ExecuteTick)
             {
-                a.Action?.Invoke();
-
-                if (a.Repeat && !a.Cancelled)
-                    a.ExecuteTick = currentTick + a.Interval;
-                else
-                    actions.RemoveAt(i);
+                try
+                {
+                    a.Action?.Invoke();
+                }
+                finally
+                {
+                    if (a.Repeat && !a.Cancelled)
+                        a.ExecuteTick = currentTick + a.Interval;
+                    else
+                        actions.RemoveAt(i);
+                }
             }
         }
     }

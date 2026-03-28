@@ -183,7 +183,7 @@ public static class HistoryDescriptionBuilderExtensions
     public static HistoryDescriptionBuilder WithOthers(this HistoryDescriptionBuilder builder, List<Pawn> pawns)
     {
         var otherCount = pawns.Count - 1;
-        var otherTag = Faction.OfPlayer.HostileTo(pawns[0]?.Faction) ? TagType.Threat : TagType.ColonistCount;
+        var otherTag = Faction.OfPlayer.HostileTo(pawns.FirstOrDefault()?.Faction) ? TagType.Threat : TagType.ColonistCount;
         var otherText = otherCount switch
         {
             1 => (otherCount + " other").ApplyTag(otherTag).Resolve(),
