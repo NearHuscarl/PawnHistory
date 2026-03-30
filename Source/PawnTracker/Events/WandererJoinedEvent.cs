@@ -1,20 +1,103 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class WandererJoinEvent(Pawn pawn, IncidentDef incidentDef) : GameEventBase
+public class WandererJoinedEvent(Pawn pawn, IEnumerable<Pawn> group, IncidentDef incidentDef = null, QuestScriptDef questScript = null) : GameEventBase
 {
     public Pawn Pawn { get; } = pawn;
+    public IEnumerable<Pawn> Group { get; } = group;
     public IncidentDef IncidentDef { get; } = incidentDef;
+    public QuestScriptDef QuestScript { get; } = questScript;
 }
 
-[HarmonyPatch(typeof(IncidentWorker_WandererJoin), nameof(IncidentWorker_WandererJoin.GeneratePawn))]
-public static class IncidentWorker_WandererJoin_GeneratePawn_Patch
+class WandererJoinContext
 {
-    public static void Postfix(Pawn __result, IncidentWorker_WandererJoin __instance)
+    private static List<Pawn> Snapshot = [];
+
+    public static IEnumerable<Pawn> UpdatePawnSnapshot(Map map)
     {
-        GameEventBus.Publish(new WandererJoinEvent(__result, __instance.def));
+        var newSnapshot = map.mapPawns.AllPawnsSpawned.ToList();
+        var oldSnapshot = Snapshot;
+        var difference = newSnapshot.Except(oldSnapshot);
+        
+        Snapshot = newSnapshot;
+        return difference;
     }
+
+    public static void Prefix(IncidentParms parms)
+    {
+        var map = (Map)parms.target;
+        UpdatePawnSnapshot(map);
+    }
+
+    public static void Postfix(IncidentParms parms, IncidentWorker __instance, bool __result)
+    {
+        if (!__result)
+            return;
+
+        var map = (Map)parms.target;
+        var pawns = UpdatePawnSnapshot(map);
+
+        foreach (var pawn in pawns)
+        {
+            GameEventBus.Publish(new WandererJoinedEvent(pawn, pawns, __instance.def));
+        }
+    }
+
+    internal static void Finalizer()
+    {
+        Snapshot.Clear();
+    }
+}
+
+[HarmonyPatch(typeof(QuestPart_PawnsArrive), nameof(QuestPart_PawnsArrive.Notify_QuestSignalReceived))]
+internal class QuestPart_PawnsArrive_Notify_QuestSignalReceived_Patch
+{
+    static void Prefix(QuestPart_PawnsArrive __instance, Signal signal)
+    {
+        if (signal.tag != __instance.inSignal) return;
+
+        WandererJoinContext.UpdatePawnSnapshot(__instance.mapParent.Map);
+    }
+    static void Postfix(QuestPart_PawnsArrive __instance, Signal signal)
+    {
+        if (signal.tag != __instance.inSignal) return;
+
+        var newPawns = WandererJoinContext.UpdatePawnSnapshot(__instance.mapParent.Map);
+
+        foreach (var pawn in newPawns)
+        {
+            GameEventBus.Publish(new WandererJoinedEvent(pawn, newPawns, null, __instance.quest.root));
+        }
+    }
+}
+
+[HarmonyPatch(typeof(IncidentWorker_WandererJoin), "TryExecuteWorker")]
+public static class IncidentWorker_WandererJoin_TryExecuteWorker_Patch
+{
+    static void Prefix(IncidentParms parms) => WandererJoinContext.Prefix(parms);
+
+    static void Postfix(IncidentParms parms, IncidentWorker_WandererJoin __instance, bool __result)
+    {
+        WandererJoinContext.Postfix(parms, __instance, __result);
+    }
+
+    static void Finalizer() => WandererJoinContext.Finalizer();
+}
+
+[HarmonyPatch(typeof(IncidentWorker_WildManWandersIn), "TryExecuteWorker")]
+public static class IncidentWorker_WildManWandersIn_TryExecuteWorker_Patch
+{
+    static void Prefix(IncidentParms parms) => WandererJoinContext.Prefix(parms);
+
+    static void Postfix(IncidentParms parms, IncidentWorker_WildManWandersIn __instance, bool __result)
+    {
+        WandererJoinContext.Postfix(parms, __instance, __result);
+    }
+
+    static void Finalizer() => WandererJoinContext.Finalizer();
 }

@@ -40,6 +40,6 @@ public class ITab_Pawn_History : ITab
     {
         var pawn = PawnToShowInfo;
         var tabRect = new Rect(0, 0, size.x, size.y);
-        HistoryCardUtility.DrawHistoryCard(tabRect, pawn, CompHistoryManager.GetComp(pawn));
+        HistoryCardUtility.DrawHistoryCard(tabRect, pawn);
     }
 }

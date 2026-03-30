@@ -123,6 +123,18 @@
 		<icon>EventIcons/TravelGroup</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>WandererJoined</defName>
+		<label>wanderer joined</label>
+		<descriptionMaker>PawnEvent_WandererJoined</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>WildManWanderedIn</defName>
+		<label>wild man wandered in</label>
+		<descriptionMaker>PawnEvent_WildManWanderedIn</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>ManInBlackJoin</defName>
 		<label>man in black joining</label>
 		<descriptionMaker>PawnEvent_ManInBlackJoin</descriptionMaker>

@@ -8,18 +8,18 @@ internal class ManInBlackJoinRecorder : RecorderBase
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<WandererJoinEvent>(e =>
+        GameEventBus.Subscribe<WandererJoinedEvent>(e =>
         {
             if (!ShouldRecord(e.Pawn))
                 return;
-            if (e.IncidentDef.defName != "StrangerInBlackJoin")
+            if (e.IncidentDef?.defName != "StrangerInBlackJoin")
                 return;
 
             HandleManInBlackJoinEvent(e);
         });
     }
 
-    private void HandleManInBlackJoinEvent(WandererJoinEvent e)
+    private void HandleManInBlackJoinEvent(WandererJoinedEvent e)
     {
         var recordDef = HistoryRecordDefOf.ManInBlackJoin;
         var relative = PawnRelationUtility.GetMostImportantColonyRelative(e.Pawn);

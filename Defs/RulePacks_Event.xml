@@ -226,6 +226,24 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_WandererJoined</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->A [PAWN_title] named [PAWN] arrived and joined the colony. [PAWN_pronoun] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_WildManWanderedIn</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->A [PAWN_kind] living among wild animals wandered into the area. [PAWN_pronoun]'s called [PAWN].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_ManInBlackJoin</defName>
 		<rulePack>
 			<rulesStrings>

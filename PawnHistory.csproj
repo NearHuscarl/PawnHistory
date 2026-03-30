@@ -66,7 +66,7 @@
     <Compile Include="Source\PawnTracker\Events\CasketAcceptedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\CasketDropEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\JoinedLordEvent.cs" />
-    <Compile Include="Source\PawnTracker\Events\PawnSoldEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\PawnTradedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ScenarioStartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PrisonerCapturedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\WandererJoinedEvent.cs" />
@@ -84,7 +84,9 @@
     <Compile Include="Source\PawnTracker\Events\SurgeryEvent.cs" />
     <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\CasketDropRecorder.cs" />
-    <Compile Include="Source\PawnTracker\Recorders\PawnSoldRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\WandererJoinedRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\WildManWanderedInRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\PawnTradedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\NewArrivalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PartyRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HistoryTaleRecorder.cs" />
@@ -119,7 +121,7 @@
     <Compile Include="Source\PawnTracker\Events\RaidStartedEvent.cs" />
     <Compile Include="Source\PawnTracker\HistoryRecordDef.cs" />
     <Compile Include="Source\PawnTracker\PawnTracker.cs" />
-    <Compile Include="Source\PawnTracker\Recorders\RecorderManager.cs" />
+    <Compile Include="Source\PawnTracker\RecorderManager.cs" />
     <Compile Include="Source\PawnTracker\Recorders\BodyPartDestroyedRecorder.cs" />
     <Compile Include="Source\Helper\ThingUtility.cs" />
     <Compile Include="Source\PawnTracker\Recorders\SocialFightRecorder.cs" />

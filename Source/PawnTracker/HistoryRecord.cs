@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -53,5 +54,33 @@ public class HistoryRecord : IExposable
         Scribe_Values.Look(ref description, "d");
         Scribe_References.Look(ref pawn, "pawn", saveDestroyedThings: true);
         Scribe_Collections.Look(ref concerns, "concerns", saveDestroyedThings: true, LookMode.Reference);
+    }
+}
+
+public static class HistoryRecordExtensions
+{
+    public static string GetShortDate(this HistoryRecord record)
+    {
+        var location = record.pawn.LocationOnMap(); // TODO: use map reference instead of pawn
+        var hourInt = GenDate.HourInteger(record.date, location.x);
+        var hour = $"{hourInt}h";
+
+        if (Prefs.TwelveHourClockMode)
+        {
+            var ampm = hourInt >= 12 ? "PM" : "AM";
+            hourInt %= 12;
+            if (hourInt == 0) hourInt = 12;
+            hour = $"{hourInt} {ampm}";
+        }
+
+        var day = GenDate.DayOfYear(record.date, location.x) + 1;
+        var year = GenDate.Year(record.date, location.x);
+        return $"Y{year} D{day} {hour}";
+    }
+
+    public static string GetTipDate(this HistoryRecord record)
+    {
+        var location = record.pawn.LocationOnMap();
+        return GenDate.DateFullStringWithHourAt(record.date, location);
     }
 }

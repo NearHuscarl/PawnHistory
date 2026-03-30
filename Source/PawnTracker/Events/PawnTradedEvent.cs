@@ -5,7 +5,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class PawnSoldEvent(Pawn soldVictim, Pawn negotiator, Pawn trader, int price, TradeAction tradeAction) : GameEventBase
+public class PawnTradedEvent(Pawn soldVictim, Pawn negotiator, Pawn trader, int price, TradeAction tradeAction) : GameEventBase
 {
     public Pawn SoldVictim { get; } = soldVictim;
     public Pawn Negotiator { get; } = negotiator;
@@ -14,7 +14,7 @@ public class PawnSoldEvent(Pawn soldVictim, Pawn negotiator, Pawn trader, int pr
     public TradeAction TradeAction { get; } = tradeAction;
 }
 
-class PawnSoldContext
+class PawnTradedContext
 {
     public static Dictionary<Pawn, List<Tradeable>> PendingTradables = [];
 }
@@ -34,10 +34,10 @@ internal static class TradeDeal_TryExecute_Patch
             if (tradeable.ActionToDo == TradeAction.None)
                 continue;
 
-            if (!PawnSoldContext.PendingTradables.TryGetValue(negotiator, out var tradeables))
+            if (!PawnTradedContext.PendingTradables.TryGetValue(negotiator, out var tradeables))
             {
                 tradeables = [];
-                PawnSoldContext.PendingTradables[negotiator] = tradeables;
+                PawnTradedContext.PendingTradables[negotiator] = tradeables;
             }
 
             tradeables.Add(tradeable);
@@ -51,11 +51,11 @@ internal static class TradeDeal_TryExecute_Patch
 
         if (!__result)
         {
-            PawnSoldContext.PendingTradables.Remove(negotiator);
+            PawnTradedContext.PendingTradables.Remove(negotiator);
             return;
         }
 
-        PawnSoldContext.PendingTradables.TryGetValue(negotiator, out List<Tradeable> tradeables);
+        PawnTradedContext.PendingTradables.TryGetValue(negotiator, out List<Tradeable> tradeables);
         foreach (var tradeable in tradeables)
         {
             if (tradeable.AnyThing is not Pawn soldVictim)
@@ -63,9 +63,9 @@ internal static class TradeDeal_TryExecute_Patch
 
             var price = tradeable.GetPriceFor(tradeable.ActionToDo);
             var tradeAction = tradeable.ActionToDo;
-            GameEventBus.Publish(new PawnSoldEvent(soldVictim, negotiator, trader, tradeable.CostToInt(price), tradeAction));
+            GameEventBus.Publish(new PawnTradedEvent(soldVictim, negotiator, trader, tradeable.CostToInt(price), tradeAction));
         }
 
-        PawnSoldContext.PendingTradables.Remove(negotiator);
+        PawnTradedContext.PendingTradables.Remove(negotiator);
     }
 }

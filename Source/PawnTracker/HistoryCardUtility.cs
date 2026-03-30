@@ -68,13 +68,14 @@ public class HistoryCardUtility
         return h;
     }
 
-    public static void DrawHistoryCard(Rect tabRect, Pawn pawn, CompHistory comp)
+    public static void DrawHistoryCard(Rect tabRect, Pawn pawn)
     {
         var color = GUI.color;
         var font = Text.Font;
         var anchor = Text.Anchor;
 
         var inRect = tabRect.ContractedBy(containerPadding);
+        var records = pawn.GetHistoryRecords();
 
         GUI.BeginGroup(inRect);
 
@@ -89,14 +90,14 @@ public class HistoryCardUtility
         // --- SCROLL VIEW ---
         var tableY = filterHeight + gap + headerHeight;
         var outRect = new Rect(0, tableY, inRect.width, inRect.height - tableY);
-        var totalHeight = comp.records.Sum(GetRowHeight);
+        var totalHeight = records.Sum(GetRowHeight);
         var viewRect = new Rect(0, 0, inRect.width - scrollWidth, totalHeight);
         var curY = totalHeight;
 
         Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
-        for (int i = 0; i < comp.records.Count; i++)
+        for (int i = 0; i < records.Count; i++)
         {
-            var record = comp.records[i];
+            var record = records[i];
             var rowHeight = GetRowHeight(record);
             curY -= rowHeight;
             var row = new Rect(0, curY, viewRect.width, rowHeight);
@@ -104,8 +105,8 @@ public class HistoryCardUtility
 
             var dateCell = new Rect(row.x + cellPx, row.y, colWidthDate, row.height);
             GUI.color = Color.gray; Text.Font = GameFont.Tiny; Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(dateCell, comp.GetShortDate(record));
-            TooltipHandler.TipRegion(dateCell, comp.GetTipDate(record));
+            Widgets.Label(dateCell, record.GetShortDate());
+            TooltipHandler.TipRegion(dateCell, record.GetTipDate());
 
             GUI.color = Color.white;
             var iconCell = new Rect(colWidthDate, row.y + ((row.height - colWidthIcon) / 2), colWidthIcon, colWidthIcon);

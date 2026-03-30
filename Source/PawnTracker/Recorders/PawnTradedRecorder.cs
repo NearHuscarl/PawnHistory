@@ -4,17 +4,17 @@ using RimWorld;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class PawnSoldRecorder : RecorderBase
+internal class PawnTradedRecorder : RecorderBase
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<PawnSoldEvent>(e =>
+        GameEventBus.Subscribe<PawnTradedEvent>(e =>
         {
             HandleSoldEvent(e);
         });
     }
 
-    private void HandleSoldEvent(PawnSoldEvent e)
+    private void HandleSoldEvent(PawnTradedEvent e)
     {
         if (!ShouldRecord(e.SoldVictim))
             return;

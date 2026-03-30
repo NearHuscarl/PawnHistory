@@ -1,6 +1,8 @@
 ﻿using LudeonTK;
 using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker;
+using PawnHistory.Source.PawnTracker.Recorders;
+using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -24,20 +26,18 @@ public static class DebugOutputsHistoryRecords
     public static void PawnHistoryRecords()
     {
         var options = new List<DebugMenuOption>();
-        var alivePawns = Find.CurrentMap.mapPawns.AllPawns;
-        var deadPawns = Find.CurrentMap.listerThings.ThingsInGroup(ThingRequestGroup.Corpse).Cast<Corpse>().Select(c => c.InnerPawn);
-        var pawns = alivePawns.Concat(deadPawns).Where(x => x.HasComp<CompHistory>()).OrderByDescending(x => CompHistoryManager.GetComp(x).records.Count);
+        var allPawns = PawnsFinder.AllMapsWorldAndTemporary_AliveOrDead.Where(RecorderManager.ShouldRecord);
 
-        foreach (var pawn in pawns)
+        foreach (var pawn in allPawns)
         {
-            var compHistory = CompHistoryManager.GetComp(pawn);
-            var label = $"{pawn.Name} ({compHistory.records.Count})";
+            var historyRecords = pawn.GetHistoryRecords();
+            var label = $"{pawn.Name} ({historyRecords.Count})";
 
             options.Add(new DebugMenuOption(label, DebugMenuOptionMode.Action, () =>
             {
-                DebugTables.MakeTablesDialog(compHistory.records,
+                DebugTables.MakeTablesDialog(historyRecords,
                     new TableDataGetter<HistoryRecord>("Timestamp", r => r.date),
-                    new TableDataGetter<HistoryRecord>("Date", r => compHistory.GetShortDate(r)),
+                    new TableDataGetter<HistoryRecord>("Date", r => r.GetShortDate()),
                     new TableDataGetter<HistoryRecord>("label", r => r.def.label),
                     new TableDataGetter<HistoryRecord>("description", r => r.description),
                     new TableDataGetter<HistoryRecord>("concerns", r => string.Join(", ", r.concerns.Select(c =>
