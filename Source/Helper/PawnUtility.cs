@@ -1,4 +1,6 @@
-﻿using RimWorld;
+﻿using PawnHistory.Source.PawnTracker;
+using RimWorld;
+using System.Collections.Generic;
 using System.Linq;
 using Verse;
 
@@ -11,6 +13,11 @@ internal static class PawnUtility
     public static string NameDef(this Pawn pawn) => pawn.Name != null
         ? Find.ActiveLanguageWorker.WithDefiniteArticle(pawn.Name.ToStringShort, pawn.gender, name: true).ApplyTag(TagType.Name).Resolve()
         : pawn.KindLabelDefinite().ApplyTag(TagType.Name).Resolve();
+
+    public static List<HistoryRecord> GetHistoryRecords(this Pawn pawn)
+    {
+        return CompHistoryManager.GetComp(pawn).records;
+    }
 
     public static Pawn GetOperatingDoctor(this Pawn patient)
     {

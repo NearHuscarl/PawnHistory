@@ -54,6 +54,7 @@
     <Compile Include="Source\DebugTools\NearDebugSettings.cs" />
     <Compile Include="Source\DebugTools\ReloadableAttribute.cs" />
     <Compile Include="Source\Helper\LangUtility.cs" />
+    <Compile Include="Source\Helper\ListExtensions.cs" />
     <Compile Include="Source\Helper\PawnUtility.cs" />
     <Compile Include="Source\Helper\EnumerableExtensions.cs" />
     <Compile Include="Source\PawnTracker\CompProperties_History.cs" />
@@ -62,6 +63,8 @@
     <Compile Include="Source\Helper\HediffUtility.cs" />
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
     <Compile Include="Source\PawnTracker\Events\BodyPartScarredEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\CasketAcceptedEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\CasketDropEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\JoinedLordEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ScenarioStartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PrisonerCapturedEvent.cs" />
@@ -79,6 +82,7 @@
     <Compile Include="Source\PawnTracker\Events\CasualtyLogAddedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryEvent.cs" />
     <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\CasketDropRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\NewArrivalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PartyRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HistoryTaleRecorder.cs" />

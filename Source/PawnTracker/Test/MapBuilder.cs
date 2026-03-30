@@ -189,7 +189,7 @@ public class MapBuilder
     /// <summary>
     /// Spawns a grave. If occupied is true, generates a pawn, kills it, and buries it.
     /// </summary>
-    public MapBuilder WithGrave(bool occupied = true)
+    public MapBuilder WithCasket(ThingDef thingDef, ThingDef stuff = null, bool occupied = true)
     {
         actions.Add(_ =>
         {
@@ -198,18 +198,21 @@ public class MapBuilder
 
             GenDebug.ClearArea(CellRect.SingleCell(pos), map);
 
-            var grave = (Building_Grave)GenSpawn.Spawn(ThingMaker.MakeThing(ThingDefOf.Sarcophagus, ThingDefOf.Plasteel), pos, map);
-            grave.SetFaction(Faction.OfPlayer);
+            var casket = (Building_Casket)GenSpawn.Spawn(ThingMaker.MakeThing(thingDef, stuff), pos, map);
+            casket.SetFaction(Faction.OfPlayer);
 
             if (occupied)
             {
                 var victim = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
-                GenSpawn.Spawn(victim, pos, map);
-                victim.Kill(null);
-                var corpse = victim.Corpse;
-                corpse.DeSpawn();
-                grave.CompAssignableToPawn.TryAssignPawn(victim);
-                grave.TryAcceptThing(victim.Corpse);
+
+                if (casket is Building_CorpseCasket)
+                {
+                    victim.Kill(null);
+                    var corpse = victim.Corpse;
+                    casket.TryAcceptThing(victim.Corpse);
+                }
+                else
+                    casket.TryAcceptThing(victim);
             }
         });
         return this;

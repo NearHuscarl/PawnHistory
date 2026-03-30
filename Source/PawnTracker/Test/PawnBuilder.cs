@@ -393,6 +393,17 @@ static class PawnBuilderExtension
         });
     }
 
+    public static PawnBuilder StartJob(this PawnBuilder builder, JobDef jobDef, LocalTargetInfo? targetA)
+    {
+        return builder.DoOnce(pawn =>
+        {
+            var job = JobMaker.MakeJob(jobDef, targetA ?? null);
+            job.count = 1;
+            job.playerForced = true;
+            pawn.jobs.StartJob(job, JobCondition.InterruptForced);
+        });
+    }
+
     public static PawnBuilder StripNaked(this PawnBuilder builder)
     {
         return builder.Do(pawn =>

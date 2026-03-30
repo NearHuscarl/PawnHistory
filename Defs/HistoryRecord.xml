@@ -93,6 +93,12 @@
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>CasketDrop</defName>
+		<label>casket drop</label>
+		<descriptionMaker>PawnEvent_CasketDrop</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TradeCaravanArrived</defName>
 		<label>trade caravan arrived</label>
 		<descriptionMaker>PawnEvent_TradeCaravanArrived</descriptionMaker>

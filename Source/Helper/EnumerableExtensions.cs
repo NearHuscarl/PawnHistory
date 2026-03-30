@@ -18,4 +18,20 @@ public static class EnumerableExtensions
                 yield return item;
         }
     }
+
+    public static string JoinToString<T>(this IEnumerable<T> source, Func<T, string> selector, string separator = ", ")
+    {
+        if (source == null)
+            return string.Empty;
+
+        return string.Join(separator, source.Select(selector));
+    }
+
+    public static string JoinToString<T>(this IEnumerable<T> source, string separator = ", ")
+    {
+        if (source == null)
+            return string.Empty;
+
+        return string.Join(separator, source);
+    }
 }

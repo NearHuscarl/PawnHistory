@@ -103,4 +103,46 @@ public static class RecorderManager
 
         return actionNodes;
     }
+
+    [NearDebugOutput]
+    public static void RecorderLogs()
+    {
+        var options = new List<DebugMenuOption>();
+
+        foreach (var recorder in activeRecorders)
+        {
+            var type = recorder.GetType();
+            var recorderName = type.Name.Replace("Recorder", "");
+            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+            foreach (var method in methods)
+            {
+                if (!method.Name.StartsWith("Log"))
+                    continue;
+
+                var parameters = method.GetParameters();
+                var labelSuffix = method.Name.Replace("Log", "");
+                var label = $"{recorderName}_{labelSuffix}";
+
+                if (parameters.Length == 0)
+                {
+                    options.Add(new DebugMenuOption(label, DebugMenuOptionMode.Action, () =>
+                    {
+                        try
+                        {
+                            method.Invoke(recorder, null);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"[PawnHistory] Failed to run log method {label}\n\n{ex}");
+                        }
+                    }));
+                }
+                else
+                    Log.Warning($"[PawnHistory] Skipping {type.Name}.{method.Name} - unsupported parameters");
+            }
+        }
+
+        Find.WindowStack.Add(new Dialog_DebugOptionListLister(options));
+    }
 }

@@ -159,6 +159,25 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_CasketDrop</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>Intro(firstReveal==True) ->[PAWN], a member of [Faction],</li>
+				<li>Intro(firstReveal==False)->[PAWN]</li>
+
+				<li>ByOpener(hasOpener==True) -> by [Opener]</li>
+				<li>ByOpener(hasOpener==False)-></li>
+				
+				<li>Removed(isCorpse==True) ->removed</li>
+				<li>Removed(isCorpse==False)->ejected</li>
+
+				<li>entry(reason==Ejected)        ->[Intro] was [Removed] from [Casket_indefinite][ByOpener].</li>
+				<li>entry(reason==CasketDestroyed)->[Intro] was violently [Removed] from [Casket_indefinite] after it was destroyed[ByOpener].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_TradeCaravanArrived</defName>
 		<rulePack>
 			<rulesStrings>
@@ -302,7 +321,8 @@
 				<li>desc_sentence->[Captor] laughed as tears welled up in [Prisoner_possessive] eyes.</li>
 				<li>desc_sentence->[Captor] kicked [Prisoner_objective] for no obvious reason.</li>
 
-				<li>contextClause->[Prisoner], a member of [HostileFaction], was put into [RoomQuality_indefinite] prison</li>
+				<li>contextClause(testPermutation==False)->[Prisoner], a member of [HostileFaction], was put into [RoomQuality_indefinite] prison</li>
+				<li>contextClause(testPermutation==True)-></li>
 
 				<li>entry->[image]. [contextClause].</li>
 				<li>entry->[image]. [desc_sentence] [contextClause].</li>

@@ -192,7 +192,7 @@ internal class MentalBreakRecorder : RecorderBase
 
         scenario.Thing()
             .BuildRoom(MapBuilder.Beside("Prison", Rot4.North, 5, 5), "Grave")
-            .WithGrave() // CorpseObsession
+            .WithCasket(ThingDefOf.Sarcophagus, ThingDefOf.Plasteel) // CorpseObsession
             .Execute();
 
         scenario.Thing()

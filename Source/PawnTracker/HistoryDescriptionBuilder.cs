@@ -71,6 +71,17 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
         return this;
     }
 
+    public HistoryDescriptionBuilder AddRule(string keyword, Def def, bool addSubsymbols = false, bool replaceIfExist = false)
+    {
+        if (def == null) return this;
+
+        AddRule(keyword, def.label, replaceIfExist);
+
+        if (addSubsymbols)
+            return AddRules(GrammarUtility.RulesForDef(keyword, def));
+        return this;
+    }
+
     public HistoryDescriptionBuilder AddRule(string keyword, Hediff hediff, bool addSubsymbols = false, bool replaceIfExist = false)
     {
         if (hediff == null) return this;
