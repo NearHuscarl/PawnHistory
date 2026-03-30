@@ -51,7 +51,8 @@ namespace PawnHistory.Source.PawnTracker;
 // Pawn.Notify_PassedToWorld() event?
 // TaleRecorder.RecordTale()
 // Search for <IncidentDef>
-// HistoryEventDefOf.cs
+// - HistoryEventDefOf.cs
+//  - .RecordEvent(
 // - Guest transition: Prisoner/Slave/Guest
 //  - "SetGuestStatus("
 

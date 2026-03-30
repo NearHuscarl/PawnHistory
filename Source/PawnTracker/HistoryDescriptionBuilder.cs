@@ -50,6 +50,11 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
         return AddRule(keyword, value.Resolve(), replaceIfExist);
     }
 
+    public HistoryDescriptionBuilder AddRule(string keyword, int value, bool replaceIfExist = false)
+    {
+        return AddRule(keyword, value.ToString(), replaceIfExist);
+    }
+
     public HistoryDescriptionBuilder AddRule(string keyword, Pawn pawn, bool addSubsymbols = false, bool replaceIfExist = false)
     {
         if (pawn == null) return this;

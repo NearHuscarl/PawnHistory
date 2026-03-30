@@ -66,6 +66,7 @@
     <Compile Include="Source\PawnTracker\Events\CasketAcceptedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\CasketDropEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\JoinedLordEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\PawnSoldEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ScenarioStartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PrisonerCapturedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\WandererJoinedEvent.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Source\PawnTracker\Events\SurgeryEvent.cs" />
     <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\CasketDropRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\PawnSoldRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\NewArrivalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PartyRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HistoryTaleRecorder.cs" />

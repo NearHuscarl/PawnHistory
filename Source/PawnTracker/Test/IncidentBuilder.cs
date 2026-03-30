@@ -26,6 +26,13 @@ public class IncidentBuilder
         return this;
     }
 
+    public IncidentBuilder TraderKind(string traderKindDefName)
+    {
+        var traderKindDef = DefDatabase<TraderKindDef>.GetNamed(traderKindDefName);
+        parms.traderKind = traderKindDef;
+        return this;
+    }
+
     public IncidentBuilder RaidStrategy(RaidStrategyDef raidStrategy)
     {
         parms.raidStrategy = raidStrategy;
@@ -44,6 +51,30 @@ public class IncidentBuilder
         return this;
     }
 
+    private bool IsTradeIncident()
+    {
+        return def.Worker is IncidentWorker_TraderCaravanArrival
+            || def.Worker is IncidentWorker_OrbitalTraderArrival;
+    }
+
+    private List<Pawn> OrderResult(IEnumerable<Pawn> pawns)
+    {
+        if (IsTradeIncident())
+        {
+            var list = pawns.ToList();
+
+            var trader = list.FirstOrDefault(p => p.trader != null);
+            if (trader == null)
+                return list;
+
+            list.Remove(trader);
+            list.Insert(0, trader);
+            return list;
+        }
+
+        return pawns.ToList();
+    }
+
     /// <summary>
     /// Executes the incident and returns the list of pawns it spawned.
     /// </summary>
@@ -60,8 +91,8 @@ public class IncidentBuilder
 
         var newLord = map.lordManager.lords.Except(oldLords).FirstOrDefault();
         if (newLord != null)
-            return newLord.ownedPawns;
+            return OrderResult(newLord.ownedPawns);
 
-        return map.mapPawns.AllPawnsSpawned.Except(oldPawns).ToList();
+        return OrderResult(map.mapPawns.AllPawnsSpawned.Except(oldPawns));
     }
 }
