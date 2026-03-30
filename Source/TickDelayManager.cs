@@ -4,9 +4,7 @@ using Verse;
 
 namespace PawnHistory.Source;
 
-#pragma warning disable CS9113 // Parameter is unread.
-public class TickDelayManager(Game game) : GameComponent
-#pragma warning restore CS9113 // Parameter is unread.
+public class TickDelayManager : GameComponent
 {
     public class ScheduledAction
     {
@@ -17,19 +15,25 @@ public class TickDelayManager(Game game) : GameComponent
         public bool Cancelled;
     }
 
-    private static readonly List<ScheduledAction> actions = [];
+    private readonly List<ScheduledAction> actions = [];
+    private static TickDelayManager _instance;
+
+    public TickDelayManager(Game _)
+    {
+        _instance = this;
+    }
 
     public override void GameComponentTick()
     {
         var currentTick = Find.TickManager.TicksGame;
+        var toRemove = new List<ScheduledAction>();
+        var toReinsert = new List<ScheduledAction>();
 
-        for (var i = actions.Count - 1; i >= 0; i--)
+        foreach (var a in actions)
         {
-            var a = actions[i];
-
             if (a.Cancelled)
             {
-                actions.RemoveAt(i);
+                toRemove.Add(a);
                 continue;
             }
 
@@ -45,18 +49,40 @@ public class TickDelayManager(Game game) : GameComponent
                 }
                 finally
                 {
+                    toRemove.Add(a);
+
                     if (a.Repeat && !a.Cancelled)
+                    {
                         a.ExecuteTick = currentTick + a.Interval;
-                    else
-                        actions.RemoveAt(i);
+                        toReinsert.Add(a);
+                    }
                 }
             }
+        }
+
+        foreach (var a in toRemove) actions.Remove(a);
+        foreach (var a in toReinsert) InsertSorted(a);
+    }
+
+    private static readonly IComparer<ScheduledAction> Comparer = Comparer<ScheduledAction>.Create((a, b) => a.ExecuteTick.CompareTo(b.ExecuteTick));
+
+    private void InsertSorted(ScheduledAction action)
+    {
+        var i = actions.BinarySearch(action, Comparer);
+
+        if (i < 0)
+            actions.Insert(~i, action);
+        else
+        {
+            while (i < actions.Count && actions[i].ExecuteTick == action.ExecuteTick)
+                i++;
+            actions.Insert(i, action);
         }
     }
 
     public static void Delay(int ticks, Action action)
     {
-        actions.Add(new ScheduledAction
+        _instance.InsertSorted(new ScheduledAction
         {
             ExecuteTick = Find.TickManager.TicksGame + ticks,
             Action = action,
@@ -74,7 +100,7 @@ public class TickDelayManager(Game game) : GameComponent
             Repeat = true
         };
 
-        actions.Add(a);
+        _instance.InsertSorted(a);
         return a;
     }
 

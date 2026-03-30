@@ -448,7 +448,7 @@ static class PawnBuilderExtension
 
     public static PawnBuilder SetRandomRelations(this PawnBuilder builder, int relationsPerPawn)
     {
-        var possibleRelations = DefDatabase<PawnRelationDef>.AllDefsListForReading.Where(def => def != null && def.defName != "Bond").ToList();
+        var possibleRelations = DefDatabase<PawnRelationDef>.AllDefsListForReading.Where(def => def != null && !def.implied && def.defName != "Bond").ToList();
 
         return builder.Do((pawn, _, pawns) =>
         {

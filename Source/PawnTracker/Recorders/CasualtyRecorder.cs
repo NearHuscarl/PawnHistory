@@ -42,11 +42,13 @@ internal class CasualtyRecorder : RecorderBase
 
         var isKillLog = e.Casualty == CasualtyType.Killed;
         var recordDef = isKillLog ? HistoryRecordDefOf.Death : HistoryRecordDefOf.Downed;
+        var historyRecords = e.Subject.GetHistoryRecords();
+        var lastRecord = historyRecords.LastOrDefault();
 
-        if (!isKillLog && CompHistoryManager.GetComp(e.Subject).records.LastOrDefault()?.def == HistoryRecordDefOf.Death)
+        if (isKillLog && lastRecord?.def == HistoryRecordDefOf.Downed && lastRecord.date == GenTicks.TicksAbs)
         {
-            Log.Warning($"[PawnHistory] Received downed transition from {e.Subject.NameShortColored}, but they were already dead. Skipping..");
-            return;
+            Log.Message($"[PawnHistory] Received death & downed transitions from {e.Subject.NameShortColored} in the same tick. Skipping down transition..");
+            historyRecords.Pop();
         }
 
         var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Subject);
@@ -60,7 +62,7 @@ internal class CasualtyRecorder : RecorderBase
             var rootKeyword = isKillLog ? "killedEntry" : "downedEntry";
             desc = recordDef.Description(e.Subject)
                 .AddRule("HediffInPart", hediffInt, hediffInt?.Part, addSubsymbols: true)
-                .AddConstantIf(e.CulpritHediff != null, "reason", "true")
+                .AddConstant("hasReason", e.CulpritHediff != null)
                 .Resolve(rootKeyword);
         }
         else
