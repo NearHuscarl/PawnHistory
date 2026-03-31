@@ -48,3 +48,25 @@ public class TestScenario
             inspectWindow.OpenTabType = historyTab.GetType();
     }
 }
+
+
+public static class TestScenarioExtensions
+{
+    public static TestScenario ForwardTime(this TestScenario scenario, float day)
+    {
+        Find.TickManager.DebugSetTicksGame(Find.TickManager.TicksGame + GenDate.DaysToTicks(day));
+        return scenario;
+    }
+
+    public static TestScenario SpeedUp(this TestScenario scenario)
+    {
+        Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
+        return scenario;
+    }
+
+    public static TestScenario SlowDown(this TestScenario scenario)
+    {
+        Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
+        return scenario;
+    }
+}

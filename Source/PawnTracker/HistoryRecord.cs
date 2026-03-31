@@ -22,10 +22,14 @@ public class HistoryRecord : IExposable
         this.description = desc.Resolve();
         this.concerns = new List<Thing> { pawn }.Concat(concerns ?? []).Where(p => p != null).Distinct().ToList();
         this.date = GenTicks.TicksAbs;
-        this.tileId = pawn.WorldLocation().tileId;
 
-        if (this.tileId == PlanetTile.Invalid.tileId)
-            Log.Warning($"History record is initialized with an invalid tileId. {DebugUtility.Format(this)}");
+        if (pawn.IsWorldPawn())
+        {
+            Log.Message($"{nameof(HistoryRecord)} is initialized but cannot locate WorldPawn location, falling back to PlayerHomeMap..\n\n{DebugUtility.Format(this)}");
+            this.tileId = Find.AnyPlayerHomeMap.Tile.tileId;
+        }
+        else
+            this.tileId = pawn.WorldLocation().tileId;
 
         CurrentPawnToJumpTo = 0;
     }
@@ -68,9 +72,16 @@ public class HistoryRecord : IExposable
 
 public static class HistoryRecordExtensions
 {
+    public static PlanetTile Tile(int tileId)
+    {
+        if (tileId < 0)
+            return Find.AnyPlayerHomeMap?.Tile ?? PlanetTile.Invalid;
+        return Find.WorldGrid[tileId].tile;
+    }
+
     public static string GetShortDate(this HistoryRecord record)
     {
-        var position = Find.WorldGrid.LongLatOf(Find.WorldGrid[record.tileId].tile);
+        var position = Find.WorldGrid.LongLatOf(Tile(record.tileId));
         var hourInt = GenDate.HourInteger(record.date, position.x);
         var hour = $"{hourInt}h";
 
@@ -89,7 +100,7 @@ public static class HistoryRecordExtensions
 
     public static string GetTipDate(this HistoryRecord record)
     {
-        var position = Find.WorldGrid.LongLatOf(Find.WorldGrid[record.tileId].tile);
+        var position = Find.WorldGrid.LongLatOf(Tile(record.tileId));
         return GenDate.DateFullStringWithHourAt(record.date, position);
     }
 }

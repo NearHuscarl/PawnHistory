@@ -197,16 +197,25 @@ public static class HistoryDescriptionBuilderExtensions
         return builder.AddRule("FACTION", faction.NameColored.Resolve());
     }
 
+    private static readonly RulePackDef VarRulePack = DefDatabase<RulePackDef>.GetNamed("PawnEvent_Var");
+    public static string GetOtherText(string ruleName, int otherCount)
+    {
+        var request = new GrammarRequest();
+
+        request.Includes.Add(VarRulePack);
+        request.Rules.Add(new Rule_String("OtherCount", otherCount.ToString()));
+        request.Constants.Add("OtherCount", otherCount.ToString());
+
+        return GrammarResolver.Resolve(ruleName, request);
+    }
+
     public static HistoryDescriptionBuilder WithOthers(this HistoryDescriptionBuilder builder, List<Pawn> pawns)
     {
         var otherCount = pawns.Count - 1;
         var otherTag = Faction.OfPlayer.HostileTo(pawns.FirstOrDefault()?.Faction) ? TagType.Threat : TagType.ColonistCount;
-        var otherText = otherCount switch
-        {
-            1 => (otherCount + " other").ApplyTag(otherTag).Resolve(),
-            _ => (otherCount + " others").ApplyTag(otherTag).Resolve(),
-        };
+        var otherText = GetOtherText("Others", otherCount).ApplyTag(otherTag).Resolve();
 
-        return builder.AddRule("Others", otherText).AddConstant("OtherCount", otherCount);
+        return builder.AddRule("Others", otherText)
+            .AddConstant("OtherCount", otherCount);
     }
 }

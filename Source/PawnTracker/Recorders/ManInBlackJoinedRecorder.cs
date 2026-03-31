@@ -4,7 +4,7 @@ using RimWorld;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class ManInBlackJoinRecorder : RecorderBase
+internal class ManInBlackJoinedRecorder : RecorderBase
 {
     public override void Register()
     {

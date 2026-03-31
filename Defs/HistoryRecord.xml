@@ -129,6 +129,12 @@
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>RefugeePodCrashed</defName>
+		<label>refugee pod crashed</label>
+		<descriptionMaker>PawnEvent_RefugeePodCrashed</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>WildManWanderedIn</defName>
 		<label>wild man wandered in</label>
 		<descriptionMaker>PawnEvent_WildManWanderedIn</descriptionMaker>
@@ -138,6 +144,12 @@
 		<defName>ManInBlackJoin</defName>
 		<label>man in black joining</label>
 		<descriptionMaker>PawnEvent_ManInBlackJoin</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>GameEndedWanderersJoined</defName>
+		<label>game ended wanderers joined</label>
+		<descriptionMaker>PawnEvent_GameEndedWanderersJoined</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">

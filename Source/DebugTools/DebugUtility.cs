@@ -1,10 +1,9 @@
-﻿using RimWorld;
+﻿using PawnHistory.Source.Helper;
+using RimWorld;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using Verse;
 
 namespace PawnHistory.Source.DebugTools;
@@ -31,7 +30,8 @@ public static class DebugUtility
         if (obj == null) return "null";
 
         var type = obj.GetType();
-        var props = type.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
 
         var parts = new List<string>();
 
@@ -39,6 +39,12 @@ public static class DebugUtility
         {
             var value = prop.GetValue(obj);
             parts.Add($"{prop.Name}={FormatValue(value)}");
+        }
+
+        foreach (var field in fields)
+        {
+            var value = field.GetValue(obj);
+            parts.Add($"{field.Name}={FormatValue(value)}");
         }
 
         return $"{type.Name}[{string.Join(", ", parts)}]";
@@ -58,6 +64,6 @@ public static class DebugUtility
             return $"[{string.Join(", ", items)}]";
         }
 
-        return value.ToString();
+        return LangUtility.Truncate(value.ToString(), 100);
     }
 }

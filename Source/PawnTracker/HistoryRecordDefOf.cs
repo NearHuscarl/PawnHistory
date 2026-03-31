@@ -28,8 +28,10 @@ internal class HistoryRecordDefOf
     public static HistoryRecordDef VisitorArrived;
     public static HistoryRecordDef TravelGroupArrived;
     public static HistoryRecordDef WandererJoined;
+    public static HistoryRecordDef RefugeePodCrashed;
     public static HistoryRecordDef WildManWanderedIn;
     public static HistoryRecordDef ManInBlackJoin;
+    public static HistoryRecordDef GameEndedWanderersJoined;
     public static HistoryRecordDef SoldToSlavery;
     public static HistoryRecordDef BoughtFromSlavery;
     public static HistoryRecordDef JoinedParty;

@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using RimWorld.QuestGen;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -54,6 +55,7 @@ class WandererJoinContext
     }
 }
 
+// Wait until the player accepts the ChoiceLetter
 [HarmonyPatch(typeof(QuestPart_PawnsArrive), nameof(QuestPart_PawnsArrive.Notify_QuestSignalReceived))]
 internal class QuestPart_PawnsArrive_Notify_QuestSignalReceived_Patch
 {
@@ -76,12 +78,34 @@ internal class QuestPart_PawnsArrive_Notify_QuestSignalReceived_Patch
     }
 }
 
+[HarmonyPatch(typeof(QuestNode_Root_RefugeePodCrash), nameof(QuestNode_Root_RefugeePodCrash.GeneratePawn))]
+internal class QuestNode_Root_RefugeePodCrash_GeneratePawn_Patch
+{
+    static void Postfix(Pawn __result)
+    {
+        GameEventBus.Publish(new WandererJoinedEvent(__result, [], null, QuestGen.quest.root));
+    }
+}
+
 [HarmonyPatch(typeof(IncidentWorker_WandererJoin), "TryExecuteWorker")]
 public static class IncidentWorker_WandererJoin_TryExecuteWorker_Patch
 {
     static void Prefix(IncidentParms parms) => WandererJoinContext.Prefix(parms);
 
     static void Postfix(IncidentParms parms, IncidentWorker_WandererJoin __instance, bool __result)
+    {
+        WandererJoinContext.Postfix(parms, __instance, __result);
+    }
+
+    static void Finalizer() => WandererJoinContext.Finalizer();
+}
+
+[HarmonyPatch(typeof(IncidentWorker_GameEndedWanderersJoin), "TryExecuteWorker")]
+public static class IncidentWorker_GameEndedWanderersJoin_TryExecuteWorker_Patch
+{
+    static void Prefix(IncidentParms parms) => WandererJoinContext.Prefix(parms);
+
+    static void Postfix(IncidentParms parms, IncidentWorker_GameEndedWanderersJoin __instance, bool __result)
     {
         WandererJoinContext.Postfix(parms, __instance, __result);
     }
