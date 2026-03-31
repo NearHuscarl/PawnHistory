@@ -1,4 +1,6 @@
-﻿using RimWorld;
+﻿using PawnHistory.Source.DebugTools;
+using RimWorld;
+using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,19 +14,25 @@ public class HistoryRecord : IExposable
     /// <summary>
     /// Empty constructor is required so Scribe can instantiate it
     /// </summary>
-    public HistoryRecord() => date = GenTicks.TicksAbs;
+    public HistoryRecord() {}
     public HistoryRecord(HistoryRecordDef def, Pawn pawn, TaggedString desc, IEnumerable<Thing> concerns = null) : this()
     {
         this.def = def;
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
         this.description = desc.Resolve();
         this.concerns = new List<Thing> { pawn }.Concat(concerns ?? []).Where(p => p != null).Distinct().ToList();
-        
+        this.date = GenTicks.TicksAbs;
+        this.tileId = pawn.WorldLocation().tileId;
+
+        if (this.tileId == PlanetTile.Invalid.tileId)
+            Log.Warning($"History record is initialized with an invalid tileId. {DebugUtility.Format(this)}");
+
         CurrentPawnToJumpTo = 0;
     }
 
     public HistoryRecordDef def;
     public int date;
+    public int tileId;
     public string description;
     public Pawn pawn;
     public List<Thing> concerns;
@@ -41,16 +49,17 @@ public class HistoryRecord : IExposable
 
         var selectedThing = Find.Selector.SingleSelectedThing;
 
-        if (selectedThing == concerns[CurrentPawnToJumpTo].GetJumpTarget())
+        if (selectedThing == concerns[CurrentPawnToJumpTo].GetSpawnedHolderOrSelf())
             CurrentPawnToJumpTo = (CurrentPawnToJumpTo + 1) % concerns.Count;
 
-        return concerns[CurrentPawnToJumpTo].GetJumpTarget();
+        return concerns[CurrentPawnToJumpTo].GetSpawnedHolderOrSelf();
     }
 
     public void ExposeData()
     {
         Scribe_Defs.Look(ref def, "def");
         Scribe_Values.Look(ref date, "date");
+        Scribe_Values.Look(ref tileId, "tileId");
         Scribe_Values.Look(ref description, "d");
         Scribe_References.Look(ref pawn, "pawn", saveDestroyedThings: true);
         Scribe_Collections.Look(ref concerns, "concerns", saveDestroyedThings: true, LookMode.Reference);
@@ -61,8 +70,8 @@ public static class HistoryRecordExtensions
 {
     public static string GetShortDate(this HistoryRecord record)
     {
-        var location = record.pawn.LocationOnMap(); // TODO: use map reference instead of pawn
-        var hourInt = GenDate.HourInteger(record.date, location.x);
+        var position = Find.WorldGrid.LongLatOf(Find.WorldGrid[record.tileId].tile);
+        var hourInt = GenDate.HourInteger(record.date, position.x);
         var hour = $"{hourInt}h";
 
         if (Prefs.TwelveHourClockMode)
@@ -73,14 +82,14 @@ public static class HistoryRecordExtensions
             hour = $"{hourInt} {ampm}";
         }
 
-        var day = GenDate.DayOfYear(record.date, location.x) + 1;
-        var year = GenDate.Year(record.date, location.x);
+        var day = GenDate.DayOfYear(record.date, position.x) + 1;
+        var year = GenDate.Year(record.date, position.x);
         return $"Y{year} D{day} {hour}";
     }
 
     public static string GetTipDate(this HistoryRecord record)
     {
-        var location = record.pawn.LocationOnMap();
-        return GenDate.DateFullStringWithHourAt(record.date, location);
+        var position = Find.WorldGrid.LongLatOf(Find.WorldGrid[record.tileId].tile);
+        return GenDate.DateFullStringWithHourAt(record.date, position);
     }
 }

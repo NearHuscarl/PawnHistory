@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace PawnHistory.Source;
@@ -29,7 +30,7 @@ public class TickDelayManager : GameComponent
         var toRemove = new List<ScheduledAction>();
         var toReinsert = new List<ScheduledAction>();
 
-        foreach (var a in actions)
+        foreach (var a in actions.ToList())
         {
             if (a.Cancelled)
             {

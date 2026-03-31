@@ -26,7 +26,9 @@ public static class DebugOutputsHistoryRecords
     public static void PawnHistoryRecords()
     {
         var options = new List<DebugMenuOption>();
-        var allPawns = PawnsFinder.AllMapsWorldAndTemporary_AliveOrDead.Where(RecorderManager.ShouldRecord);
+        var allPawns = PawnsFinder.AllMapsWorldAndTemporary_AliveOrDead.Where(RecorderManager.ShouldRecord)
+            .OrderByDescending(p => p.GetHistoryRecords().Count)
+            .ThenByDescending(p => p.GetHistoryRecords().LastOrDefault()?.date ?? 0);
 
         foreach (var pawn in allPawns)
         {
@@ -39,14 +41,15 @@ public static class DebugOutputsHistoryRecords
                     new TableDataGetter<HistoryRecord>("Timestamp", r => r.date),
                     new TableDataGetter<HistoryRecord>("Date", r => r.GetShortDate()),
                     new TableDataGetter<HistoryRecord>("label", r => r.def.label),
-                    new TableDataGetter<HistoryRecord>("description", r => r.description),
+                    new TableDataGetter<HistoryRecord>("description", r => LangUtility.Truncate(r.description, 200)),
                     new TableDataGetter<HistoryRecord>("concerns", r => string.Join(", ", r.concerns.Select(c =>
                     {
                         if (c == null) return "null";
                         if (c is Pawn p) return p.NameDef();
                         return c.Label;
                     }))),
-                    new TableDataGetter<HistoryRecord>("currentPawnToJumpTo", r => r.CurrentPawnToJumpTo)
+                    new TableDataGetter<HistoryRecord>("currentPawnToJumpTo", r => r.CurrentPawnToJumpTo),
+                    new TableDataGetter<HistoryRecord>("tileId", r => r.tileId)
                 );
             }));
         }

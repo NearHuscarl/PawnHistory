@@ -97,4 +97,12 @@ internal static class LangUtility
         var union = setA.Union(setB).Count();
         return (float)common / union;
     }
+
+    public static string Truncate(string value, int maxLength)
+    {
+        if (string.IsNullOrEmpty(value) || value.Length <= maxLength)
+            return value;
+
+        return value[..maxLength] + "...";
+    }
 }
