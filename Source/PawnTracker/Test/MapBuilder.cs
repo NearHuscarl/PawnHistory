@@ -98,7 +98,23 @@ public class MapBuilder
         return BuildRoom(CellRect.CenteredOn(Find.CurrentMap.Center, width, height), tag, wallDef, stuff, floorDef);
     }
 
-    public MapBuilder AsBarrack(int bedCount = 3)
+    public MapBuilder AsBarrack(List<Pawn> assignedPawns)
+    {
+        AsBarrack(assignedPawns.Count);
+        
+        actions.Add(center =>
+        {
+            foreach (var pawn in assignedPawns)
+            {
+                var bed = RestUtility.FindBedFor(pawn);
+                pawn.ownership.ClaimBedIfNonMedical(bed);
+            }
+        });
+
+        return this;
+    }
+
+    public MapBuilder AsBarrack(int bedCount = 3, List<Pawn> assignedPawns = null)
     {
         actions.Add(center =>
         {

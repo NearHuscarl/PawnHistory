@@ -203,6 +203,12 @@
 	</HistoryRecordDef>
 
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Rescued</defName>
+		<label>rescued</label>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<descriptionMaker>PawnEvent_Rescued</descriptionMaker>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonerCaptured</defName>
 		<label>prisoner captured</label>
 		<descriptionMaker>PawnEvent_PrisonerCaptured</descriptionMaker>
@@ -246,6 +252,13 @@
 		<defName>MinedValuable</defName>
 		<label>mined valuable</label>
 		<descriptionMaker>PawnEvent_MinedValuable</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<importance>Minor</importance>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>VisitedGrave</defName>
+		<label>visited grave</label>
+		<descriptionMaker>PawnEvent_VisitedGrave</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<importance>Minor</importance>
 	</HistoryRecordDef>

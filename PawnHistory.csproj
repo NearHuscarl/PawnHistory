@@ -66,6 +66,7 @@
     <Compile Include="Source\PawnTracker\Events\CasketAcceptedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\CasketDropEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\DiseaseEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\JobEndEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\JoinedLordEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PawnTradedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ScenarioStartEvent.cs" />
@@ -87,7 +88,9 @@
     <Compile Include="Source\PawnTracker\Recorders\CasketDropRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\GameEndedWanderersJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\DiseaseRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\RescueRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\MinedValuableRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\VisitedGraveRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WandererJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RefugeePodCrashedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WildManWanderedInRecorder.cs" />

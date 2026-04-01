@@ -226,10 +226,7 @@ internal class MentalBreakRecorder : RecorderBase
             {
                 if (mentalBreaks[i].defName == "BedroomTantrum" || mentalBreaks[i].defName.Contains("Wander_OwnRoom"))
                 {
-                    var bed = p.Map.listerBuildings.AllBuildingsColonistOfClass<Building_Bed>()
-                        .FirstOrDefault(b => TestScenario.TaggedRooms["Bedroom"].Contains(b.Position) && b.AnyUnownedSleepingSlot);
-                    if (bed != null)
-                        p.ownership.ClaimBedIfNonMedical(bed);
+                    p.ownership.ClaimBedIfNonMedical(RestUtility.FindBedFor(p));
                 }
             })
             .Do((p, i) => p.StartMentalBreakWithMadeupThought(mentalBreaks[i]))

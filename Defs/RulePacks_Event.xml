@@ -382,6 +382,44 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_Rescued</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>tale_noun->[PAWN] was rescued by [Rescuer].</li>
+
+				<li>circumstance_phrase->as [PAWN_pronoun] lay barely conscious</li>
+				<li>circumstance_phrase->as [PAWN_pronoun] struggled to stay awake</li>
+				<li>circumstance_phrase->with careful precision</li>
+				<li>circumstance_phrase->with urgency</li>
+				<li>circumstance_phrase->in a hurry</li>
+				<li>circumstance_phrase->amid the chaos</li>
+				<li>circumstance_phrase->with visible concern</li>
+				<li>circumstance_phrase->while calling out reassurance</li>
+
+				<li>image->[Rescuer_pronoun] carried [PAWN] to safety [circumstance_phrase]</li>
+				<li>image->[Rescuer_pronoun] pulled [PAWN] from danger [circumstance_phrase]</li>
+				<li>image->[Rescuer_pronoun] lifted [PAWN] onto [Rescuer_possessive] shoulder [circumstance_phrase]</li>
+				<li>image->[Rescuer_pronoun] dragged [PAWN] away from the threat [circumstance_phrase]</li>
+				<li>image->[Rescuer_pronoun] supported [PAWN] as they moved to safety [circumstance_phrase]</li>
+				<li>image->[Rescuer_pronoun] rushed [PAWN] toward shelter [circumstance_phrase]</li>
+
+				<li>desc_sentence->[Rescuer] checked [PAWN_possessive] condition with urgency.</li>
+				<li>desc_sentence->[PAWN] winced in pain but remained conscious.</li>
+				<li>desc_sentence->[PAWN] clung weakly to [Rescuer].</li>
+				<li>desc_sentence->[PAWN] seemed relieved to be found.</li>
+				<li>desc_sentence->[Rescuer] urged [PAWN_objective] to hold on.</li>
+				<li>desc_sentence->[Rescuer] steadied [PAWN_objective] with firm support.</li>
+				<li>desc_sentence->[Rescuer] reassured [PAWN_objective] that help was near.</li>
+				<li>desc_sentence->[PAWN] drifted in and out of awareness.</li>
+				<li>desc_sentence->[Rescuer] moved as quickly as possible without worsening the injuries.</li>
+				<li>desc_sentence->[PAWN] tried to speak but could barely manage a whisper.</li>
+
+				<li>entry->[tale_noun] [image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_PrisonerCaptured</defName>
 		<rulePack>
 			<rulesStrings>
@@ -549,6 +587,38 @@
 				<li>desc_sentence->[PAWN] was filthy and sweat-soaked by the end of it.</li>
 				
 				<li>entry->[tale_noun] [image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_VisitedGrave</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_Job.xml#VisitedGrave-->
+				<li>tale_noun->[PAWN] visited the grave of [Corpse]</li>
+				<li>tale_noun->[PAWN] visited [Corpse]'s grave</li>
+				
+				<li>circumstance_phrase->with a [AdjectiveAngsty] expression</li>
+				<li>circumstance_phrase->and consumed in thought</li>
+				<li>circumstance_phrase->while gazing at a faraway [TerrainFeature]</li>
+				<li>circumstance_phrase->and talked quietly to the memorial</li>
+
+				<li>image->[PAWN_pronoun] stood next to it [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] sat next to it [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] leaned against it [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] read the text on it [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] looked at the art on it [circumstance_phrase]</li>
+
+				<li>desc_sentence->A [Color] aurora shined in the background.</li>
+				<li>desc_sentence->In the distance, a [Community] was covered with snow.</li>
+				<li>desc_sentence->A spectral image of [Corpse] looked over the scene with a [AdjectiveFriendly] expression.</li>
+				<li>desc_sentence->A spectral image of [Corpse] stood next to [PAWN], wearing a [AdjectiveFriendly] expression.</li>
+				<li>desc_sentence->A spectral image of [Corpse] looked over the scene with a [AdjectiveAngsty] expression.</li>
+				<li>desc_sentence->A spectral image of [Corpse] stood next to [PAWN], wearing a [AdjectiveAngsty] expression.</li>
+				<li>desc_sentence->[Quantity_adjphrase] [Animal]s rest near the scene.</li>
+
+				<li>entry->[tale_noun]. [image]. [desc_sentence]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

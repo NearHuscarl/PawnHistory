@@ -40,6 +40,7 @@ internal class HistoryRecordDefOf
     public static HistoryRecordDef MentalBreak;
     public static HistoryRecordDef MentalBreakViolent;
     public static HistoryRecordDef SocialFight;
+    public static HistoryRecordDef Rescued;
     public static HistoryRecordDef PrisonerCaptured;
     public static HistoryRecordDef PrisonBreak;
     public static HistoryRecordDef LightningStriked;
@@ -47,6 +48,7 @@ internal class HistoryRecordDefOf
     public static HistoryRecordDef ReadBook;
     public static HistoryRecordDef Stripped;
     public static HistoryRecordDef MinedValuable;
+    public static HistoryRecordDef VisitedGrave;
 
     static HistoryRecordDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(HistoryRecordDefOf));
 }

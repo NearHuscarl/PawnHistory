@@ -11,14 +11,18 @@ public class JobStartedEvent(Pawn pawn, Job oldJob, Job newJob) : GameEventBase
     public Job NewJob { get; } = newJob;
 }
 
+public class JobStartedContext
+{
+    public static readonly AccessTools.FieldRef<Pawn_JobTracker, Pawn> PawnRef = AccessTools.FieldRefAccess<Pawn_JobTracker, Pawn>("pawn");
+}
+
 [HarmonyPatch(typeof(Pawn_JobTracker), nameof(Pawn_JobTracker.StartJob))]
 public static class Pawn_JobTracker_StartJob_Patch
 {
-    static readonly AccessTools.FieldRef<Pawn_JobTracker, Pawn> PawnRef = AccessTools.FieldRefAccess<Pawn_JobTracker, Pawn>("pawn");
 
     public static void Postfix(Pawn_JobTracker __instance, Job newJob)
     {
-        var pawn = PawnRef(__instance);
+        var pawn = JobStartedContext.PawnRef(__instance);
         var oldJob = __instance.curJob;
 
         GameEventBus.Publish(new JobStartedEvent(pawn, oldJob, newJob));
