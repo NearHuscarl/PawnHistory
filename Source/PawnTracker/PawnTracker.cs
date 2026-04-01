@@ -48,6 +48,7 @@ namespace PawnHistory.Source.PawnTracker;
 // - DLC breaks
 // Raid type: seige with a different icon
 // Ideology convert, belief reduced
+// Quest: track giver, link to (visible) quest.
 // Pawn.Notify_PassedToWorld() event?
 // TaleRecorder.RecordTale()
 // Search for <IncidentDef>

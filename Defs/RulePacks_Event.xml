@@ -323,6 +323,18 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_Disease</defName>
+		<include>
+			<li>PawnEvent_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] got sick from [Disease] along [WithOthers].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_MentalBreak</defName>
 		<rulePack>
 			<rulesStrings>

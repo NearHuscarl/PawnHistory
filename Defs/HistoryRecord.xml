@@ -179,6 +179,12 @@
 	</HistoryRecordDef>
 
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Disease</defName>
+		<label>disease</label>
+		<descriptionMaker>PawnEvent_Disease</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>MentalBreak</defName>
 		<label>mental break</label>
 		<descriptionMaker>PawnEvent_MentalBreak</descriptionMaker>

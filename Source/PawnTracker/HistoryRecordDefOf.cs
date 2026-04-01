@@ -36,6 +36,7 @@ internal class HistoryRecordDefOf
     public static HistoryRecordDef BoughtFromSlavery;
     public static HistoryRecordDef JoinedParty;
     public static HistoryRecordDef PartyCancelled;
+    public static HistoryRecordDef Disease;
     public static HistoryRecordDef MentalBreak;
     public static HistoryRecordDef MentalBreakViolent;
     public static HistoryRecordDef SocialFight;

@@ -19,7 +19,7 @@ internal class HediffComp_GetsPermanent_PreFinalizeInjury_Patch
 [HarmonyPatch(typeof(HediffComp_GetsPermanent), nameof(HediffComp_GetsPermanent.CompPostInjuryHeal))]
 internal class HediffComp_GetsPermanent_CompPostInjuryHeal_Patch
 {
-    static void Prefix(HediffComp_GetsPermanent __instance, ref float amount)
+    static void Prefix(HediffComp_GetsPermanent __instance, float amount)
     {
         if (!NearDebugSettings.ForcePostHealScar)
             return;
