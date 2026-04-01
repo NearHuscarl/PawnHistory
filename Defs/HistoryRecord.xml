@@ -242,4 +242,11 @@
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<importance>Minor</importance>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>MinedValuable</defName>
+		<label>mined valuable</label>
+		<descriptionMaker>PawnEvent_MinedValuable</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<importance>Minor</importance>
+	</HistoryRecordDef>
 </Defs>

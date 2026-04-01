@@ -87,6 +87,7 @@
     <Compile Include="Source\PawnTracker\Recorders\CasketDropRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\GameEndedWanderersJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\DiseaseRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\MinedValuableRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WandererJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RefugeePodCrashedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WildManWanderedInRecorder.cs" />

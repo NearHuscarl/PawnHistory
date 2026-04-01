@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using UnityEngine;
 using Verse;
 using Verse.Grammar;
@@ -84,6 +85,17 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
 
         if (addSubsymbols)
             return AddRules(GrammarUtility.RulesForDef(keyword, def));
+        return this;
+    }
+
+    public HistoryDescriptionBuilder AddRule(string keyword, ThingDef thingDef, bool addSubsymbols = false, bool replaceIfExist = false)
+    {
+        if (thingDef == null) return this;
+
+        AddRule(keyword, thingDef.label.Colorize(thingDef.graphicData.colorTwo), addSubsymbols, replaceIfExist);
+
+        if (addSubsymbols)
+            return AddRules(GrammarUtility.RulesForDef(keyword, thingDef));
         return this;
     }
 

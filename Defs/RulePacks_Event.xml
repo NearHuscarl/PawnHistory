@@ -15,11 +15,27 @@
 		<defName>PawnEvent_Common</defName>
 		<rulePack>
 			<rulesStrings>
+				<li>PH_Quantity->two</li>
+				<li>PH_Quantity->three</li>
+				<li>PH_Quantity->four</li>
+				<li>PH_Quantity->five</li>
+				<li>PH_Quantity->six</li>
+				<li>PH_Quantity->seven</li>
+				<li>PH_Quantity->eight</li>
+				<li>PH_Quantity->nine</li>
+				<li>PH_Quantity->ten</li>
+				<li>PH_Quantity->several</li>
+				<li>PH_Quantity->a group of</li>
+				<li>PH_Quantity->dozens of</li>
+
 				<li>AndOthers(OtherCount==0)-></li>
 				<li>AndOthers(OtherCount!=0)-> and [Others]</li>
 				
 				<li>WithOthers(OtherCount==0)-></li>
 				<li>WithOthers(OtherCount!=0)-> with [Others]</li>
+
+				<li>AlongWithOthers(OtherCount==0)-></li>
+				<li>AlongWithOthers(OtherCount!=0)->along with [Others]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -329,7 +345,8 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry->[PAWN] got sick from [Disease] along [WithOthers].</li>
+				<li>entry(disease!=OrganDecay)->[PAWN] got sick from [Disease] [AlongWithOthers].</li>
+				<li>entry(disease==OrganDecay)->[PAWN] developed a flesh-eating infection known as [Disease] in [PAWN_possessive] [Part].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -501,6 +518,37 @@
 				<li>image->[PAWN] waited patiently as [STRIPPED] removed [STRIPPED_possessive] clothes [circumstance_phrase]</li>
 				
 				<li>entry->[image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_MinedValuable</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_Job.xml#MinedValuable-->
+				<li>tale_noun->[PAWN] struck a rich vein of [Material]!</li>
+				
+				<li>circumstance_phrase->sweating heavily</li>
+				<li>circumstance_phrase->wearing a [AdjectiveFriendly] expression</li>
+				<li>circumstance_phrase->wearing a [AdjectiveFriendly] expression</li>
+				<li>circumstance_phrase->smiling proudly</li>
+				<li>circumstance_phrase->a satisfied expression on [PAWN_possessive] face</li>
+
+				<li>image->[PAWN_pronoun] worked a tunnel wall with [PAWN_possessive] pick, [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] held up a chunk of the ore for the others to see, [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] leaned against the tunnel wall to catch [PAWN_possessive] breath, [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] directed the dig team through the thick seam, [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] ran [PAWN_possessive] fingers along the exposed vein, [circumstance_phrase]</li>
+				
+				<li>desc_sentence->[PH_Quantity] [ally]s assisted.</li>
+				<li>desc_sentence->[PH_Quantity] [Animal]s had wandered into the area.</li>
+				<li>desc_sentence->A [Community] could be seen on the horizon.</li>
+				<li>desc_sentence->[PH_Quantity] further veins were visible in the distance.</li>
+				<li>desc_sentence->A [TerrainFeature] was visible in the distance.</li>
+				<li>desc_sentence->[PAWN] was filthy and sweat-soaked by the end of it.</li>
+				
+				<li>entry->[tale_noun] [image]. [desc_sentence]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

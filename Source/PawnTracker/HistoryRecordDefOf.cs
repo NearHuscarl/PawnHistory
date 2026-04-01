@@ -46,6 +46,7 @@ internal class HistoryRecordDefOf
     public static HistoryRecordDef WalkNaked;
     public static HistoryRecordDef ReadBook;
     public static HistoryRecordDef Stripped;
+    public static HistoryRecordDef MinedValuable;
 
     static HistoryRecordDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(HistoryRecordDefOf));
 }
