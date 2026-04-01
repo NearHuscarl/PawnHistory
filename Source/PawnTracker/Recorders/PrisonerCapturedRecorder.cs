@@ -45,7 +45,7 @@ internal class PrisonerCapturedRecorder : RecorderBase
     public override void Test(TestScenario scenario)
     {
         NearDebugSettings.NoDisabledWorkTypes = true;
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
+        scenario.SpeedUp();
 
         scenario.Thing()
             .BuildRoom(8, 8, tag: "Prison")
@@ -60,10 +60,10 @@ internal class PrisonerCapturedRecorder : RecorderBase
             .Capture(prisoner)
             .CreateSingle();
 
-        GameEventBus.RunOnceWhen<PrisonerCapturedEvent>((e) => true, e =>
+        GameEventBus.SubscribeOnce<PrisonerCapturedEvent>(e =>
         {
             NearDebugSettings.NoDisabledWorkTypes = false;
-            Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
+            scenario.SlowDown();
             scenario.OpenHistoryRecordTab(prisoner);
         });
     }
@@ -71,7 +71,7 @@ internal class PrisonerCapturedRecorder : RecorderBase
     public void TestArrest(TestScenario scenario)
     {
         NearDebugSettings.NoDisabledWorkTypes = true;
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
+        scenario.SpeedUp();
 
         scenario.Thing()
             .BuildRoom(8, 8, tag: "Prison")
@@ -86,10 +86,10 @@ internal class PrisonerCapturedRecorder : RecorderBase
             .Do(p => CaptureUtility.OrderArrest(p, friend))
             .CreateSingle();
 
-        GameEventBus.RunOnceWhen<PrisonerCapturedEvent>((e) => true, e =>
+        GameEventBus.SubscribeOnce<PrisonerCapturedEvent>(e =>
         {
             NearDebugSettings.NoDisabledWorkTypes = false;
-            Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
+            scenario.SlowDown();
             scenario.OpenHistoryRecordTab(friend);
         });
     }

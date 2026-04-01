@@ -92,8 +92,7 @@ internal class BodyPartDestroyedRecorder : RecorderBase
             .WeakenParts(nonVitalParts, oneSide: true)
             .Execute();
 
-        DebugViewSettings.neverForceNormalSpeed = true;
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Ultrafast;
+        scenario.SpeedUp();
     }
 
     // hasInstigator==,hasDmgSource==
@@ -119,14 +118,16 @@ internal class BodyPartDestroyedRecorder : RecorderBase
             .WeakenParts(nonVitalParts, true)
             .Execute();
 
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
+        var tickStart = Find.TickManager.TicksGame;
 
-        var interval = TickDelayManager.Interval(100, () =>
+        scenario.SpeedUp();
+        scenario.RunUntil(() => Find.TickManager.TicksGame - tickStart > 2500, () =>
         {
             foreach (var pawn in pawns)
+            {
+                if (pawn == null) continue;
                 FireUtility.TryAttachFire(pawn, 1.75f, null);
-        });
-
-        TickDelayManager.Delay(2500, () => TickDelayManager.Cancel(interval));
+            }
+        }, interval: 100);
     }
 }

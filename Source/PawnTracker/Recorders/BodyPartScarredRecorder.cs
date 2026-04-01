@@ -60,14 +60,8 @@ internal class BodyPartScarredRecorder : RecorderBase
             .FullHeal()
             .Execute();
 
-        DebugViewSettings.neverForceNormalSpeed = true;
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Ultrafast;
-
-        GameEventBus.RunOnceWhen<LordToilChangeEvent>(e => e.NextToil is LordToil_PanicFlee, e =>
-        {
-            NearDebugSettings.ForceInjuryScar = false;
-            Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
-        });
+        scenario.SpeedUp();
+        scenario.RunOnceOn<LordToilChangeEvent>(e => e.NextToil is LordToil_PanicFlee, e => scenario.SlowDown());
     }
 
     public void TestPostHeal(TestScenario scenario)
@@ -85,10 +79,8 @@ internal class BodyPartScarredRecorder : RecorderBase
             .ThatMatches(ShouldRecord)
             .Execute();
 
-        DebugViewSettings.neverForceNormalSpeed = true;
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Ultrafast;
-
-        GameEventBus.RunOnceWhen<LordToilChangeEvent>(e => e.NextToil is LordToil_PanicFlee, e =>
+        scenario.SpeedUp();
+        scenario.RunOnceOn<LordToilChangeEvent>(e => e.NextToil is LordToil_PanicFlee, e =>
         {
             scenario.Pawn(friends.Concat(enemies))
                 .TendInjuries()

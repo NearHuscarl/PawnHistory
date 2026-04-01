@@ -25,13 +25,10 @@ public class GameEventBus
         list.Add(listener);
     }
 
-    public static void RunOnceWhen<T>(Func<T, bool> runWhen, Action<T> listener) where T : GameEventBase
+    public static void SubscribeOnce<T>(Action<T> listener) where T : GameEventBase
     {
         void wrapper(T evt)
         {
-            if (!runWhen(evt))
-                return;
-
             try
             {
                 listener(evt);

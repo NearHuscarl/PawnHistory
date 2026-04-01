@@ -5,16 +5,17 @@ using Verse;
 
 namespace PawnHistory.Source;
 
+public class ScheduledAction
+{
+    public int ExecuteTick;
+    public int Interval;
+    public Action Action;
+    public bool Repeat;
+    public bool Cancelled;
+}
+
 public class TickDelayManager : GameComponent
 {
-    public class ScheduledAction
-    {
-        public int ExecuteTick;
-        public int Interval;
-        public Action Action;
-        public bool Repeat;
-        public bool Cancelled;
-    }
 
     private readonly List<ScheduledAction> actions = [];
     private static TickDelayManager _instance;

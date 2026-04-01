@@ -109,41 +109,41 @@ internal class PartyRecorder : RecorderBase
 
     public void TestDangerousMap(TestScenario scenario)
     {
+        scenario.SpeedUp();
         scenario.Pawn(8).Colonist().Execute();
-        var res = scenario.Incident(GatheringDefOf.Party).Execute();
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
+        scenario.Incident(GatheringDefOf.Party).Execute();
 
         TickDelayManager.Delay(400, () =>
         {
             scenario.Incident(IncidentDefOf.RaidEnemy).Point(500).Execute();
             scenario.RaidFriendly().Point(500).Execute();
-            Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
+            scenario.SlowDown();
         });
     }
 
     public void TestOrganizerLeft(TestScenario scenario)
     {
+        scenario.SpeedUp();
         scenario.Pawn(8).Colonist().Execute();
         var organizer = scenario.Incident(GatheringDefOf.Party).Execute().Organizer;
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
 
         TickDelayManager.Delay(400, () =>
         {
             scenario.Pawn([organizer]).Do(p => p.needs.rest.CurLevel = 0f).Execute();
-            Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
+            scenario.SlowDown();
         });
     }
 
     public void TestPawnKilled(TestScenario scenario)
     {
+        scenario.SpeedUp();
         scenario.Pawn(8).Colonist().Execute();
         var res = scenario.Incident(GatheringDefOf.Party).Execute();
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
 
         TickDelayManager.Delay(400, () =>
         {
             res.Lord.ownedPawns.FirstOrDefault(p => p != res.Organizer)?.Kill(null);
-            Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
+            scenario.SlowDown();
         });
     }
 }

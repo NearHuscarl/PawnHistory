@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -7,6 +8,8 @@ namespace PawnHistory.Source.PawnTracker.Test;
 
 public class TestScenario
 {
+    public bool neverForceNormalSpeed = DebugViewSettings.neverForceNormalSpeed;
+
     public static CellRect LastRoomRect { get; internal set; }
     public static Dictionary<string, CellRect> TaggedRooms { get; internal set; } = [];
     public static HashSet<Pawn> ProcessedPawns { get; internal set; } = [];
@@ -60,13 +63,63 @@ public static class TestScenarioExtensions
 
     public static TestScenario SpeedUp(this TestScenario scenario)
     {
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
+        scenario.neverForceNormalSpeed = DebugViewSettings.neverForceNormalSpeed;
+        DebugViewSettings.neverForceNormalSpeed = true;
+        Find.TickManager.CurTimeSpeed = TimeSpeed.Ultrafast;
         return scenario;
     }
 
     public static TestScenario SlowDown(this TestScenario scenario)
     {
+        DebugViewSettings.neverForceNormalSpeed = scenario.neverForceNormalSpeed;
         Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
+        return scenario;
+    }
+
+    public static TestScenario RunOnceOn<T>(this TestScenario scenario, Func<T, bool> runWhen, Action<T> listener) where T : GameEventBase
+    {
+        void wrapper(T evt)
+        {
+            if (!runWhen(evt))
+                return;
+
+            try
+            {
+                listener(evt);
+            }
+            finally
+            {
+                GameEventBus.Unsubscribe((Action<T>)wrapper);
+            }
+        }
+        GameEventBus.Subscribe((Action<T>)wrapper);
+
+        return scenario;
+    }
+
+    public static TestScenario RunUntil(this TestScenario scenario, Func<bool> stopCondition, Action action, Action onFinish = null, int interval = 1)
+    {
+        ScheduledAction scheduled = null;
+
+        scheduled = TickDelayManager.Interval(interval, () =>
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Error while executing action {action}, {ex}");
+            }
+            finally
+            {
+                if (stopCondition())
+                {
+                    scheduled.Cancelled = true;
+                    onFinish?.Invoke();
+                }
+            }
+        });
         return scenario;
     }
 }

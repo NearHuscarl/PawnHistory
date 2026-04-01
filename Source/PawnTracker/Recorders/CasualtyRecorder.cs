@@ -127,7 +127,6 @@ internal class CasualtyRecorder : RecorderBase
             .SetRandomRelations(5)
             .Execute();
 
-        DebugViewSettings.neverForceNormalSpeed = true;
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Ultrafast;
+        scenario.SpeedUp();
     }
 }

@@ -161,9 +161,11 @@ internal class MentalBreakRecorder : RecorderBase
             .WithFaction(Faction.OfPlayer)
             .CreateSingle();
 
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
+        scenario.SpeedUp();
 
-        var interval = TickDelayManager.Interval(200, () =>
+        // MentalBreaker.CurrentDesiredMoodBreakIntensity -> only allows mental break after 2000 ticks
+        var tickStart = Find.TickManager.TicksGame;
+        scenario.RunUntil(() => Find.TickManager.TicksGame - tickStart > 2500, () =>
         {
             pawn.needs.mood.CurLevel = 0;
             pawn.needs.food.CurLevel = 0;
@@ -171,16 +173,13 @@ internal class MentalBreakRecorder : RecorderBase
             pawn.needs.beauty.CurLevel = 0;
             pawn.needs.comfort.CurLevel = 0;
             pawn.needs.rest.CurLevel = 0.05f;
-        });
-
-        // MentalBreaker.CurrentDesiredMoodBreakIntensity -> only allows mental break after 2000 ticks
-        TickDelayManager.Delay(2500, () =>
+        },
+        onFinish: () =>
         {
             pawn.jobs?.EndCurrentJob(JobCondition.InterruptForced); // wake the fuck up
             pawn.mindState.mentalBreaker.TryDoRandomMoodCausedMentalBreak();
-            TickDelayManager.Cancel(interval);
-            Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
-        });
+            scenario.SlowDown();
+        }, 200);
     }
 
     public override void Test(TestScenario scenario)
