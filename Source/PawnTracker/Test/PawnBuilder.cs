@@ -175,7 +175,7 @@ public class PawnBuilder(int count = 1)
         return Do(pawn =>
         {
             var parts = partDef != null ? pawn.RaceProps.body.GetPartsWithDef(partDef).ToList() : null;
-            var part = parts[partIndex];
+            var part = parts?[partIndex];
             var hediff = HediffMaker.MakeHediff(def, pawn, part);
 
             hediff.SetVisible();
@@ -253,6 +253,24 @@ public class PawnBuilder(int count = 1)
                 if (!hasAddedPart)
                     pawn.health.RestorePart(hediff.Part);
             }
+        });
+    }
+
+    public PawnBuilder SetSkillLevel(SkillDef skillDef, int level)
+    {
+        return Do(pawn =>
+        {
+            var skill = pawn.skills.GetSkill(skillDef);
+            skill.Level = level;
+        });
+    }
+
+    public PawnBuilder Learn(SkillDef skillDef, float xp)
+    {
+        return Do(pawn =>
+        {
+            var skill = pawn.skills.GetSkill(skillDef);
+            skill.Learn(xp);
         });
     }
 

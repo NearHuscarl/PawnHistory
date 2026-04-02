@@ -53,10 +53,10 @@ public class HistoryRecord : IExposable
 
         var selectedThing = Find.Selector.SingleSelectedThing;
 
-        if (selectedThing == concerns[CurrentPawnToJumpTo].GetSpawnedHolderOrSelf())
+        if (selectedThing == concerns[CurrentPawnToJumpTo].SpawnedParentOrMe)
             CurrentPawnToJumpTo = (CurrentPawnToJumpTo + 1) % concerns.Count;
 
-        return concerns[CurrentPawnToJumpTo].GetSpawnedHolderOrSelf();
+        return concerns[CurrentPawnToJumpTo].SpawnedParentOrMe;
     }
 
     public void ExposeData()

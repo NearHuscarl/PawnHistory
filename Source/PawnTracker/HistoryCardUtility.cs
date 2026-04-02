@@ -92,15 +92,13 @@ public class HistoryCardUtility
         var outRect = new Rect(0, tableY, inRect.width, inRect.height - tableY);
         var totalHeight = records.Sum(GetRowHeight);
         var viewRect = new Rect(0, 0, inRect.width - scrollWidth, totalHeight);
-        var curY = totalHeight;
 
         Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
         for (int i = 0; i < records.Count; i++)
         {
             var record = records[i];
             var rowHeight = GetRowHeight(record);
-            curY -= rowHeight;
-            var row = new Rect(0, curY, viewRect.width, rowHeight);
+            var row = new Rect(0, i * rowHeight, viewRect.width, rowHeight);
             if (i % 2 == 0) Widgets.DrawHighlight(row);
 
             var dateCell = new Rect(row.x + cellPx, row.y, colWidthDate, row.height);

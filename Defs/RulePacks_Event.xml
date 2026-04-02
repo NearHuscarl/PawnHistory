@@ -172,6 +172,54 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_SkillLeveledUp</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>DoXThings(record==Kills)                ->killing [RecordCount] creatures</li>
+				<li>DoXThings(record==KillsHumanlikes)      ->killing [RecordCount] humanlike characters</li>
+				<li>DoXThings(record==KillsAnimals)         ->hunting [RecordCount] animals</li>
+				<li>DoXThings(record==KillsMechanoids)      ->killing [RecordCount] mechanoids</li>
+				<li>DoXThings(record==KillsEntities)        ->killing [RecordCount] entities</li>
+				<li>DoXThings(record==PawnsDowned)          ->incapacitated [RecordCount] creatures</li>
+				<li>DoXThings(record==PawnsDownedHumanlikes)->incapacitated [RecordCount] humanlike characters</li>
+				<li>DoXThings(record==PawnsDownedAnimals)   ->incapacitated [RecordCount] animals</li>
+				<li>DoXThings(record==PawnsDownedMechanoids)->incapacitated [RecordCount] mechanoids</li>
+				<li>DoXThings(record==PawnsDownedEntities)  ->incapacitated [RecordCount] entities</li>
+				<li>DoXThings(record==ShotsFired)           ->firing [RecordCount] shots</li>
+				<li>DoXThings(record==Headshots)            ->having [RecordCount] headshots</li>
+				<li>DoXThings(record==OperationsPerformed)  ->performing [RecordCount] medical operations</li>
+				<li>DoXThings(record==TimesTendedOther)     ->tending others' medical conditions [RecordCount] times</li>
+				<li>DoXThings(record==ThingsCrafted)        ->crafting [RecordCount] things</li>
+				<li>DoXThings(record==CellsMined)           ->mining out [RecordCount] cells</li>
+				<li>DoXThings(record==PlantsSown)           ->sowing [RecordCount] plants</li>
+				<li>DoXThings(record==PlantsHarvested)      ->harvesting [RecordCount] plants</li>
+				<li>DoXThings(record==MealsCooked)          ->cooking [RecordCount] meals</li>
+				<li>DoXThings(record==ThingsConstructed)    ->constructing [RecordCount] things</li>
+				<li>DoXThings(record==ThingsRepaired)       ->repairing [RecordCount] things</li>
+				<li>DoXThings(record==ThingsDeconstructed)  ->deconstructing [RecordCount] things</li>
+				<li>DoXThings(record==AnimalsTamed)         ->taming [RecordCount] animals</li>
+				<li>DoXThings(record==PrisonersRecruited)   ->recruiting [RecordCount] prisoners</li>
+				<li>DoXThings(record==PrisonersChatted)     ->chatting with [RecordCount] prisoners</li>
+				<li>DoXThings(record==ResearchPointsResearched)->gaining [RecordCount] research points</li>
+
+				<li>AfterDoingXThings(record==)-></li>
+				<li>AfterDoingXThings(record!=)-> after [DoXThings]</li>
+				
+				<li>entry->[PAWN] reached level [NewLevel] in [Skill][AfterDoingXThings].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_SkillLeveledDown</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] dropped to level [NewLevel] in [Skill].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_NewArrival</defName>
 		<include>
 			<li>PawnEvent_Common</li>

@@ -14,7 +14,7 @@ internal class RescueRecorder : RecorderBase
         {
             if (!ShouldRecord(e.Pawn))
                 return;
-            if (e.CurrentJob.def != JobDefOf.Rescue)
+            if (e.CurrentJob == null || e.CurrentJob.def != JobDefOf.Rescue)
                 return;
             if (e.Condition != JobCondition.Succeeded)
                 return;

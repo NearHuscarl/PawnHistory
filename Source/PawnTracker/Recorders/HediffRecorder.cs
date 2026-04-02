@@ -37,7 +37,7 @@ internal class HediffRecorder : RecorderBase
         var patient = scenario.Pawn()
             .ThatMatches(ShouldRecord)
             .ThatMatches(p => p.health.hediffSet.hediffs.All(h => h.def != HediffDefOf.Anesthetic))
-            .Do(p => p.health.AddHediff(HediffDefOf.Anesthetic))
+            .AddHediff(HediffDefOf.Anesthetic)
             .CreateSingle();
         scenario.OpenHistoryRecordTab(patient);
     }

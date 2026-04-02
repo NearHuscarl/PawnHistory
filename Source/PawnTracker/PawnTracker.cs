@@ -26,15 +26,17 @@ namespace PawnHistory.Source.PawnTracker;
 // - rimworld\assets-odyssey\Assets\data\odyssey\textures
 
 // Events:
-// Skill level up/down
-// - Reason: Become a __ (lvl x) at social after selling [1st expensive item], [2nd expensive item] and x others
-// - Reason: Become a __ (lvl x) at doctor after doing x surgeries
+// - Skill level up/down
+//  + Reason: Become a __ (lvl x) at doctor after doing x surgeries
+//  ^ Reason: Become a __ (lvl x) at doctor after doing surgeries for x hours
+//  - More detailed reason: Become a __ (lvl x) at social after selling [1st expensive item], [2nd expensive item] and x others
 // Crawling to safety
 // Social gathering: Party, wedding, ritual...
 // Social fight
 // + Base
 // - Ideology
 // Panic Flee
+// Food poisoning
 // Scarred body part
 // + Instant from injury damage
 // + Post heal

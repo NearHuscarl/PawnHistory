@@ -44,6 +44,18 @@
 		<icon>EventIcons/Sleep</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>SkillLeveledUp</defName>
+		<label>skill leveled up</label>
+		<descriptionMaker>PawnEvent_SkillLeveledUp</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>SkillLeveledDown</defName>
+		<label>skill leveled down</label>
+		<descriptionMaker>PawnEvent_SkillLeveledDown</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BodyPartDestroyed</defName>
 		<label>body part destroyed</label>
 		<descriptionMaker>PawnEvent_BodyPartDestroyed</descriptionMaker>
