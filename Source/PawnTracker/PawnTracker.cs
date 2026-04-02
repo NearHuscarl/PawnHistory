@@ -58,6 +58,8 @@ namespace PawnHistory.Source.PawnTracker;
 //  - .RecordEvent(
 // - Guest transition: Prisoner/Slave/Guest
 //  - "SetGuestStatus("
+// - ^ Mod options
+//  - Prune less important records
 
 // Create a filter in WorldPawn window (All/Alive/Dead)
 // - Add a column to see the history of dead AND destroyed pawn. Concerned dead&destoryed pawn will open a dedicated history window.

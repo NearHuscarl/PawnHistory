@@ -129,7 +129,7 @@ internal class PartyRecorder : RecorderBase
 
         TickDelayManager.Delay(400, () =>
         {
-            scenario.Pawn([organizer]).Do(p => p.needs.rest.CurLevel = 0f).Execute();
+            scenario.Pawn(organizer).Do(p => p.needs.rest.CurLevel = 0f).Execute();
             scenario.SlowDown();
         });
     }

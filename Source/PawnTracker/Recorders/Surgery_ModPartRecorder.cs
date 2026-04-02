@@ -52,7 +52,7 @@ internal class Surgery_ModPartRecorder : SurgeryRecorder
             .AddRule("Doctor", e.Doctor)
             .AddRule("RemovedPart", e.Part)
             .AddRule("RemovedPart", e.HediffToRemove, replaceIfExist: true)
-            .AddRule("BadHediff", e.BadHediff?.LabelNounFull())
+            .AddRule("BadHediff", e.BadHediff?.LabelNounInBracket())
             .AddRule("AddedHediff", e.HediffToAdd, addSubsymbols: true)
             .AddConstant("type", GetSurgeryType(e))
             .AddConstant("isViolation", e.IsViolation)

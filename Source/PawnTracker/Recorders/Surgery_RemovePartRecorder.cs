@@ -35,7 +35,7 @@ internal class Surgery_RemovePartRecorder : SurgeryRecorder
         var desc = recordDef.Description(e.Patient)
             .AddRule("Doctor", e.Doctor)
             .AddRule("Part", e.Part.Label.Colorize(HediffDefOf.MissingBodyPart.defaultLabelColor))
-            .AddRule("BadHediff", e.BadHediff?.LabelNounFull())
+            .AddRule("BadHediff", e.BadHediff?.LabelNounInBracket())
             .AddConstant("intent", e.Intent)
             .Resolve();
         AddRecord(recordDef, e.Patient, desc, [e.Doctor]);

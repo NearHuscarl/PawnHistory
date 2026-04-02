@@ -160,13 +160,23 @@
 		<rulePack>
 			<rulesStrings>
 				<li>Downed(hasReason==False)->was incapacitated</li>
-				<li>Downed(hasReason==True) ->was incapacitated due to [HediffInPart_indefinite]</li>
+				<li>Downed(hasReason==True) ->was incapacitated due to [HediffInPart]</li>
 				<li>Died(hasReason==False)  ->died</li>
-				<li>Died(hasReason==True)   ->died because of [HediffInPart_indefinite]</li>
+				<li>Died(hasReason==True)   ->died because of [HediffInPart]</li>
 
 				<li>relativePov->[PAWN]'s [Relation], [Subject],</li>
 				<li>downedEntry->[PAWN] [Downed].</li>
 				<li>killedEntry->[PAWN] [Died].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_Birthday</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(isCancer==False)->[PAWN] turned [PAWN_age] and began suffering from [Hediffs] due to aging.</li>
+				<li>entry(isCancer==True) ->[PAWN] turned [PAWN_age] and began suffering from [Hediffs] in [PAWN_possessive] [Part] due to aging.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

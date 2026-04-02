@@ -1,11 +1,7 @@
 ﻿using PawnHistory.Source.Helper;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography;
-using UnityEngine;
 using Verse;
 using Verse.Grammar;
 
@@ -36,9 +32,10 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
         {
             if (replaceIfExist)
                 extraRules.RemoveAll(r => r.keyword.StartsWith(keyword));
-            extraRules.Add(new Rule_String(keyword, value));
             if (addSubsymbols)
                 extraRules.AddRange(LangUtility.RulesForString(keyword, value));
+
+            extraRules.Add(new Rule_String(keyword, value));
         }
         else
             namedArgs[keyword] = value;
@@ -108,15 +105,7 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
     public HistoryDescriptionBuilder AddRule(string keyword, HediffDef hediffDef, bool addSubsymbols = false, bool replaceIfExist = false)
     {
         if (hediffDef == null) return this;
-        return AddRule(keyword, hediffDef.label.Colorize(hediffDef.defaultLabelColor), addSubsymbols, replaceIfExist);
-    }
-
-    public HistoryDescriptionBuilder AddRule(string keyword, Hediff hediff, BodyPartRecord bodyPart, bool addSubsymbols = false, bool replaceIfExist = false)
-    {
-        if (bodyPart == null)
-            return AddRule(keyword, hediff, addSubsymbols, replaceIfExist);
-
-        return AddRule(keyword, hediff.def.PrettyTextForPart(bodyPart), addSubsymbols, replaceIfExist);
+        return AddRule(keyword, hediffDef.LabelColored(), addSubsymbols, replaceIfExist);
     }
 
     public HistoryDescriptionBuilder AddRule(string keyword, BodyPartRecord part, bool addSubsymbols = false, bool replaceIfExist = false)

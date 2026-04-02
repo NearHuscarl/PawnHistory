@@ -51,7 +51,7 @@ internal class Surgery_InstallPartRecorder : SurgeryRecorder
             .AddRule("Doctor", e.Doctor)
             .AddRule("RemovedPart", e.Part)
             .AddRule("RemovedPart", e.HediffToRemove, replaceIfExist: true)
-            .AddRule("BadHediff", e.BadHediff?.LabelNounFull())
+            .AddRule("BadHediff", e.BadHediff?.LabelNounInBracket())
             .AddConstant("type", GetSurgeryType(e))
             .AddRule("AddedPart", e.Part, addSubsymbols: true)
             .Resolve();

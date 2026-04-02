@@ -22,12 +22,11 @@ internal class DiseaseRecorder : RecorderBase
 
         var recordDef = HistoryRecordDefOf.Disease;
         var diseaseHediffDef = e.IncidentDef.diseaseIncident;
-        var part = e.Pawn.health.hediffSet.hediffs.First(h => h.def == diseaseHediffDef && h.ageTicks == 0).Part;
         var desc = recordDef.Description(e.Pawn)
             .IncludePawnGrammar()
             .WithOthers(e.Group.ToList())
             .AddRule("Disease", diseaseHediffDef)
-            .AddRule("Part", part)
+            .AddRule("Part", e.BodyPart)
             .AddConstant("disease", diseaseHediffDef.defName)
             .Resolve();
         AddRecord(recordDef, e.Pawn, desc);

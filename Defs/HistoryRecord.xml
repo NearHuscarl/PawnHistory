@@ -44,6 +44,12 @@
 		<icon>EventIcons/Sleep</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Birthday</defName>
+		<label>birthday</label>
+		<descriptionMaker>PawnEvent_Birthday</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>SkillLeveledUp</defName>
 		<label>skill leveled up</label>
 		<descriptionMaker>PawnEvent_SkillLeveledUp</descriptionMaker>

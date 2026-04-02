@@ -9,14 +9,45 @@ namespace PawnHistory.Source.Helper;
 // Shamelessly copied from Number
 public static class HediffHelper
 {
-    public static string LabelNounFull(this Hediff h)
+    public static string LabelNounInBracket(this Hediff h)
+    {
+        var labelNoun = h.LabelNoun(noColor: true);
+
+        if (h.LabelInBrackets.NullOrEmpty())
+            return labelNoun;
+
+        return $"{labelNoun.ToLower()} ({h.LabelInBrackets})".Colorize(h.LabelColor);
+    }
+
+    public static string LabelNoun(this Hediff h, bool noColor = false)
     {
         var labelNoun = h.def.labelNoun ?? h.LabelBase;
 
-        if (h.LabelInBrackets.NullOrEmpty())
-            return labelNoun.ToLower().Colorize(h.LabelColor);
+        if (noColor)
+            return labelNoun.ToLower();
 
-        return $"{labelNoun.ToLower()} ({h.LabelInBrackets})".Colorize(h.LabelColor);
+        return labelNoun.ToLower().Colorize(h.LabelColor);
+    }
+
+    public static string LabelNounPretty(this Hediff h, bool noColor = false)
+    {
+        var labelNoun = h.def.PrettyTextForPart(h.Part) ?? h.def.labelNoun ?? h.LabelBase;
+
+        if (noColor)
+            return labelNoun.ToLower();
+
+        return labelNoun.ToLower().Colorize(h.LabelColor);
+    }
+
+    public static string LabelNounColored(this HediffDef hediffDef)
+    {
+        var labelNoun = hediffDef.labelNoun ?? hediffDef.label;
+        return labelNoun.Colorize(hediffDef.defaultLabelColor);
+    }
+
+    public static string LabelColored(this HediffDef hediffDef)
+    {
+        return hediffDef.label.Colorize(hediffDef.defaultLabelColor);
     }
 
     public static bool IsInstalledBodyPart(this Hediff h)

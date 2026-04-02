@@ -51,7 +51,7 @@ internal class RescueRecorder : RecorderBase
             .AsBarrack(pawns)
             .Execute();
 
-        scenario.Pawn([rescuer])
+        scenario.Pawn(rescuer)
             .StartJob(JobDefOf.Rescue, victim, RestUtility.FindBedFor(victim))
             .Execute();
     }

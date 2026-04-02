@@ -381,6 +381,15 @@ public class PawnBuilder(int count = 1)
 
 static class PawnBuilderExtension
 {
+    public static PawnBuilder ForceBirthday(this PawnBuilder builder)
+    {
+        return builder.Do(p =>
+        {
+            p.ageTracker.AgeBiologicalTicks = (p.ageTracker.AgeBiologicalYears + 1) * 3_600_000 + 1;
+            p.ageTracker.DebugForceBirthdayBiological();
+        });
+    }
+
     public static PawnBuilder EquipWeapon(this PawnBuilder builder, string weaponDefName, Func<Pawn, int, bool> ShouldEquip = null)
     {
         return builder.EquipWeapon(DefDatabase<ThingDef>.GetNamed(weaponDefName), ShouldEquip);
