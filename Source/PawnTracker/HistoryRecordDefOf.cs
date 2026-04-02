@@ -45,6 +45,7 @@ internal class HistoryRecordDefOf
     public static HistoryRecordDef SocialFight;
     public static HistoryRecordDef Rescued;
     public static HistoryRecordDef PrisonerCaptured;
+    public static HistoryRecordDef PrisonerRecruited;
     public static HistoryRecordDef PrisonBreak;
     public static HistoryRecordDef LightningStriked;
     public static HistoryRecordDef WalkNaked;

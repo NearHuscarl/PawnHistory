@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using Verse;
 
@@ -75,21 +74,16 @@ public static class PrisonBreakUtility_StartPrisonBreak_Patch
 [HarmonyPatch(typeof(PlayLog), nameof(PlayLog.Add))]
 internal class PlayLog_Add_Patch_2
 {
-    static readonly AccessTools.FieldRef<PlayLogEntry_Interaction, Pawn> InitiatorRef =
-        AccessTools.FieldRefAccess<PlayLogEntry_Interaction, Pawn>("initiator");
-    static readonly AccessTools.FieldRef<PlayLogEntry_Interaction, InteractionDef> InteractionDefRef =
-        AccessTools.FieldRefAccess<PlayLogEntry_Interaction, InteractionDef>("intDef");
-
     static void Postfix(LogEntry entry)
     {
         if (PrisonBreakStartedContext.reason == PrisonBreakReason.JailBreaker)
         {
             if (entry is not PlayLogEntry_Interaction interactionEntry) return;
 
-            var initiator = InitiatorRef(interactionEntry);
+            var initiator = PlayLog_Add_Patch.InitiatorRef(interactionEntry);
             if (initiator == null) return;
 
-            if (InteractionDefRef(interactionEntry) != InteractionDefOf.SparkJailbreak)
+            if (PlayLog_Add_Patch.InteractionDefRef(interactionEntry) != InteractionDefOf.SparkJailbreak)
                 return;
 
             var logText = entry.ToGameStringFromPOV(initiator);

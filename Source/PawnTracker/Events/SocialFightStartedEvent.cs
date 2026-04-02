@@ -14,10 +14,12 @@ public class SocialFightStartedEvent(PlayLogEntry_Interaction interactionEntry, 
 [HarmonyPatch(typeof(PlayLog), nameof(PlayLog.Add))]
 internal class PlayLog_Add_Patch
 {
-    static readonly AccessTools.FieldRef<PlayLogEntry_Interaction, Pawn> InitiatorRef =
+    public static readonly AccessTools.FieldRef<PlayLogEntry_Interaction, Pawn> InitiatorRef =
         AccessTools.FieldRefAccess<PlayLogEntry_Interaction, Pawn>("initiator");
-    static readonly AccessTools.FieldRef<PlayLogEntry_Interaction, Pawn> RecipientRef =
+    public static readonly AccessTools.FieldRef<PlayLogEntry_Interaction, Pawn> RecipientRef =
         AccessTools.FieldRefAccess<PlayLogEntry_Interaction, Pawn>("recipient");
+    public static readonly AccessTools.FieldRef<PlayLogEntry_Interaction, InteractionDef> InteractionDefRef =
+        AccessTools.FieldRefAccess<PlayLogEntry_Interaction, InteractionDef>("intDef");
 
     static void Postfix(LogEntry entry)
     {

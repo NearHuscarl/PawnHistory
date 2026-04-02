@@ -517,6 +517,16 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_PrisonerRecruited</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(hasFactionName==True) ->[InteractionLog]. [Prisoner] accepted and joined [Faction].</li>
+				<li>entry(hasFactionName==False)->[InteractionLog]. [Prisoner] accepted and joined [Recruiter_possessive] community.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_PrisonBreak</defName>
 		<include>
 			<li>PawnEvent_Common</li>

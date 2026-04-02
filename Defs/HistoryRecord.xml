@@ -233,6 +233,12 @@
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PrisonerRecruited</defName>
+		<label>prisoner recruited</label>
+		<descriptionMaker>PawnEvent_PrisonerRecruited</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonBreak</defName>
 		<label>prison break</label>
 		<descriptionMaker>PawnEvent_PrisonBreak</descriptionMaker>

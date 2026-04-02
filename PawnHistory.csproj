@@ -71,6 +71,7 @@
     <Compile Include="Source\PawnTracker\Events\JobEndEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\JoinedLordEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PawnTradedEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\PrisonerRecruitedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ScenarioStartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PrisonerCapturedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SkillLevelChangedEvent.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Source\PawnTracker\Recorders\GameEndedWanderersJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\DiseaseRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\BirthdayRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\PrisonerRecruitedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\SkillLevelChangedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RescueRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\MinedValuableRecorder.cs" />
