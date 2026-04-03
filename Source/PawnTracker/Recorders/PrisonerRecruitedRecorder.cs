@@ -49,9 +49,11 @@ internal class PrisonerRecruitedRecorder : RecorderBase
             .Execute();
         var recruiter = scenario.Pawn()
             .Colonist()
+            .FullHeal()
             .StartJob(JobDefOf.PrisonerAttemptRecruit, prisoners[0])
             .CreateSingle();
 
+        recruiter.Faction.Name = null;
         scenario.SpeedUp();
 
         GameEventBus.SubscribeOnce<PrisonerRecruitedEvent>(e =>
@@ -61,6 +63,10 @@ internal class PrisonerRecruitedRecorder : RecorderBase
             scenario.SlowDown();
             scenario.OpenHistoryRecordTab(recruiter);
         });
+
+        Expect.That(recruiter)
+            .Eventually()
+            .ToHaveHistoryRecord("[InteractionLog]. [Prisoner] accepted and joined [Recruiter_possessive] community.");
     }
 
     public void TestNamedFaction(TestScenario scenario)
@@ -76,6 +82,7 @@ internal class PrisonerRecruitedRecorder : RecorderBase
             .Execute();
         var recruiter = scenario.Pawn()
             .Colonist()
+            .FullHeal()
             .StartJob(JobDefOf.PrisonerAttemptRecruit, prisoners[0])
             .CreateSingle();
 
@@ -89,5 +96,9 @@ internal class PrisonerRecruitedRecorder : RecorderBase
             scenario.SlowDown();
             scenario.OpenHistoryRecordTab(recruiter);
         });
+
+        Expect.That(recruiter)
+            .Eventually()
+            .ToHaveHistoryRecord("[InteractionLog]. [Prisoner] accepted and joined [Faction].");
     }
 }

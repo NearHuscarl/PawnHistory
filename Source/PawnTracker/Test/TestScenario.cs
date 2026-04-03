@@ -100,9 +100,7 @@ public static class TestScenarioExtensions
 
     public static TestScenario RunUntil(this TestScenario scenario, Func<bool> stopCondition, Action action, Action onFinish = null, int interval = 1)
     {
-        ScheduledAction scheduled = null;
-
-        scheduled = TickDelayManager.Interval(interval, () =>
+        TickDelayManager.Interval(interval, (data) =>
         {
             try
             {
@@ -116,7 +114,7 @@ public static class TestScenarioExtensions
             {
                 if (stopCondition())
                 {
-                    scheduled.Cancelled = true;
+                    data.Cancelled = true;
                     onFinish?.Invoke();
                 }
             }

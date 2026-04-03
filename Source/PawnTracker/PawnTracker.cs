@@ -32,22 +32,25 @@ namespace PawnHistory.Source.PawnTracker;
 //  - More detailed reason: Become a __ (lvl x) at social after selling [1st expensive item], [2nd expensive item] and x others
 // Crawling to safety
 // Social gathering: Party, wedding, ritual...
-// Social fight
-// + Base
-// - Ideology
-// Panic Flee
-// Food poisoning
-// Scarred body part
-// + Instant from injury damage
-// + Post heal
-// - Birthday event
-// - Scarfication ritual
-// Birthday event
+// - Social fight
+//  + Base
+//  - Ideology
+// - Panic Flee
+// - Food poisoning
+// - Scarred body part
+//  + Instant from injury damage
+//  + Post heal
+//  + Aging scar
+//  - Scarfication ritual
+// - Recruited
+//  + prisoner
+//  ^ quest
 // Catching fire: handle with permanent/missing hediffs.
 // Craft a legendary item
-// Mental breaks
-// + Base game
-// - DLC breaks
+// - Mental breaks
+//  + Base game
+//  - DLC breaks
+// - Relationships (breakup, cheating, new love..)
 // Raid type: seige with a different icon
 // Ideology convert, belief reduced
 // Quest: track giver, link to (visible) quest.
@@ -67,8 +70,6 @@ namespace PawnHistory.Source.PawnTracker;
 // Bug:
 // -- kill record POV is wrong for the killer
 // -- Exception when killing in dev mode, in KillOrDown handler
-
-// TODO: handle another related pawn in BattleLogEntry_RangedImpact
 
 [StaticConstructorOnStartup]
 internal class PawnTracker

@@ -8,7 +8,6 @@ namespace PawnHistory.Source.PawnTracker.Events;
 public enum ScarReason
 {
     InstantDamage,
-    AgeInjury,
     PostHeal,
     Scarification,
 }
@@ -29,7 +28,6 @@ class BodyPartScarredContext
 }
 
 // Search for: "IsPermanent = true;"
-// TODO: handle scar from aging
 
 // Call order:
 // - DamageWorker_AddInjury.FinalizeAndAddInjury() > PreFinalizeInjury()

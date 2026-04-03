@@ -5,13 +5,18 @@ using Verse;
 
 namespace PawnHistory.Source;
 
+public class ScheduledActionData
+{
+    public bool Cancelled;
+}
+
 public class ScheduledAction
 {
     public int ExecuteTick;
     public int Interval;
-    public Action Action;
+    public Action<ScheduledActionData> Action;
     public bool Repeat;
-    public bool Cancelled;
+    public ScheduledActionData Data = new();
 }
 
 public class TickDelayManager : GameComponent
@@ -33,7 +38,7 @@ public class TickDelayManager : GameComponent
 
         foreach (var a in actions.ToList())
         {
-            if (a.Cancelled)
+            if (a.Data.Cancelled)
             {
                 toRemove.Add(a);
                 continue;
@@ -43,7 +48,7 @@ public class TickDelayManager : GameComponent
             {
                 try
                 {
-                    a.Action?.Invoke();
+                    a.Action?.Invoke(a.Data);
                 }
                 catch (Exception e)
                 {
@@ -53,7 +58,7 @@ public class TickDelayManager : GameComponent
                 {
                     toRemove.Add(a);
 
-                    if (a.Repeat && !a.Cancelled)
+                    if (a.Repeat && !a.Data.Cancelled)
                     {
                         a.ExecuteTick = currentTick + a.Interval;
                         toReinsert.Add(a);
@@ -82,7 +87,9 @@ public class TickDelayManager : GameComponent
         }
     }
 
-    public static void Delay(int ticks, Action action)
+    public static void Delay(int ticks, Action action) => Delay(ticks, a => action());
+
+    public static void Delay(int ticks, Action<ScheduledActionData> action)
     {
         _instance.InsertSorted(new ScheduledAction
         {
@@ -92,7 +99,8 @@ public class TickDelayManager : GameComponent
         });
     }
 
-    public static ScheduledAction Interval(int interval, Action action)
+    public static ScheduledAction Interval(int interval, Action action) => Interval(interval, a => action());
+    public static ScheduledAction Interval(int interval, Action<ScheduledActionData> action)
     {
         var a = new ScheduledAction
         {
@@ -104,10 +112,5 @@ public class TickDelayManager : GameComponent
 
         _instance.InsertSorted(a);
         return a;
-    }
-
-    public static void Cancel(ScheduledAction action)
-    {
-        action?.Cancelled = true;
     }
 }
