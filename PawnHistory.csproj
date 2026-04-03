@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Defs\RulePacks_Event.xml" />
+    <Compile Include="Source\Accessor.cs" />
     <Compile Include="Source\DebugTools\DebugActionLord.cs" />
     <Compile Include="Source\DebugTools\DebugUtility.cs" />
     <Compile Include="Source\DebugTools\NearDebugActionAttribute.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Source\PawnTracker\Events\JobEndEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\JoinedLordEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PawnTradedEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\FoodPoisoningEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PrisonerRecruitedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ScenarioStartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PrisonerCapturedEvent.cs" />
@@ -93,6 +95,7 @@
     <Compile Include="Source\PawnTracker\Recorders\GameEndedWanderersJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\DiseaseRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\BirthdayRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\FoodPoisoningRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PrisonerRecruitedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\SkillLevelChangedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RescueRecorder.cs" />
@@ -140,7 +143,6 @@
     <Compile Include="Source\PawnTracker\Recorders\BodyPartDestroyedRecorder.cs" />
     <Compile Include="Source\Helper\ThingUtility.cs" />
     <Compile Include="Source\PawnTracker\Recorders\SocialFightRecorder.cs" />
-    <Compile Include="Source\PawnTracker\Test\CellRectExtensions.cs" />
     <Compile Include="Source\PawnTracker\Test\Expect.cs" />
     <Compile Include="Source\PawnTracker\Test\GatheringBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\IncidentBuilder.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Source\PawnTracker\Test\TestContext.cs" />
     <Compile Include="Source\PawnTracker\Test\TestManager.cs" />
     <Compile Include="Source\PawnTracker\Test\TestScenario.cs" />
+    <Compile Include="Source\PawnTracker\Test\ThingBuilder.cs" />
     <Compile Include="Source\WorldPawn\InfoCard.cs" />
     <Compile Include="Source\WorldPawn\PawnColumnWorker_Health.cs" />
     <Compile Include="Source\WorldPawn\PawnColumnWorker_Bio.cs" />

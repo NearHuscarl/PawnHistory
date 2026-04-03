@@ -184,29 +184,29 @@ internal class MentalBreakRecorder : RecorderBase
 
     public override void Test(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6, tag: "Prison")
             .AsPrison(prisonerCount: 2) // Jailbreaker
             .Execute();
 
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(MapBuilder.Beside("Prison", Rot4.North, 5, 5), "Grave")
             .WithCasket(ThingDefOf.Sarcophagus, ThingDefOf.Plasteel) // CorpseObsession
             .Execute();
 
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(MapBuilder.Beside("Prison", Rot4.East, 7, 7), "Bedroom")
             .AsBarrack(bedCount: 2) // BedroomTantrum
             .WithThing(ThingDefOf.GoJuice) // Binging_DrugExtreme
             .WithThing(ThingDefOf.Beer) // Binging_DrugMajor
             .Execute();
 
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(MapBuilder.Beside("Prison", Rot4.South, 18, 7), "Freezer")
             .WithThing(ThingDefOf.MealFine, 300) // Binging_Food
             .Execute();
 
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(MapBuilder.Beside("Prison", Rot4.West, 5, 5), "Common")
             .Execute();
 

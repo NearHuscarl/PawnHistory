@@ -10,7 +10,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>RaidFriendly</defName>
 		<label>friendlies arrived</label>
-		<descriptionMaker>PawnEvent_Raid</descriptionMaker>
+		<descriptionMaker>PawnEvent_RaidFriendly</descriptionMaker>
 		<icon>Ui/Commands/CallAid</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
@@ -42,6 +42,12 @@
 		<label>anesthetized</label>
 		<description>{PAWN} was put under {Anesthetic}.</description>
 		<icon>EventIcons/Sleep</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>FoodPoisoning</defName>
+		<label>food poisoning</label>
+		<descriptionMaker>PawnEvent_FoodPoisoning</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Birthday</defName>

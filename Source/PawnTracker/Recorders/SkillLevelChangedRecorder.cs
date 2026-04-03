@@ -85,58 +85,59 @@ internal class SkillLevelChangedRecorder : RecorderBase
 
     public void TestUp(TestScenario scenario)
     {
-        var pawns = scenario.Pawn()
+        var pawn = scenario.Pawn()
             .Colonist()
             .SetSkillLevel(SkillDefOf.Shooting, 5)
-            .Execute();
+            .CreateSingle();
 
-        scenario.Pawn(pawns)
+        scenario.Pawn(pawn)
             .Do(p => p.records.AddTo(RecordDefOf.Kills, 20))
             .Do(p => p.records.AddTo(RecordDefOf.KillsAnimals, 15))
             .Do(p => p.records.AddTo(RecordDefOf.KillsMechanoids, 15))
             .Learn(SkillDefOf.Shooting, 20_000)
             .Execute();
 
-        scenario.Pawn(pawns)
+        scenario.Pawn(pawn)
             .Do(p => p.records.AddTo(RecordDefOf.Kills, 20))
             .Do(p => p.records.AddTo(RecordDefOf.KillsAnimals, 15))
             .Do(p => p.records.AddTo(RecordDefOf.KillsMechanoids, 15))
             .Learn(SkillDefOf.Shooting, 30_000)
             .Execute();
 
-        scenario.Pawn(pawns)
+        scenario.Pawn(pawn)
             .Do(p => p.records.AddTo(RecordDefOf.Kills, 20))
             .Do(p => p.records.AddTo(RecordDefOf.KillsAnimals, 15))
             .Do(p => p.records.AddTo(RecordDefOf.KillsMechanoids, 15))
             .Learn(SkillDefOf.Shooting, 40_000)
             .Execute();
 
-        scenario.Pawn(pawns)
+        scenario.Pawn(pawn)
             .Do(p => p.records.AddTo(RecordDefOf.Kills, 20))
             .Do(p => p.records.AddTo(RecordDefOf.KillsAnimals, 15))
             .Do(p => p.records.AddTo(RecordDefOf.KillsMechanoids, 15))
             .Learn(SkillDefOf.Shooting, 70_000)
             .Execute();
 
-        // should show:
-        // Alvarez reached level 8 in shooting after killing 20 creatures.
-        // Alvarez reached level 10 in shooting after hunting 30 animals.
-        // Alvarez reached level 12 in shooting after killing 45 mechanoids.
-        // Alvarez reached level 13 in shooting after killing 80 creatures.
-        scenario.OpenHistoryRecordTab(pawns[0]);
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] reached level [NewLevel] in shooting after killing 20 creatures.", -4);
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] reached level [NewLevel] in shooting after hunting 30 animals.", -3);
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] reached level [NewLevel] in shooting after killing 45 mechanoids.", -2);
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] reached level [NewLevel] in shooting after killing 80 creatures.", -1);
+
+        scenario.OpenHistoryRecordTab(pawn);
     }
 
     public void TestDown(TestScenario scenario)
     {
-        var pawns = scenario.Pawn()
+        var pawn = scenario.Pawn()
             .Colonist()
             .SetSkillLevel(SkillDefOf.Shooting, 20)
-            .Execute();
+            .CreateSingle();
 
-        scenario.Pawn(pawns)
+        scenario.Pawn(pawn)
             .Learn(SkillDefOf.Shooting, -200_000)
             .Execute();
 
-        scenario.OpenHistoryRecordTab(pawns[0]);
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] dropped to level [NewLevel] in shooting.");
+        scenario.OpenHistoryRecordTab(pawn);
     }
 }

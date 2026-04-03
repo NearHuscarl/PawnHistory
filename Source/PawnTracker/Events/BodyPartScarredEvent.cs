@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using System.Runtime.CompilerServices;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
@@ -19,12 +18,27 @@ public class BodyPartScarredEvent(Pawn pawn, Hediff hediff, BodyPartRecord part,
     public BodyPartRecord Part { get; } = part;
     public Thing Instigator { get; } = instigator;
     public ScarReason Reason { get; } = reason;
-
 }
 
-class BodyPartScarredContext
+public class HediffComp_History : HediffComp
 {
-    public static readonly ConditionalWeakTable<Hediff, Thing> InstigatorLookup = [];
+    public Thing instigator;
+
+    public static void InjectComp()
+    {
+        foreach (var def in DefDatabase<HediffDef>.AllDefs)
+        {
+            if (def.HasComp(typeof(HediffComp_GetsPermanent)))
+            {
+                def.comps.Add(new HediffCompProperties { compClass = typeof(HediffComp_History) });
+            }
+        }
+    }
+
+    public override void CompExposeData()
+    {
+        Scribe_References.Look(ref instigator, "PH_instigator");
+    }
 }
 
 // Search for: "IsPermanent = true;"
@@ -40,10 +54,14 @@ internal class DamageWorker_AddInjury_FinalizeAndAddInjury_Patch
 {
     static void Postfix(Pawn pawn, Hediff_Injury injury, DamageInfo dinfo)
     {
-        if (dinfo.Instigator != null && injury.TryGetComp<HediffComp_GetsPermanent>(out _))
-            BodyPartScarredContext.InstigatorLookup.GetValue(injury, _ => dinfo.Instigator);
-
-        if (!injury.IsPermanent()) return;
+        if (!injury.IsPermanent())
+        {
+            if (dinfo.Instigator != null && injury.TryGetComp(out HediffComp_History comp))
+            {
+                comp.instigator = dinfo.Instigator;
+            }
+            return;
+        }
 
         var part = injury.Part;
 
@@ -66,7 +84,7 @@ internal class HediffComp_GetsPermanent_CompPostInjuryHeal_Patch
         var pawn = __instance.Pawn;
         var hediff = __instance.parent;
         var part = __instance.parent.Part;
-        BodyPartScarredContext.InstigatorLookup.TryGetValue(hediff, out var instigator);
+        var instigator = hediff.TryGetComp<HediffComp_History>()?.instigator;
 
         GameEventBus.Publish(new BodyPartScarredEvent(pawn, hediff, part, instigator, ScarReason.PostHeal));
     }

@@ -19,7 +19,11 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
         RunAssertion(() =>
         {
             if (!pawn.GetHistoryRecords().Any(r => r.def == def))
+            {
                 TestManager.Current.Fail($"Expected record of type '{def.defName}' for {pawn} but none found.");
+                return false;
+            }
+            return true;
         });
 
         return this;
@@ -32,17 +36,21 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
             var actual = pawn.GetHistoryRecords().Count;
 
             if (actual != expected)
+            {
                 TestManager.Current.Fail($"Expected {expected} number of records but got {actual}.");
+                return false;
+            }
+            return true;
         });
 
         return this;
     }
 
-    public PawnHistoryAssertions ToHaveHistoryRecord(string descriptionTemplate)
+    public PawnHistoryAssertions ToHaveHistoryRecord(string descriptionTemplate, int index = -1)
     {
         RunAssertion(() =>
         {
-            var lastRecord = pawn.GetHistoryRecords().LastOrDefault();
+            var lastRecord = pawn.GetHistoryRecords().At(index);
             var actual = lastRecord.description.StripTags();
 
             if (!IsStructurallyTheSame(descriptionTemplate, actual))
@@ -53,7 +61,10 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
                     "Actual resolved description:",
                     actual
                 );
+                return false;
             }
+
+            return true;
         });
 
         return this;
@@ -67,18 +78,20 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
         return this;
     }
 
-    private void RunAssertion(Action assertion)
+    private void RunAssertion(Func<bool> assertion)
     {
+        var ctx = TestManager.Current;
+
         if (!isEventually)
         {
-            assertion();
+            if (assertion())
+                ctx.AssertionsPassed++;
             return;
         }
 
         var tickStart = Find.TickManager.TicksGame;
         Exception lastException = null;
 
-        var ctx = TestManager.Current;
         ctx.PendingEventually++;
 
         TickDelayManager.Interval(eventuallyPollIntervalTicks, (a) =>
@@ -93,7 +106,8 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
 
             try
             {
-                assertion();
+                if (assertion())
+                    ctx.AssertionsPassed++;
                 ctx.PendingEventually--;
                 a.Cancelled = true;
             }

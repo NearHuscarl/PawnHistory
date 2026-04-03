@@ -22,12 +22,12 @@ public enum PrisonBreakReason
 
 public static class PrisonBreakStartedContext
 {
-    public static PrisonBreakReason reason;
-    public static List<Pawn> escapingPrisoners;
+    public static PrisonBreakReason Reason;
+    public static List<Pawn> EscapingPrisoners;
     public static void Reset()
     {
-        reason = PrisonBreakReason.None;
-        escapingPrisoners = [];
+        Reason = PrisonBreakReason.None;
+        EscapingPrisoners = [];
     }
 }
 
@@ -43,7 +43,7 @@ public static class Pawn_InteractionsTracker_TryInteractWith_Patch
     static void Prefix(InteractionDef intDef)
     {
         if (intDef == InteractionDefOf.SparkJailbreak)
-            PrisonBreakStartedContext.reason = PrisonBreakReason.JailBreaker;
+            PrisonBreakStartedContext.Reason = PrisonBreakReason.JailBreaker;
     }
 
     static void Finalizer()
@@ -62,9 +62,9 @@ public static class PrisonBreakUtility_StartPrisonBreak_Patch
 {
     public static void Postfix(Pawn initiator, List<Pawn> escapingPrisoners)
     {
-        PrisonBreakStartedContext.escapingPrisoners = escapingPrisoners;
+        PrisonBreakStartedContext.EscapingPrisoners = escapingPrisoners;
 
-        if (PrisonBreakStartedContext.reason == PrisonBreakReason.JailBreaker)
+        if (PrisonBreakStartedContext.Reason == PrisonBreakReason.JailBreaker)
             return;
 
         GameEventBus.Publish(new PrisonBreakStartedEvent(initiator, escapingPrisoners, PrisonBreakReason.Rebellion));
@@ -76,21 +76,21 @@ internal class PlayLog_Add_Patch_2
 {
     static void Postfix(LogEntry entry)
     {
-        if (PrisonBreakStartedContext.reason == PrisonBreakReason.JailBreaker)
+        if (PrisonBreakStartedContext.Reason == PrisonBreakReason.JailBreaker)
         {
             if (entry is not PlayLogEntry_Interaction interactionEntry) return;
 
-            var initiator = PlayLog_Add_Patch.InitiatorRef(interactionEntry);
+            var initiator = Accessor.PlayLogEntry_Interaction.Initiator(interactionEntry);
             if (initiator == null) return;
 
-            if (PlayLog_Add_Patch.InteractionDefRef(interactionEntry) != InteractionDefOf.SparkJailbreak)
+            if (Accessor.PlayLogEntry_Interaction.InteractionDef(interactionEntry) != InteractionDefOf.SparkJailbreak)
                 return;
 
             var logText = entry.ToGameStringFromPOV(initiator);
             GameEventBus.Publish(new PrisonBreakStartedEvent(
                 initiator,
-                PrisonBreakStartedContext.escapingPrisoners,
-                PrisonBreakStartedContext.reason,
+                PrisonBreakStartedContext.EscapingPrisoners,
+                PrisonBreakStartedContext.Reason,
                 logText
             ));
         }

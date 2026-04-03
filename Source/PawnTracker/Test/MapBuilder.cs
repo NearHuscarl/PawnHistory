@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -45,12 +46,21 @@ public class MapBuilder
 
             if (doorPositions.Contains(cell))
             {
-                var door = (Building_Door)ThingMaker.MakeThing(ThingDefOf.Door, stuff);
-                door.SetFaction(Faction.OfPlayer);
-                GenSpawn.Spawn(door, cell, map);
+                new ThingBuilder(ThingDefOf.Door)
+                    .MadeOf(stuff)
+                    .Map(map)
+                    .At(cell)
+                    .Faction(Faction.OfPlayer)
+                    .Create();
             }
             else
-                GenSpawn.Spawn(ThingMaker.MakeThing(wallDef, stuff), cell, map);
+            {
+                new ThingBuilder(wallDef)
+                    .MadeOf(stuff)
+                    .Map(map)
+                    .At(cell)
+                    .Create();
+            }
         }
 
         foreach (var cell in rect.Cells)
@@ -95,7 +105,7 @@ public class MapBuilder
 
     public MapBuilder BuildRoom(int width, int height, string tag = null, ThingDef wallDef = null, ThingDef stuff = null, TerrainDef floorDef = null)
     {
-        return BuildRoom(CellRect.CenteredOn(Find.CurrentMap.Center, width, height), tag, wallDef, stuff, floorDef);
+        return BuildRoom(CellRect.CenteredOn(map.Center, width, height), tag, wallDef, stuff, floorDef);
     }
 
     public MapBuilder AsBarrack(List<Pawn> assignedPawns)
@@ -124,7 +134,7 @@ public class MapBuilder
 
             foreach (var cell in cells)
             {
-                var bed = (Building_Bed)GenSpawn.Spawn(ThingMaker.MakeThing(ThingDefOf.Bed, ThingDefOf.Steel), cell, map);
+                var bed = new ThingBuilder(ThingDefOf.Bed).MadeOf(ThingDefOf.Steel).Map(map).At(cell).Execute<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
             }
         });
@@ -141,7 +151,7 @@ public class MapBuilder
 
             foreach (var cell in cells)
             {
-                var bed = (Building_Bed)GenSpawn.Spawn(ThingMaker.MakeThing(ThingDefOf.Bed, ThingDefOf.Steel), cell, map);
+                var bed = new ThingBuilder(ThingDefOf.Bed).MadeOf(ThingDefOf.Steel).Map(map).At(cell).Execute<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
                 bed.Medical = true;
                 beds?.Add(bed);
@@ -161,7 +171,7 @@ public class MapBuilder
 
             foreach (var cell in cells)
             {
-                var bed = (Building_Bed)GenSpawn.Spawn(ThingMaker.MakeThing(ThingDefOf.Bed, ThingDefOf.Steel), cell, map);
+                var bed = new ThingBuilder(ThingDefOf.Bed).MadeOf(ThingDefOf.Steel).Map(map).At(cell).Execute<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
                 bed.ForPrisoners = true;
             }
@@ -184,20 +194,23 @@ public class MapBuilder
 
             for (var i = 0; i < fullStacks; i++)
             {
-                var thing = ThingMaker.MakeThing(thingDef);
-                thing.stackCount = limit;
-                GenSpawn.Spawn(thing, interior.RandomCell, map);
+                new ThingBuilder(thingDef)
+                    .Map(map)
+                    .Stack(limit)
+                    .At(interior.RandomCell)
+                    .Create();
             }
 
             if (remainder > 0)
             {
-                var pos = interior.RandomCell;
-                var thing = ThingMaker.MakeThing(thingDef);
-                thing.stackCount = remainder;
-                GenSpawn.Spawn(thing, pos, map);
+                new ThingBuilder(thingDef)
+                    .Map(map)
+                    .Stack(remainder)
+                    .At(interior.RandomCell)
+                    .Create();
             }
 
-            Find.CurrentMap.resourceCounter.UpdateResourceCounts(); // unoptimized?
+            map.resourceCounter.UpdateResourceCounts(); // unoptimized?
         });
         return this;
     }
@@ -210,12 +223,16 @@ public class MapBuilder
         actions.Add(_ =>
         {
             var interior = TestScenario.LastRoomRect.ContractedBy(1);
-            var pos = interior.Cells.Where(x => x.Standable(Find.CurrentMap)).RandomElement();
+            var pos = interior.Cells.Where(x => x.Standable(map)).RandomElement();
 
             GenDebug.ClearArea(CellRect.SingleCell(pos), map);
 
-            var casket = (Building_Casket)GenSpawn.Spawn(ThingMaker.MakeThing(thingDef, stuff), pos, map);
-            casket.SetFaction(Faction.OfPlayer);
+            var casket = new ThingBuilder(thingDef)
+                .MadeOf(stuff)
+                .Map(map)
+                .At(pos)
+                .Faction(Faction.OfPlayer)
+                .Execute<Building_Casket>();
 
             if (occupied)
             {

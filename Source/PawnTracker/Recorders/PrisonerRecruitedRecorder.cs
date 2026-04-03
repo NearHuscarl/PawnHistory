@@ -43,7 +43,7 @@ internal class PrisonerRecruitedRecorder : RecorderBase
 
         var prisoners = new List<Pawn>();
 
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(8, 8)
             .AsPrison(2, prisoners: prisoners)
             .Execute();
@@ -76,7 +76,7 @@ internal class PrisonerRecruitedRecorder : RecorderBase
 
         var prisoners = new List<Pawn>();
 
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(8, 8)
             .AsPrison(2, prisoners: prisoners)
             .Execute();

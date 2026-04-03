@@ -66,31 +66,42 @@ internal class PrisonBreakRecorder : RecorderBase
     {
         var prisoners = new List<Pawn>();
 
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(8, 8, tag: "Prison")
             .AsPrison(prisonerCount, prisoners: prisoners)
             .Execute();
 
-        TickDelayManager.Delay(100, () =>
-        {
-            PrisonBreakUtility.StartPrisonBreak(prisoners[0]);
-        });
+        var initiator = prisoners[0];
+        var prisoner = prisoners[1];
+
+        TickDelayManager.Delay(100, () => PrisonBreakUtility.StartPrisonBreak(initiator));
+
+        Expect.That(initiator)
+            .Eventually()
+            .ToHaveHistoryRecord("[PAWN] started a prison break. [PAWN_pronoun] broke the locks open and tried to escape[WithOthers].");
+        Expect.That(prisoner)
+            .Eventually()
+            .ToHaveHistoryRecord("[PAWN][AndOthers] joined [Initiator]'s prison break and tried to escape.");
     }
 
     public void TestJailbreaker(TestScenario scenario, int prisonerCount)
     {
         var prisoners = new List<Pawn>();
 
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(8, 8, tag: "Prison")
             .AsPrison(prisonerCount, prisoners: prisoners)
             .Execute();
 
         var jailbreakerBreak = DefDatabase<MentalBreakDef>.GetNamed("Jailbreaker");
         var pawn = scenario.Pawn()
-            .WithPosition(TestScenario.TaggedRooms["Prison"].OutsideOf())
+            .WithPosition(scenario.OutsideOf("Prison"))
             .ThatMatches(ShouldRecord)
             .Do(p => p.StartMentalBreakWithMadeupThought(jailbreakerBreak))
             .CreateSingle();
+
+        Expect.That(prisoners[0])
+            .Eventually()
+            .ToHaveHistoryRecord("[Reason] As a result, [PAWN][AndOthers] started a prison break.");
     }
 }

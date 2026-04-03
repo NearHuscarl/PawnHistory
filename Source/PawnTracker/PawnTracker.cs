@@ -1,4 +1,5 @@
-﻿using PawnHistory.Source.PawnTracker.Recorders;
+﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Recorders;
 using System.Reflection;
 using Verse;
 
@@ -70,6 +71,8 @@ namespace PawnHistory.Source.PawnTracker;
 // Bug:
 // -- kill record POV is wrong for the killer
 // -- Exception when killing in dev mode, in KillOrDown handler
+// -- In-memory information > Exposable
+//  - BodyPartScarredContext.InstigatorLookup
 
 [StaticConstructorOnStartup]
 internal class PawnTracker
@@ -79,6 +82,8 @@ internal class PawnTracker
         new HarmonyLib.Harmony("rimworld.mod.nearhuscarl.pawnhistory").PatchAllUncategorized(Assembly.GetExecutingAssembly());
 
         CompHistoryManager.AttachHistoryComp();
+        HediffComp_History.InjectComp();
+        CompCookTracker.InjectComp();
         RecorderManager.Initialize();
     }
 }

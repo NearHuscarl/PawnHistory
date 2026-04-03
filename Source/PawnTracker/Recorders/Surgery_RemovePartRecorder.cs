@@ -43,7 +43,7 @@ internal class Surgery_RemovePartRecorder : SurgeryRecorder
 
     public void TestHarvest(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
             .Execute();
@@ -63,7 +63,7 @@ internal class Surgery_RemovePartRecorder : SurgeryRecorder
 
     public void TestAmputate(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
             .Execute();
@@ -84,7 +84,7 @@ internal class Surgery_RemovePartRecorder : SurgeryRecorder
 
     public void TestFail(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
             .Execute();

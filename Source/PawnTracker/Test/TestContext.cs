@@ -9,19 +9,20 @@ public sealed class TestContext(string name)
 {
     public string Name = name;
     public bool Failed;
+    public int AssertionsPassed;
     public int PendingEventually;
     private static string Red(object obj) => obj.ToString().ApplyTag(TagType.Red).Resolve();
     private static string Green(object obj) => obj.ToString().Colorize(ColoredText.FactionColor_Ally);
-
-    public void Fail(params string[] message)
-    {
-        Fail(null, message);
-    }
 
     public void Pass()
     {
         Log.Message(Green("[PASS] " + Name));
         Messages.Message("[PASS] " + Name, MessageTypeDefOf.PositiveEvent);
+    }
+
+    public void Fail(params string[] message)
+    {
+        Fail(null, message);
     }
 
     public void Fail(Exception ex = null, params string[] msgs)

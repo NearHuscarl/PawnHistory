@@ -39,7 +39,7 @@ internal class Surgery_ImplantRecorder : SurgeryRecorder
 
     public override void Test(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
             .WithThing("Joywire", 1)
@@ -59,7 +59,7 @@ internal class Surgery_ImplantRecorder : SurgeryRecorder
 
     public void TestFail(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
             .WithThing("Joywire", 1)

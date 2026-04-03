@@ -26,7 +26,9 @@ public class TestScenario
     public GatheringBuilder Incident(GatheringDef def) => new(def);
     public IncidentBuilder Incident(IncidentDef def) => new(def);
     public IncidentBuilder Incident(string defName) => new(DefDatabase<IncidentDef>.GetNamed(defName));
-    public MapBuilder Thing(IntVec3? pos = null) => new(pos);
+    public MapBuilder Map(IntVec3? pos = null) => new(pos);
+    public ThingBuilder Thing(ThingDef thingDef) => new(thingDef);
+    public ThingBuilder Thing(string defName) => new(DefDatabase<ThingDef>.GetNamed(defName));
 
     public IncidentBuilder Siege()
     {
@@ -50,6 +52,24 @@ public class TestScenario
 
         if (historyTab != null)
             inspectWindow.OpenTabType = historyTab.GetType();
+    }
+
+    public IntVec3 OutsideOf(string taggedRoom)
+    {
+        var rect = TaggedRooms[taggedRoom];
+        var side = Rand.RangeInclusive(0, 3);
+
+        return side switch
+        {
+            // Left
+            0 => new IntVec3(rect.minX - 1, 0, Rand.RangeInclusive(rect.minZ, rect.maxZ)),
+            // Right
+            1 => new IntVec3(rect.maxX + 1, 0, Rand.RangeInclusive(rect.minZ, rect.maxZ)),
+            // Bottom
+            2 => new IntVec3(Rand.RangeInclusive(rect.minX, rect.maxX), 0, rect.minZ - 1),
+            // Top
+            _ => new IntVec3(Rand.RangeInclusive(rect.minX, rect.maxX), 0, rect.maxZ + 1),
+        };
     }
 }
 

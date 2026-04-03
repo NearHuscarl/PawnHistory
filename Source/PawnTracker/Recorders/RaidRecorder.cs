@@ -38,8 +38,8 @@ internal class RaidRecorder : RecorderBase
                 .WithFaction(faction)
                 .WithOthers(pawns)
                 .AddConstantIf(hostileFaction != null, "hostileFaction", "true") // not manhunter/insect
-                .AddRule("HOSTILEFACTION", hostileFaction)
-                .Resolve("entryFriendly");
+                .AddRule("HostileFaction", hostileFaction)
+                .Resolve();
 
             AddRecord(recordDef, pawn, desc);
         }

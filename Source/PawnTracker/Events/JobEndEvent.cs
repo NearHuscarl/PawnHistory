@@ -16,7 +16,7 @@ public static class Pawn_JobTracker_CleanupCurrentJob_Patch
 {
     public static void Prefix(Pawn_JobTracker __instance, JobCondition condition)
     {
-        var pawn = JobStartedContext.PawnRef(__instance);
+        var pawn = Accessor.Pawn_JobTracker.Pawn(__instance);
         var curJob = __instance.curJob;
 
         GameEventBus.Publish(new JobEndEvent(pawn, curJob, condition));

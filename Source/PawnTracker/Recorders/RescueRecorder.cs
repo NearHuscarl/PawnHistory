@@ -46,7 +46,7 @@ internal class RescueRecorder : RecorderBase
         HealthUtility.DamageUntilDowned(victim);
 
         scenario.SpeedUp();
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(7, 7, "Bedroom")
             .AsBarrack(pawns)
             .Execute();

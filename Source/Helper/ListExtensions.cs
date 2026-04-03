@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine.Profiling;
 
 namespace PawnHistory.Source.Helper;
 
@@ -25,5 +26,22 @@ public static class ListExtensions
             return (float)values[mid];
 
         return (float)((values[mid - 1] + values[mid]) / 2.0);
+    }
+
+    /// <summary>
+    /// A less retarded way of accessing element via index, supports negative indices.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    /// <exception cref="IndexOutOfRangeException"></exception>
+    public static T At<T>(this IList<T> source, int index)
+    {
+        var resolvedIndex = index < 0 ? source.Count + index : index;
+        if (resolvedIndex < 0 || resolvedIndex >= source.Count)
+            throw new IndexOutOfRangeException($"Index {index} is out of range for a list of {source.Count} elements.");
+
+        return source[resolvedIndex];
     }
 }

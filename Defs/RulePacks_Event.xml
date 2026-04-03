@@ -52,11 +52,22 @@
 				<li>entry(raidProperty==Sapper)    ->[PAWN][AndOthers] from [FACTION] raided the colony using sapper tactics.</li>
 				<li>entry(raidProperty==Siege)     ->[PAWN][AndOthers] from [FACTION] besieged the colony.</li>
 				<li>entry(raidProperty==CenterDrop)->[PAWN][AndOthers] from [FACTION] raided the colony by dropping directly into it.</li>
-				<li>entryFriendly(hostileFaction==)    ->[PAWN][AndOthers] from [FACTION] came to aid the colony.</li>
-				<li>entryFriendly(hostileFaction==true)->[PAWN][AndOthers] from [FACTION] came to aid the colony against [HOSTILEFACTION].</li>
 			</rulesStrings>
         </rulePack>
     </RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_RaidFriendly</defName>
+		<include>
+			<li>PawnEvent_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(hostileFaction==)    ->[PAWN][AndOthers] from [FACTION] came to aid the colony.</li>
+				<li>entry(hostileFaction==true)->[PAWN][AndOthers] from [FACTION] came to aid the colony against [HostileFaction].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 
     <RulePackDef>
         <defName>PawnEvent_BodyPartDestroyed</defName>
@@ -167,6 +178,18 @@
 				<li>relativePov->[PAWN]'s [Relation], [Subject],</li>
 				<li>downedEntry->[PAWN] [Downed].</li>
 				<li>killedEntry->[PAWN] [Died].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_FoodPoisoning</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>CauseClause(hasCook==True) ->[Cause] [Cook]</li>
+				<li>CauseClause(hasCook==False)->[Cause]</li>
+				<li>entry(cause==Unknown)->[PAWN] got food poisoning from [Ingestible_indefinite].</li>
+				<li>entry(cause!=Unknown)->[PAWN] got food poisoning from [Ingestible_indefinite] because of [CauseClause].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

@@ -36,7 +36,7 @@ internal class PawnTradedRecorder : RecorderBase
             .Point(400)
             .Execute();
 
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(8, 8, tag: "Prison")
             .AsPrison(2)
             .WithThing(ThingDefOf.Silver, 3000)

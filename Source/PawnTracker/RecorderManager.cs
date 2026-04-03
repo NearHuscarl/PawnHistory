@@ -58,12 +58,9 @@ public static class RecorderManager
                     {
                         try
                         {
-                            TestScenario.ClearAll();
-                            TestManager.Current = new TestContext(label);
-
+                            TestManager.Reset(label);
                             method.Invoke(recorder, [testScenario]);
-
-                            WaitForTestCompletion(TestManager.Current);
+                            TestManager.WaitForTestCompletion(TestManager.Current);
                         }
                         catch (Exception ex)
                         {
@@ -88,11 +85,9 @@ public static class RecorderManager
                             {
                                 try
                                 {
-                                    TestScenario.ClearAll();
-                                    TestManager.Current = new TestContext(label);
+                                    TestManager.Reset(label);
                                     method.Invoke(recorder, [testScenario, count]);
-
-                                    WaitForTestCompletion(TestManager.Current);
+                                    TestManager.WaitForTestCompletion(TestManager.Current);
                                 }
                                 catch (Exception ex)
                                 {
@@ -109,29 +104,6 @@ public static class RecorderManager
         }
 
         return actionNodes;
-    }
-
-    private static void WaitForTestCompletion(TestContext ctx)
-    {
-        var start = Find.TickManager.TicksGame;
-
-        TickDelayManager.Interval(1, (a) =>
-        {
-            if (ctx.PendingEventually == 0)
-            {
-                if (!ctx.Failed)
-                    ctx.Pass();
-                a.Cancelled = true;
-
-                return;
-            }
-
-            if (Find.TickManager.TicksGame - start > TestManager.Timeout)
-            {
-                ctx.Fail("Timeout waiting for test assertions.");
-                a.Cancelled = true;
-            }
-        });
     }
 
     [NearDebugOutput]

@@ -62,7 +62,7 @@ internal class Surgery_ModPartRecorder : SurgeryRecorder
 
     public void TestInstall(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
             .WithThing("BionicArm", 1)
@@ -83,7 +83,7 @@ internal class Surgery_ModPartRecorder : SurgeryRecorder
 
     public void TestReplace(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
             .WithThing("BionicHeart", 1)
@@ -103,7 +103,7 @@ internal class Surgery_ModPartRecorder : SurgeryRecorder
 
     public void TestViolation(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
             .WithThing("SimpleProstheticHeart", 1)
@@ -124,7 +124,7 @@ internal class Surgery_ModPartRecorder : SurgeryRecorder
 
     public void TestFix(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
             .WithThing("BionicHeart", 1)
@@ -145,7 +145,7 @@ internal class Surgery_ModPartRecorder : SurgeryRecorder
 
     public void TestFail(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
             .WithThing("BionicHeart", 1)

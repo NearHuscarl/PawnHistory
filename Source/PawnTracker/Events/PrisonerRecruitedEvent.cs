@@ -32,7 +32,7 @@ public static class Pawn_InteractionsTracker_TryInteractWith_Patch_2
             return;
 
         var entries = Find.PlayLog.AllEntries;
-        var logEntry = entries.FirstOrDefault(entry => entry is PlayLogEntry_Interaction il && PlayLog_Add_Patch.InteractionDefRef(il).defName == "RecruitAttempt");
+        var logEntry = entries.FirstOrDefault(entry => entry is PlayLogEntry_Interaction il && Accessor.PlayLogEntry_Interaction.InteractionDef(il).defName == "RecruitAttempt");
         PrisonerRecruitedContext.PendingEvent.LogEntryText = logEntry.ToGameStringFromPOV(recipient);
         GameEventBus.Publish(PrisonerRecruitedContext.PendingEvent);
         PrisonerRecruitedContext.PendingEvent = null;

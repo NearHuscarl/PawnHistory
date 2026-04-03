@@ -55,7 +55,7 @@ internal class CasketDropRecorder : RecorderBase
 
     public void TestEjected(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6)
             .WithCasket(ThingDefOf.AncientCryptosleepCasket)
             .Execute();
@@ -69,7 +69,7 @@ internal class CasketDropRecorder : RecorderBase
 
     public void TestEjectedBy(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6)
             .WithCasket(ThingDefOf.AncientCryptosleepCasket)
             .Execute();
@@ -83,7 +83,7 @@ internal class CasketDropRecorder : RecorderBase
 
     public void TestRemovedBy(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6)
             .WithCasket(ThingDefOf.Sarcophagus, ThingDefOf.Plasteel)
             .Execute();
@@ -97,7 +97,7 @@ internal class CasketDropRecorder : RecorderBase
 
     public void TestDestroyed(TestScenario scenario)
     {
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(6, 6)
             .WithCasket(ThingDefOf.AncientCryptosleepCasket)
             .Execute();

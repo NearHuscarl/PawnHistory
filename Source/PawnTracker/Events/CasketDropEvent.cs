@@ -41,7 +41,6 @@ class CasketDropContext
 [HarmonyPatch(typeof(Building_Casket), nameof(Building_Casket.EjectContents))]
 internal class Building_Casket_EjectContents_Patch
 {
-
     static void Prefix(Building_Casket __instance)
     {
         CasketDropContext.PrefixDrop(__instance, DropReason.Ejected);

@@ -47,7 +47,7 @@ internal class PrisonerCapturedRecorder : RecorderBase
         NearDebugSettings.NoDisabledWorkTypes = true;
         scenario.SpeedUp();
 
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(8, 8, tag: "Prison")
             .AsPrison(prisonerCount: 0, bedCount: 2)
             .Execute();
@@ -73,7 +73,7 @@ internal class PrisonerCapturedRecorder : RecorderBase
         NearDebugSettings.NoDisabledWorkTypes = true;
         scenario.SpeedUp();
 
-        scenario.Thing()
+        scenario.Map()
             .BuildRoom(8, 8, tag: "Prison")
             .AsPrison(prisonerCount: 0, bedCount: 2)
             .Execute();
