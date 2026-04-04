@@ -14,8 +14,6 @@ public class PrisonerCapturedEvent(Pawn prisoner, Pawn captor, Room room) : Game
 [HarmonyPatch(typeof(Pawn_GuestTracker), nameof(Pawn_GuestTracker.CapturedBy))]
 internal class Pawn_GuestTracker_CapturedBy_Patch
 {
-    static readonly AccessTools.FieldRef<Pawn_GuestTracker, Pawn> PawnRef = AccessTools.FieldRefAccess<Pawn_GuestTracker, Pawn>("pawn");
-
     static void Postfix(Pawn_GuestTracker __instance, Pawn byPawn = null)
     {
         if (__instance.GuestStatus != GuestStatus.Prisoner)
@@ -25,7 +23,7 @@ internal class Pawn_GuestTracker_CapturedBy_Patch
         if (byPawn == null)
             return;
 
-        var prisoner = PawnRef(__instance);
+        var prisoner = Accessor.Pawn_GuestTracker.Pawn(__instance);
         if (prisoner?.ownership?.OwnedBed?.GetRoom() is not { } room)
             return;
 

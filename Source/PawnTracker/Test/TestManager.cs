@@ -12,36 +12,37 @@ public static class TestManager
     private static readonly Queue<Action> queue = new();
     private static bool isRunningTest;
 
-    public static void QueueTest(Action testAction, string label)
+    public static void EnqueueTest(Action testAction, string label)
     {
         queue.Enqueue(() =>
         {
-            try
+            ResetBeforeTest(label);
+            GameUtility.CreateTestGame(() =>
             {
-                ResetBeforeTest(label);
-                GameUtility.CreateTestGame(() =>
+                Log.Message("[PawnHistory] Starting test: " + label);
+                // GameComponent initiated, can create scheduled action again here.
+                TickDelayManager.Delay(50, () =>
                 {
-                    Log.Message("[PawnHistory] Starting test: " + label);
-                    // GameComponent initiated, can create scheduled action again here.
-                    TickDelayManager.Delay(50, () =>
+                    try
                     {
                         testAction();
-                        WaitForTestCompletion(Ctx, result =>
-                        {
-                            isRunningTest = result;
-                            if (isRunningTest)
-                                RunNext();
-                            else
-                                queue.Clear();
-                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"[PawnHistory] [Failed] {label}\n\n{ex}");
+                        StopTestRun();
+                    }
+
+                    WaitForTestCompletion(Ctx, result =>
+                    {
+                        isRunningTest = result;
+                        if (isRunningTest)
+                            RunNext();
+                        else
+                            StopTestRun();
                     });
                 });
-            }
-            catch (Exception ex)
-            {
-                isRunningTest = false;
-                Log.Error($"[PawnHistory] [Failed] {label}\n\n{ex}");
-            }
+            });
         });
     }
 

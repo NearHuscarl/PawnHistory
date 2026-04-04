@@ -37,11 +37,11 @@ namespace PawnHistory.Source.PawnTracker;
 //  + Base
 //  - Ideology
 // - Panic Flee
-// - Food poisoning
+// + Food poisoning
+// + Birthday
 // - Scarred body part
 //  + Instant from injury damage
 //  + Post heal
-//  + Aging scar
 //  - Scarfication ritual
 // - Recruited
 //  + prisoner
@@ -57,6 +57,7 @@ namespace PawnHistory.Source.PawnTracker;
 // Quest: track giver, link to (visible) quest.
 // Pawn.Notify_PassedToWorld() event?
 // TaleRecorder.RecordTale()
+// Letter.xml
 // Search for <IncidentDef>
 // - HistoryEventDefOf.cs
 //  - .RecordEvent(

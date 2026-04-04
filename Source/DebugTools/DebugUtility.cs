@@ -64,6 +64,12 @@ public static class DebugUtility
             return $"[{string.Join(", ", items)}]";
         }
 
+        var type = value.GetType();
+        if (!type.IsPrimitive && type != typeof(string) && !typeof(IEnumerable).IsAssignableFrom(type))
+        {
+            return $"({LangUtility.Truncate(value.ToString(), 100)})";
+        }
+
         return LangUtility.Truncate(value.ToString(), 100);
     }
 }

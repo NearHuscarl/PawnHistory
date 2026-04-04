@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System.Collections.Generic;
 using Verse;
 
 namespace PawnHistory.Source;
@@ -42,5 +43,15 @@ public static class Accessor
     public class Pawn_JobTracker
     {
         public static readonly AccessTools.FieldRef<Verse.AI.Pawn_JobTracker, Pawn> Pawn = AccessTools.FieldRefAccess<Verse.AI.Pawn_JobTracker, Pawn>("pawn");
+    }
+
+    public class Pawn_AgeTracker
+    {
+        public static readonly List<HediffDef> tmpHediffsGained = AccessTools.StaticFieldRefAccess<Verse.Pawn_AgeTracker, List<HediffDef>>("tmpHediffsGained");
+    }
+
+    public class Pawn_GuestTracker
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Pawn_GuestTracker, Pawn> Pawn = AccessTools.FieldRefAccess<RimWorld.Pawn_GuestTracker, Pawn>("pawn");
     }
 }

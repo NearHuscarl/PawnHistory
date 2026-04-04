@@ -23,6 +23,7 @@ public class PawnBuilder(int count = 1)
     private int count = count;
     private IntVec3 spawnPosition = Find.CameraDriver.MapPosition;
     private int spawnRadius = 4;
+    private bool humanLike = true;
 
     public PawnBuilder WithPosition(IntVec3 position, int radius = 3)
     {
@@ -49,11 +50,21 @@ public class PawnBuilder(int count = 1)
         return this;
     }
 
+    public PawnBuilder WithFriendlyFaction()
+    {
+        var friendlyFaction = Find.FactionManager.AllFactions
+            .FirstOrDefault(f =>
+                !f.IsPlayer &&
+                (f.def == FactionDefOf.OutlanderCivil || f.def == FactionDefOf.TribeCivil) &&
+                (f.RelationKindWith(Faction.OfPlayer) == FactionRelationKind.Neutral || f.RelationKindWith(Faction.OfPlayer) == FactionRelationKind.Ally)
+            );
+        faction = friendlyFaction;
+        return this;
+    }
+
     public PawnBuilder HumanLike(bool value = true)
     {
-        if (value)
-            filters.Add(p => p.RaceProps.Humanlike);
-
+        humanLike = value;
         return this;
     }
 
@@ -133,6 +144,7 @@ public class PawnBuilder(int count = 1)
             p => kind == null || p.kindDef == kind,
             p => faction == null || p.Faction == faction,
             p => p.GuestStatus == null || p.GuestStatus == guestStatus,
+            p => p.RaceProps.Humanlike == humanLike,
             p => !TestScenario.ProcessedPawns.Contains(p),
         ]).ToList();
         var pawns = reusePawns ? Find.CurrentMap.mapPawns.AllPawnsSpawned.Where(p => allFilters.All(f => f(p))).Take(count).ToList() : [];
@@ -244,14 +256,11 @@ public class PawnBuilder(int count = 1)
     {
         return Do(pawn =>
         {
-            var badHediffs = pawn.health.hediffSet.hediffs
-                .Where(h => h is Hediff_Injury || h.def.isBad)
-                .ToList();
+            var badHediffs = pawn.health.hediffSet.hediffs.Where(h => h is Hediff_Injury || h.def.isBad).ToList();
 
             foreach (var hediff in badHediffs)
                 pawn.health.RemoveHediff(hediff);
 
-            // Fully satisfy all needs (Food, Joy, Rest) so they don't collapse mid-test
             if (pawn.needs != null)
             {
                 foreach (var need in pawn.needs.AllNeeds)

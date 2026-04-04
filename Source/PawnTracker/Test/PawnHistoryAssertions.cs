@@ -77,9 +77,10 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
                 assertion();
                 ctx.AssertionsPassed++;
             }
-            catch
+            catch (Exception ex)
             {
                 ctx.AssertionsFailed++;
+                throw ex;
             }
             return;
         }
@@ -95,9 +96,8 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
             {
                 ctx.PendingEventually--;
                 ctx.AssertionsFailed++;
-                ctx.Fail(lastException, $"Eventually failed after {eventuallyTimeoutTicks} ticks.");
                 a.Cancelled = true;
-                return;
+                ctx.Fail(lastException, $"Eventually failed after {eventuallyTimeoutTicks} ticks.");
             }
 
             try

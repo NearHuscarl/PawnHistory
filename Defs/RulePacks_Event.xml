@@ -334,6 +334,18 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_RescueJoined</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>F(hasFactionName==True) ->[Faction]</li>
+				<li>F(hasFactionName==False)->the community</li>
+
+				<li>entry->[PAWN] was grateful after being rescued. Instead of leaving, [PAWN_pronoun] decided to stay and joined [F].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_WandererJoined</defName>
 		<rulePack>
 			<rulesStrings>

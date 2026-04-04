@@ -40,7 +40,7 @@ public static class RecorderManager
             if (skipTest)
                 return;
 
-            TestManager.QueueTest(() => method.Invoke(recorder, [testScenario]), label);
+            TestManager.EnqueueTest(() => method.Invoke(recorder, [testScenario]), label);
         });
 
         TestManager.Run();

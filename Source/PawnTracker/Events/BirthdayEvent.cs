@@ -16,8 +16,6 @@ public class BirthdayEvent(Pawn pawn, List<HediffDef> agingHediffs) : GameEventB
 [HarmonyPatch(typeof(LetterStack), nameof(LetterStack.ReceiveLetter), [typeof(TaggedString), typeof(TaggedString), typeof(LetterDef), typeof(LookTargets), typeof(Faction), typeof(Quest), typeof(List<ThingDef>), typeof(string), typeof(int), typeof(bool)])]
 public static class LetterStack_ReceiveLetter_Patch
 {
-    public static readonly List<HediffDef> tmpHediffsGainedRef = AccessTools.StaticFieldRefAccess<Pawn_AgeTracker, List<HediffDef>>("tmpHediffsGained");
-
     private static readonly string LetterLabelBirthday = "LetterLabelBirthday".Translate();
 
     public static void Prefix(TaggedString label, LookTargets lookTargets)
@@ -29,7 +27,7 @@ public static class LetterStack_ReceiveLetter_Patch
         if (pawn == null)
             return;
 
-        var hediffs = tmpHediffsGainedRef;
+        var hediffs = Accessor.Pawn_AgeTracker.tmpHediffsGained;
         if (hediffs.Count == 0)
             return;
 

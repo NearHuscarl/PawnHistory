@@ -147,6 +147,12 @@
 		<icon>EventIcons/TravelGroup</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>RescueJoined</defName>
+		<label>rescue joined</label>
+		<descriptionMaker>PawnEvent_RescueJoined</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>WandererJoined</defName>
 		<label>wanderer joined</label>
 		<descriptionMaker>PawnEvent_WandererJoined</descriptionMaker>

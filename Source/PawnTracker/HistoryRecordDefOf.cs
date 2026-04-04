@@ -31,6 +31,7 @@ internal class HistoryRecordDefOf
     public static HistoryRecordDef TradeCaravanLeft;
     public static HistoryRecordDef VisitorArrived;
     public static HistoryRecordDef TravelGroupArrived;
+    public static HistoryRecordDef RescueJoined;
     public static HistoryRecordDef WandererJoined;
     public static HistoryRecordDef RefugeePodCrashed;
     public static HistoryRecordDef WildManWanderedIn;

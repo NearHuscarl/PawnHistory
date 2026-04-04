@@ -67,7 +67,7 @@ public class GameEventBus
             }
             catch (Exception ex)
             {
-                Log.Error($"[PawnHistory] Failed after firing {DebugUtility.Format(evt)}\n{ex}");
+                Log.Error($"[PawnHistory] {nameof(GameEventBus)} failed after firing {DebugUtility.Format(evt)}\n{ex}");
             }
         }
     }
