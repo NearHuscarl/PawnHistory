@@ -32,6 +32,7 @@ internal class DiseaseRecorder : RecorderBase
         AddRecord(recordDef, e.Pawn, desc);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(8).Colonist().Execute();

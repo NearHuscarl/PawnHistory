@@ -107,6 +107,7 @@ internal class PartyRecorder : RecorderBase
         }
     }
 
+    [SkipTest]
     public void TestDangerousMap(TestScenario scenario)
     {
         scenario.SpeedUp();
@@ -121,6 +122,7 @@ internal class PartyRecorder : RecorderBase
         });
     }
 
+    [SkipTest]
     public void TestOrganizerLeft(TestScenario scenario)
     {
         scenario.SpeedUp();
@@ -134,6 +136,7 @@ internal class PartyRecorder : RecorderBase
         });
     }
 
+    [SkipTest]
     public void TestPawnKilled(TestScenario scenario)
     {
         scenario.SpeedUp();

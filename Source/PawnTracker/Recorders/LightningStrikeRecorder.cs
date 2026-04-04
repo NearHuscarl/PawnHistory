@@ -64,6 +64,7 @@ internal class LightningStrikeRecorder : RecorderBase
         AddRecord(recordDef, pawn, desc);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         scenario.Pawn(10)

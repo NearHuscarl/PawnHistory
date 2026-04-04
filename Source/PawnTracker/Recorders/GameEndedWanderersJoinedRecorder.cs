@@ -1,6 +1,5 @@
 ﻿using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
-using RimWorld;
 using System.Linq;
 using Verse;
 
@@ -31,6 +30,7 @@ internal class GameEndedWanderersJoinedRecorder : RecorderBase
         AddRecord(recordDef, e.Pawn, desc, e.Group);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         scenario.SpeedUp();

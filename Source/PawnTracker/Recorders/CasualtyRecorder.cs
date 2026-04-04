@@ -10,9 +10,6 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 internal class CasualtyRecorder : RecorderBase
 {
-    static readonly AccessTools.FieldRef<BattleLogEntry_RangedImpact, Pawn> OriginalTargetPawnRef =
-        AccessTools.FieldRefAccess<BattleLogEntry_RangedImpact, Pawn>("originalTargetPawn");
-
     public override void Register()
     {
         GameEventBus.Subscribe<CasualtyLogAddedEvent>(e =>
@@ -25,7 +22,7 @@ internal class CasualtyRecorder : RecorderBase
                 Pawn originalTargetPawn = null;
 
                 if (e.LastDamageEntry is BattleLogEntry_RangedImpact rangedEntry)
-                    originalTargetPawn = OriginalTargetPawnRef(rangedEntry);
+                    originalTargetPawn = Accessor.BattleLogEntry_RangedImpact.OriginalTargetPawn(rangedEntry);
 
                 if (e.Casualty == CasualtyType.Killed)
                     HandleKillEvent(e, combatLogText, originalTargetPawn);
@@ -111,6 +108,7 @@ internal class CasualtyRecorder : RecorderBase
         AddRecord(HistoryRecordDefOf.Kill, e.Initiator, desc, [e.Subject, originalTarget]);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         var friends = scenario.RaidFriendly()

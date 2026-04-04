@@ -37,6 +37,7 @@ internal class Surgery_ImplantRecorder : SurgeryRecorder
         AddRecord(recordDef, e.Patient, desc, [e.Doctor]);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         scenario.Map()
@@ -57,6 +58,7 @@ internal class Surgery_ImplantRecorder : SurgeryRecorder
             .CreateSingle();
     }
 
+    [SkipTest]
     public void TestFail(TestScenario scenario)
     {
         scenario.Map()

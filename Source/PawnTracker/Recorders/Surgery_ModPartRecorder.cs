@@ -60,6 +60,7 @@ internal class Surgery_ModPartRecorder : SurgeryRecorder
         AddRecord(recordDef, e.Patient, desc, [e.Doctor]);
     }
 
+    [SkipTest]
     public void TestInstall(TestScenario scenario)
     {
         scenario.Map()
@@ -81,6 +82,7 @@ internal class Surgery_ModPartRecorder : SurgeryRecorder
             .CreateSingle();
     }
 
+    [SkipTest]
     public void TestReplace(TestScenario scenario)
     {
         scenario.Map()
@@ -101,6 +103,7 @@ internal class Surgery_ModPartRecorder : SurgeryRecorder
             .CreateSingle();
     }
 
+    [SkipTest]
     public void TestViolation(TestScenario scenario)
     {
         scenario.Map()
@@ -122,6 +125,7 @@ internal class Surgery_ModPartRecorder : SurgeryRecorder
             .CreateSingle();
     }
 
+    [SkipTest]
     public void TestFix(TestScenario scenario)
     {
         scenario.Map()
@@ -143,6 +147,7 @@ internal class Surgery_ModPartRecorder : SurgeryRecorder
             .CreateSingle();
     }
 
+    [SkipTest]
     public void TestFail(TestScenario scenario)
     {
         scenario.Map()

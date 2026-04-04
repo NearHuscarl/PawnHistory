@@ -16,7 +16,7 @@ public class ThingBuilder(ThingDef def)
     private int stackCount = 1;
     private ThingDef stuff;
     private Faction faction;
-    private ThingPlaceMode placeMode;
+    private ThingPlaceMode placeMode = ThingPlaceMode.Near;
 
     public ThingBuilder At(IntVec3 pos)
     {

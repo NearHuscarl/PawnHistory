@@ -154,6 +154,7 @@ internal class MentalBreakRecorder : RecorderBase
         return fullReason;
     }
 
+    [SkipTest]
     public void TestNaturalBreak(TestScenario scenario)
     {
         var pawn = scenario.Pawn()
@@ -182,6 +183,7 @@ internal class MentalBreakRecorder : RecorderBase
         }, 200);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         scenario.Map()

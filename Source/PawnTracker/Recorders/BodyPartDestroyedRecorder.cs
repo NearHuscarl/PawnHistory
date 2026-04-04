@@ -63,6 +63,7 @@ internal class BodyPartDestroyedRecorder : RecorderBase
     }
 
     // hasInstigator==true,hasDmgSource==true
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         HashSet<BodyPartDef> nonVitalParts =
@@ -96,6 +97,7 @@ internal class BodyPartDestroyedRecorder : RecorderBase
     }
 
     // hasInstigator==,hasDmgSource==
+    [SkipTest]
     public void TestBurn(TestScenario scenario)
     {
         HashSet<BodyPartDef> nonVitalParts =

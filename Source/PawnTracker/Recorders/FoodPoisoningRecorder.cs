@@ -45,6 +45,13 @@ internal class FoodPoisoningRecorder : RecorderBase
         {
             FoodUtility.AddFoodPoisoningHediff(victim, ingestible, cause);
         }
+
+        Expect.That(victim).ToHaveHistoryRecord("[PAWN] got food poisoning from a simple meal.", -5, exactMatch: true);
+        Expect.That(victim).ToHaveHistoryRecord("[PAWN] got food poisoning from a simple meal because of incompetent cook.", -4);
+        Expect.That(victim).ToHaveHistoryRecord("[PAWN] got food poisoning from a simple meal because of dirty cooking area.", -3);
+        Expect.That(victim).ToHaveHistoryRecord("[PAWN] got food poisoning from a simple meal because of rotten food.", -2);
+        Expect.That(victim).ToHaveHistoryRecord("[PAWN] got food poisoning from a simple meal because of dangerous food type.", -1);
+
         scenario.OpenHistoryRecordTab(victim);
     }
 
@@ -54,6 +61,8 @@ internal class FoodPoisoningRecorder : RecorderBase
             .ThatMatches(ShouldRecord)
             .FullHeal()
             .Execute();
+        var oldPoisonChance = Find.Storyteller.difficulty.foodPoisonChanceFactor;
+        Find.Storyteller.difficulty.foodPoisonChanceFactor = 1f;
 
         var victim = pawns[0];
         var cook = pawns[1];
@@ -67,8 +76,11 @@ internal class FoodPoisoningRecorder : RecorderBase
             .Execute();
 
         scenario.SpeedUp();
+        Expect.That(victim).Eventually().ToHaveHistoryRecord("[PAWN] got food poisoning from a simple meal because of incompetent cook [Cook].");
+
         GameEventBus.SubscribeOnce<FoodPoisoningEvent>(e =>
         {
+            Find.Storyteller.difficulty.foodPoisonChanceFactor = oldPoisonChance;
             scenario.SlowDown();
             scenario.OpenHistoryRecordTab(victim);
         });

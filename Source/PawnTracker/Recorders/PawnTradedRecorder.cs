@@ -29,6 +29,7 @@ internal class PawnTradedRecorder : RecorderBase
         AddRecord(recordDef, e.SoldVictim, desc, [e.Negotiator]);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         var pawns = scenario.Incident(IncidentDefOf.TraderCaravanArrival)

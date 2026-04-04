@@ -33,6 +33,7 @@ internal class ManInBlackJoinedRecorder : RecorderBase
         AddRecord(recordDef, e.Pawn, desc, [relative]);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         scenario.Incident("StrangerInBlackJoin").Execute();

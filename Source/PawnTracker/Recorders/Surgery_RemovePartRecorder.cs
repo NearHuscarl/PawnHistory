@@ -41,6 +41,7 @@ internal class Surgery_RemovePartRecorder : SurgeryRecorder
         AddRecord(recordDef, e.Patient, desc, [e.Doctor]);
     }
 
+    [SkipTest]
     public void TestHarvest(TestScenario scenario)
     {
         scenario.Map()
@@ -61,6 +62,7 @@ internal class Surgery_RemovePartRecorder : SurgeryRecorder
             .CreateSingle();
     }
 
+    [SkipTest]
     public void TestAmputate(TestScenario scenario)
     {
         scenario.Map()
@@ -82,6 +84,7 @@ internal class Surgery_RemovePartRecorder : SurgeryRecorder
             .CreateSingle();
     }
 
+    [SkipTest]
     public void TestFail(TestScenario scenario)
     {
         scenario.Map()

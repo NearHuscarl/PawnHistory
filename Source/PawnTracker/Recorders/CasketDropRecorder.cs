@@ -53,6 +53,7 @@ internal class CasketDropRecorder : RecorderBase
         );
     }
 
+    [SkipTest]
     public void TestEjected(TestScenario scenario)
     {
         scenario.Map()
@@ -67,6 +68,7 @@ internal class CasketDropRecorder : RecorderBase
         casket.EjectContents();
     }
 
+    [SkipTest]
     public void TestEjectedBy(TestScenario scenario)
     {
         scenario.Map()
@@ -81,6 +83,7 @@ internal class CasketDropRecorder : RecorderBase
         scenario.Pawn().Colonist().StartJob(JobDefOf.Open, casket).Execute();
     }
 
+    [SkipTest]
     public void TestRemovedBy(TestScenario scenario)
     {
         scenario.Map()
@@ -95,6 +98,7 @@ internal class CasketDropRecorder : RecorderBase
         scenario.Pawn().Colonist().StartJob(JobDefOf.Open, casket).Execute();
     }
 
+    [SkipTest]
     public void TestDestroyed(TestScenario scenario)
     {
         scenario.Map()

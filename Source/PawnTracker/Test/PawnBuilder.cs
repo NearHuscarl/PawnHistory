@@ -148,6 +148,7 @@ public class PawnBuilder(int count = 1)
 
             if (guestStatus.HasValue)
                 pawn.guest?.SetGuestStatus(Faction.OfPlayer, guestStatus.Value);
+
             pawns.Add(pawn);
         }
 
@@ -164,10 +165,34 @@ public class PawnBuilder(int count = 1)
             {
                 processor(res[i], i, res);
             }
+            MakePawnCapable(res[i]);
             TestScenario.ProcessedPawns.Add(res[i]);
         }
 
         return res;
+    }
+
+    private static readonly BackstoryDef Childhood = DefDatabase<BackstoryDef>.GetNamed("MusicalKid86");
+    private static readonly BackstoryDef Adulthood = DefDatabase<BackstoryDef>.GetNamed("NavyScientist52");
+    private void MakePawnCapable(Pawn pawn)
+    {
+        // Ensure systems exist
+        pawn.workSettings?.EnableAndInitialize();
+
+        // 1. Remove work-disabling backstories
+        // Setting these to null removes the primary source of "Incapable of"
+        pawn.story.Childhood = Childhood;
+        pawn.story.Adulthood = Adulthood;
+
+        // 2. Remove work-disabling traits (e.g., Lazy, Brawler, etc.)
+        pawn.story.traits.allTraits.Clear();
+
+        // 3. Optional: Clear DLC restrictions if testing with Royalty/Ideology
+        if (ModsConfig.RoyaltyActive) pawn.royalty?.AllTitlesForReading.Clear();
+        if (ModsConfig.IdeologyActive) pawn.ideo?.SetIdeo(null);
+
+        // 4. IMPORTANT: Refresh the pawn's internal work-tag cache
+        pawn.Notify_DisabledWorkTypesChanged();
     }
 
     public PawnBuilder AddHediff(HediffDef def, BodyPartDef partDef = null, Action<Hediff> hediffCreated = null, int partIndex = 0)

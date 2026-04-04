@@ -186,8 +186,8 @@
 		<defName>PawnEvent_FoodPoisoning</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>CauseClause(hasCook==True) ->[Cause] [Cook]</li>
-				<li>CauseClause(hasCook==False)->[Cause]</li>
+				<li>CauseClause(hasCook==True,cause==IncompetentCook) ->[Cause] [Cook]</li>
+				<li>CauseClause(hasCook==False)                       ->[Cause]</li>
 				<li>entry(cause==Unknown)->[PAWN] got food poisoning from [Ingestible_indefinite].</li>
 				<li>entry(cause!=Unknown)->[PAWN] got food poisoning from [Ingestible_indefinite] because of [CauseClause].</li>
 			</rulesStrings>

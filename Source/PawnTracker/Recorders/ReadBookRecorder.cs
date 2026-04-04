@@ -34,6 +34,7 @@ internal class ReadBookRecorder : HistoryTaleRecorder
         AddRecord(recordDef, e.Pawn, desc, [book]);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(15).Colonist().Execute();
@@ -48,6 +49,7 @@ internal class ReadBookRecorder : HistoryTaleRecorder
         }
     }
 
+    [SkipTest]
     public void TestSkipValidation(TestScenario scenario)
     {
         skipDateCheck = true;

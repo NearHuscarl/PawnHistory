@@ -32,6 +32,7 @@ internal class HediffRecorder : RecorderBase
         AddRecord(HistoryRecordDefOf.Anesthetized, pawn, desc);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         var patient = scenario.Pawn()

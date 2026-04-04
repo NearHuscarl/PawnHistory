@@ -35,6 +35,7 @@ internal class BirthdayRecorder : RecorderBase
         AddRecord(recordDef, e.Pawn, desc);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         var victim = scenario.Pawn()

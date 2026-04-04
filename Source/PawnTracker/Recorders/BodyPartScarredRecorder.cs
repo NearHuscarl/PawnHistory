@@ -44,6 +44,7 @@ internal class BodyPartScarredRecorder : RecorderBase
         AddRecord(recordDef, pawn, desc, [instigator]);
     }
 
+    [SkipTest]
     public void TestInjury(TestScenario scenario)
     {
         NearDebugSettings.ForceInjuryScar = true;
@@ -64,6 +65,7 @@ internal class BodyPartScarredRecorder : RecorderBase
         scenario.RunOnceOn<LordToilChangeEvent>(e => e.NextToil is LordToil_PanicFlee, e => scenario.SlowDown());
     }
 
+    [SkipTest]
     public void TestPostHeal(TestScenario scenario)
     {
         NearDebugSettings.ForcePostHealScar = true;

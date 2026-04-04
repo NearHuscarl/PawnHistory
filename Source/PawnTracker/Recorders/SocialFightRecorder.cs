@@ -30,6 +30,7 @@ internal class SocialFightRecorder : RecorderBase
         AddRecord(HistoryRecordDefOf.SocialFight, pawn, description, concerns);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         var oldDebugValue = DebugSettings.alwaysSocialFight;

@@ -38,6 +38,7 @@ internal class VisitedGraveRecorder : HistoryTaleRecorder
         AddRecord(recordDef, corpse, desc, [e.Pawn]);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(5).Colonist().Execute();

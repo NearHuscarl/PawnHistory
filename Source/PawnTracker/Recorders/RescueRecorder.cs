@@ -37,6 +37,7 @@ internal class RescueRecorder : RecorderBase
         AddRecord(recordDef, takee, desc, [rescuer]);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(2).Colonist().Execute();

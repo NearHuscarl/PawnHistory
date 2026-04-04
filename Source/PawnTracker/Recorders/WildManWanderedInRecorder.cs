@@ -27,6 +27,7 @@ internal class WildManWanderedInRecorder : RecorderBase
         AddRecord(recordDef, e.Pawn, desc, e.Group);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         scenario.Incident("WildManWandersIn").Execute();

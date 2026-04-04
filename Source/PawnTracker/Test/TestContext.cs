@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Verse;
 
@@ -8,16 +9,16 @@ namespace PawnHistory.Source.PawnTracker.Test;
 public sealed class TestContext(string name)
 {
     public string Name = name;
-    public bool Failed;
     public int AssertionsPassed;
+    public int AssertionsFailed;
     public int PendingEventually;
-    private static string Red(object obj) => obj.ToString().ApplyTag(TagType.Red).Resolve();
-    private static string Green(object obj) => obj.ToString().Colorize(ColoredText.FactionColor_Ally);
+    public static string Red(object obj) => obj.ToString().ApplyTag(TagType.Red).Resolve();
+    public static string Green(object obj) => obj.ToString().Colorize(ColoredText.FactionColor_Ally);
 
     public void Pass()
     {
-        Log.Message(Green("[PASS] " + Name));
-        Messages.Message("[PASS] " + Name, MessageTypeDefOf.PositiveEvent);
+        Log.Message(Green($"[PawnHistory] [Passed] {Name}: {AssertionsPassed} passed"));
+        Messages.Message("[Passed] " + Name, MessageTypeDefOf.PositiveEvent);
     }
 
     public void Fail(params string[] message)
@@ -27,8 +28,6 @@ public sealed class TestContext(string name)
 
     public void Fail(Exception ex = null, params string[] msgs)
     {
-        Failed = true;
-
         var stringBuilder = new StringBuilder();
 
         for (var i = 0; i < msgs.Length; i++)
@@ -39,6 +38,18 @@ public sealed class TestContext(string name)
         if (ex != null)
             stringBuilder.Append("\n" + ex.ToString());
 
-        Log.Error(Red("[FAIL] " + Name) + "\n" + stringBuilder);
+        throw new Exception("[FAIL] " + Name + "\n" + stringBuilder);
+    }
+
+    private readonly List<Action> cleanupCallbacks = [];
+
+    public void OnCleanup(Action callback)
+    {
+        cleanupCallbacks.Add(callback);
+    }
+
+    public void Cleanup()
+    {
+        cleanupCallbacks.ForEach(c => c());
     }
 }

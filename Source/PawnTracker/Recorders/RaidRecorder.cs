@@ -86,11 +86,13 @@ internal class RaidRecorder : RecorderBase
         scenario.Incident(IncidentDefOf.RaidEnemy).Point(point).Execute();
     }
 
+    [SkipTest]
     public void TestSiege(TestScenario scenario)
     {
         scenario.Siege().Point(500).Execute();
     }
 
+    [SkipTest]
     public void TestCenterDrop(TestScenario scenario)
     {
         scenario.Incident(IncidentDefOf.RaidEnemy).Point(500).RaidArrivalMode(PawnsArrivalModeDefOf.CenterDrop).Execute();

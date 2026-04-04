@@ -30,6 +30,7 @@ internal class WalkNakedRecorder : HistoryTaleRecorder
         AddRecord(recordDef, e.Pawn, desc);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(15).Colonist().StripNaked().Execute();

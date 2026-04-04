@@ -30,10 +30,88 @@ public static class RecorderManager
     }
 
     [NearDebugAction]
+    public static void RunAllTests()
+    {
+        ForEachTestMethod((label, recorder, method, debugValues, skipTest) =>
+        {
+            if (debugValues != null)
+                return;
+
+            if (skipTest)
+                return;
+
+            TestManager.QueueTest(() => method.Invoke(recorder, [testScenario]), label);
+        });
+
+        TestManager.Run();
+    }
+
+
+    [NearDebugAction]
+    public static void StopTestRun()
+    {
+        TestManager.StopTestRun();
+    }
+
+    [NearDebugAction]
     public static List<DebugActionNode> RecorderTests()
     {
         var actionNodes = new List<DebugActionNode>();
 
+        ForEachTestMethod((label, recorder, method, debugValues, skipTest) =>
+        {
+            var parameters = method.GetParameters();
+
+            if (debugValues == null)
+            {
+                actionNodes.Add(new DebugActionNode(label, DebugActionType.Action, () =>
+                {
+                    try
+                    {
+                        TestManager.ResetBeforeTest(label);
+                        method.Invoke(recorder, [testScenario]);
+                        TestManager.WaitForTestCompletion(TestManager.Ctx);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"[PawnHistory] Failed to run recorder test {label}\n\n{ex}");
+                    }
+                }));
+            }
+            else
+            {
+                var parentNode = new DebugActionNode(label, DebugActionType.Action, () =>
+                {
+                    var options = new List<DebugMenuOption>();
+
+                    foreach (int count in debugValues)
+                    {
+                        options.Add(new DebugMenuOption($"{parameters[1].Name}: {count}", DebugMenuOptionMode.Action, () =>
+                        {
+                            try
+                            {
+                                TestManager.ResetBeforeTest(label);
+                                method.Invoke(recorder, [testScenario, count]);
+                                TestManager.WaitForTestCompletion(TestManager.Ctx);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error($"[PawnHistory] Failed to run recorder test {label}\n\n{ex}");
+                            }
+                        }));
+                    }
+                    Find.WindowStack.Add(new Dialog_DebugOptionListLister(options));
+                });
+
+                actionNodes.Add(parentNode);
+            }
+        });
+
+        return actionNodes;
+    }
+
+    private static void ForEachTestMethod(Action<string, RecorderBase, MethodInfo, int[], bool> action)
+    {
         foreach (var recorder in activeRecorders)
         {
             var type = recorder.GetType();
@@ -50,60 +128,30 @@ public static class RecorderManager
                 var label = (method.Name == "Test")
                     ? buttonName
                     : $"{buttonName}_{method.Name.ReplaceFirst("Test", "")}";
+                int[] debugValues = null;
 
                 // CASE 1: Standard Test(TestScenario scenario)
                 if (parameters.Length == 1 && parameters[0].ParameterType == typeof(TestScenario))
                 {
-                    actionNodes.Add(new DebugActionNode(label, DebugActionType.Action, () =>
-                    {
-                        try
-                        {
-                            TestManager.Reset(label);
-                            method.Invoke(recorder, [testScenario]);
-                            TestManager.WaitForTestCompletion(TestManager.Current);
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error($"[PawnHistory] Failed to run recorder test {label}\n\n{ex}");
-                        }
-                    }));
                 }
                 // CASE 2: Parameterized Test(TestScenario scenario, int count)
                 else if (parameters.Length == 2 && parameters[0].ParameterType == typeof(TestScenario) && parameters[1].ParameterType == typeof(int))
                 {
-                    var parentNode = new DebugActionNode(label, DebugActionType.Action, () =>
-                    {
-                        var attr = method.GetCustomAttribute<DebugValuesAttribute>()
-                           ?? parameters[1].GetCustomAttribute<DebugValuesAttribute>();
+                    var attr = method.GetCustomAttribute<DebugValuesAttribute>()
+                       ?? parameters[1].GetCustomAttribute<DebugValuesAttribute>();
 
-                        int[] presets = attr?.Values ?? [1, 2, 3, 5, 10];
-                        var options = new List<DebugMenuOption>();
-
-                        foreach (int count in presets)
-                        {
-                            options.Add(new DebugMenuOption($"{parameters[1].Name}: {count}", DebugMenuOptionMode.Action, () =>
-                            {
-                                try
-                                {
-                                    TestManager.Reset(label);
-                                    method.Invoke(recorder, [testScenario, count]);
-                                    TestManager.WaitForTestCompletion(TestManager.Current);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Log.Error($"[PawnHistory] Failed to run recorder test {label}\n\n{ex}");
-                                }
-                            }));
-                        }
-                        Find.WindowStack.Add(new Dialog_DebugOptionListLister(options));
-                    });
-
-                    actionNodes.Add(parentNode);
+                    debugValues = attr?.Values ?? [1, 2, 3, 5, 10];
                 }
+                else
+                {
+                    throw new ArgumentException($"Unsupported test method signature for {type.Name}.{method.Name}. Expected either {method.Name}(TestScenario) or {method.Name}(TestScenario, int).");
+                }
+
+                var skipTest = method.GetCustomAttribute<SkipTestAttribute>();
+
+                action(label, recorder, method, debugValues, skipTest != null);
             }
         }
-
-        return actionNodes;
     }
 
     [NearDebugOutput]

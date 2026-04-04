@@ -42,6 +42,7 @@ internal class PrisonerCapturedRecorder : RecorderBase
         AddRecord(recordDef, e.Prisoner, desc, [e.Captor]);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         NearDebugSettings.NoDisabledWorkTypes = true;
@@ -68,6 +69,7 @@ internal class PrisonerCapturedRecorder : RecorderBase
         });
     }
 
+    [SkipTest]
     public void TestArrest(TestScenario scenario)
     {
         NearDebugSettings.NoDisabledWorkTypes = true;
@@ -94,6 +96,7 @@ internal class PrisonerCapturedRecorder : RecorderBase
         });
     }
 
+    [SkipTest]
     public void TestPermutation(TestScenario scenario)
     {
         const int n = 20;

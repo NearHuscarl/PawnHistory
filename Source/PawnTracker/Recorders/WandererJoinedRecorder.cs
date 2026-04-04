@@ -27,6 +27,7 @@ internal class WandererJoinedRecorder : RecorderBase
         AddRecord(recordDef, e.Pawn, desc, e.Group);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         scenario.Incident("WandererJoin").Execute();

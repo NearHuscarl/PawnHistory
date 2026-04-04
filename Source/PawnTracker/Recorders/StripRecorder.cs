@@ -36,6 +36,7 @@ internal class StripRecorder : HistoryTaleRecorder
         AddRecord(recordDef, e.Pawn, desc, [strippedPawn]);
     }
 
+    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(15).Colonist().Execute();

@@ -107,6 +107,7 @@ internal class CaravanRecorder : RecorderBase
         }
     }
 
+    [SkipTest]
     public void TestFractionLost(TestScenario scenario)
     {
         var pawns = scenario.Incident(IncidentDefOf.TraderCaravanArrival).Point(400).Execute();
@@ -119,6 +120,7 @@ internal class CaravanRecorder : RecorderBase
         });
     }
 
+    [SkipTest]
     public void TestAnimalLost(TestScenario scenario)
     {
         var pawns = scenario.Incident(IncidentDefOf.TraderCaravanArrival).Point(400).Execute();
@@ -131,6 +133,7 @@ internal class CaravanRecorder : RecorderBase
         });
     }
 
+    [SkipTest]
     public void TestTraderLost(TestScenario scenario)
     {
         var pawns = scenario.Incident(IncidentDefOf.TraderCaravanArrival).Point(400).Execute();

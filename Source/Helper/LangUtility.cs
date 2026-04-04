@@ -105,4 +105,43 @@ internal static class LangUtility
 
         return value[..maxLength] + "...";
     }
+
+    public static bool IsStructurallyTheSame(string template, string actual, bool exactMatch = false)
+    {
+        var segments = Regex.Matches(template, @"(?<rule>\[[^\]]+\])|(?<literal>[^\[]+)", RegexOptions.Compiled);
+        int searchFrom = 0;
+        var expectingContent = false;
+
+        foreach (Match m in segments)
+        {
+            if (m.Groups["rule"].Success)
+            {
+                expectingContent = true;
+                continue;
+            }
+
+            var literal = m.Groups["literal"].Value;
+            var index = actual.IndexOf(literal, searchFrom, StringComparison.OrdinalIgnoreCase);
+
+            // The text following a rule wasn't found
+            if (index == -1)
+                return false;
+
+            // The placeholder was empty (literal found immediately at current position)
+            if (expectingContent && index == searchFrom)
+                return false;
+
+            searchFrom = index + literal.Length;
+            expectingContent = false;
+        }
+
+        if (exactMatch && searchFrom != actual.Length)
+            return false;
+
+        // Handle case where template ends with a placeholder [Rule]
+        if (expectingContent && searchFrom >= actual.Length)
+            return false;
+
+        return true;
+    }
 }

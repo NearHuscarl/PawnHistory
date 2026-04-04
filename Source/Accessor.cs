@@ -21,6 +21,12 @@ public static class Accessor
             AccessTools.FieldRefAccess<Verse.BattleLogEntry_StateTransition, BodyPartRecord>("culpritHediffTargetPart");
     }
 
+    public class BattleLogEntry_RangedImpact
+    {
+        public static readonly AccessTools.FieldRef<Verse.BattleLogEntry_RangedImpact, Pawn> OriginalTargetPawn =
+            AccessTools.FieldRefAccess<Verse.BattleLogEntry_RangedImpact, Pawn>("originalTargetPawn");
+    }
+
     public static class PlayLogEntry_Interaction
     {
         public static readonly AccessTools.FieldRef<Verse.PlayLogEntry_Interaction, Pawn> Initiator =
