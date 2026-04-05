@@ -15,6 +15,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef Downed;
     public static HistoryRecordDef Anesthetized;
     public static HistoryRecordDef FoodPoisoning;
+    public static HistoryRecordDef HealthComplication;
     public static HistoryRecordDef Birthday;
     public static HistoryRecordDef SkillLeveledUp;
     public static HistoryRecordDef SkillLeveledDown;

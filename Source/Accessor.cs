@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System;
 using System.Collections.Generic;
 using Verse;
 
@@ -53,5 +54,11 @@ public static class Accessor
     public class Pawn_GuestTracker
     {
         public static readonly AccessTools.FieldRef<RimWorld.Pawn_GuestTracker, Pawn> Pawn = AccessTools.FieldRefAccess<RimWorld.Pawn_GuestTracker, Pawn>("pawn");
+    }
+
+    public class HediffGiver
+    {
+        public static readonly Action<Verse.HediffGiver, Pawn, Hediff> SendLetter =
+            AccessTools.MethodDelegate<Action<Verse.HediffGiver, Pawn, Hediff>>(AccessTools.Method(typeof(Verse.HediffGiver), "SendLetter"));
     }
 }

@@ -50,6 +50,12 @@
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>HealthComplication</defName>
+		<label>health complication</label>
+		<descriptionMaker>PawnEvent_HealthComplication</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Birthday</defName>
 		<label>birthday</label>
 		<descriptionMaker>PawnEvent_Birthday</descriptionMaker>

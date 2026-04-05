@@ -203,6 +203,12 @@ public class PawnBuilder(int count = 1)
         pawn.Notify_DisabledWorkTypesChanged();
     }
 
+    public PawnBuilder AddHediff(string defName, BodyPartDef partDef = null, Action<Hediff> hediffCreated = null, int partIndex = 0)
+    {
+        var hediffDef = DefDatabase<HediffDef>.GetNamed(defName);
+        return AddHediff(hediffDef, partDef, hediffCreated, partIndex);
+    }
+
     public PawnBuilder AddHediff(HediffDef def, BodyPartDef partDef = null, Action<Hediff> hediffCreated = null, int partIndex = 0)
     {
         return Do(pawn =>
@@ -215,12 +221,6 @@ public class PawnBuilder(int count = 1)
             pawn.health.AddHediff(hediff, part);
             hediffCreated?.Invoke(hediff);
         });
-    }
-
-    public PawnBuilder AddHediff(string defName, BodyPartDef partDef)
-    {
-        var hediffDef = DefDatabase<HediffDef>.GetNamed(defName);
-        return AddHediff(hediffDef, partDef);
     }
 
     public PawnBuilder AddHediff(string defName, string partDefName)

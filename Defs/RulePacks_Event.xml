@@ -195,6 +195,16 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_HealthComplication</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(hasCause==False)->[PAWN] developed a health condition: [Condition].</li>
+				<li>entry(hasCause==True) ->[PAWN] developed a health condition: [Condition]. It was caused by [Cause].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_Birthday</defName>
 		<rulePack>
 			<rulesStrings>
