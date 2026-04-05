@@ -66,6 +66,11 @@ namespace PawnHistory.Source.PawnTracker;
 //  - "SetGuestStatus("
 // - ^ Mod options
 //  - Prune less important records
+// - Docs
+//  - DescriptionBuilder and rulepack
+// - Test
+//  - TestManager should collect all failing tests instead of stopping on first failure
+//  - TestManager should re-run failed tests from previous run first
 
 // Create a filter in WorldPawn window (All/Alive/Dead)
 // - Add a column to see the history of dead AND destroyed pawn. Concerned dead&destoryed pawn will open a dedicated history window.

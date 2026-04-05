@@ -29,16 +29,6 @@ internal class HediffComp_GetsPermanent_CompPostInjuryHeal_Patch
     }
 }
 
-[HarmonyPatch(typeof(Pawn), nameof(Pawn.WorkTypeIsDisabled))]
-static class Patch_WorkTypeIsDisabled_Patch
-{
-    static void Postfix(ref bool __result)
-    {
-        if (NearDebugSettings.NoDisabledWorkTypes)
-            __result = false;
-    }
-}
-
 [HarmonyPatch(typeof(DebugTabMenu_Settings), nameof(DebugTabMenu_Settings.InitActions))]
 public static class Patch_DebugTabMenu_Settings_InitActions
 {
@@ -60,5 +50,4 @@ internal class NearDebugSettings
 {
     public static bool ForceInjuryScar = false;
     public static bool ForcePostHealScar = false;
-    public static bool NoDisabledWorkTypes = false;
 }

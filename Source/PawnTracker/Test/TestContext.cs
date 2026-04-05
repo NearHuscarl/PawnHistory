@@ -6,7 +6,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
 
-public sealed class TestContext(string name)
+internal sealed class TestContext(string name)
 {
     public string Name = name;
     public int AssertionsPassed;
@@ -38,7 +38,7 @@ public sealed class TestContext(string name)
         if (ex != null)
             stringBuilder.Append("\n" + ex.ToString());
 
-        throw new Exception("[FAIL] " + Name + "\n" + stringBuilder);
+        throw new Exception("[PawnHistory] [Failed] " + Name + "\n" + stringBuilder);
     }
 
     private readonly List<Action> cleanupCallbacks = [];
@@ -51,5 +51,6 @@ public sealed class TestContext(string name)
     public void Cleanup()
     {
         cleanupCallbacks.ForEach(c => c());
+        cleanupCallbacks.Clear();
     }
 }

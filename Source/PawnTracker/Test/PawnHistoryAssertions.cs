@@ -1,15 +1,14 @@
 ﻿using PawnHistory.Source.Helper;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using Verse;
-using static UnityEngine.Networking.UnityWebRequest;
 
 namespace PawnHistory.Source.PawnTracker.Test;
 
-public sealed class PawnHistoryAssertions(Pawn pawn)
+public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
 {
-    private readonly Pawn pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
+    private readonly IEnumerable<Pawn> pawns = pawns ?? throw new ArgumentNullException(nameof(pawns));
 
     private bool isEventually;
     private int eventuallyTimeoutTicks;
@@ -28,25 +27,26 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
             TestManager.Ctx.Fail(negate ? negativeMessage : positiveMessage);
     }
 
-    public PawnHistoryAssertions ToHaveHistoryRecordOf(HistoryRecordDef def)
+    public void ToHaveHistoryRecordOf(HistoryRecordDef def)
     {
         RunAssertion(() =>
         {
-            var hasRecord = pawn.GetHistoryRecords().Any(r => r.def == def);
+            var hasRecord = pawns.Any(p => p.GetHistoryRecords().Any(r => r.def == def));
+            var pawn = pawns.Count() == 1 ? pawns.First() : null;
+            var forPawn = pawn == null ? "" : $"for {pawn} ";
             AssertCondition(
                 hasRecord,
-                $"Expected record of type '{def.defName}' for {pawn} but none found.",
-                $"Expected NO record of type '{def.defName}' for {pawn} but one was found."
+                $"Expected record of type '{def.defName}' {forPawn}but none found.",
+                $"Expected NO record of type '{def.defName}' {forPawn}but one was found."
             );
         });
-
-        return this;
     }
 
-    public PawnHistoryAssertions ToHaveHistoryRecordCount(int expected)
+    public void ToHaveHistoryRecordCount(int expected)
     {
         RunAssertion(() =>
         {
+            var pawn = pawns.First();
             var actual = pawn.GetHistoryRecords().Count;
             var result = actual != expected;
 
@@ -56,26 +56,27 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
                 $"Expected NOT {expected} number of records but got {actual}."
             );
         });
-
-        return this;
     }
 
-    public PawnHistoryAssertions ToHaveHistoryRecord(string descriptionTemplate, int index = -1, bool exactMatch = false)
+    public void ToHaveHistoryRecord(string descriptionTemplate, int index = -1, bool exactMatch = false)
     {
         RunAssertion(() =>
         {
-            var lastRecord = pawn.GetHistoryRecords().At(index);
-            var actual = lastRecord.description.StripTags();
-            var isTheSame = LangUtility.IsStructurallyTheSame(descriptionTemplate, actual, exactMatch);
+            string actual = "";
+            var result = pawns.Any(p =>
+            {
+                if (!p.GetHistoryRecords().TryAt(index, out HistoryRecord record))
+                    return false;
+                actual = record.description.StripTags();
+                return LangUtility.IsStructurallyTheSame(descriptionTemplate, actual, exactMatch);
+            });
 
             AssertCondition(
-                isTheSame,
+                result,
                 $"Expected description to match template\nExpected template [exactMatch={exactMatch}]:\n{descriptionTemplate}\nActual resolved description:\n{actual}",
                 $"Expected description NOT to match template\nExpected template [exactMatch={exactMatch}]:\n{descriptionTemplate}\nActual resolved description:\n{actual}."
             );
         });
-
-        return this;
     }
 
     public PawnHistoryAssertions Eventually(int timeoutTicks = 3000, int pollIntervalTicks = 25)
@@ -88,30 +89,38 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
 
     private void RunAssertion(Action assertion)
     {
+        TestManager.Ctx.PendingEventually++;
+        // don't run immediately, so Test method can return cleanup action if synchronous test call failed.
+        TickDelayManager.Delay(0, () => DoRunAssertion(assertion));
+    }
+
+    private void DoRunAssertion(Action assertion)
+    {
         var ctx = TestManager.Ctx;
-
-        if (!isEventually)
-        {
-            try
-            {
-                assertion();
-                ctx.AssertionsPassed++;
-            }
-            catch (Exception ex)
-            {
-                ctx.AssertionsFailed++;
-                throw ex;
-            }
-            return;
-        }
-
         var tickStart = Find.TickManager.TicksGame;
         Exception lastException = null;
 
-        ctx.PendingEventually++;
-
         var action = TickDelayManager.Interval(eventuallyPollIntervalTicks, (a) =>
         {
+            if (!isEventually)
+            {
+                try
+                {
+                    assertion();
+                    ctx.PendingEventually--;
+                    ctx.AssertionsPassed++;
+                    a.Cancelled = true;
+                }
+                catch (Exception ex)
+                {
+                    ctx.PendingEventually--;
+                    ctx.AssertionsFailed++;
+                    a.Cancelled = true;
+                    throw ex;
+                }
+                return;
+            }
+
             if (Find.TickManager.TicksGame - tickStart > eventuallyTimeoutTicks)
             {
                 ctx.PendingEventually--;
@@ -134,7 +143,5 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
         });
 
         ctx.OnCleanup(() => action.Data.Cancelled = true);
-        // reset mode so next assertions are normal unless re-enabled
-        isEventually = false;
     }
 }

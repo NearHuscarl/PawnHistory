@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using RimWorld.BaseGen;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,31 @@ public class MapBuilder
 
     public static MapBuilder At(IntVec3 pos) => new(pos);
     public static MapBuilder AtMouse() => new(UI.MouseCell());
+
+    // Copied and modified from GenStep_ScatterShrines.ScatterAt()
+    public MapBuilder GenerateAncientTemple(int width, int height)
+    {
+        var rect = map.Center.RectAbout(width, height);
+        var resolveParams = new ResolveParams();
+        resolveParams.rect = rect;
+        resolveParams.disableSinglePawn = true;
+        resolveParams.disableHives = true;
+        resolveParams.makeWarningLetter = true;
+        BaseGen.globalSettings.map = map;
+        BaseGen.symbolStack.Push("ancientTemple", resolveParams);
+        BaseGen.Generate();
+
+        map.fogGrid.Refog(rect);
+        foreach (var cell in rect.Cells)
+        {
+            var room = cell.GetRoom(map);
+
+            if (room == null || room.PsychologicallyOutdoors)
+                map.fogGrid.Unfog(cell);
+        }
+
+        return this;
+    }
 
     public void BuildRoomPhysical(CellRect rect, ThingDef wallDef = null, ThingDef stuff = null, TerrainDef floorDef = null, string tag = null)
     {

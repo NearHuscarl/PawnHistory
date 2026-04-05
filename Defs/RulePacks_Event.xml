@@ -267,6 +267,15 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_AncientDangerWarning</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] felt a deep sense of foreboding while approaching an ancient structure, sensing great danger within.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_CasketDrop</defName>
 		<rulePack>
 			<rulesStrings>

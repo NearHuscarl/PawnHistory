@@ -38,7 +38,6 @@ internal class PrisonerRecruitedRecorder : RecorderBase
 
     public override void Test(TestScenario scenario)
     {
-        NearDebugSettings.NoDisabledWorkTypes = true;
         DebugSettings.instantRecruit = true;
 
         var prisoners = new List<Pawn>();
@@ -58,7 +57,6 @@ internal class PrisonerRecruitedRecorder : RecorderBase
 
         GameEventBus.SubscribeOnce<PrisonerRecruitedEvent>(e =>
         {
-            NearDebugSettings.NoDisabledWorkTypes = false;
             DebugSettings.instantRecruit = false;
             scenario.SlowDown();
             scenario.OpenHistoryRecordTab(recruiter);
@@ -71,7 +69,6 @@ internal class PrisonerRecruitedRecorder : RecorderBase
 
     public void TestNamedFaction(TestScenario scenario)
     {
-        NearDebugSettings.NoDisabledWorkTypes = true;
         DebugSettings.instantRecruit = true;
 
         var prisoners = new List<Pawn>();
@@ -91,7 +88,6 @@ internal class PrisonerRecruitedRecorder : RecorderBase
 
         GameEventBus.SubscribeOnce<PrisonerRecruitedEvent>(e =>
         {
-            NearDebugSettings.NoDisabledWorkTypes = false;
             DebugSettings.instantRecruit = false;
             scenario.SlowDown();
             scenario.OpenHistoryRecordTab(recruiter);

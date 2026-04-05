@@ -36,12 +36,25 @@ public static class ListExtensions
     /// <param name="index"></param>
     /// <returns></returns>
     /// <exception cref="IndexOutOfRangeException"></exception>
-    public static T At<T>(this IList<T> source, int index)
+    public static bool TryAt<T>(this IList<T> source, int index, out T value)
     {
         var resolvedIndex = index < 0 ? source.Count + index : index;
-        if (resolvedIndex < 0 || resolvedIndex >= source.Count)
+
+        if (resolvedIndex >= 0 && resolvedIndex < source.Count)
+        {
+            value = source[resolvedIndex];
+            return true;
+        }
+
+        value = default;
+        return false;
+    }
+
+    public static T At<T>(this IList<T> source, int index)
+    {
+        if (!source.TryAt(index, out var value))
             throw new IndexOutOfRangeException($"Index {index} is out of range for a list of {source.Count} elements.");
 
-        return source[resolvedIndex];
+        return value;
     }
 }

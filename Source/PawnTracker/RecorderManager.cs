@@ -68,9 +68,7 @@ public static class RecorderManager
                 {
                     try
                     {
-                        TestManager.ResetBeforeTest(label);
-                        method.Invoke(recorder, [testScenario]);
-                        TestManager.WaitForTestCompletion(TestManager.Ctx);
+                        TestManager.ExecuteTestMethod(label, () => method.Invoke(recorder, [testScenario]));
                     }
                     catch (Exception ex)
                     {
@@ -90,9 +88,7 @@ public static class RecorderManager
                         {
                             try
                             {
-                                TestManager.ResetBeforeTest(label);
-                                method.Invoke(recorder, [testScenario, count]);
-                                TestManager.WaitForTestCompletion(TestManager.Ctx);
+                                TestManager.ExecuteTestMethod(label, () => method.Invoke(recorder, [testScenario, count]));
                             }
                             catch (Exception ex)
                             {

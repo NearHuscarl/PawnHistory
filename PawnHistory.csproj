@@ -65,6 +65,7 @@
     <Compile Include="Source\DebugTools\DebugOutputsHistoryRecords.cs" />
     <Compile Include="Source\Helper\HediffUtility.cs" />
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
+    <Compile Include="Source\PawnTracker\Events\ReceiveLetterEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\RescueJoinedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\BirthdayEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\BodyPartScarredEvent.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Source\PawnTracker\Events\CasualtyLogAddedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryEvent.cs" />
     <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\AncientDangerWarningRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\CasketDropRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\GameEndedWanderersJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\DiseaseRecorder.cs" />

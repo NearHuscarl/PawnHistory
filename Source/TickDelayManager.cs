@@ -14,6 +14,7 @@ public class ScheduledAction
 {
     public int ExecuteTick;
     public int Interval;
+    public int EndTick = -1;
     public Action<ScheduledActionData> Action;
     public bool Repeat;
     public ScheduledActionData Data = new();
@@ -60,8 +61,15 @@ public class TickDelayManager : GameComponent
 
                     if (a.Repeat && !a.Data.Cancelled)
                     {
-                        a.ExecuteTick = currentTick + a.Interval;
-                        toReinsert.Add(a);
+                        var nextExecuteTick = currentTick + a.Interval;
+
+                        if (a.EndTick != -1 && nextExecuteTick > a.EndTick)
+                            a.Data.Cancelled = true;
+                        else
+                        {
+                            a.ExecuteTick = nextExecuteTick;
+                            toReinsert.Add(a);
+                        }
                     }
                 }
             }
@@ -99,13 +107,17 @@ public class TickDelayManager : GameComponent
         });
     }
 
-    public static ScheduledAction Interval(int interval, Action action) => Interval(interval, a => action());
-    public static ScheduledAction Interval(int interval, Action<ScheduledActionData> action)
+    public static ScheduledAction Interval(int interval, Action action) => Interval(interval, -1, _ => action());
+    public static ScheduledAction Interval(int interval, Action<ScheduledActionData> action) => Interval(interval, -1, action);
+    public static ScheduledAction Interval(int interval, int timeout, Action action) => Interval(interval, timeout, _ => action());
+    public static ScheduledAction Interval(int interval, int timeout, Action<ScheduledActionData> action)
     {
+        var currentTick = Find.TickManager.TicksGame;
         var a = new ScheduledAction
         {
-            ExecuteTick = Find.TickManager.TicksGame + interval,
+            ExecuteTick = currentTick + interval,
             Interval = interval,
+            EndTick = timeout > 0 ? (currentTick + timeout) : -1,
             Action = action,
             Repeat = true
         };

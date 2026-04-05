@@ -45,7 +45,6 @@ internal class PrisonerCapturedRecorder : RecorderBase
     [SkipTest]
     public override void Test(TestScenario scenario)
     {
-        NearDebugSettings.NoDisabledWorkTypes = true;
         scenario.SpeedUp();
 
         scenario.Map()
@@ -63,7 +62,6 @@ internal class PrisonerCapturedRecorder : RecorderBase
 
         GameEventBus.SubscribeOnce<PrisonerCapturedEvent>(e =>
         {
-            NearDebugSettings.NoDisabledWorkTypes = false;
             scenario.SlowDown();
             scenario.OpenHistoryRecordTab(prisoner);
         });
@@ -72,7 +70,6 @@ internal class PrisonerCapturedRecorder : RecorderBase
     [SkipTest]
     public void TestArrest(TestScenario scenario)
     {
-        NearDebugSettings.NoDisabledWorkTypes = true;
         scenario.SpeedUp();
 
         scenario.Map()
@@ -90,7 +87,6 @@ internal class PrisonerCapturedRecorder : RecorderBase
 
         GameEventBus.SubscribeOnce<PrisonerCapturedEvent>(e =>
         {
-            NearDebugSettings.NoDisabledWorkTypes = false;
             scenario.SlowDown();
             scenario.OpenHistoryRecordTab(friend);
         });
