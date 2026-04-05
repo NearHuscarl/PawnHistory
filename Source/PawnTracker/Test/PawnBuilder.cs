@@ -3,12 +3,8 @@ using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
-using UnityEngine;
-using UnityEngine.UIElements;
 using Verse;
 using Verse.AI;
-using Verse.Noise;
 
 namespace PawnHistory.Source.PawnTracker.Test;
 
@@ -290,12 +286,14 @@ public class PawnBuilder(int count = 1)
         });
     }
 
-    public PawnBuilder SetSkillLevel(SkillDef skillDef, int level)
+    public PawnBuilder ResetSkillLevel(SkillDef skillDef, int level)
     {
         return Do(pawn =>
         {
             var skill = pawn.skills.GetSkill(skillDef);
             skill.Level = level;
+            skill.xpSinceLastLevel = 0f;
+            skill.passion = Passion.Minor;
         });
     }
 
@@ -304,6 +302,7 @@ public class PawnBuilder(int count = 1)
         return Do(pawn =>
         {
             var skill = pawn.skills.GetSkill(skillDef);
+            skill.xpSinceMidnight = 0f;
             skill.Learn(xp);
         });
     }
@@ -386,15 +385,6 @@ public class PawnBuilder(int count = 1)
         });
     }
 
-    /// <summary>
-    /// Forces the pawns into a Berserk rage. They will attack the nearest target (pawn or animal).
-    /// </summary>
-    public PawnBuilder MakeBerserk()
-    {
-        processors.Add((pawn, index, all) => pawn.mindState.mentalStateHandler.TryStartMentalState(MentalStateDefOf.Berserk, null, true, false, false));
-        return this;
-    }
-
     public PawnBuilder MakeHostile()
     {
         var hostileFactions = Find.FactionManager.AllFactions
@@ -415,6 +405,21 @@ public class PawnBuilder(int count = 1)
 
 static class PawnBuilderExtension
 {
+    public static PawnBuilder ResetRecords(this PawnBuilder builder)
+    {
+        return builder.Do(p =>
+        {
+            var recordDefs = DefDatabase<RecordDef>.AllDefsListForReading.ToList();
+
+            foreach (var recordDef in recordDefs)
+            {
+                if (recordDef.type == RecordType.Time)
+                    continue;
+                p.records.AddTo(recordDef, -p.records.GetValue(recordDef));
+            }
+        });
+    }
+
     public static PawnBuilder ForceBirthday(this PawnBuilder builder)
     {
         return builder.Do(p =>

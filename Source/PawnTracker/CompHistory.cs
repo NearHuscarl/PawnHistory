@@ -85,6 +85,13 @@ public class CompHistory : ThingComp
         return best;
     }
 
+    public void ClearAll()
+    {
+        records = [];
+        pawnRecordSnapshot = [];
+        recordsShownInCurrentRound = [];
+    }
+
     private void EnsureInitialized()
     {
         records ??= [];

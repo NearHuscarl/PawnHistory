@@ -68,19 +68,13 @@ public static class GameUtility
             var t = allThings[i];
 
             if (t.def.mineable)
-            {
                 t.Destroy();
-            }
-        }
-
-        var plants = Find.CurrentMap.listerThings.ThingsInGroup(ThingRequestGroup.Plant);
-
-        for (int i = plants.Count - 1; i >= 0; i--)
-        {
-            if (plants[i] is Plant plant && plant.def.plant.IsTree)
-            {
-                plant.Destroy();
-            }
+            if (t.def.IsWall)
+                t.Destroy();
+            if (t.def.IsDoor)
+                t.Destroy();
+            if (t.def.category == ThingCategory.Plant && t.def.plant.IsTree)
+                t.Destroy();
         }
     }
 

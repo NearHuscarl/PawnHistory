@@ -87,8 +87,10 @@ internal class SkillLevelChangedRecorder : RecorderBase
     {
         var pawn = scenario.Pawn()
             .Colonist()
-            .SetSkillLevel(SkillDefOf.Shooting, 5)
+            .ResetSkillLevel(SkillDefOf.Shooting, 1)
+            .ResetRecords()
             .CreateSingle();
+        CompHistoryManager.GetComp(pawn).ClearAll(); // remove record snapshots
 
         scenario.Pawn(pawn)
             .Do(p => p.records.AddTo(RecordDefOf.Kills, 20))
@@ -130,7 +132,7 @@ internal class SkillLevelChangedRecorder : RecorderBase
     {
         var pawn = scenario.Pawn()
             .Colonist()
-            .SetSkillLevel(SkillDefOf.Shooting, 20)
+            .ResetSkillLevel(SkillDefOf.Shooting, 20)
             .CreateSingle();
 
         scenario.Pawn(pawn)

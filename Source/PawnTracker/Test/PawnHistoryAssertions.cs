@@ -1,7 +1,9 @@
 ﻿using PawnHistory.Source.Helper;
 using System;
 using System.Linq;
+using System.Security.Cryptography;
 using Verse;
+using static UnityEngine.Networking.UnityWebRequest;
 
 namespace PawnHistory.Source.PawnTracker.Test;
 
@@ -12,13 +14,30 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
     private bool isEventually;
     private int eventuallyTimeoutTicks;
     private int eventuallyPollIntervalTicks;
+    private bool negate = false;
+
+    public PawnHistoryAssertions Not()
+    {
+        negate = !negate;
+        return this;
+    }
+
+    private void AssertCondition(bool condition, string positiveMessage, string negativeMessage)
+    {
+        if (negate ? condition : !condition)
+            TestManager.Ctx.Fail(negate ? negativeMessage : positiveMessage);
+    }
 
     public PawnHistoryAssertions ToHaveHistoryRecordOf(HistoryRecordDef def)
     {
         RunAssertion(() =>
         {
-            if (!pawn.GetHistoryRecords().Any(r => r.def == def))
-                TestManager.Ctx.Fail($"Expected record of type '{def.defName}' for {pawn} but none found.");
+            var hasRecord = pawn.GetHistoryRecords().Any(r => r.def == def);
+            AssertCondition(
+                hasRecord,
+                $"Expected record of type '{def.defName}' for {pawn} but none found.",
+                $"Expected NO record of type '{def.defName}' for {pawn} but one was found."
+            );
         });
 
         return this;
@@ -29,9 +48,13 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
         RunAssertion(() =>
         {
             var actual = pawn.GetHistoryRecords().Count;
+            var result = actual != expected;
 
-            if (actual != expected)
-                TestManager.Ctx.Fail($"Expected {expected} number of records but got {actual}.");
+            AssertCondition(
+                result,
+                $"Expected {expected} number of records but got {actual}.",
+                $"Expected NOT {expected} number of records but got {actual}."
+            );
         });
 
         return this;
@@ -43,16 +66,13 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
         {
             var lastRecord = pawn.GetHistoryRecords().At(index);
             var actual = lastRecord.description.StripTags();
+            var isTheSame = LangUtility.IsStructurallyTheSame(descriptionTemplate, actual, exactMatch);
 
-            if (!LangUtility.IsStructurallyTheSame(descriptionTemplate, actual, exactMatch))
-            {
-                TestManager.Ctx.Fail(
-                    $"Expected template [exactMatch={exactMatch}]:",
-                    descriptionTemplate,
-                    "Actual resolved description:",
-                    actual
-                );
-            }
+            AssertCondition(
+                isTheSame,
+                $"Expected description to match template\nExpected template [exactMatch={exactMatch}]:\n{descriptionTemplate}\nActual resolved description:\n{actual}",
+                $"Expected description NOT to match template\nExpected template [exactMatch={exactMatch}]:\n{descriptionTemplate}\nActual resolved description:\n{actual}."
+            );
         });
 
         return this;
@@ -97,14 +117,14 @@ public sealed class PawnHistoryAssertions(Pawn pawn)
                 ctx.PendingEventually--;
                 ctx.AssertionsFailed++;
                 a.Cancelled = true;
-                ctx.Fail(lastException, $"Eventually failed after {eventuallyTimeoutTicks} ticks.");
+                ctx.Fail(lastException, $"Test assertion failed after {eventuallyTimeoutTicks} ticks.");
             }
 
             try
             {
                 assertion();
-                ctx.AssertionsPassed++;
                 ctx.PendingEventually--;
+                ctx.AssertionsPassed++;
                 a.Cancelled = true;
             }
             catch (Exception ex)

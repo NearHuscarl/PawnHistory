@@ -31,6 +31,7 @@ namespace PawnHistory.Source.PawnTracker;
 //  + Reason: Become a __ (lvl x) at doctor after doing x surgeries
 //  ^ Reason: Become a __ (lvl x) at doctor after doing surgeries for x hours
 //  - More detailed reason: Become a __ (lvl x) at social after selling [1st expensive item], [2nd expensive item] and x others
+//  - Time record: time spent in bed, hunting...
 // Crawling to safety
 // Social gathering: Party, wedding, ritual...
 // - Social fight

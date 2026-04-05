@@ -5,7 +5,7 @@ namespace PawnHistory.Source.PawnTracker;
 
 #pragma warning disable CS0649
 [DefOf]
-internal class HistoryRecordDefOf
+public class HistoryRecordDefOf
 {
     public static HistoryRecordDef Raid;
     public static HistoryRecordDef RaidFriendly;

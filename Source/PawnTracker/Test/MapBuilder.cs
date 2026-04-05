@@ -50,6 +50,7 @@ public class MapBuilder
                     .MadeOf(stuff)
                     .Map(map)
                     .At(cell)
+                    .PlaceMode(ThingPlaceMode.Direct)
                     .Faction(Faction.OfPlayer)
                     .Create();
             }
@@ -59,6 +60,8 @@ public class MapBuilder
                     .MadeOf(stuff)
                     .Map(map)
                     .At(cell)
+                    .PlaceMode(ThingPlaceMode.Direct)
+                    .Faction(Faction.OfPlayer)
                     .Create();
             }
         }
@@ -134,7 +137,7 @@ public class MapBuilder
 
             foreach (var cell in cells)
             {
-                var bed = new ThingBuilder(ThingDefOf.Bed).MadeOf(ThingDefOf.Steel).Map(map).At(cell).Execute<Building_Bed>();
+                var bed = new ThingBuilder(ThingDefOf.Bed).MadeOf(ThingDefOf.Steel).Map(map).At(cell).PlaceMode(ThingPlaceMode.Direct).Execute<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
             }
         });
@@ -151,7 +154,7 @@ public class MapBuilder
 
             foreach (var cell in cells)
             {
-                var bed = new ThingBuilder(ThingDefOf.Bed).MadeOf(ThingDefOf.Steel).Map(map).At(cell).Execute<Building_Bed>();
+                var bed = new ThingBuilder(ThingDefOf.Bed).MadeOf(ThingDefOf.Steel).Map(map).At(cell).PlaceMode(ThingPlaceMode.Direct).Execute<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
                 bed.Medical = true;
                 beds?.Add(bed);
@@ -171,7 +174,7 @@ public class MapBuilder
 
             foreach (var cell in cells)
             {
-                var bed = new ThingBuilder(ThingDefOf.Bed).MadeOf(ThingDefOf.Steel).Map(map).At(cell).Execute<Building_Bed>();
+                var bed = new ThingBuilder(ThingDefOf.Bed).MadeOf(ThingDefOf.Steel).Map(map).At(cell).PlaceMode(ThingPlaceMode.Direct).Execute<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
                 bed.ForPrisoners = true;
             }
@@ -231,6 +234,7 @@ public class MapBuilder
                 .MadeOf(stuff)
                 .Map(map)
                 .At(pos)
+                .PlaceMode(ThingPlaceMode.Direct)
                 .Faction(Faction.OfPlayer)
                 .Execute<Building_Casket>();
 

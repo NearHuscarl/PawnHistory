@@ -20,27 +20,23 @@ public static class TestManager
             GameUtility.CreateTestGame(() =>
             {
                 Log.Message("[PawnHistory] Starting test: " + label);
-                // GameComponent initiated, can create scheduled action again here.
-                TickDelayManager.Delay(50, () =>
+                try
                 {
-                    try
-                    {
-                        testAction();
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error($"[PawnHistory] [Failed] {label}\n\n{ex}");
-                        StopTestRun();
-                    }
+                    testAction();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"[PawnHistory] [Failed] {label}\n\n{ex}");
+                    StopTestRun();
+                }
 
-                    WaitForTestCompletion(Ctx, result =>
-                    {
-                        isRunningTest = result;
-                        if (isRunningTest)
-                            RunNext();
-                        else
-                            StopTestRun();
-                    });
+                WaitForTestCompletion(Ctx, result =>
+                {
+                    isRunningTest = result;
+                    if (isRunningTest)
+                        RunNext();
+                    else
+                        StopTestRun();
                 });
             });
         });

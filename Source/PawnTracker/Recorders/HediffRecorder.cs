@@ -32,7 +32,6 @@ internal class HediffRecorder : RecorderBase
         AddRecord(HistoryRecordDefOf.Anesthetized, pawn, desc);
     }
 
-    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         var patient = scenario.Pawn()
@@ -41,5 +40,18 @@ internal class HediffRecorder : RecorderBase
             .AddHediff(HediffDefOf.Anesthetic)
             .CreateSingle();
         scenario.OpenHistoryRecordTab(patient);
+
+        Expect.That(patient).ToHaveHistoryRecord("[PAWN] was put under anesthetic.");
+    }
+
+    public void TestInvert(TestScenario scenario)
+    {
+        var patient = scenario.Pawn()
+            .ThatMatches(ShouldRecord)
+            .FullHeal()
+            .CreateSingle();
+        scenario.OpenHistoryRecordTab(patient);
+
+        Expect.That(patient).Not().ToHaveHistoryRecordOf(HistoryRecordDefOf.Anesthetized);
     }
 }

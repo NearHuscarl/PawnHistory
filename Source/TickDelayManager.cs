@@ -52,7 +52,7 @@ public class TickDelayManager : GameComponent
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"Error while executing action {a.Action}, {e}");
+                    Log.Error($"[{nameof(TickDelayManager)}] ScheduledAction failed: {e}");
                 }
                 finally
                 {
