@@ -1,9 +1,12 @@
 ﻿using LudeonTK;
 using PawnHistory.Source.DebugTools;
+using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Test;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using UnityEngine.Profiling;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
@@ -29,11 +32,28 @@ public static class RecorderManager
         }
     }
 
+    [NearDebugOutput]
+    public static void ListRecorderTests()
+    {
+        DebugTables.MakeTablesDialog(GetTestMethods(),
+            new TableDataGetter<TestMethodInfo>("Label", d => d.Label),
+            new TableDataGetter<TestMethodInfo>("Method", d => d.Method.Name),
+            new TableDataGetter<TestMethodInfo>("Skip", d => d.SkipTest.ToStringCheckBlank()),
+            new TableDataGetter<TestMethodInfo>("DebugValues", d => d.DebugValues.JoinToString())
+        );
+    }
+
     [NearDebugAction]
     public static void RunAllTests()
     {
-        ForEachTestMethod((label, recorder, method, debugValues, skipTest) =>
+        foreach (var testMethodInfo in GetTestMethods())
         {
+            var label = testMethodInfo.Label;
+            var recorder = testMethodInfo.Recorder;
+            var debugValues = testMethodInfo.DebugValues;
+            var method = testMethodInfo.Method;
+            var skipTest = testMethodInfo.SkipTest;
+
             if (debugValues != null)
                 return;
 
@@ -41,8 +61,7 @@ public static class RecorderManager
                 return;
 
             TestManager.EnqueueTest(() => method.Invoke(recorder, [testScenario]), label);
-        });
-
+        }
         TestManager.Run();
     }
 
@@ -58,8 +77,12 @@ public static class RecorderManager
     {
         var actionNodes = new List<DebugActionNode>();
 
-        ForEachTestMethod((label, recorder, method, debugValues, skipTest) =>
+        foreach (var testMethodInfo in GetTestMethods())
         {
+            var label = testMethodInfo.Label;
+            var recorder = testMethodInfo.Recorder;
+            var debugValues = testMethodInfo.DebugValues;
+            var method = testMethodInfo.Method;
             var parameters = method.GetParameters();
 
             if (debugValues == null)
@@ -101,12 +124,21 @@ public static class RecorderManager
 
                 actionNodes.Add(parentNode);
             }
-        });
+        }
 
         return actionNodes;
     }
 
-    private static void ForEachTestMethod(Action<string, RecorderBase, MethodInfo, int[], bool> action)
+    struct TestMethodInfo
+    {
+        public string Label;
+        public RecorderBase Recorder;
+        public MethodInfo Method;
+        public int[] DebugValues;
+        public bool SkipTest;
+    }
+
+    private static IEnumerable<TestMethodInfo> GetTestMethods()
     {
         foreach (var recorder in activeRecorders)
         {
@@ -145,7 +177,14 @@ public static class RecorderManager
 
                 var skipTest = method.GetCustomAttribute<SkipTestAttribute>();
 
-                action(label, recorder, method, debugValues, skipTest != null);
+                yield return new TestMethodInfo
+                {
+                    Label = label,
+                    Recorder = recorder,
+                    Method = method,
+                    DebugValues = debugValues,
+                    SkipTest = skipTest != null
+                };
             }
         }
     }

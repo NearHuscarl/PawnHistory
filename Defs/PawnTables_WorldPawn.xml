@@ -8,6 +8,7 @@
       <li>Info</li>
       <li>LabelWithIcon</li>
       <li>WorldPawnBio</li>
+      <li>WorldPawnHistory</li>
       <li>WorldPawnHealth</li>
       <li>Faction</li>
       <li MayRequire="Ludeon.RimWorld.Ideology">Ideo</li>

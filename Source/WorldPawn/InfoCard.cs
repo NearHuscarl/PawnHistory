@@ -1,9 +1,5 @@
-﻿using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PawnHistory.Source.PawnTracker;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -13,6 +9,7 @@ public enum InfoCardType
 {
     Bio,
     Health,
+    History
 }
 
 class InfoCard(Pawn pawn, InfoCardType infoType) : Window
@@ -31,6 +28,10 @@ class InfoCard(Pawn pawn, InfoCardType infoType) : Window
                 break;
             case InfoCardType.Health:
                 HealthCardUtility.DrawPawnHealthCard(inRect.ContractedBy(18f), pawn, false, HealthCardUtility.ShowBloodLoss(pawn), null);
+                break;
+            case InfoCardType.History:
+                var tabRect = new Rect(0, 0, ITab_Pawn_History.DefaultWidth, ITab_Pawn_History.DefaultHeight);
+                HistoryCardUtility.DrawHistoryCard(tabRect, pawn);
                 break;
         }
     }

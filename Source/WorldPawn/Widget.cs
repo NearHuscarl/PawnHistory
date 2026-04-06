@@ -5,8 +5,6 @@ namespace PawnHistory.Source.WorldPawn;
 
 class Widget
 {
-    private static Color defaultColor = GUI.color;
-
     public static bool IconButtonWorker(Rect cellRect, Texture2D buttonTex, int buttonWidth, int buttonHeight, Color color)
     {
         var rect = new Rect(cellRect.center.x - buttonWidth / 2, cellRect.center.y - buttonHeight / 2, buttonWidth, buttonHeight);

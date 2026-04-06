@@ -8,6 +8,9 @@ namespace PawnHistory.Source.PawnTracker;
 
 public class ITab_Pawn_History : ITab
 {
+    public static readonly float DefaultWidth = 630f;
+    public static readonly float DefaultHeight = 510f;
+
     public Pawn PawnToShowInfo
     {
         get
@@ -25,7 +28,7 @@ public class ITab_Pawn_History : ITab
 
     public ITab_Pawn_History()
     {
-        this.size = new Vector2(630f, 510f);
+        this.size = new Vector2(DefaultWidth, DefaultHeight);
         this.labelKey = "TabHistory";
         this.tutorTag = "History";
     }

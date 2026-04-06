@@ -5,16 +5,11 @@ using Verse;
 
 namespace PawnHistory.Source.WorldPawn
 {
-    public class PawnTable_WorldPawns : PawnTable
+    public class PawnTable_WorldPawns(PawnTableDef def, Func<IEnumerable<Pawn>> pawnsGetter, int uiWidth, int uiHeight) : PawnTable(def, pawnsGetter, uiWidth, uiHeight)
     {
         protected override IEnumerable<Pawn> LabelSortFunction(IEnumerable<Pawn> input)
         {
             return PlayerPawnsDisplayOrderUtility.InOrder(input);
-        }
-
-        public PawnTable_WorldPawns(PawnTableDef def, Func<IEnumerable<Pawn>> pawnsGetter, int uiWidth, int uiHeight)
-            : base(def, pawnsGetter, uiWidth, uiHeight)
-        {
         }
     }
 }

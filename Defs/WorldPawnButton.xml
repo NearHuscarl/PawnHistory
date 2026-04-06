@@ -3,11 +3,13 @@
 
   <MainButtonDef>
     <defName>nearWorldPawns</defName>
-    <label>World Pawns</label>
-    <description>See all world pawns that the game is keeping track of</description>
+    <label>world pawns</label>
+    <description>View all pawns outside of your map that the game is keeping track of</description>
     <tabWindowClass>PawnHistory.Source.WorldPawn.MainTabWindow_WorldPawns</tabWindowClass>
-    <order>68</order>
+    <order>75</order>
     <defaultHotKey>None</defaultHotKey>
+	<minimized>True</minimized>
+	<iconPath>ButtonIcons/Globe</iconPath>
   </MainButtonDef>
 
 </Defs>

@@ -165,6 +165,7 @@
     <Compile Include="Source\PawnTracker\Test\TestScenario.cs" />
     <Compile Include="Source\PawnTracker\Test\ThingBuilder.cs" />
     <Compile Include="Source\WorldPawn\InfoCard.cs" />
+    <Compile Include="Source\WorldPawn\PawnColumnWorker_History.cs" />
     <Compile Include="Source\WorldPawn\PawnColumnWorker_Health.cs" />
     <Compile Include="Source\WorldPawn\PawnColumnWorker_Bio.cs" />
     <Compile Include="Source\WorldPawn\PawnColumnWorker_WorldSituation.cs" />

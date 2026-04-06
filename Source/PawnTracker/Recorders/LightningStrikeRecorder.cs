@@ -64,7 +64,6 @@ internal class LightningStrikeRecorder : RecorderBase
         AddRecord(recordDef, pawn, desc);
     }
 
-    [SkipTest]
     public override void Test(TestScenario scenario)
     {
         scenario.Pawn(10)
@@ -72,5 +71,7 @@ internal class LightningStrikeRecorder : RecorderBase
             .ThatMatches(ShouldRecord)
             .Do(p => Find.CurrentMap.weatherManager.eventHandler.AddEvent(new WeatherEvent_LightningStrike(Find.CurrentMap, p.Position)))
             .Execute();
+
+        Expect.AnyPawnOnMap().Eventually().ToHaveHistoryRecord("[PAWN] was struck by lightning, burning [POSSESSIVE] [PART].");
     }
 }
