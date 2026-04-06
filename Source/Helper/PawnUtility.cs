@@ -18,6 +18,16 @@ internal static class PawnUtility
     {
         return CompHistoryManager.GetComp(pawn).records;
     }
+    public static bool IsFactionLeader(this Pawn pawn, Faction faction = null)
+    {
+        return (faction ?? pawn.Faction)?.leader == pawn;
+    }
+    public static void MakeDowned(this Pawn pawn)
+    {
+        pawn.health.forceDowned = true;
+        Accessor.Pawn_HealthTracker.MakeDowned(pawn.health, null, null);
+        pawn.health.forceDowned = false;
+    }
 
     public static Pawn GetOperatingDoctor(this Pawn patient)
     {

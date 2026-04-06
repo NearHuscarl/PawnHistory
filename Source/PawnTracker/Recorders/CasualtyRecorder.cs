@@ -1,8 +1,8 @@
-﻿using HarmonyLib;
-using PawnHistory.Source.Helper;
+﻿using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
+using System;
 using System.Linq;
 using Verse;
 
@@ -14,6 +14,8 @@ internal class CasualtyRecorder : RecorderBase
     {
         GameEventBus.Subscribe<CasualtyLogAddedEvent>(e =>
         {
+            var isLeader = e.Subject.IsFactionLeader(); // cache leader before it is reassigned next tick
+
             // We intercept BattleLog.Add() but it runs before DamageWorker.AssociateWithLog() which is required to populate bodyPart data so we can get the
             // exact in-game combat log. But since DamageWorker.AssociateWithLog() is not always used we need to pick BattleLog.Add and fallback.
             TickDelayManager.Delay(0, () =>
@@ -27,12 +29,12 @@ internal class CasualtyRecorder : RecorderBase
                 if (e.Casualty == CasualtyType.Killed)
                     HandleKillEvent(e, combatLogText, originalTargetPawn);
                 if (e.CulpritHediff != HediffDefOf.Anesthetic)
-                    HandleDownOrDeathEvent(e, combatLogText, originalTargetPawn);
+                    HandleDownOrDeathEvent(e, combatLogText, originalTargetPawn, isLeader);
             });
         });
     }
 
-    private void HandleDownOrDeathEvent(CasualtyLogAddedEvent e, string combatLogText, Pawn originalTarget)
+    private void HandleDownOrDeathEvent(CasualtyLogAddedEvent e, string combatLogText, Pawn originalTarget, bool isLeader)
     {
         if (!RecorderManager.ShouldRecord(e.Subject))
             return;
@@ -55,11 +57,14 @@ internal class CasualtyRecorder : RecorderBase
         // - LastDamageEntry may not match any current hediff if the same hediff was linked to an earlier combat log entry.
         if (combatLogText == null)
         {
-            var hediffInt = e.Subject.health.hediffSet.hediffs.Where(h => h.def == e.CulpritHediff).OrderBy(h => h.ageTicks).FirstOrDefault();
+            var hediffInt = e.Subject.health.hediffSet.hediffs.LastOrDefault(h => h.def == e.CulpritHediff && h.ageTicks == 0);
+            hediffInt ??= e.Subject.health.hediffSet.hediffs.LastOrDefault(h => h.ageTicks == 0 && h.def.isBad); // sometimes IF it does not find anything, use bruteforce
             var rootKeyword = isKillLog ? "killedEntry" : "downedEntry";
             desc = recordDef.Description(e.Subject)
-                .AddRule("HediffInPart", hediffInt.LabelNounPretty())
-                .AddConstant("hasReason", e.CulpritHediff != null)
+                .IncludePawnGrammar()
+                .AddConstant("factionLeader", isLeader)
+                .AddRule("HediffInPart", hediffInt?.LabelNounPretty())
+                .AddConstant("hasReason", hediffInt != null)
                 .Resolve(rootKeyword);
         }
         else
@@ -92,7 +97,7 @@ internal class CasualtyRecorder : RecorderBase
             // "A died" -> "C's brother, A, died"
             var desc = combatLogText != null
                 ? transitionText.ReplaceFirstMatch(deceasedName, relativePov) + " " + combatLogText
-                : deathDesc.ReplaceFirstMatch(deceasedName, relativePov);
+                : deathDesc.ReplaceFirstMatch(deceasedName, relativePov).ReplaceFirstMatch(",,", ","); // factionLeader==True + relativePov
 
             AddRecord(recordDef, relative, desc, [deceased, initiator, originalTarget]);
         }
@@ -108,11 +113,10 @@ internal class CasualtyRecorder : RecorderBase
         AddRecord(HistoryRecordDefOf.Kill, e.Initiator, desc, [e.Subject, originalTarget]);
     }
 
-    [SkipTest]
-    public override void Test(TestScenario scenario)
+    public Action TestDeadInCombat(TestScenario scenario)
     {
         var friends = scenario.RaidFriendly()
-            .Point(600)
+            .Point(700)
             .Execute();
 
         var enemies = scenario.Incident(IncidentDefOf.RaidEnemy)
@@ -126,5 +130,45 @@ internal class CasualtyRecorder : RecorderBase
             .Execute();
 
         scenario.SpeedUp();
+
+        Expect.AnyPawnOnMap().Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Downed);
+        Expect.AnyPawnOnMap().Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Death);
+        Expect.AnyPawnOnMap().Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.RelativeDeath);
+
+        return () => scenario.SlowDown();
+    }
+
+    public void TestLeaderDead(TestScenario scenario)
+    {
+        var leader = scenario.Pawn().FactionLeader(Faction.OfPirates).CreateSingle();
+        var spouse = scenario.Pawn().SetRelation(leader, PawnRelationDefOf.Spouse).CreateSingle();
+        HealthUtility.DamageUntilDead(leader);
+
+        Expect.That(leader).ToHaveHistoryRecord("[PAWN], a faction leader of [PAWN_factionName], died because of [HediffInPart].");
+        Expect.That(spouse).ToHaveHistoryRecord("[PAWN]'s [Relation], [Subject], a faction leader of [PAWN_factionName], died because of [HediffInPart].");
+    }
+
+    public void TestDead(TestScenario scenario)
+    {
+        var pawn = scenario.Pawn().CreateSingle();
+        HealthUtility.DamageUntilDead(pawn);
+
+        var pawn2 = scenario.Pawn().CreateSingle();
+        pawn2.Kill(null);
+
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] died because of [HediffInPart].");
+        Expect.That(pawn2).ToHaveHistoryRecord("[PAWN] died.", exactMatch: true);
+    }
+
+    public void TestDowned(TestScenario scenario)
+    {
+        var pawn = scenario.Pawn().Enemy().CreateSingle();
+        HealthUtility.DamageUntilDowned(pawn);
+
+        var pawn2 = scenario.Pawn().Enemy().CreateSingle();
+        pawn2.MakeDowned();
+
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] was incapacitated due to [HediffInPart].");
+        Expect.That(pawn2).ToHaveHistoryRecord("[PAWN] was incapacitated.", exactMatch: true);
     }
 }

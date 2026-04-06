@@ -177,7 +177,8 @@
 
 				<li>relativePov->[PAWN]'s [Relation], [Subject],</li>
 				<li>downedEntry->[PAWN] [Downed].</li>
-				<li>killedEntry->[PAWN] [Died].</li>
+				<li>killedEntry(factionLeader==True)->[PAWN], a faction leader of [PAWN_factionName], [Died].</li>
+				<li>killedEntry(factionLeader!=True)->[PAWN] [Died].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

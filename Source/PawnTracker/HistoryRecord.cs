@@ -20,7 +20,7 @@ public class HistoryRecord : IExposable
         this.def = def;
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
         this.description = desc.Resolve();
-        this.concerns = new List<Thing> { pawn }.Concat(concerns ?? []).Where(p => p != null).Distinct().ToList();
+        this.concerns = (concerns ?? []).Where(p => p != null && p != pawn).Distinct().ToList();
         this.date = GenTicks.TicksAbs;
 
         if (pawn.IsWorldPawn())
@@ -47,16 +47,27 @@ public class HistoryRecord : IExposable
         return ContentFinder<Texture2D>.Get(def.icon);
     }
 
+    public IEnumerable<Thing> AllTargets
+    {
+        get
+        {
+            yield return pawn;
+            foreach (var concern in concerns) yield return concern;
+        }
+    }
+
     public Thing GetThingToJumpTo()
     {
-        CurrentPawnToJumpTo = (CurrentPawnToJumpTo + 1) % concerns.Count;
+        var targets = AllTargets.ToList();
+
+        CurrentPawnToJumpTo = (CurrentPawnToJumpTo + 1) % targets.Count;
 
         var selectedThing = Find.Selector.SingleSelectedThing;
 
-        if (selectedThing == concerns[CurrentPawnToJumpTo].SpawnedParentOrMe)
-            CurrentPawnToJumpTo = (CurrentPawnToJumpTo + 1) % concerns.Count;
+        if (selectedThing == targets[CurrentPawnToJumpTo].SpawnedParentOrMe)
+            CurrentPawnToJumpTo = (CurrentPawnToJumpTo + 1) % targets.Count;
 
-        return concerns[CurrentPawnToJumpTo].SpawnedParentOrMe;
+        return targets[CurrentPawnToJumpTo].SpawnedParentOrMe;
     }
 
     public void ExposeData()

@@ -76,6 +76,7 @@ namespace PawnHistory.Source.PawnTracker;
 // - Add a column to see the history of dead AND destroyed pawn. Concerned dead&destoryed pawn will open a dedicated history window.
 
 // Bug:
+// - Test multiple maps to see if CasualtyRecorder use the correct battle log?
 // -- kill record POV is wrong for the killer
 // -- Exception when killing in dev mode, in KillOrDown handler
 // -- In-memory information > Exposable

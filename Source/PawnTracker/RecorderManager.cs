@@ -35,10 +35,14 @@ public static class RecorderManager
     [NearDebugOutput]
     public static void ListRecorderTests()
     {
-        DebugTables.MakeTablesDialog(GetTestMethods(),
-            new TableDataGetter<TestMethodInfo>("Label", d => d.Label),
+        var dataSource = GetTestMethods();
+        var totalLabels = dataSource.Select(x => x.Label).Distinct().Count();
+        var totalSkip = dataSource.Count(x => x.SkipTest);
+
+        DebugTables.MakeTablesDialog(dataSource,
+            new TableDataGetter<TestMethodInfo>($"Label ({totalLabels})", d => d.Label),
             new TableDataGetter<TestMethodInfo>("Method", d => d.Method.Name),
-            new TableDataGetter<TestMethodInfo>("Skip", d => d.SkipTest.ToStringCheckBlank()),
+            new TableDataGetter<TestMethodInfo>($"Skip ({totalSkip})", d => d.SkipTest.ToStringCheckBlank()),
             new TableDataGetter<TestMethodInfo>("DebugValues", d => d.DebugValues.JoinToString())
         );
     }

@@ -33,27 +33,28 @@ internal sealed class TestContext(string name)
 
     public string FailMessage(Exception ex = null, params string[] msgs)
     {
+        if (ex is TestAssertionException tae)
+            return $"{tae.Message}\n{tae.StackTrace}";
+
         var stringBuilder = new StringBuilder();
 
         for (var i = 0; i < msgs.Length; i++)
         {
-            stringBuilder.AppendLine(msgs[i]);
+            if (i == 0)
+                stringBuilder.Append(msgs[i]);
+            else
+                stringBuilder.AppendLine(msgs[i]);
         }
 
         if (ex != null)
             stringBuilder.AppendLine("\n" + ex.ToString());
 
-        return "[PawnHistory] [Failed] " + Name + "\n" + stringBuilder;
+        return "[PawnHistory] [Failed] " + Name + ": " + stringBuilder;
     }
 
-    public void Fail(params string[] message)
+    public void Fail(params string[] msgs)
     {
-        Fail(null, message);
-    }
-
-    public void Fail(Exception ex = null, params string[] msgs)
-    {
-        throw new Exception(FailMessage(ex, msgs));
+        throw new TestAssertionException(FailMessage(null, msgs));
     }
 
     private readonly List<Action> cleanupCallbacks = [];

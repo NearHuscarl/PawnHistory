@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Verse;
+using Verse.Grammar;
 
 namespace PawnHistory.Source.Helper;
 
@@ -31,7 +32,13 @@ public static class HediffHelper
 
     public static string LabelNounPretty(this Hediff h, bool noColor = false)
     {
-        var labelNoun = h.def.PrettyTextForPart(h.Part) ?? h.def.labelNoun ?? h.LabelBase;
+        var prettyTextForPart = h.def.PrettyTextForPart(h.Part);
+        // labelNoun includes an indefinite article (e.g. "a [CountableHediff]"),
+        // while labelNounPretty omits it (e.g. "{Wound} in the {Part}").
+        // A hot fix to make sure the noun result more consistent.
+        if (h is Hediff_Injury)
+            prettyTextForPart = Find.ActiveLanguageWorker.WithIndefiniteArticlePostProcessed(prettyTextForPart);
+        var labelNoun = prettyTextForPart ?? h.def.labelNoun ?? h.LabelBase;
 
         if (noColor)
             return labelNoun.ToLower();

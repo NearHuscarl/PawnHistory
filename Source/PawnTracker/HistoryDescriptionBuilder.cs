@@ -60,7 +60,7 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
         AddRule(keyword, pawn.NameDef(), replaceIfExist);
 
         if (addSubsymbols)
-            return AddRules(GrammarUtility.RulesForPawn(keyword, pawn));
+            return AddRules(GrammarUtility.RulesForPawn(keyword, pawn, extraConstants));
         return this;
     }
 
@@ -70,7 +70,7 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
         
         AddRule(keyword, faction.NameColored.Resolve(), replaceIfExist);
         if (addSubsymbols)
-            return AddRules(GrammarUtility.RulesForFaction(keyword, faction));
+            return AddRules(GrammarUtility.RulesForFaction(keyword, faction, extraConstants));
         return this;
     }
 
@@ -179,7 +179,7 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
         request.Rules.Add(new Rule_String(Keyword, Pawn.NameDef()));
 
         if (includePawnRules)
-            request.Rules.AddRange(GrammarUtility.RulesForPawn(Keyword, Pawn));
+            request.Rules.AddRange(GrammarUtility.RulesForPawn(Keyword, Pawn, extraConstants));
 
         request.Rules.AddRange(extraRules);
         request.Constants.AddRange(extraConstants);

@@ -41,6 +41,12 @@ public static class Accessor
             AccessTools.FieldRefAccess<Verse.PlayLogEntry_Interaction, InteractionDef>("intDef");
     }
 
+    public class Pawn_HealthTracker
+    {
+        public static readonly Action<Verse.Pawn_HealthTracker, DamageInfo?, Hediff> MakeDowned =
+            AccessTools.MethodDelegate<Action<Verse.Pawn_HealthTracker, DamageInfo?, Hediff>>(AccessTools.Method(typeof(Verse.Pawn_HealthTracker), "MakeDowned"));
+    }
+
     public class Pawn_JobTracker
     {
         public static readonly AccessTools.FieldRef<Verse.AI.Pawn_JobTracker, Pawn> Pawn = AccessTools.FieldRefAccess<Verse.AI.Pawn_JobTracker, Pawn>("pawn");
@@ -60,5 +66,11 @@ public static class Accessor
     {
         public static readonly Action<Verse.HediffGiver, Pawn, Hediff> SendLetter =
             AccessTools.MethodDelegate<Action<Verse.HediffGiver, Pawn, Hediff>>(AccessTools.Method(typeof(Verse.HediffGiver), "SendLetter"));
+    }
+
+    public class LogLineDisplayableLog
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.ITab_Pawn_Log_Utility.LogLineDisplayableLog, LogEntry> Log =
+            AccessTools.FieldRefAccess<RimWorld.ITab_Pawn_Log_Utility.LogLineDisplayableLog, LogEntry>("log");
     }
 }

@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using PawnHistory.Source.Helper;
+using RimWorld;
 using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ public class PawnBuilder(int count = 1)
     private IntVec3 spawnPosition = Find.CameraDriver.MapPosition;
     private int spawnRadius = 4;
     private bool humanLike = true;
+    private bool factionLeader = false;
 
     public PawnBuilder WithPosition(IntVec3 position, int radius = 3)
     {
@@ -68,6 +70,20 @@ public class PawnBuilder(int count = 1)
     {
         if (value)
             return HumanLike().WithFaction(Faction.OfPlayer);
+
+        return this;
+    }
+
+    public PawnBuilder FactionLeader(Faction faction)
+    {
+        factionLeader = true;
+        return HumanLike().WithFaction(faction);
+    }
+
+    public PawnBuilder Enemy(bool value = true)
+    {
+        if (value)
+            return HumanLike().WithFaction(Faction.OfPirates);
 
         return this;
     }
@@ -136,20 +152,24 @@ public class PawnBuilder(int count = 1)
     private List<Pawn> SourcePawns(bool reusePawns)
     {
         var allFilters = filters.Concat([
-            p => !p.Downed,
+            p => !p.DeadOrDowned,
             p => kind == null || p.kindDef == kind,
             p => faction == null || p.Faction == faction,
             p => p.GuestStatus == null || p.GuestStatus == guestStatus,
             p => p.RaceProps.Humanlike == humanLike,
             p => !TestScenario.ProcessedPawns.Contains(p),
+            p => p.IsFactionLeader(faction) == factionLeader,
         ]).ToList();
         var pawns = reusePawns ? Find.CurrentMap.mapPawns.AllPawnsSpawned.Where(p => allFilters.All(f => f(p))).Take(count).ToList() : [];
         var existingCount = pawns.Count;
+        var generateCount = count - existingCount;
 
-        for (var i = 0; i < count - existingCount; i++)
+        for (var i = 0; i < generateCount; i++)
         {
             var generatedKind = kind ?? PawnKindDefOf.Colonist;
-            var pawn = PawnGenerator.GeneratePawn(generatedKind, FactionUtility.DefaultFactionFrom(faction?.def ?? generatedKind.defaultFactionDef), new PlanetTile?(Find.CurrentMap.Tile));
+            var pawn = factionLeader
+                ? faction.leader
+                : PawnGenerator.GeneratePawn(generatedKind, FactionUtility.DefaultFactionFrom(faction?.def ?? generatedKind.defaultFactionDef), new PlanetTile?(Find.CurrentMap.Tile));
             var spawnPos = CellFinder.RandomClosewalkCellNear(spawnPosition, Find.CurrentMap, spawnRadius);
 
             GenSpawn.Spawn(pawn, spawnPos, Find.CurrentMap);
@@ -512,6 +532,15 @@ static class PawnBuilderExtension
                 injury.Severity = damage;
                 pawn.health.AddHediff(injury);
             }
+        });
+    }
+
+    public static PawnBuilder SetRelation(this PawnBuilder builder, Pawn other, PawnRelationDef relationDef)
+    {
+        return builder.Do((pawn) =>
+        {
+            pawn.relations.AddDirectRelation(relationDef, other);
+            other.relations.AddDirectRelation(relationDef, pawn);
         });
     }
 
