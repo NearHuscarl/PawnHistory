@@ -289,8 +289,8 @@
 		<defName>PawnEvent_CasketDrop</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>Intro(firstReveal==True) ->[PAWN], a member of [Faction],</li>
-				<li>Intro(firstReveal==False)->[PAWN]</li>
+				<li>Intro(isAwakened==True) ->[PAWN], a member of [Faction],</li>
+				<li>Intro(isAwakened==False)->[PAWN]</li>
 
 				<li>ByOpener(hasOpener==True) -> by [Opener]</li>
 				<li>ByOpener(hasOpener==False)-></li>

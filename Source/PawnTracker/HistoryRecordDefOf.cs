@@ -29,6 +29,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef NewArrival;
     public static HistoryRecordDef AncientDangerWarning;
     public static HistoryRecordDef CasketDrop;
+    public static HistoryRecordDef CasketAwakened;
     public static HistoryRecordDef TradeCaravanArrived;
     public static HistoryRecordDef TradeCaravanLeft;
     public static HistoryRecordDef VisitorArrived;

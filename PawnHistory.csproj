@@ -96,6 +96,7 @@
     <Compile Include="Source\PawnTracker\Events\CasualtyLogAddedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryEvent.cs" />
     <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
+    <Compile Include="Source\PawnTracker\HistoryRecordCategory.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HealthComplicationRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\AncientDangerWarningRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\CasketDropRecorder.cs" />

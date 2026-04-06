@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using System.Collections.Generic;
+using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
 
@@ -6,6 +7,7 @@ public enum RecordImportance
 {
     Minor,
     Major,
+    Debug,
 }
 
 public class HistoryRecordDef : Def
@@ -13,6 +15,7 @@ public class HistoryRecordDef : Def
     public string icon;
     public RulePackDef descriptionMaker;
     public RecordImportance importance = RecordImportance.Major;
+    public List<HistoryRecordCategory> categories;
 }
 
 public static class HistoryRecordDefExtension

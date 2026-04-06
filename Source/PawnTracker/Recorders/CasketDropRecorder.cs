@@ -24,7 +24,8 @@ internal class CasketDropRecorder : RecorderBase
 
     private void HandleCasketDropEvent(CasketDropEvent e)
     {
-        var recordDef = HistoryRecordDefOf.CasketDrop;
+        var isAwakened = !e.Pawn.GetHistoryRecords().Any();
+        var recordDef = isAwakened ? HistoryRecordDefOf.CasketAwakened : HistoryRecordDefOf.CasketDrop;
         var desc = recordDef.Description(e.Pawn)
             .AddRule("Faction", e.Pawn.Faction)
             .AddRule("Opener", e.Opener)
@@ -32,7 +33,7 @@ internal class CasketDropRecorder : RecorderBase
             .AddConstant("reason", e.Reason)
             .AddConstant("isCorpse", e.Pawn.Dead) // is removed from a corpse container (e.g. grave/sarcophagus)
             .AddConstant("hasOpener", e.Opener != null)
-            .AddConstant("firstReveal", !e.Pawn.GetHistoryRecords().Any())
+            .AddConstant("isAwakened", isAwakened)
             .Resolve();
         AddRecord(recordDef, e.Pawn, desc, [e.Casket, e.Opener]);
     }
