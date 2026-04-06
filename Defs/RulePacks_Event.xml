@@ -761,4 +761,37 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_Hunted</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_DoublePawn.xml#Hunted-->
+				<li>image->[Prey_indefinite] was hunted by [PAWN] [circumstance_phrase]</li>
+				<li>image->[PAWN] stalked [Prey_indefinite] from afar [circumstance_phrase]</li>
+				<li>image->[PAWN] hunted [Prey_indefinite] [circumstance_phrase]</li>
+				<li>image->[PAWN] aimed at [Prey_indefinite] carefully [circumstance_phrase]</li>
+
+				<li>AnimalVerb->relaxed</li>
+				<li>AnimalVerb->traveled</li>
+				<li>AnimalVerb->ate</li>
+				<li>AnimalVerb->wandered</li>
+				
+				<li>circumstance_phrase->while [Prey_pronoun] [AnimalVerb]</li>
+				<li>circumstance_phrase->as [PAWN_pronoun] waited patiently</li>
+				<li>circumstance_phrase->as [PAWN_pronoun] observed quietly</li>
+				<li>circumstance_phrase->as the distance closed between them</li>
+				<li>circumstance_phrase->in the quiet of the wild</li>
+
+				<li>desc_sentence->[Prey_nameDef] seemed completely oblivious.</li>
+				<li>desc_sentence->[Prey_nameDef] showed no sign of noticing anything unusual.</li>
+				<li>desc_sentence->[PAWN] gripped [Hunter_Possessive] weapon tightly.</li>
+				<li>desc_sentence->[Prey_nameDef] looked around as though [Prey_pronoun] sensed something was wrong.</li>
+				<li>desc_sentence->[PAWN] moved carefully to avoid detection.</li>
+				<li>desc_sentence->[Prey_nameDef] reacted too late to escape.</li>
+
+				<li>entry->[image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>

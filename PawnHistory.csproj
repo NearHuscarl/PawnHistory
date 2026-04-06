@@ -113,6 +113,7 @@
     <Compile Include="Source\PawnTracker\Recorders\RescueRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\MinedValuableRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\VisitedGraveRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\AnimalHuntedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WandererJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RefugeePodCrashedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WildManWanderedInRecorder.cs" />

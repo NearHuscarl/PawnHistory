@@ -59,6 +59,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef Stripped;
     public static HistoryRecordDef MinedValuable;
     public static HistoryRecordDef VisitedGrave;
+    public static HistoryRecordDef Hunted;
 
     static HistoryRecordDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(HistoryRecordDefOf));
 }

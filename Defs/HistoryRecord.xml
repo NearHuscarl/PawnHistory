@@ -486,4 +486,14 @@
 		</categories>
 		<importance>Minor</importance>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Hunted</defName>
+		<label>animal hunted</label>
+		<descriptionMaker>PawnEvent_Hunted</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Work</li>
+		</categories>
+		<importance>Minor</importance>
+	</HistoryRecordDef>
 </Defs>
