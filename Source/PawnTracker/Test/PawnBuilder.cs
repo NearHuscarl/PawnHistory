@@ -184,6 +184,9 @@ public class PawnBuilder(int count = 1)
     private static readonly BackstoryDef Adulthood = DefDatabase<BackstoryDef>.GetNamed("NavyScientist52");
     private void MakePawnCapable(Pawn pawn)
     {
+        if (!pawn.RaceProps.Humanlike)
+            return;
+
         // Ensure systems exist
         pawn.workSettings?.EnableAndInitialize();
 

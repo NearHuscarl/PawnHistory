@@ -35,7 +35,7 @@
 				<li>WithOthers(OtherCount!=0)-> with [Others]</li>
 
 				<li>AlongWithOthers(OtherCount==0)-></li>
-				<li>AlongWithOthers(OtherCount!=0)->along with [Others]</li>
+				<li>AlongWithOthers(OtherCount!=0)-> along with [Others]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -198,8 +198,14 @@
 		<defName>PawnEvent_HealthComplication</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(hasCause==False)->[PAWN] developed a health condition: [Condition].</li>
-				<li>entry(hasCause==True) ->[PAWN] developed a health condition: [Condition]. It was caused by [Cause].</li>
+				<li>InHisPart(priority=1,hediff==OrganDecay)             -> in [PAWN_possessive] [Part]</li>
+				<li>InHisPart(priority=1,hediff==Carcinoma)              -> in [PAWN_possessive] [Part]</li>
+				<li>InHisPart(priority=1,hediff==ChemicalDamageModerate) -> in [PAWN_possessive] [Part]</li>
+				<li>InHisPart(priority=1,hediff==ChemicalDamageSevere)   -> in [PAWN_possessive] [Part]</li>
+				<li>InHisPart(priority=0)                                -></li>
+				
+				<li>entry(hasCause==False)->[PAWN] developed [Condition][InHisPart].</li>
+				<li>entry(hasCause==True) ->[PAWN] developed [Condition][InHisPart]. It was caused by [Cause].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -457,7 +463,7 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(disease!=OrganDecay)->[PAWN] got sick from [Disease] [AlongWithOthers].</li>
+				<li>entry(disease!=OrganDecay)->[PAWN] got sick from [Disease][AlongWithOthers].</li>
 				<li>entry(disease==OrganDecay)->[PAWN] developed a flesh-eating infection known as [Disease] in [PAWN_possessive] [Part].</li>
 			</rulesStrings>
 		</rulePack>
@@ -467,28 +473,28 @@
 		<defName>PawnEvent_MentalBreak</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(name==Berserk)             ->[PAWN] went berserk. [PAWN_pronoun] was going to attack anyone [PAWN_pronoun] sees. [REASON]</li>
-				<li>entry(name==FireStartingSpree)   ->[PAWN] was on a fire starting spree. [PAWN_pronoun] wandered around for a while, randomly starting fires. [REASON]</li>
-				<li>entry(name==Catatonic)           ->[PAWN] suffered a total mental breakdown and entered a catatonic state for several days. [REASON]</li>
-				<li>entry(name==Jailbreaker)         ->[PAWN] had a mental breakdown and was going to induce [PRISONERS] to escape. [REASON]</li>
-				<li>entry(name==RunWild)             ->[PAWN] was fed up with civilization. [PAWN_pronoun] decided to leave [FACTION] to live with the animals in the wild. [REASON]</li>
-				<li>entry(name==GiveUpExit)          ->[PAWN] gave up on this community. [PAWN_pronoun] decided to leave and pursue a better life elsewhere. [REASON]</li>
-				<li>entry(name==Binging_DrugExtreme) ->[PAWN] binged on [DRUG] during an extreme mental break. [REASON]</li>
-				<li>entry(name==Binging_DrugMajor)   ->[PAWN] binged on [DRUG] during a major mental break. [REASON]</li>
-				<li>entry(name==Binging_Food)        ->[PAWN] pigged out on food. [REASON]</li>
-				<li>entry(name==Wander_Psychotic)    ->[PAWN] wandered around in a psychotic state. [REASON]</li>
-				<li>entry(name==Wander_Sad)          ->[PAWN] broke down and wandered around in sadness. [REASON]</li>
-				<li>entry(name==Wander_OwnRoom)      ->[PAWN] hid in [PAWN_possessive] room. [REASON]</li>
-				<li>entry(name==Tantrum)             ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash up random furniture, items and structures. [REASON]</li>
-				<li>entry(name==TargetedTantrum)     ->[PAWN] had a tantrum. [PAWN_pronoun] was going to destroy [THING]. [REASON]</li>
-				<li>entry(name==BedroomTantrum)      ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash things in [PAWN_possessive] room. [REASON]</li>
-				<li>entry(name==SadisticRage)        ->[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. [REASON]</li>
-				<li>entry(name==InsultingSpree)      ->[PAWN] was on an insulting spree. [PAWN_pronoun] was going to wander around, randomly insulting others. [REASON]</li>
-				<li>entry(name==Slaughterer)         ->[PAWN] had a mental breakdown and was going to vent [PAWN_possessive] anger by slaughtering [TARGET]. [REASON]</li>
-				<li>entry(name==TargetedInsultingSpree)  ->[PAWN] fixated [PAWN_possessive] rage on [TARGET]. [PAWN_pronoun] was going to follow [TARGET_objective] around, hurling insults. [REASON]</li>
-				<li>entry(name==CorpseObsession)     ->[PAWN] became obsessed with corpses. [PAWN_pronoun] was going to find and present [TARGET]'s corpse for all to see. [REASON]</li>
-				<li>entry(name==MurderousRage)       ->[PAWN] flew into a murderous rage and decided to kill [TARGET]. [REASON]</li>
-				<li>entry(name==Default)             ->[INGAMEDESC]. [REASON]</li>
+				<li>entry(priority=1,name==Berserk)             ->[PAWN] went berserk. [PAWN_pronoun] was going to attack anyone [PAWN_pronoun] sees. [Reason]</li>
+				<li>entry(priority=1,name==FireStartingSpree)   ->[PAWN] was on a fire starting spree. [PAWN_pronoun] wandered around for a while, randomly starting fires. [Reason]</li>
+				<li>entry(priority=1,name==Catatonic)           ->[PAWN] suffered a total mental breakdown and entered a catatonic state for several days. [Reason]</li>
+				<li>entry(priority=1,name==Jailbreaker)         ->[PAWN] had a mental breakdown and was going to induce [Prisoners] to escape. [Reason]</li>
+				<li>entry(priority=1,name==RunWild)             ->[PAWN] was fed up with civilization. [PAWN_pronoun] decided to leave [FACTION] to live with the animals in the wild. [Reason]</li>
+				<li>entry(priority=1,name==GiveUpExit)          ->[PAWN] gave up on this community. [PAWN_pronoun] decided to leave and pursue a better life elsewhere. [Reason]</li>
+				<li>entry(priority=1,name==Binging_DrugExtreme) ->[PAWN] binged on [Drug] during an extreme mental break. [Reason]</li>
+				<li>entry(priority=1,name==Binging_DrugMajor)   ->[PAWN] binged on [Drug] during a major mental break. [Reason]</li>
+				<li>entry(priority=1,name==Binging_Food)        ->[PAWN] pigged out on food. [Reason]</li>
+				<li>entry(priority=1,name==Wander_Psychotic)    ->[PAWN] wandered around in a psychotic state. [Reason]</li>
+				<li>entry(priority=1,name==Wander_Sad)          ->[PAWN] broke down and wandered around in sadness. [Reason]</li>
+				<li>entry(priority=1,name==Wander_OwnRoom)      ->[PAWN] hid in [PAWN_possessive] room. [Reason]</li>
+				<li>entry(priority=1,name==Tantrum)             ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash up random furniture, items and structures. [Reason]</li>
+				<li>entry(priority=1,name==TargetedTantrum)     ->[PAWN] had a tantrum. [PAWN_pronoun] was going to destroy [Thing]. [Reason]</li>
+				<li>entry(priority=1,name==BedroomTantrum)      ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash things in [PAWN_possessive] room. [Reason]</li>
+				<li>entry(priority=1,name==SadisticRage)        ->[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. [Reason]</li>
+				<li>entry(priority=1,name==InsultingSpree)      ->[PAWN] was on an insulting spree. [PAWN_pronoun] was going to wander around, randomly insulting others. [Reason]</li>
+				<li>entry(priority=1,name==Slaughterer)         ->[PAWN] had a mental breakdown and was going to vent [PAWN_possessive] anger by slaughtering [Target]. [Reason]</li>
+				<li>entry(priority=1,name==TargetedInsultingSpree)  ->[PAWN] fixated [PAWN_possessive] rage on [Target]. [PAWN_pronoun] was going to follow [Target_objective] around, hurling insults. [Reason]</li>
+				<li>entry(priority=1,name==CorpseObsession)     ->[PAWN] became obsessed with corpses. [PAWN_pronoun] was going to find and present [Target]'s corpse for all to see. [Reason]</li>
+				<li>entry(priority=1,name==MurderousRage)       ->[PAWN] flew into a murderous rage and decided to kill [Target]. [Reason]</li>
+				<li>entry(priority=0)                           ->[InGameDesc]. [Reason]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

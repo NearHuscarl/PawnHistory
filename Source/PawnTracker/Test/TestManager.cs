@@ -104,9 +104,9 @@ public static class TestManager
                 }
                 finally
                 {
+                    ctx.LogFailed($"Timeout waiting for test assertions of {label}.");
                     CleanupAfterTest();
                     onCompleted?.Invoke(false);
-                    ctx.Fail($"Timeout waiting for test assertions of {label}.");
                 }
             }
         });

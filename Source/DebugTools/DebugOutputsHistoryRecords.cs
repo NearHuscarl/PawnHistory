@@ -23,6 +23,18 @@ public static class DebugOutputsHistoryRecords
     }
 
     [NearDebugOutput]
+    public static void HistoryRecordDefs()
+    {
+        DebugTables.MakeTablesDialog(DefDatabase<HistoryRecordDef>.AllDefs,
+            new TableDataGetter<HistoryRecordDef>("defName", d => d.defName),
+            new TableDataGetter<HistoryRecordDef>("label", d => d.label),
+            new TableDataGetter<HistoryRecordDef>("categories", d => d.categories.JoinToString()),
+            new TableDataGetter<HistoryRecordDef>("importance", d => d.importance),
+            new TableDataGetter<HistoryRecordDef>("icon", d => d.icon)
+        );
+    }
+
+    [NearDebugOutput]
     public static void PawnHistoryRecords()
     {
         var options = new List<DebugMenuOption>();

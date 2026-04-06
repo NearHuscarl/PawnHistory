@@ -116,7 +116,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
                     ctx.PendingEventually--;
                     ctx.AssertionsFailed++;
                     a.Cancelled = true;
-                    throw ex;
+                    ctx.LogFailed(ex);
                 }
                 return;
             }
@@ -126,7 +126,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
                 ctx.PendingEventually--;
                 ctx.AssertionsFailed++;
                 a.Cancelled = true;
-                ctx.Fail(lastException, $"Test assertion failed after {eventuallyTimeoutTicks} ticks.");
+                ctx.LogFailed(lastException, $"Test assertion failed after {eventuallyTimeoutTicks} ticks.");
             }
 
             try

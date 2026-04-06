@@ -21,12 +21,17 @@ internal sealed class TestContext(string name)
         Messages.Message("[Passed] " + Name, MessageTypeDefOf.PositiveEvent);
     }
 
-    public void Fail(params string[] message)
+    public void LogFailed(Exception ex = null, params string[] msgs)
     {
-        Fail(null, message);
+        Log.Error(FailMessage(ex, msgs));
     }
 
-    public void Fail(Exception ex = null, params string[] msgs)
+    public void LogFailed(params string[] msgs)
+    {
+        Log.Error(FailMessage(null, msgs));
+    }
+
+    public string FailMessage(Exception ex = null, params string[] msgs)
     {
         var stringBuilder = new StringBuilder();
 
@@ -36,9 +41,19 @@ internal sealed class TestContext(string name)
         }
 
         if (ex != null)
-            stringBuilder.Append("\n" + ex.ToString());
+            stringBuilder.AppendLine("\n" + ex.ToString());
 
-        throw new Exception("[PawnHistory] [Failed] " + Name + "\n" + stringBuilder);
+        return "[PawnHistory] [Failed] " + Name + "\n" + stringBuilder;
+    }
+
+    public void Fail(params string[] message)
+    {
+        Fail(null, message);
+    }
+
+    public void Fail(Exception ex = null, params string[] msgs)
+    {
+        throw new Exception(FailMessage(ex, msgs));
     }
 
     private readonly List<Action> cleanupCallbacks = [];

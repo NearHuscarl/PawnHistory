@@ -63,9 +63,9 @@ internal class MentalBreakRecorder : RecorderBase
         var descBuilder = recordDef.Description(pawn)
             .WithFaction(pawn.Faction)
             .IncludePawnGrammar()
-            .AddRule("REASON", ParseReason(reason))
-            .AddRule("TARGET", target, addSubsymbols: true)
-            .AddConstant("name", hasCustomDescription ? mentalBreak.defName : "Default");
+            .AddRule("Reason", ParseReason(reason))
+            .AddRule("Target", target, addSubsymbols: true)
+            .AddConstant("name", mentalBreak.defName);
 
         // Reasons to override mental state's description:
         // - Too long to fit in history record (RunWild, GiveUpExit)
@@ -74,10 +74,10 @@ internal class MentalBreakRecorder : RecorderBase
         if (hasCustomDescription)
         {
             if (mentalState is MentalState_BingingDrug bd)
-                descBuilder.AddRule("DRUG", bd.chemical.label);
+                descBuilder.AddRule("Drug", bd.chemical.label);
             else if (mentalState is MentalState_TargetedTantrum tt)
             {
-                descBuilder.AddRule("THING", tt.target.Label.Colorize(ColoredText.SubtleGrayColor));
+                descBuilder.AddRule("Thing", tt.target.Label.Colorize(ColoredText.SubtleGrayColor));
                 concerns.Add(tt.target);
             }
             else if (mentalState is MentalState_Jailbreaker)
@@ -85,7 +85,7 @@ internal class MentalBreakRecorder : RecorderBase
                 var room = target.GetRoom();
                 var allPrisonersInRoom = room.ContainedThings<Pawn>().Where(p => p.IsPrisoner).ToList();
                 concerns.AddRange(allPrisonersInRoom);
-                descBuilder.AddRule("PRISONERS", LangUtility.FormatList(allPrisonersInRoom));
+                descBuilder.AddRule("Prisoners", LangUtility.FormatList(allPrisonersInRoom));
             }
         }
         else
@@ -99,7 +99,7 @@ internal class MentalBreakRecorder : RecorderBase
                 return;
             }
 
-            descBuilder.AddRule("INGAMEDESC", inGameDesc);
+            descBuilder.AddRule("InGameDesc", inGameDesc);
         }
 
         AddRecord(recordDef, pawn, descBuilder.Resolve(), concerns);
@@ -107,11 +107,11 @@ internal class MentalBreakRecorder : RecorderBase
 
     private static bool HasCustomDescription(MentalBreakDef mentalBreak, HistoryRecordDef recordDef)
     {
-        return recordDef.descriptionMaker.RulesPlusIncludes.Any(rule =>
-            rule.keyword == "entry" &&
-            rule.constantConstraints != null &&
-            rule.constantConstraints.Any(c => c.key == "name" && c.value == mentalBreak.defName && c.value != "Default")
-            );
+        return recordDef.descriptionMaker.RulesPlusIncludes.Any(r => r.keyword == "entry"
+            && r.constantConstraints != null
+            && r.Priority == 1
+            && r.constantConstraints.Any(c => c.key == "name" && c.value == mentalBreak.defName)
+        );
     }
 
     private static Pawn TryFindTarget(MentalState mentalState)
