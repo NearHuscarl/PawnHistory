@@ -27,6 +27,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef BodyPartModded;
     public static HistoryRecordDef BotchedSurgery;
     public static HistoryRecordDef NewArrival;
+    public static HistoryRecordDef LeaderChanged;
     public static HistoryRecordDef AncientDangerWarning;
     public static HistoryRecordDef CasketDrop;
     public static HistoryRecordDef CasketAwakened;

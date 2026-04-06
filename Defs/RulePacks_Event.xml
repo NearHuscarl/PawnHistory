@@ -284,6 +284,16 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_LeaderChanged</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(reason==Death)->[PAWN] became the new [Faction_leaderTitle] of [Faction] after [OldLeader] died.</li>
+				<li>entry(reason==Lost)->[PAWN] became the new [Faction_leaderTitle] of [Faction] after [OldLeader] went missing.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_AncientDangerWarning</defName>
 		<rulePack>
 			<rulesStrings>

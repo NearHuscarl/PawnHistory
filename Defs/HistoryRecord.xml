@@ -187,6 +187,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>LeaderChanged</defName>
+		<label>leader changed</label>
+		<descriptionMaker>PawnEvent_LeaderChanged</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>None</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>AncientDangerWarning</defName>
 		<label>ancient danger warning</label>
 		<descriptionMaker>PawnEvent_AncientDangerWarning</descriptionMaker>
