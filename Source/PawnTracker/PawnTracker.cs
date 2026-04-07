@@ -77,8 +77,8 @@ namespace PawnHistory.Source.PawnTracker;
 
 // Bug:
 // - Test multiple maps to see if CasualtyRecorder use the correct battle log?
+// - Killed: handle turret & animal
 // -- kill record POV is wrong for the killer
-// -- Exception when killing in dev mode, in KillOrDown handler
 // -- In-memory information > Exposable
 //  - BodyPartScarredContext.InstigatorLookup
 

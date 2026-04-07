@@ -14,6 +14,7 @@ internal class MentalBreakRecorder : RecorderBase
 {
     public override void Register()
     {
+        // TODO: move this to Events/
         GameEventBus.Subscribe<MentalBreakStartEvent>(e =>
         {
             if (!ShouldRecord(e.Pawn)) return;
@@ -183,46 +184,37 @@ internal class MentalBreakRecorder : RecorderBase
         }, 200);
     }
 
+    private static readonly List<MentalBreakDef> InvididuallyTestedMentalBreaks = [
+        DefDatabase<MentalBreakDef>.GetNamed("Slaughterer"),
+        DefDatabase<MentalBreakDef>.GetNamed("Jailbreaker"),
+        DefDatabase<MentalBreakDef>.GetNamed("SadisticRage"),
+        MentalBreakDefOf.CorpseObsession,
+    ];
+
     [SkipTest]
     public override void Test(TestScenario scenario)
     {
         scenario.Map()
-            .BuildRoom(6, 6, tag: "Prison")
-            .AsPrison(prisonerCount: 2) // Jailbreaker
-            .Execute();
-
-        scenario.Map()
-            .BuildRoom(MapBuilder.Beside("Prison", Rot4.North, 5, 5), "Grave")
-            .WithCasket(ThingDefOf.Sarcophagus, ThingDefOf.Plasteel) // CorpseObsession
-            .Execute();
-
-        scenario.Map()
-            .BuildRoom(MapBuilder.Beside("Prison", Rot4.East, 7, 7), "Bedroom")
+            .BuildRoom(7, 7, "Bedroom")
             .AsBarrack(bedCount: 2) // BedroomTantrum
             .WithThing(ThingDefOf.GoJuice) // Binging_DrugExtreme
             .WithThing(ThingDefOf.Beer) // Binging_DrugMajor
             .Execute();
 
         scenario.Map()
-            .BuildRoom(MapBuilder.Beside("Prison", Rot4.South, 18, 7), "Freezer")
+            .BuildRoom(MapBuilder.Beside("Bedroom", Rot4.South, 18, 7), "Freezer")
             .WithThing(ThingDefOf.MealFine, 300) // Binging_Food
             .Execute();
 
         scenario.Map()
-            .BuildRoom(MapBuilder.Beside("Prison", Rot4.West, 5, 5), "Common")
+            .BuildRoom(MapBuilder.Beside("Bedroom", Rot4.West, 5, 5), "Common")
             .Execute();
 
-        scenario.Pawn()
-            .Animal() // Slaughterer
-            .WithFaction(Faction.OfPlayer)
-            .CreateSingle();
-
-        var mentalBreaks = DefDatabase<MentalBreakDef>.AllDefs.ToList();
+        var mentalBreaks = DefDatabase<MentalBreakDef>.AllDefs.Except(InvididuallyTestedMentalBreaks).ToList();
 
         var pawns = scenario.Pawn(mentalBreaks.Count)
             .ThatMatches(ShouldRecord)
             .WithPosition(TestScenario.TaggedRooms["Common"].CenterCell, 4)
-            .Do(p => p.story?.traits?.allTraits.Clear())
             .Do(p => p.story?.traits?.GainTrait(new Trait(TraitDefOf.Pyromaniac))) // FireStartingSpree
             .Do((p, i) =>
             {
@@ -233,5 +225,68 @@ internal class MentalBreakRecorder : RecorderBase
             })
             .Do((p, i) => p.StartMentalBreakWithMadeupThought(mentalBreaks[i]))
             .Execute();
+    }
+
+    public void TestAnimalSlaughterer(TestScenario scenario)
+    {
+        scenario.Pawn()
+            .Animal()
+            .WithFaction(Faction.OfPlayer)
+            .CreateSingle();
+
+        var pawn = scenario.Pawn()
+            .Colonist()
+            .Do((p, i) => p.StartMentalBreakWithMadeupThought(DefDatabase<MentalBreakDef>.GetNamed("Slaughterer")))
+            .CreateSingle();
+
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] had a mental breakdown and was going to vent [PAWN_possessive] anger by slaughtering [Target]. [Reason]");
+    }
+
+    public void TestSadisticRage(TestScenario scenario)
+    {
+        scenario.Map()
+            .BuildRoom(6, 6, tag: "Prison")
+            .AsPrison(prisonerCount: 2)
+            .Execute();
+
+        var pawn = scenario.Pawn()
+            .Colonist()
+            .WithPosition(scenario.OutsideOf("Prison"))
+            .Do((p, i) => p.StartMentalBreakWithMadeupThought(DefDatabase<MentalBreakDef>.GetNamed("SadisticRage")))
+            .CreateSingle();
+
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. [Reason]");
+    }
+
+    public void TestPrisonBreak(TestScenario scenario)
+    {
+        scenario.Map()
+            .BuildRoom(6, 6, tag: "Prison")
+            .AsPrison(prisonerCount: 2) // Jailbreaker
+            .Execute();
+
+        var jailbreakerBreak = DefDatabase<MentalBreakDef>.GetNamed("Jailbreaker");
+        var pawn = scenario.Pawn()
+            .Colonist()
+            .WithPosition(scenario.OutsideOf("Prison"))
+            .Do((p, i) => p.StartMentalBreakWithMadeupThought(jailbreakerBreak))
+            .CreateSingle();
+
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] had a mental breakdown and was going to induce [Prisoners] to escape. [Reason]");
+    }
+
+    public void TestCorpseObsession(TestScenario scenario)
+    {
+        scenario.Map()
+            .BuildRoom(6, 6, "Grave")
+            .WithCasket(ThingDefOf.Sarcophagus, ThingDefOf.Plasteel)
+            .Execute();
+
+        var pawn = scenario.Pawn()
+            .Colonist()
+            .Do((p, i) => p.StartMentalBreakWithMadeupThought(MentalBreakDefOf.CorpseObsession))
+            .CreateSingle();
+
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] became obsessed with corpses. [PAWN_pronoun] was going to find and present [Target]'s corpse for all to see. [Reason]");
     }
 }

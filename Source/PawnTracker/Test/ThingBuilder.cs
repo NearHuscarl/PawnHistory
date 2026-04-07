@@ -6,7 +6,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
 
-public class ThingBuilder(ThingDef def)
+public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
 {
     private readonly ThingDef def = def;
     private Map map = Find.CurrentMap;
@@ -14,7 +14,7 @@ public class ThingBuilder(ThingDef def)
 
     private IntVec3? position;
     private int stackCount = 1;
-    private ThingDef stuff;
+    private ThingDef stuff = stuffDef;
     private Faction faction;
     private ThingPlaceMode placeMode = ThingPlaceMode.Near;
 

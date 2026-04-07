@@ -1,10 +1,8 @@
 ﻿using RimWorld;
 using RimWorld.BaseGen;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
@@ -158,12 +156,9 @@ public class MapBuilder
         actions.Add(center =>
         {
             var rect = TestScenario.LastRoomRect;
-            var interior = rect.ContractedBy(1);
-            var cells = interior.Cells.Where(c => c.x % 2 == 0).Take(bedCount).ToList();
-
-            foreach (var cell in cells)
+            for (var i = 0; i < bedCount; i++)
             {
-                var bed = new ThingBuilder(ThingDefOf.Bed).MadeOf(ThingDefOf.Steel).Map(map).At(cell).PlaceMode(ThingPlaceMode.Direct).Execute<Building_Bed>();
+                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Execute<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
             }
         });
@@ -175,12 +170,9 @@ public class MapBuilder
         actions.Add(center =>
         {
             var rect = TestScenario.LastRoomRect;
-            var interior = rect.ContractedBy(1);
-            var cells = interior.Cells.Where(c => c.x % 2 == 0).Take(bedCount).ToList();
-
-            foreach (var cell in cells)
+            for (var i = 0; i < bedCount; i++)
             {
-                var bed = new ThingBuilder(ThingDefOf.Bed).MadeOf(ThingDefOf.Steel).Map(map).At(cell).PlaceMode(ThingPlaceMode.Direct).Execute<Building_Bed>();
+                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Execute<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
                 bed.Medical = true;
                 beds?.Add(bed);
@@ -195,12 +187,10 @@ public class MapBuilder
         {
             if (bedCount == 0) bedCount = prisonerCount;
             var rect = TestScenario.LastRoomRect;
-            var interior = rect.ContractedBy(1);
-            var cells = interior.Cells.Where(c => c.x % 2 == 0 && c.z > interior.minZ).Take(bedCount);
 
-            foreach (var cell in cells)
+            for (var i = 0; i < bedCount; i++)
             {
-                var bed = new ThingBuilder(ThingDefOf.Bed).MadeOf(ThingDefOf.Steel).Map(map).At(cell).PlaceMode(ThingPlaceMode.Direct).Execute<Building_Bed>();
+                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Execute<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
                 bed.ForPrisoners = true;
             }
