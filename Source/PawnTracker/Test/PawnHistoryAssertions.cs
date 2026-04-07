@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
@@ -27,15 +28,21 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
             TestManager.Ctx.Fail(negate ? negativeMessage : positiveMessage);
     }
 
-    public void ToHaveHistoryRecordOf(HistoryRecordDef def)
+    public void ToHaveHistoryRecordOf(HistoryRecordDef def, int index = -1)
     {
         RunAssertion(() =>
         {
-            var hasRecord = pawns.Any(p => p.GetHistoryRecords().Any(r => r.def == def));
+            var result = pawns.Any(p =>
+            {
+                if (!p.GetHistoryRecords().TryAt(index, out HistoryRecord record))
+                    return false;
+                return record.def == def;
+            });
+
             var pawn = pawns.Count() == 1 ? pawns.First() : null;
             var forPawn = pawn == null ? "" : $"for {pawn} ";
             AssertCondition(
-                hasRecord,
+                result,
                 $"Expected record of type '{def.defName}' {forPawn}but none found.",
                 $"Expected NO record of type '{def.defName}' {forPawn}but one was found."
             );
@@ -75,6 +82,27 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
                 result,
                 $"Expected description to match template\nExpected template [exactMatch={exactMatch}]:\n{descriptionTemplate}\nActual resolved description:\n{actual}",
                 $"Expected description NOT to match template\nExpected template [exactMatch={exactMatch}]:\n{descriptionTemplate}\nActual resolved description:\n{actual}."
+            );
+        });
+    }
+
+    public void ToHaveHistoryRecordPosition(IntVec3 position, int index = -1)
+    {
+        RunAssertion(() =>
+        {
+            var result = pawns.Any(p =>
+            {
+                if (!p.GetHistoryRecords().TryAt(index, out HistoryRecord record))
+                    return false;
+                return record.location?.position == position;
+            });
+            var pawn = pawns.Count() == 1 ? pawns.First() : null;
+            var forPawn = pawn == null ? "" : $"for {pawn} ";
+
+            AssertCondition(
+                result,
+                $"Expected record's position '{position}' {forPawn}but none found.",
+                $"Expected NO record's position '{position}' {forPawn}but none found."
             );
         });
     }

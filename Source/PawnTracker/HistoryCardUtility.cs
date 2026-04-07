@@ -75,7 +75,7 @@ public class HistoryCardUtility
         var anchor = Text.Anchor;
 
         var inRect = tabRect.ContractedBy(containerPadding);
-        var records = pawn.GetHistoryRecords();
+        var records = pawn.GetHistoryRecords().Where(r => r.def.importance != RecordImportance.Debug).ToList();
 
         GUI.BeginGroup(inRect);
 

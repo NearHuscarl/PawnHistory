@@ -12,6 +12,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef Death;
     public static HistoryRecordDef RelativeDeath;
     public static HistoryRecordDef Downed;
+    public static HistoryRecordDef Crushed;
     public static HistoryRecordDef Anesthetized;
     public static HistoryRecordDef FoodPoisoning;
     public static HistoryRecordDef HealthComplication;

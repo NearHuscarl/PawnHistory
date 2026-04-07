@@ -3,6 +3,7 @@ using RimWorld.BaseGen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
@@ -304,6 +305,14 @@ public class MapBuilder
         // Use the direct constructor (minX, minZ, width, height) 
         // to bypass the "CenteredOn" bias bullshit.
         return new CellRect(minX, minZ, w, h);
+    }
+
+    public MapBuilder CollapseRoofAndCrush(Pawn pawn)
+    {
+        Find.CurrentMap.roofGrid.SetRoof(pawn.Position, RoofDefOf.RoofRockThick);
+        RoofCollapserImmediate.DropRoofInCells([pawn.Position], map, []);
+
+        return this;
     }
 
     public void Execute()

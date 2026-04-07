@@ -58,6 +58,16 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Crushed</defName>
+		<label>crushed to death</label>
+		<description>{PAWN} was crushed to death.</description>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>None</li>
+		</categories>
+		<importance>Debug</importance>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Anesthetized</defName>
 		<label>anesthetized</label>
 		<description>{PAWN} was put under {Anesthetic}.</description>

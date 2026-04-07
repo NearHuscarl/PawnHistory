@@ -30,8 +30,9 @@ internal class AncientDangerWarningRecorder : RecorderBase
         var recordDef = HistoryRecordDefOf.AncientDangerWarning;
         var desc = recordDef.Description(pawn)
             .Resolve();
+        var location = new RecordLocation { position = pawn.Position, map = pawn.Map };
 
-        AddRecord(recordDef, pawn, desc, storeLocation: true);
+        AddRecord(recordDef, pawn, desc, null, location);
     }
 
     public Action Test(TestScenario scenario)

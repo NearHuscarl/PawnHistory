@@ -27,7 +27,7 @@ public class HistoryRecord : IExposable
     /// Empty constructor is required so Scribe can instantiate it
     /// </summary>
     public HistoryRecord() {}
-    public HistoryRecord(HistoryRecordDef def, Pawn pawn, TaggedString desc, IEnumerable<Thing> concerns = null, bool storeLocation = false) : this()
+    public HistoryRecord(HistoryRecordDef def, Pawn pawn, TaggedString desc, IEnumerable<Thing> concerns = null, RecordLocation location = null) : this()
     {
         this.def = def;
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
@@ -43,8 +43,7 @@ public class HistoryRecord : IExposable
         else
             this.tileId = pawn.WorldLocation().tileId;
 
-        if (storeLocation && pawn.Spawned)
-            this.location = new RecordLocation { position = pawn.Position, map = pawn.Map };
+        this.location = location;
 
         CurrentPawnToJumpTo = 0;
     }
@@ -63,7 +62,7 @@ public class HistoryRecord : IExposable
         return ContentFinder<Texture2D>.Get(def.icon);
     }
 
-    public IEnumerable<Thing> AllTargets
+    public IEnumerable<Thing> ConcernedThings
     {
         get
         {
@@ -79,14 +78,14 @@ public class HistoryRecord : IExposable
             if (location != null)
                 yield return new GlobalTargetInfo(location.position, location.map, true);
 
-            foreach (var target in AllTargets)
+            foreach (var target in ConcernedThings)
                 yield return target;
         }
     }
 
     public Thing GetThingToJumpTo()
     {
-        var targets = AllTargets.ToList();
+        var targets = ConcernedThings.ToList();
 
         CurrentPawnToJumpTo = (CurrentPawnToJumpTo + 1) % targets.Count;
 

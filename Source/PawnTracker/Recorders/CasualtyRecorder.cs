@@ -3,6 +3,7 @@ using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Verse;
 
@@ -113,6 +114,25 @@ internal class CasualtyRecorder : RecorderBase
         AddRecord(HistoryRecordDefOf.Kill, e.Initiator, desc, [e.Subject, originalTarget]);
     }
 
+    protected override void AddRecord(HistoryRecordDef def, Pawn pawn, TaggedString resolvedDesc, IEnumerable<Thing> concerns = null, RecordLocation location = null)
+    {
+        if (def == HistoryRecordDefOf.Death)
+        {
+            var lastRecord = pawn.GetHistoryRecords().LastOrDefault();
+            if (lastRecord?.def == HistoryRecordDefOf.Crushed)
+                location = lastRecord.location;
+        }
+        if (def == HistoryRecordDefOf.RelativeDeath)
+        {
+            var deathRelative = concerns.FirstOrDefault() as Pawn;
+            var lastRecord = deathRelative?.GetHistoryRecords().LastOrDefault();
+            if (lastRecord?.def == HistoryRecordDefOf.Crushed)
+                location = lastRecord?.location;
+        }
+
+        base.AddRecord(def, pawn, resolvedDesc, concerns, location);
+    }
+
     public Action TestDeadInCombat(TestScenario scenario)
     {
         var friends = scenario.RaidFriendly()
@@ -134,6 +154,7 @@ internal class CasualtyRecorder : RecorderBase
         Expect.AnyPawnOnMap().Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Downed);
         Expect.AnyPawnOnMap().Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Death);
         Expect.AnyPawnOnMap().Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.RelativeDeath);
+        Expect.AnyPawnOnMap().Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Kill);
 
         return () => scenario.SlowDown();
     }

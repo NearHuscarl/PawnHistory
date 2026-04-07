@@ -52,15 +52,15 @@ public static class DebugOutputsHistoryRecords
                 DebugTables.MakeTablesDialog(historyRecords,
                     new TableDataGetter<HistoryRecord>("Timestamp", r => r.date),
                     new TableDataGetter<HistoryRecord>("Date", r => r.GetShortDate()),
-                    new TableDataGetter<HistoryRecord>("label", r => r.def.label),
-                    new TableDataGetter<HistoryRecord>("description", r => LangUtility.Truncate(r.description, 200)),
-                    new TableDataGetter<HistoryRecord>("Targets", r => r.AllTargets.Select(c =>
+                    new TableDataGetter<HistoryRecord>("Def", r => r.def.defName),
+                    new TableDataGetter<HistoryRecord>("Description", r => LangUtility.Truncate(r.description, 200)),
+                    new TableDataGetter<HistoryRecord>("Concerns", r => r.ConcernedThings.Select(c =>
                     {
                         if (c == null) return "null";
                         if (c is Pawn p) return p.NameDef();
                         return c.Label;
                     }).JoinToString()),
-                    new TableDataGetter<HistoryRecord>("Location", r => r.location == null ? "" : $"{r.location.map} {r.location.position}"),
+                    new TableDataGetter<HistoryRecord>("Position", r => r.location == null ? "" : $"{r.location.map} {r.location.position}"),
                     new TableDataGetter<HistoryRecord>("tileId", r => r.tileId),
                     new TableDataGetter<HistoryRecord>("currentPawnToJumpTo", r => r.CurrentPawnToJumpTo)
                 );

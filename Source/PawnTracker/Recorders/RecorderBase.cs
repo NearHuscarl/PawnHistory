@@ -1,4 +1,5 @@
-﻿using PawnHistory.Source.PawnTracker.Test;
+﻿using PawnHistory.Source.Helper;
+using PawnHistory.Source.PawnTracker.Test;
 using System.Collections.Generic;
 using Verse;
 
@@ -23,9 +24,9 @@ public abstract class RecorderBase
         }
     }
 
-    protected void AddRecord(HistoryRecordDef def, Pawn pawn, TaggedString resolvedDesc, IEnumerable<Thing> concerns = null)
+    protected virtual void AddRecord(HistoryRecordDef def, Pawn pawn, TaggedString resolvedDesc, IEnumerable<Thing> concerns = null, RecordLocation location = null)
     {
-        CompHistoryManager.GetComp(pawn).records.Add(new HistoryRecord(def, pawn, resolvedDesc, concerns));
+        pawn.GetHistoryRecords().Add(new HistoryRecord(def, pawn, resolvedDesc, concerns, location));
     }
 
     public virtual void Test(TestScenario testScenario)
