@@ -54,14 +54,15 @@ public static class DebugOutputsHistoryRecords
                     new TableDataGetter<HistoryRecord>("Date", r => r.GetShortDate()),
                     new TableDataGetter<HistoryRecord>("label", r => r.def.label),
                     new TableDataGetter<HistoryRecord>("description", r => LangUtility.Truncate(r.description, 200)),
-                    new TableDataGetter<HistoryRecord>("Targets", r => string.Join(", ", r.AllTargets.Select(c =>
+                    new TableDataGetter<HistoryRecord>("Targets", r => r.AllTargets.Select(c =>
                     {
                         if (c == null) return "null";
                         if (c is Pawn p) return p.NameDef();
                         return c.Label;
-                    }))),
-                    new TableDataGetter<HistoryRecord>("currentPawnToJumpTo", r => r.CurrentPawnToJumpTo),
-                    new TableDataGetter<HistoryRecord>("tileId", r => r.tileId)
+                    }).JoinToString()),
+                    new TableDataGetter<HistoryRecord>("Location", r => r.location == null ? "" : $"{r.location.map} {r.location.position}"),
+                    new TableDataGetter<HistoryRecord>("tileId", r => r.tileId),
+                    new TableDataGetter<HistoryRecord>("currentPawnToJumpTo", r => r.CurrentPawnToJumpTo)
                 );
             }));
         }

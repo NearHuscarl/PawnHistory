@@ -47,7 +47,7 @@ public static class DebugUtility
             parts.Add($"{field.Name}={FormatValue(value)}");
         }
 
-        return $"{type.Name}[{string.Join(", ", parts)}]";
+        return $"{type.Name}[{parts.JoinToString()}]";
     }
 
     private static string FormatValue(object value)
@@ -61,7 +61,7 @@ public static class DebugUtility
             foreach (var item in enumerable)
                 items.Add(item?.ToString() ?? "null");
 
-            return $"[{string.Join(", ", items)}]";
+            return $"[{items.JoinToString()}]";
         }
 
         var type = value.GetType();

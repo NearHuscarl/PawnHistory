@@ -9,13 +9,25 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
 
+public class RecordLocation : IExposable
+{
+    public IntVec3 position;
+    public Map map;
+
+    public void ExposeData()
+    {
+        Scribe_Values.Look(ref position, "position");
+        Scribe_References.Look(ref map, "map");
+    }
+}
+
 public class HistoryRecord : IExposable
 {
     /// <summary>
     /// Empty constructor is required so Scribe can instantiate it
     /// </summary>
     public HistoryRecord() {}
-    public HistoryRecord(HistoryRecordDef def, Pawn pawn, TaggedString desc, IEnumerable<Thing> concerns = null) : this()
+    public HistoryRecord(HistoryRecordDef def, Pawn pawn, TaggedString desc, IEnumerable<Thing> concerns = null, bool storeLocation = false) : this()
     {
         this.def = def;
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
@@ -31,15 +43,19 @@ public class HistoryRecord : IExposable
         else
             this.tileId = pawn.WorldLocation().tileId;
 
+        if (storeLocation && pawn.Spawned)
+            this.location = new RecordLocation { position = pawn.Position, map = pawn.Map };
+
         CurrentPawnToJumpTo = 0;
     }
 
     public HistoryRecordDef def;
     public int date;
-    public int tileId;
-    public string description;
     public Pawn pawn;
+    public string description;
     public List<Thing> concerns;
+    public int tileId;
+    public RecordLocation location;
     public int CurrentPawnToJumpTo { get; private set; }
 
     public Texture2D GetIcon()
@@ -53,6 +69,18 @@ public class HistoryRecord : IExposable
         {
             yield return pawn;
             foreach (var concern in concerns) yield return concern;
+        }
+    }
+
+    public IEnumerable<GlobalTargetInfo> GlobalTargets
+    {
+        get
+        {
+            if (location != null)
+                yield return new GlobalTargetInfo(location.position, location.map, true);
+
+            foreach (var target in AllTargets)
+                yield return target;
         }
     }
 
@@ -74,10 +102,11 @@ public class HistoryRecord : IExposable
     {
         Scribe_Defs.Look(ref def, "def");
         Scribe_Values.Look(ref date, "date");
-        Scribe_Values.Look(ref tileId, "tileId");
-        Scribe_Values.Look(ref description, "d");
         Scribe_References.Look(ref pawn, "pawn", saveDestroyedThings: true);
+        Scribe_Values.Look(ref description, "d");
         Scribe_Collections.Look(ref concerns, "concerns", saveDestroyedThings: true, LookMode.Reference);
+        Scribe_Values.Look(ref tileId, "tileId");
+        Scribe_Deep.Look(ref location, "location");
     }
 }
 

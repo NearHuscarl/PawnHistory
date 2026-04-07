@@ -31,7 +31,7 @@ internal class AncientDangerWarningRecorder : RecorderBase
         var desc = recordDef.Description(pawn)
             .Resolve();
 
-        AddRecord(recordDef, pawn, desc);
+        AddRecord(recordDef, pawn, desc, storeLocation: true);
     }
 
     public Action Test(TestScenario scenario)
@@ -39,7 +39,7 @@ internal class AncientDangerWarningRecorder : RecorderBase
         var map = Find.CurrentMap;
 
         scenario.SpeedUp();
-        scenario.Map().GenerateAncientTemple(10, 10).Execute();
+        scenario.Map().GenerateAncientTemple(8, 8).Execute();
         scenario.Pawn()
             .Colonist()
             .StartJob(JobDefOf.Goto, map.Center)

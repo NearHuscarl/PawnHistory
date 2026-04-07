@@ -120,7 +120,7 @@ public class HistoryCardUtility
 
             if (Mouse.IsOver(row))
             {
-                foreach (var target in record.AllTargets)
+                foreach (var target in record.GlobalTargets)
                     TargetHighlighter.Highlight(target);
             }
             if (Mouse.IsOver(row) && Event.current.type == EventType.MouseDown && Event.current.button == 0)
