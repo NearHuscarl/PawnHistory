@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using LudeonTK;
+using RimWorld;
 using System;
 using System.Reflection;
 using Verse;
@@ -30,7 +31,7 @@ internal class HediffComp_GetsPermanent_CompPostInjuryHeal_Patch
 }
 
 [HarmonyPatch(typeof(DebugTabMenu_Settings), nameof(DebugTabMenu_Settings.InitActions))]
-public static class Patch_DebugTabMenu_Settings_InitActions
+public static class Patch_DebugTabMenu_Settings_InitActions_Patch
 {
     private static readonly Action<DebugTabMenu_Settings, FieldInfo, string> AddNode =
        AccessTools.MethodDelegate<Action<DebugTabMenu_Settings, FieldInfo, string>>(AccessTools.Method(typeof(DebugTabMenu_Settings), "AddNode"));
@@ -46,8 +47,19 @@ public static class Patch_DebugTabMenu_Settings_InitActions
     }
 }
 
+[HarmonyPatch(typeof(PawnUtility), nameof(PawnUtility.GetManhunterChanceFactorForInstigator))]
+public static class PawnUtility_GetManhunterChanceFactorForInstigator_Patch
+{
+    static void Postfix(ref float __result)
+    {
+        if (NearDebugSettings.ForceManhunterChance)
+            __result = 10f;
+    }
+}
+
 internal class NearDebugSettings
 {
     public static bool ForceInjuryScar = false;
     public static bool ForcePostHealScar = false;
+    public static bool ForceManhunterChance = false;
 }

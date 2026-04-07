@@ -511,6 +511,22 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_AnimalRevenge</defName>
+		<include>
+			<li>PawnEvent_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>OthersRevenge(packRevenge==True) ->, [Others] nearby also became enraged!</li>
+				<li>OthersRevenge(packRevenge==False)->.</li>
+				
+				<li>entry(reason==Hunt)->[MadAnimal] went manhunter after being harmed by [PAWN][OthersRevenge]</li>
+				<li>entry(reason==Tame)->[MadAnimal] went manhunter after [PAWN] failed to tame it[OthersRevenge]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_Rescued</defName>
 		<rulePack>
 			<rulesStrings>

@@ -14,12 +14,10 @@ public class ScenarioStartEvent(List<Pawn> startingPawns, PlayerPawnsArriveMetho
 [HarmonyPatch(typeof(ScenPart_PlayerPawnsArriveMethod), nameof(ScenPart_PlayerPawnsArriveMethod.GenerateIntoMap))]
 internal class ScenPart_PlayerPawnsArriveMethod_GenerateIntoMap_Patch
 {
-    static readonly AccessTools.FieldRef<ScenPart_PlayerPawnsArriveMethod, PlayerPawnsArriveMethod> MethodRef =
-        AccessTools.FieldRefAccess<ScenPart_PlayerPawnsArriveMethod, PlayerPawnsArriveMethod>("method");
-
     static void Postfix(ScenPart_PlayerPawnsArriveMethod __instance)
     {
         var pawns = Find.GameInitData.startingAndOptionalPawns;
-        GameEventBus.Publish(new ScenarioStartEvent(pawns, MethodRef(__instance)));
+        var arriveMethod = Accessor.ScenPart_PlayerPawnsArriveMethod.Method(__instance);
+        GameEventBus.Publish(new ScenarioStartEvent(pawns, arriveMethod));
     }
 }

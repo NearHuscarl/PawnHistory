@@ -39,10 +39,11 @@ internal class AnimalHuntedRecorder : HistoryTaleRecorder
     public override void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(15).Colonist().Execute();
-        var animal = scenario.Pawn().Animal().CreateSingle();
 
         foreach (var pawn in pawns)
         {
+            var animal = scenario.Pawn().Animal().CreateSingle();
+
             TaleRecorder.RecordTale(TaleDefOf.Hunted, pawn, animal);
             TaleRecorder.RecordTale(TaleDefOf.Hunted, pawn, animal);
         }

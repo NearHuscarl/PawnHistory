@@ -25,8 +25,6 @@ public class HediffAddedEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, Dam
 [HarmonyPatch(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.AddHediff), [typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo?), typeof(DamageResult)])]
 internal class Pawn_HealthTracker_AddHediff_Patch
 {
-    public static readonly AccessTools.FieldRef<Pawn_HealthTracker, Pawn> PawnRef = AccessTools.FieldRefAccess<Pawn_HealthTracker, Pawn>("pawn");
-
     // Insert OnHediffAdd() right after `hediff.Part = part;` to get the resolved BodyPartRecord.
     static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
@@ -53,14 +51,14 @@ internal class Pawn_HealthTracker_AddHediff_Patch
 
     static void OnHediffAdd(Pawn_HealthTracker __instance, Hediff hediff, DamageInfo? dinfo)
     {
-        var pawn = PawnRef(__instance);
+        var pawn = Accessor.Pawn_HealthTracker.Pawn(__instance);
         var part = hediff.Part;
         GameEventBus.Publish(new HediffAddEvent(pawn, hediff, part, dinfo));
     }
 
     static void Postfix(Pawn_HealthTracker __instance, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo, DamageResult result)
     {
-        var pawn = PawnRef(__instance);
+        var pawn = Accessor.Pawn_HealthTracker.Pawn(__instance);
         GameEventBus.Publish(new HediffAddedEvent(pawn, hediff, hediff.Part, dinfo));
     }
 }

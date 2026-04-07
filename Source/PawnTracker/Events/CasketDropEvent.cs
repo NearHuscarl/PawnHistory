@@ -21,11 +21,9 @@ internal class CasketDropEvent(Pawn pawn, Building_Casket casket, DropReason rea
 
 class CasketDropContext
 {
-    public static readonly AccessTools.FieldRef<Building_Casket, ThingOwner> InnerContainerRef = AccessTools.FieldRefAccess<Building_Casket, ThingOwner>("innerContainer");
-
     public static void PrefixDrop(Building_Casket __instance, DropReason reason)
     {
-        var innerContainer = InnerContainerRef(__instance);
+        var innerContainer = Accessor.Building_Casket.InnerContainer(__instance);
         var ejector = Find.CurrentMap.mapPawns.AllPawnsSpawned.FirstOrDefault(p => p.CurJob?.targetA.Thing == __instance || p.CurJob?.targetB.Thing == __instance);
 
         foreach (var thing in innerContainer)

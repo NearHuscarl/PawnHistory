@@ -67,6 +67,7 @@
     <Compile Include="Source\Helper\HediffUtility.cs" />
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
     <Compile Include="Source\PawnTracker\Events\CrushedEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\AnimalRevengeEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\LeaderChangedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\HealthComplicationEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ReceiveLetterEvent.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Source\PawnTracker\Events\SurgeryEvent.cs" />
     <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
     <Compile Include="Source\PawnTracker\HistoryRecordCategory.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\AnimalRevengeRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\CrushedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HealthComplicationRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\AncientDangerWarningRecorder.cs" />

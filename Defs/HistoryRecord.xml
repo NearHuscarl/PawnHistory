@@ -390,6 +390,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>AnimalRevenge</defName>
+		<label>animal revenge</label>
+		<descriptionMaker>PawnEvent_AnimalRevenge</descriptionMaker>
+		<icon>Ui/Icons/ColonistBar/MentalStateAggro</icon>
+		<categories>
+			<li>Work</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>SocialFight</defName>
 		<label>social fight</label>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>

@@ -75,8 +75,14 @@ namespace PawnHistory.Source.PawnTracker;
 // Create a filter in WorldPawn window (All/Alive/Dead)
 // - Add a column to see the history of dead AND destroyed pawn. Concerned dead&destoryed pawn will open a dedicated history window.
 
+// - UI
+//  - Pagination
+//  - Cache icon texture2d
+//  - Filtering
+
 // Bug:
 // - Test multiple maps to see if CasualtyRecorder use the correct battle log?
+// - RulesForPawn bug "a elephant" -> "an elephant", but "<color>a elephant</color>" -> "<color>a elephant</color>".
 // - Killed: handle turret & animal
 // -- kill record POV is wrong for the killer
 // -- In-memory information > Exposable

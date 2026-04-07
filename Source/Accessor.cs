@@ -43,6 +43,8 @@ public static class Accessor
 
     public class Pawn_HealthTracker
     {
+        public static readonly AccessTools.FieldRef<Verse.Pawn_HealthTracker, Pawn> Pawn = AccessTools.FieldRefAccess<Verse.Pawn_HealthTracker, Pawn>("pawn");
+
         public static readonly Action<Verse.Pawn_HealthTracker, DamageInfo?, Hediff> MakeDowned =
             AccessTools.MethodDelegate<Action<Verse.Pawn_HealthTracker, DamageInfo?, Hediff>>(AccessTools.Method(typeof(Verse.Pawn_HealthTracker), "MakeDowned"));
     }
@@ -62,6 +64,17 @@ public static class Accessor
         public static readonly AccessTools.FieldRef<RimWorld.Pawn_GuestTracker, Pawn> Pawn = AccessTools.FieldRefAccess<RimWorld.Pawn_GuestTracker, Pawn>("pawn");
     }
 
+    public class Pawn_MindState
+    {
+        public static readonly Action<Verse.AI.Pawn_MindState, Pawn, string, bool> StartManhunterBecauseOfPawnAction =
+            AccessTools.MethodDelegate<Action<Verse.AI.Pawn_MindState, Pawn, string, bool>>(AccessTools.Method(typeof(Verse.AI.Pawn_MindState), "StartManhunterBecauseOfPawnAction"));
+    }
+
+    public class MentalStateHandler
+    {
+        public static readonly AccessTools.FieldRef<Verse.AI.MentalStateHandler, Pawn> Pawn = AccessTools.FieldRefAccess<Verse.AI.MentalStateHandler, Pawn>("pawn");
+    }
+
     public class HediffGiver
     {
         public static readonly Action<Verse.HediffGiver, Pawn, Hediff> SendLetter =
@@ -72,5 +85,16 @@ public static class Accessor
     {
         public static readonly AccessTools.FieldRef<RimWorld.ITab_Pawn_Log_Utility.LogLineDisplayableLog, LogEntry> Log =
             AccessTools.FieldRefAccess<RimWorld.ITab_Pawn_Log_Utility.LogLineDisplayableLog, LogEntry>("log");
+    }
+
+    public class Building_Casket
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Building_Casket, ThingOwner> InnerContainer = AccessTools.FieldRefAccess<RimWorld.Building_Casket, ThingOwner>("innerContainer");
+    }
+
+    public class ScenPart_PlayerPawnsArriveMethod
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.ScenPart_PlayerPawnsArriveMethod, PlayerPawnsArriveMethod> Method =
+            AccessTools.FieldRefAccess<RimWorld.ScenPart_PlayerPawnsArriveMethod, PlayerPawnsArriveMethod>("method");
     }
 }

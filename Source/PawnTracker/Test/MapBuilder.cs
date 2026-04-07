@@ -243,15 +243,10 @@ public class MapBuilder
         actions.Add(_ =>
         {
             var interior = TestScenario.LastRoomRect.ContractedBy(1);
-            var pos = interior.Cells.Where(x => x.Standable(map)).RandomElement();
-
-            GenDebug.ClearArea(CellRect.SingleCell(pos), map);
-
             var casket = new ThingBuilder(thingDef)
                 .MadeOf(stuff)
                 .Map(map)
-                .At(pos)
-                .PlaceMode(ThingPlaceMode.Direct)
+                .At(interior.CenterCell)
                 .Faction(Faction.OfPlayer)
                 .Execute<Building_Casket>();
 

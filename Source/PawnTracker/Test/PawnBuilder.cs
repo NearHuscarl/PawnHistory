@@ -94,12 +94,11 @@ public class PawnBuilder(int count = 1)
         return this;
     }
 
-    public PawnBuilder Animal()
-    {
-        var animalKinds = DefDatabase<PawnKindDef>.AllDefs.Where(k => k.RaceProps?.Animal ?? false);
-        kind = animalKinds.RandomElement();
+    public PawnBuilder Animal(string pawnKindDefName) => Animal(DefDatabase<PawnKindDef>.GetNamed(pawnKindDefName));
 
-        return WithKind(animalKinds.RandomElement());
+    public PawnBuilder Animal(PawnKindDef def = null)
+    {
+        return WithKind(def ?? DefDatabase<PawnKindDef>.AllDefs.Where(k => k.RaceProps?.Animal ?? false).RandomElement());
     }
 
     public PawnBuilder AsPrisoner()
