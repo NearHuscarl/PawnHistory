@@ -13,7 +13,6 @@ public enum CasualtyType
 public record CasualtyLogAddedEvent(
     Battle Battle,
     BattleLogEntry_StateTransition TransitionEntry,
-    LogEntry_DamageResult LastDamageEntry,
     Pawn Subject,
     Pawn Initiator,
     CasualtyType Casualty,
@@ -31,9 +30,8 @@ public static class BattleLog_Add_Patch
         var subject = Accessor.BattleLogEntry_StateTransition.SubjectPawn(transitionEntry);
         var initiator = Accessor.BattleLogEntry_StateTransition.Initiator(transitionEntry);
         var casualtyType = transitionEntry.IconFromPOV(null) == LogEntry.Skull ? CasualtyType.Killed : CasualtyType.Downed;
-        var damageResultEntry = battle.Entries.Skip(transitionIndex + 1).FirstOrDefault(e => e is LogEntry_DamageResult && e.Concerns(subject)) as LogEntry_DamageResult;
         var culpritHediff = Accessor.BattleLogEntry_StateTransition.CulpritHediff(transitionEntry);
 
-        GameEventBus.Publish(new CasualtyLogAddedEvent(battle, transitionEntry, damageResultEntry, subject, initiator, casualtyType, culpritHediff));
+        GameEventBus.Publish(new CasualtyLogAddedEvent(battle, transitionEntry, subject, initiator, casualtyType, culpritHediff));
     }
 }

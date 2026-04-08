@@ -24,19 +24,23 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
             // exact in-game combat log. But since DamageWorker.AssociateWithLog() is not always used we need to pick BattleLog.Add and fallback.
             TickDelayManager.Delay(0, () =>
             {
-                var combatLogText = e.Subject?.health.hediffSet.hediffs.FirstOrDefault(h => h.combatLogEntry?.Target?.LogID == e.LastDamageEntry?.LogID)?.combatLogText;
                 Pawn originalTargetPawn = null;
+                // Note: Do not rely on the order. Most of the time, transitionEntry is inserted before the damageResultEntry, but occasionally the opposite happens.
+                // Luckily they happen on the same tick if the damage cause state transition.
+                var lastDamageEntry = e.Battle.Entries.FirstOrDefault(l => l.Tick == e.TransitionEntry.Tick && l is LogEntry_DamageResult && l.Concerns(e.Subject)) as LogEntry_DamageResult;
 
-                if (e.LastDamageEntry is BattleLogEntry_RangedImpact rangedEntry)
+                if (lastDamageEntry is BattleLogEntry_RangedImpact rangedEntry)
                     originalTargetPawn = Accessor.BattleLogEntry_RangedImpact.OriginalTargetPawn(rangedEntry);
 
                 if (e.Casualty == CasualtyType.Killed)
                 {
+                    var combatLogText = lastDamageEntry?.ToGameStringFromPOV(e.Initiator);
                     var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Initiator);
                     CreateRecord(new KillInput(e.Subject, e.Initiator, combatLogText, transitionText, originalTargetPawn));
                 }
                 if (e.CulpritHediff != HediffDefOf.Anesthetic)
                 {
+                    var combatLogText = lastDamageEntry?.ToGameStringFromPOV(e.Subject);
                     var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Subject);
                     CreateRecord(new KilledOrDownedInput(e.Subject, e.Initiator, e.Casualty, e.CulpritHediff, combatLogText, transitionText, originalTargetPawn, isLeader));
                 }
@@ -74,7 +78,6 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         string desc;
         // combatLogText is null when:
         // - Log entry is not associated with any active battle. Non-combat dead needs to be handled manually (e.g. BloodLoss, ToxicBuildup...)
-        // - LastDamageEntry may not match any current hediff if the same hediff was linked to an earlier combat log entry.
         if (combatLogText == null)
         {
             var hediffInt = subject.health.hediffSet.hediffs.LastOrDefault(h => h.def == culpritHediff && h.ageTicks == 0);
@@ -134,7 +137,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         if (def == HistoryRecordDefOf.RelativeDeath)
         {
             var deathRelative = concerns.FirstOrDefault() as Pawn;
-            var lastTwoRecords = deathRelative?.GetHistoryRecords().TakeLast(2).ToList();
+            var lastTwoRecords = deathRelative.GetHistoryRecords().TakeLast(2).ToList();
             if (lastTwoRecords.Count == 2 && lastTwoRecords[0].def == HistoryRecordDefOf.Crushed && lastTwoRecords[1].def == HistoryRecordDefOf.Death)
                 location = lastTwoRecords[0]?.location;
         }

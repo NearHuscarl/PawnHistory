@@ -57,9 +57,20 @@ public static class PawnUtility_GetManhunterChanceFactorForInstigator_Patch
     }
 }
 
+[HarmonyPatch(typeof(Building_Trap), "SpringChance")]
+public static class Building_Trap_SpringChance_Patch
+{
+    static void Postfix(ref float __result)
+    {
+        if (NearDebugSettings.ForceSpringTrap)
+            __result = 10f;
+    }
+}
+
 internal class NearDebugSettings
 {
     public static bool ForceInjuryScar = false;
     public static bool ForcePostHealScar = false;
     public static bool ForceManhunterChance = false;
+    public static bool ForceSpringTrap = false;
 }

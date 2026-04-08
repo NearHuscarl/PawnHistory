@@ -63,12 +63,10 @@ public static class ListExtensions
         if (source == null)
             throw new ArgumentNullException(nameof(source));
 
-        count = Math.Max(0, count);
-
-        if (count == 0)
+        if (count <= 0)
             yield break;
 
-        var start = source.Count - count;
+        var start = Math.Max(source.Count - count, 0);
 
         for (var i = start; i < source.Count; i++)
             yield return source[i];
