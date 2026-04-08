@@ -6,8 +6,10 @@ using Verse.AI;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class RescueRecorder : RecorderBase
+public class RescueRecorder : RecorderBase<RescueRecorder.Input>
 {
+    public record Input(Pawn Rescuer, Pawn Takee);
+
     public override void Register()
     {
         GameEventBus.Subscribe<JobEndEvent>(e =>
@@ -23,12 +25,13 @@ internal class RescueRecorder : RecorderBase
             if (takee.IsPrisonerOfColony) // handled by CaptureRecorder
                 return;
 
-            HandleRescueEvent(e.Pawn, takee);
+            CreateRecord(new Input(e.Pawn, takee));
         });
     }
 
-    private void HandleRescueEvent(Pawn rescuer, Pawn takee)
+    public override void CreateRecord(Input input)
     {
+        var (rescuer, takee) = input;
         var recordDef = HistoryRecordDefOf.Rescued;
         var desc = recordDef.Description(takee)
             .IncludePawnGrammar()
@@ -38,7 +41,7 @@ internal class RescueRecorder : RecorderBase
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(2).Colonist().Execute();
         var rescuer = pawns[0];

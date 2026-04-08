@@ -116,21 +116,6 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
         return AddRule(keyword, part.Label, addSubsymbols, replaceIfExist);
     }
 
-    public HistoryDescriptionBuilder AddRuleIf(bool condition, string keyword, object value)
-    {
-        if (!condition || value == null) return this;
-
-        return value switch
-        {
-            string v => AddRule(keyword, v),
-            Pawn v => AddRule(keyword, v),
-            Faction v => AddRule(keyword, v),
-            Hediff v => AddRule(keyword, v),
-            TaggedString v => AddRule(keyword, v),
-            _ => AddRule(keyword, value.ToString())
-        };
-    }
-
     public HistoryDescriptionBuilder AddRules(IEnumerable<Rule> rules)
     {
         extraRules.AddRange(rules);

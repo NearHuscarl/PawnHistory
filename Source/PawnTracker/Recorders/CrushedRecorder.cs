@@ -4,25 +4,27 @@ using RimWorld;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class CrushedRecorder : RecorderBase
+public class CrushedRecorder : RecorderBase<CrushedEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<CrushedEvent>(e =>
-        {
-            HandleCrushedEvent(e);
-        });
+        GameEventBus.Subscribe<CrushedEvent>(CreateRecord);
     }
 
-    private void HandleCrushedEvent(CrushedEvent e)
+    public override void CreateRecord(CrushedEvent e)
     {
+        var (pawns, map, position) = e;
+
         // This is just an intermidate record to store the crushed position so the Death record can reference it later.
         var recordDef = HistoryRecordDefOf.Crushed;
-        foreach (var pawn in e.Pawns)
+        foreach (var pawn in pawns)
         {
+            if (!ShouldRecord(pawn))
+                continue;
+
             var desc = recordDef.Description(pawn)
                 .Format();
-            AddRecord(recordDef, pawn, desc, location: new RecordLocation() { map = e.Map, position = e.Position });
+            AddRecord(recordDef, pawn, desc, location: new RecordLocation() { map = map, position = position });
         }
     }
 

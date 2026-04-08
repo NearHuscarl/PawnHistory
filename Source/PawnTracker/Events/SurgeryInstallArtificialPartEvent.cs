@@ -6,13 +6,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-internal class SurgeryInstallArtificialPartEvent(Pawn patient, Pawn doctor, BodyPartRecord part, HediffDef hediffToAdd, Hediff hediffToRemove, Hediff badHediff, bool isViolation) : SurgeryEvent(patient, doctor, part)
-{
-    public HediffDef HediffToAdd { get; } = hediffToAdd;
-    public Hediff HediffToRemove { get; } = hediffToRemove;
-    public Hediff BadHediff { get; } = badHediff;
-    public bool IsViolation { get; } = isViolation;
-}
+public record SurgeryInstallArtificialPartEvent(Pawn Patient, Pawn Doctor, BodyPartRecord Part, HediffDef HediffToAdd, Hediff HediffToRemove, Hediff BadHediff, bool IsViolation) : SurgeryEvent(Patient, Doctor, Part);
 
 class InstallArtificialPartContext : SurgeryContext<SurgeryInstallArtificialPartEvent> { }
 

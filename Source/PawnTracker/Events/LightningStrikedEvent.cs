@@ -5,12 +5,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class LightningStrikedEvent(IntVec3 strikeLoc, Map map, float radius) : GameEventBase
-{
-    public IntVec3 StrikeLoc { get; } = strikeLoc;
-    public Map Map { get; } = map;
-    public float Radius { get; } = radius;
-}
+public record LightningStrikedEvent(IntVec3 StrikeLoc, Map Map, float Radius) : GameEventBase;
 
 [HarmonyPatch(typeof(WeatherEvent_LightningStrike), nameof(WeatherEvent_LightningStrike.DoStrike))]
 public static class WeatherEvent_LightningStrike_DoStrike_Patch

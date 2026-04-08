@@ -5,14 +5,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class PawnTradedEvent(Pawn soldVictim, Pawn negotiator, Pawn trader, int price, TradeAction tradeAction) : GameEventBase
-{
-    public Pawn SoldVictim { get; } = soldVictim;
-    public Pawn Negotiator { get; } = negotiator;
-    public Pawn Trader { get; } = trader;
-    public int Price { get; } = price;
-    public TradeAction TradeAction { get; } = tradeAction;
-}
+public record PawnTradedEvent(Pawn SoldVictim, Pawn Negotiator, Pawn Trader, int Price, TradeAction TradeAction) : GameEventBase;
 
 class PawnTradedContext
 {

@@ -5,38 +5,37 @@ using System.Linq;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class BirthdayRecorder : RecorderBase
+public class BirthdayRecorder : RecorderBase<BirthdayEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<BirthdayEvent>(e =>
-        {
-            if (!ShouldRecord(e.Pawn))
-                return;
-
-            HandleBirthdayEvent(e);
-        });
+        GameEventBus.Subscribe<BirthdayEvent>(CreateRecord);
     }
 
-    private void HandleBirthdayEvent(BirthdayEvent e)
+    public override void CreateRecord(BirthdayEvent e)
     {
+        var (pawn, agingHediffs) = e;
+
+        if (!ShouldRecord(pawn))
+            return;
+
         var recordDef = HistoryRecordDefOf.Birthday;
-        var agingHediffSet = e.AgingHediffs.ToHashSet();
-        var hediffs = e.Pawn.health.hediffSet.hediffs.Where(h => h.ageTicks == 0 && agingHediffSet.Contains(h.def))
+        var agingHediffSet = agingHediffs.ToHashSet();
+        var hediffs = pawn.health.hediffSet.hediffs.Where(h => h.ageTicks == 0 && agingHediffSet.Contains(h.def))
             .DistinctBy(h => h.def.defName) // reporting 2x hearing loss in both ears is unnecessary
             .ToList();
-        var desc = recordDef.Description(e.Pawn)
+        var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
             .AddRule("Hediffs", LangUtility.FormatList(hediffs, h => h.LabelNoun()))
             .AddRule("Part", hediffs.FirstOrDefault()?.Part)
             .AddConstant("isCancer", hediffs.Count == 1 && hediffs[0].def.defName == "Carcinoma")
             .Resolve();
 
-        AddRecord(recordDef, e.Pawn, desc);
+        AddRecord(recordDef, pawn, desc);
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var victim = scenario.Pawn()
             .ThatMatches(ShouldRecord)

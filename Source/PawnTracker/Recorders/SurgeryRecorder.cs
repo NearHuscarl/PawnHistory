@@ -6,7 +6,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class SurgeryRecorder : RecorderBase
+public abstract class SurgeryRecorder<TInput> : RecorderBase<TInput>
 {
     enum SurgeryOutcomeType
     {
@@ -16,9 +16,9 @@ internal class SurgeryRecorder : RecorderBase
         Sterilized,
     }
 
-    public override void Register() { }
+    public abstract override void Register();
 
-    protected void HandleBotchSurgeryEvent(SurgeryEvent e, string botched)
+    protected void RecordBotchedSurgery(SurgeryEvent e, string botched)
     {
         var recordDef = HistoryRecordDefOf.BotchedSurgery;
         var injuredParts = e.NewInjuries.Select(h => h.Part).Distinct().ToList();

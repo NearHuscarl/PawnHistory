@@ -7,13 +7,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class WandererJoinedEvent(Pawn pawn, IEnumerable<Pawn> group, IncidentDef incidentDef = null, QuestScriptDef questScript = null) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-    public IEnumerable<Pawn> Group { get; } = group;
-    public IncidentDef IncidentDef { get; } = incidentDef;
-    public QuestScriptDef QuestScript { get; } = questScript;
-}
+public record WandererJoinedEvent(Pawn Pawn, IEnumerable<Pawn> Group, IncidentDef IncidentDef = null, QuestScriptDef QuestScript = null) : GameEventBase;
 
 class WandererJoinContext
 {

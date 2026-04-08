@@ -4,11 +4,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class CasketAcceptedEvent(Pawn pawn, Building_Casket casket) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-    public Building_Casket Casket { get; } = casket;
-}
+public record CasketAcceptedEvent(Pawn Pawn, Building_Casket Casket) : GameEventBase;
 
 
 [HarmonyPatch(typeof(Building_Casket), nameof(Building_Casket.TryAcceptThing))]

@@ -79,6 +79,10 @@ namespace PawnHistory.Source.PawnTracker;
 //  - Pagination
 //  - Cache icon texture2d
 //  - Filtering
+// - Test Framework
+//  - Create ITestable interface to decouple from RecorderBase
+//  - Show time elapsed for all test runs
+//  - Add test runner to scan for test methods.
 
 // Bug:
 // - Test multiple maps to see if CasualtyRecorder use the correct battle log?

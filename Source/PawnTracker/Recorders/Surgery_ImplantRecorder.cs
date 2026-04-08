@@ -4,29 +4,27 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class Surgery_ImplantRecorder : SurgeryRecorder
+public class Surgery_ImplantRecorder : SurgeryRecorder<SurgeryInstallImplantEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<SurgeryInstallImplantEvent>(e =>
-        {
-            if (e.Outcome.failure)
-            {
-                var botched = HistoryRecordDefOf.BodyPartImplanted.Description(e.Patient)
-                    .AddRule("ImplantHediff", e.HediffToAdd, addSubsymbols: true)
-                    .Resolve("BotchedSurgery")
-                    .ToLower();
-                HandleBotchSurgeryEvent(e, botched);
-            }
-            else
-                HandleBodyPartImplantedEvent(e);
-        });
+        GameEventBus.Subscribe<SurgeryInstallImplantEvent>(CreateRecord);
     }
 
-    private void HandleBodyPartImplantedEvent(SurgeryInstallImplantEvent e)
+    public override void CreateRecord(SurgeryInstallImplantEvent e)
     {
         if (!ShouldRecord(e.Patient))
             return;
+
+        if (e.Outcome.failure)
+        {
+            var botched = HistoryRecordDefOf.BodyPartImplanted.Description(e.Patient)
+                .AddRule("ImplantHediff", e.HediffToAdd, addSubsymbols: true)
+                .Resolve("BotchedSurgery")
+                .ToLower();
+            RecordBotchedSurgery(e, botched);
+            return;
+        }
 
         var recordDef = HistoryRecordDefOf.BodyPartImplanted;
         var desc = recordDef.Description(e.Patient)
@@ -38,7 +36,7 @@ internal class Surgery_ImplantRecorder : SurgeryRecorder
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")

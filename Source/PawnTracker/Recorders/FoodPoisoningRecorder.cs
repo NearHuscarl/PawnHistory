@@ -2,38 +2,38 @@
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System;
+using UnityEngine.Profiling;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class FoodPoisoningRecorder : RecorderBase
+public class FoodPoisoningRecorder : RecorderBase<FoodPoisoningEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<FoodPoisoningEvent>(e =>
-        {
-            HandleFoodPoisoningEvent(e);
-        });
+        GameEventBus.Subscribe<FoodPoisoningEvent>(CreateRecord);
     }
 
-    private void HandleFoodPoisoningEvent(FoodPoisoningEvent e)
+    public override void CreateRecord(FoodPoisoningEvent e)
     {
-        if (!ShouldRecord(e.Victim))
+        var (victim, ingestible, cause, cook) = e;
+
+        if (!ShouldRecord(victim))
             return;
 
         var recordDef = HistoryRecordDefOf.FoodPoisoning;
         var desc = recordDef.Description(e.Victim)
-            .AddRule("Ingestible", e.Ingestible.LabelShort, addSubsymbols: true)
-            .AddRule("Cook", e.Cook)
-            .AddRule("Cause", e.Cause.ToStringHuman())
-            .AddConstant("cause", e.Cause)
-            .AddConstant("hasCook", e.Cook != null)
+            .AddRule("Ingestible", ingestible.LabelShort, addSubsymbols: true)
+            .AddRule("Cook", cook)
+            .AddRule("Cause", cause.ToStringHuman())
+            .AddConstant("cause", cause)
+            .AddConstant("hasCook", cook != null)
             .Resolve();
 
         AddRecord(recordDef, e.Victim, desc, [e.Cook]);
     }
 
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var victim = scenario.Pawn()
             .ThatMatches(ShouldRecord)

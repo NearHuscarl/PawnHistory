@@ -6,11 +6,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-internal class SurgeryRemoveBodyPartEvent(Pawn patient, Pawn doctor, BodyPartRecord part, BodyPartRemovalIntent intent, Hediff badHediff) : SurgeryEvent(patient, doctor, part)
-{
-    public BodyPartRemovalIntent Intent { get; } = intent;
-    public Hediff BadHediff { get; } = badHediff;
-}
+public record SurgeryRemoveBodyPartEvent(Pawn Patient, Pawn Doctor, BodyPartRecord Part, BodyPartRemovalIntent Intent, Hediff BadHediff) : SurgeryEvent(Patient, Doctor, Part);
 
 class RemoveContext : SurgeryContext<SurgeryRemoveBodyPartEvent> { }
 

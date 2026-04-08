@@ -1,5 +1,4 @@
-﻿using Ionic.Zlib;
-using PawnHistory.Source.DebugTools;
+﻿using PawnHistory.Source.DebugTools;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
@@ -8,17 +7,14 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class AnimalRevengeRecorder : RecorderBase
+public class AnimalRevengeRecorder : RecorderBase<AnimalRevengeEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<AnimalRevengeEvent>(e =>
-        {
-            HandleAnimalRevengeEvent(e);
-        });
+        GameEventBus.Subscribe<AnimalRevengeEvent>(CreateRecord);
     }
 
-    private void HandleAnimalRevengeEvent(AnimalRevengeEvent e)
+    public override void CreateRecord(AnimalRevengeEvent e)
     {
         if (!ShouldRecord(e.Instigator))
             return;
@@ -34,7 +30,7 @@ internal class AnimalRevengeRecorder : RecorderBase
         AddRecord(recordDef, e.Instigator, desc, e.Animals);
     }
 
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var animals = scenario.Pawn(5).Animal(PawnKindDefOf.Muffalo).Execute().ToList();
         var instigator = scenario.Pawn().Colonist().CreateSingle();

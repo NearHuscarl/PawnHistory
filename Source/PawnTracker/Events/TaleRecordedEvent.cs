@@ -5,12 +5,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-internal class TaleRecordedEvent(Tale tale, Pawn pawn, object[] taleParams) : GameEventBase
-{
-    public Tale Tale { get; } = tale;
-    public Pawn Pawn { get; } = pawn;
-    public object[] Params { get; } = taleParams;
-}
+public record TaleRecordedEvent(Tale Tale, Pawn Pawn, object[] Params) : GameEventBase;
 
 [HarmonyPatch(typeof(TaleRecorder), nameof(TaleRecorder.RecordTale))]
 public static class TaleRecorder_RecordTale_Patch

@@ -8,7 +8,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class BodyPartDestroyedRecorder : RecorderBase
+public class BodyPartDestroyedRecorder : RecorderBase<HediffAddedEvent>
 {
     public override void Register()
     {
@@ -18,35 +18,31 @@ internal class BodyPartDestroyedRecorder : RecorderBase
         // Reference: Pawn_HealthTracker.AddHediff() > HediffSet.AddDirect()
         GameEventBus.Subscribe<HediffAddedEvent>(e =>
         {
-            var pawn = e.Pawn;
-            var hediff = e.Hediff;
-            var part = e.Part;
-            var dinfo = e.Dinfo;
-
-            if (!ShouldRecord(pawn))
+            if (e.Part == null)
                 return;
 
-            if (part == null)
-                return;
-
-            if (hediff.def == HediffDefOf.MissingBodyPart)
+            if (e.Hediff.def == HediffDefOf.MissingBodyPart)
             {
                 // missing vital body parts will make a pawn die, this is handled by CasualtyRecorder instead.
-                if (pawn.Dead)
+                if (e.Pawn.Dead)
                     return;
 
                 // handled by BodyPartRemovedRecorder
-                if (dinfo?.Def == DamageDefOf.SurgicalCut)
+                if (e.Dinfo?.Def == DamageDefOf.SurgicalCut)
                     return;
                 
-                HandleDestroyPartEvent(pawn, hediff, part, dinfo);
+                CreateRecord(e);
             }
         });
     }
 
     // Must be called in postfix because hediff.label does not exist in prefix.
-    private void HandleDestroyPartEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo)
+    public override void CreateRecord(HediffAddedEvent e)
     {
+        if (!ShouldRecord(e.Pawn))
+            return;
+
+        var (pawn, hediff, part, dinfo) = e;
         var instigator = dinfo?.Instigator as Pawn;
         var dmgSource = dinfo?.GetDamageSource();
         var recordDef = HistoryRecordDefOf.BodyPartDestroyed;
@@ -64,7 +60,7 @@ internal class BodyPartDestroyedRecorder : RecorderBase
 
     // hasInstigator==true,hasDmgSource==true
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         HashSet<BodyPartDef> nonVitalParts =
         [

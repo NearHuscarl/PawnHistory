@@ -8,32 +8,31 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class HealthComplicationRecorder : RecorderBase
+public class HealthComplicationRecorder : RecorderBase<HealthComplicationEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<HealthComplicationEvent>(e =>
-        {
-            if (!ShouldRecord(e.Pawn))
-                return;
-            HandleHealthComplicationEvent(e);
-        });
+        GameEventBus.Subscribe<HealthComplicationEvent>(CreateRecord);
     }
 
-    private void HandleHealthComplicationEvent(HealthComplicationEvent e)
+    public override void CreateRecord(HealthComplicationEvent e)
     {
+        var (pawn, condition, cause) = e;
+
+        if (!ShouldRecord(pawn))
+            return;
         var recordDef = HistoryRecordDefOf.HealthComplication;
-        var part = e.Pawn.health.hediffSet.hediffs.LastOrDefault(h => h.def == e.Condition && h.ageTicks == 0).Part;
-        var desc = recordDef.Description(e.Pawn)
+        var part = pawn.health.hediffSet.hediffs.LastOrDefault(h => h.def == condition && h.ageTicks == 0).Part;
+        var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
-            .AddRule("Condition", e.Condition.LabelNounColored())
-            .AddRule("Cause", e.Cause?.LabelNounInBracket())
+            .AddRule("Condition", condition.LabelNounColored())
+            .AddRule("Cause", cause?.LabelNounInBracket())
             .AddRule("Part", part)
-            .AddConstant("hediff", e.Condition.defName)
-            .AddConstant("hasCause", e.Cause != null)
+            .AddConstant("hediff", condition.defName)
+            .AddConstant("hasCause", cause != null)
             .Resolve();
 
-        AddRecord(recordDef, e.Pawn, desc);
+        AddRecord(recordDef, pawn, desc);
     }
 
     public void LogAllHediffGiverSubClasses()

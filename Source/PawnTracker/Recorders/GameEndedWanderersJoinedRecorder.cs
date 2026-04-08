@@ -5,23 +5,24 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class GameEndedWanderersJoinedRecorder : RecorderBase
+public class GameEndedWanderersJoinedRecorder : RecorderBase<WandererJoinedEvent>
 {
     public override void Register()
     {
         GameEventBus.Subscribe<WandererJoinedEvent>(e =>
         {
-            if (!ShouldRecord(e.Pawn))
-                return;
             if (e.IncidentDef?.defName != "GameEndedWanderersJoin")
                 return;
 
-            HandleEvent(e);
+            CreateRecord(e);
         });
     }
 
-    private void HandleEvent(WandererJoinedEvent e)
+    public override void CreateRecord(WandererJoinedEvent e)
     {
+        if (!ShouldRecord(e.Pawn))
+            return;
+
         var recordDef = HistoryRecordDefOf.GameEndedWanderersJoined;
         var desc = recordDef.Description(e.Pawn)
             .IncludePawnGrammar()
@@ -31,7 +32,7 @@ internal class GameEndedWanderersJoinedRecorder : RecorderBase
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         scenario.SpeedUp();
         Find.CurrentMap.mapPawns.AllHumanlikeSpawned.ForEach(p => p.Kill(null));

@@ -6,32 +6,33 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class SocialFightRecorder : RecorderBase
+public class SocialFightRecorder : RecorderBase<SocialFightRecorder.Input>
 {
+    public record Input(Pawn Initiator, Pawn Recipient, string initiatorPov, string recipientPov);
+
     public override void Register()
     {
-        GameEventBus.Subscribe<SocialFightStartedEvent>(HandleSocialFightEvent);
+        GameEventBus.Subscribe<SocialFightStartedEvent>(e =>
+        {
+            var initiatorPov = e.InteractionEntry.ToGameStringFromPOV(e.Initiator);
+            var recipientPov = e.InteractionEntry.ToGameStringFromPOV(e.Recipient);
+
+            CreateRecord(new Input(e.Initiator, e.Recipient, initiatorPov, recipientPov));
+        });
     }
 
-    private void HandleSocialFightEvent(SocialFightStartedEvent e)
+    public override void CreateRecord(Input input)
     {
-        var initiatorPov = e.InteractionEntry.ToGameStringFromPOV(e.Initiator);
-        var recipientPov = e.InteractionEntry.ToGameStringFromPOV(e.Recipient);
+        var (initiator, recipient, initiatorPov, recipientPov) = input;
 
-        CreateRecord(e.Initiator, initiatorPov, [e.Recipient]);
-        CreateRecord(e.Recipient, recipientPov, [e.Initiator]);
-    }
-
-    private void CreateRecord(Pawn pawn, string description, IEnumerable<Pawn> concerns)
-    {
-        if (!ShouldRecord(pawn))
-            return;
-
-        AddRecord(HistoryRecordDefOf.SocialFight, pawn, description, concerns);
+        if (ShouldRecord(initiator))
+            AddRecord(HistoryRecordDefOf.SocialFight, initiator, initiatorPov, [recipient]);
+        if (ShouldRecord(recipient))
+            AddRecord(HistoryRecordDefOf.SocialFight, recipient, recipientPov, [initiator]);
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var oldDebugValue = DebugSettings.alwaysSocialFight;
         DebugSettings.alwaysSocialFight = true;

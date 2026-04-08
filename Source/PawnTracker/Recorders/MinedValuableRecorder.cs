@@ -6,8 +6,10 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class MinedValuableRecorder : HistoryTaleRecorder
+public class MinedValuableRecorder : HistoryTaleRecorder<MinedValuableRecorder.Input>
 {
+    public record Input(Pawn pawn, ThingDef mineableThing);
+
     public override void Register()
     {
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
@@ -15,27 +17,27 @@ internal class MinedValuableRecorder : HistoryTaleRecorder
             if (e.Tale.def != TaleDefOf.MinedValuable)
                 return;
 
-            HandleMinedValuableEvent(e);
+            CreateRecord(new Input(e.Pawn, e.Params[0] as ThingDef));
         });
     }
 
-    private void HandleMinedValuableEvent(TaleRecordedEvent e)
+    public override void CreateRecord(Input input)
     {
+        var (pawn, mineableThing) = input;
         var recordDef = HistoryRecordDefOf.MinedValuable;
-        var mineableThing = e.Params[0] as ThingDef;
-        var desc = recordDef.Description(e.Pawn)
+        var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
             .AddRule("Material", mineableThing)
             .Resolve();
 
-        if (!ShouldRecordTale(e.Pawn, recordDef, desc))
+        if (!ShouldRecordTale(pawn, recordDef, desc))
             return;
 
-        AddRecord(recordDef, e.Pawn, desc);
+        AddRecord(recordDef, pawn, desc);
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(15).Colonist().Execute();
         var mineables = new List<ThingDef>() { ThingDefOf.MineableGold, ThingDefOf.MineableSteel, ThingDefOf.MineableComponentsIndustrial };

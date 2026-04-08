@@ -57,4 +57,20 @@ public static class ListExtensions
 
         return value;
     }
+
+    public static IEnumerable<T> TakeLast<T>(this IList<T> source, int count)
+    {
+        if (source == null)
+            throw new ArgumentNullException(nameof(source));
+
+        count = Math.Max(0, count);
+
+        if (count == 0)
+            yield break;
+
+        var start = source.Count - count;
+
+        for (var i = start; i < source.Count; i++)
+            yield return source[i];
+    }
 }

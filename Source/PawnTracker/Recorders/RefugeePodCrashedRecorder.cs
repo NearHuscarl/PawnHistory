@@ -3,23 +3,24 @@ using PawnHistory.Source.PawnTracker.Test;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class RefugeePodCrashedRecorder : RecorderBase
+public class RefugeePodCrashedRecorder : RecorderBase<WandererJoinedEvent>
 {
     public override void Register()
     {
         GameEventBus.Subscribe<WandererJoinedEvent>(e =>
         {
-            if (!ShouldRecord(e.Pawn))
-                return;
             if (e.QuestScript?.defName != "RefugeePodCrash")
                 return;
 
-            HandleRefugeePodCrashedEvent(e);
+            CreateRecord(e);
         });
     }
 
-    private void HandleRefugeePodCrashedEvent(WandererJoinedEvent e)
+    public override void CreateRecord(WandererJoinedEvent e)
     {
+        if (!ShouldRecord(e.Pawn))
+            return;
+
         var recordDef = HistoryRecordDefOf.RefugeePodCrashed;
         var desc = recordDef.Description(e.Pawn)
             .IncludePawnGrammar()
@@ -29,7 +30,7 @@ internal class RefugeePodCrashedRecorder : RecorderBase
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         scenario.Incident("RefugeePodCrash").Execute();
     }

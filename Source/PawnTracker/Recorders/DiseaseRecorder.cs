@@ -5,35 +5,33 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class DiseaseRecorder : RecorderBase
+public class DiseaseRecorder : RecorderBase<DiseaseEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<DiseaseEvent>(e =>
-        {
-            HandleDiseaseEvent(e);
-        });
+        GameEventBus.Subscribe<DiseaseEvent>(CreateRecord);
     }
 
-    private void HandleDiseaseEvent(DiseaseEvent e)
+    public override void CreateRecord(DiseaseEvent e)
     {
-        if (!ShouldRecord(e.Pawn))
+        var (pawn, group, incidentDef, bodyPart) = e;
+        if (!ShouldRecord(pawn))
             return;
 
         var recordDef = HistoryRecordDefOf.Disease;
-        var diseaseHediffDef = e.IncidentDef.diseaseIncident;
-        var desc = recordDef.Description(e.Pawn)
+        var diseaseHediffDef = incidentDef.diseaseIncident;
+        var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
-            .WithOthers(e.Group.ToList())
+            .WithOthers(group.ToList())
             .AddRule("Disease", diseaseHediffDef)
-            .AddRule("Part", e.BodyPart)
+            .AddRule("Part", bodyPart)
             .AddConstant("disease", diseaseHediffDef.defName)
             .Resolve();
-        AddRecord(recordDef, e.Pawn, desc);
+        AddRecord(recordDef, pawn, desc);
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(8).Colonist().Execute();
         scenario.Incident("Disease_OrganDecay").Execute();

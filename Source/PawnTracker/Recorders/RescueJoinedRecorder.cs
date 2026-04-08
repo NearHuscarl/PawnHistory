@@ -5,23 +5,20 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class RescueJoinedRecorder : RecorderBase
+public class RescueJoinedRecorder : RecorderBase<RescueJoinedEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<RescueJoinedEvent>(e =>
-        {
-            var pawn = e.Pawn;
-
-            if (!ShouldRecord(pawn))
-                return;
-
-            HandleRescueJoinedEvent(pawn);
-        });
+        GameEventBus.Subscribe<RescueJoinedEvent>(CreateRecord);
     }
 
-    private void HandleRescueJoinedEvent(Pawn pawn)
+    public override void CreateRecord(RescueJoinedEvent e)
     {
+        var pawn = e.Pawn;
+
+        if (!ShouldRecord(pawn))
+            return;
+
         var recordDef = HistoryRecordDefOf.RescueJoined;
         var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
@@ -32,7 +29,7 @@ internal class RescueJoinedRecorder : RecorderBase
         AddRecord(recordDef, pawn, desc);
     }
 
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         scenario.SpeedUp();
         scenario.Incident(IncidentDefOf.ToxicFallout).Execute(); // pawn will join if it's dangerous outside

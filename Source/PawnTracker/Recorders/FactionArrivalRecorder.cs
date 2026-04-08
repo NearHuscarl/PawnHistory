@@ -3,54 +3,73 @@ using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Verse;
 using Verse.AI.Group;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class FactionArrivalRecorder : RecorderBase
+public enum FactionArrivalType
 {
+    None,
+    VisitorGroup,
+    TravelerGroup
+}
+
+public class FactionArrivalRecorder : RecorderBase<FactionArrivalRecorder.Input>
+{
+    public record Input(Faction Faction, List<Pawn> Pawns, FactionArrivalType FactionArrivalType);
+
     public override void Register()
     {
         GameEventBus.Subscribe<LordToilChangeEvent>(e =>
         {
             var lord = e.Lord;
             var currentToil = e.CurrentToil;
-            var pawns = lord.ownedPawns.Where(ShouldRecord).ToList();
+            var pawns = lord.ownedPawns;
             var isStartingLord = currentToil == null;
+            var factionArrivalType = FactionArrivalType.None;
 
             if (isStartingLord && lord.LordJob is LordJob_TravelAndExit)
-                HandleTravelerGroupStartedEvents(lord, pawns);
+                factionArrivalType = FactionArrivalType.TravelerGroup;
             if (isStartingLord && lord.LordJob is LordJob_VisitColony)
-                HandleVisitStartedEvents(lord, pawns);
+                factionArrivalType = FactionArrivalType.VisitorGroup;
+
+            CreateRecord(new Input(lord.faction, pawns, factionArrivalType));
         });
     }
 
-    private void HandleVisitStartedEvents(Lord lord, List<Pawn> pawns)
+    public override void CreateRecord(Input input)
     {
-        var recordDef = HistoryRecordDefOf.VisitorArrived;
+        var (faction, pawns, factionArrivalType) = input;
+        
+        pawns = pawns.Where(ShouldRecord).ToList();
 
-        foreach (var pawn in pawns)
+        if (factionArrivalType == FactionArrivalType.VisitorGroup)
         {
-            var desc = recordDef.Description(pawn)
-                .WithFaction(lord.faction)
-                .WithOthers(pawns)
-                .Resolve();
-            AddRecord(recordDef, pawn, desc);
+            var recordDef = HistoryRecordDefOf.VisitorArrived;
+
+            foreach (var pawn in pawns)
+            {
+                var desc = recordDef.Description(pawn)
+                    .WithFaction(faction)
+                    .WithOthers(pawns)
+                    .Resolve();
+                AddRecord(recordDef, pawn, desc);
+            }
         }
-    }
-
-    private void HandleTravelerGroupStartedEvents(Lord lord, List<Pawn> pawns)
-    {
-        var recordDef = HistoryRecordDefOf.TravelGroupArrived;
-
-        foreach (var pawn in pawns)
+        else if (factionArrivalType == FactionArrivalType.TravelerGroup)
         {
-            var desc = recordDef.Description(pawn)
-                .WithFaction(lord.faction)
-                .WithOthers(pawns)
-                .Resolve();
-            AddRecord(recordDef, pawn, desc);
+            var recordDef = HistoryRecordDefOf.TravelGroupArrived;
+
+            foreach (var pawn in pawns)
+            {
+                var desc = recordDef.Description(pawn)
+                    .WithFaction(faction)
+                    .WithOthers(pawns)
+                    .Resolve();
+                AddRecord(recordDef, pawn, desc);
+            }
         }
     }
 

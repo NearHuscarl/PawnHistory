@@ -4,12 +4,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class PrisonerRecruitedEvent(Pawn prisoner, Pawn recruiter, string logEntryText = null) : GameEventBase
-{
-    public Pawn Prisoner { get; } = prisoner;
-    public Pawn Recruiter { get; } = recruiter;
-    public string LogEntryText { get; set; } = logEntryText;
-}
+public record PrisonerRecruitedEvent(Pawn Prisoner, Pawn Recruiter, string LogEntryText = null) : GameEventBase;
 
 public static class PrisonerRecruitedContext
 {
@@ -33,8 +28,8 @@ public static class Pawn_InteractionsTracker_TryInteractWith_Patch_2
 
         var entries = Find.PlayLog.AllEntries;
         var logEntry = entries.FirstOrDefault(entry => entry is PlayLogEntry_Interaction il && Accessor.PlayLogEntry_Interaction.InteractionDef(il).defName == "RecruitAttempt");
-        PrisonerRecruitedContext.PendingEvent.LogEntryText = logEntry.ToGameStringFromPOV(recipient);
-        GameEventBus.Publish(PrisonerRecruitedContext.PendingEvent);
+        var e = PrisonerRecruitedContext.PendingEvent with { LogEntryText = logEntry.ToGameStringFromPOV(recipient) };
+        GameEventBus.Publish(e);
         PrisonerRecruitedContext.PendingEvent = null;
     }
 }

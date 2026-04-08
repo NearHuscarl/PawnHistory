@@ -8,26 +8,20 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class BodyPartScarredRecorder : RecorderBase
+public class BodyPartScarredRecorder : RecorderBase<BodyPartScarredEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<BodyPartScarredEvent>(e =>
-        {
-            if (!ShouldRecord(e.Pawn))
-                return;
-
-            HandleScarredPartEvent(e);
-        });
+        GameEventBus.Subscribe<BodyPartScarredEvent>(CreateRecord);
     }
 
-    private void HandleScarredPartEvent(BodyPartScarredEvent e)
+    public override void CreateRecord(BodyPartScarredEvent e)
     {
-        var pawn = e.Pawn;
-        var hediff = e.Hediff;
-        var part = e.Part;
+        if (!ShouldRecord(e.Pawn))
+            return;
 
-        var instigator = e.Instigator as Pawn;
+        var (pawn, hediff, part, instigatorThing, reason) = e;
+        var instigator = instigatorThing as Pawn; // TODO: handle thing
         var dmgSource = hediff.GetDamageSource();
         var recordDef = HistoryRecordDefOf.BodyPartScarred;
         var desc = recordDef.Description(pawn)
@@ -38,7 +32,7 @@ internal class BodyPartScarredRecorder : RecorderBase
             .AddConstant("hasInstigator", instigator != null)
             .AddRule("DmgSource", dmgSource)
             .AddConstant("hasDmgSource", dmgSource != null)
-            .AddConstant("reason", e.Reason)
+            .AddConstant("reason", reason)
             .Resolve();
 
         AddRecord(recordDef, pawn, desc, [instigator]);

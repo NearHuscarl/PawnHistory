@@ -11,12 +11,7 @@ public enum LeaderChangeReason
     Lost,
 }
 
-public class LeaderChangedEvent(Pawn newLeader, Pawn oldLeader, LeaderChangeReason reason) : GameEventBase
-{
-    public Pawn NewLeader { get; } = newLeader;
-    public Pawn OldLeader { get; } = oldLeader;
-    public LeaderChangeReason Reason { get; } = reason;
-}
+public record LeaderChangedEvent(Pawn NewLeader, Pawn OldLeader, LeaderChangeReason Reason) : GameEventBase;
 
 internal class LeaderChangedContext
 {

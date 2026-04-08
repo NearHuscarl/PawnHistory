@@ -4,17 +4,14 @@ using RimWorld;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class PawnTradedRecorder : RecorderBase
+public class PawnTradedRecorder : RecorderBase<PawnTradedEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<PawnTradedEvent>(e =>
-        {
-            HandleSoldEvent(e);
-        });
+        GameEventBus.Subscribe<PawnTradedEvent>(CreateRecord);
     }
 
-    private void HandleSoldEvent(PawnTradedEvent e)
+    public override void CreateRecord(PawnTradedEvent e)
     {
         if (!ShouldRecord(e.SoldVictim))
             return;
@@ -30,7 +27,7 @@ internal class PawnTradedRecorder : RecorderBase
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var pawns = scenario.Incident(IncidentDefOf.TraderCaravanArrival)
             .TraderKind("Caravan_Neolithic_Slaver")

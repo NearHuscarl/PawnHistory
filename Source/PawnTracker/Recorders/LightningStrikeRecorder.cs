@@ -6,8 +6,10 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class LightningStrikeRecorder : RecorderBase
+public class LightningStrikeRecorder : RecorderBase<LightningStrikeRecorder.Input>
 {
+    public record Input(Pawn Pawn, Hediff Hediff, BodyPartRecord Part);
+
     private const int LightningWindowTicks = 3;
 
     private static readonly List<(Map map, IntVec3 loc, int tick, float radius)> strikes = [];
@@ -22,10 +24,7 @@ internal class LightningStrikeRecorder : RecorderBase
         {
             strikes.RemoveAll(s => Find.TickManager.TicksGame - s.tick > 10);
 
-            var pawn = e.Pawn;
-            var hediff = e.Hediff;
-            var part = e.Part;
-            var dinfo = e.Dinfo;
+            var (pawn, hediff, part, dinfo) = e;
 
             if (!ShouldRecord(pawn))
                 return;
@@ -46,15 +45,16 @@ internal class LightningStrikeRecorder : RecorderBase
 
                 if (pawn.Position.DistanceTo(loc) <= radius)
                 {
-                    HandleLightningHitEvent(pawn, hediff, part);
+                    CreateRecord(new Input(pawn, hediff, part));
                     break;
                 }
             }
         });
     }
 
-    private void HandleLightningHitEvent(Pawn pawn, Hediff hediff, BodyPartRecord part)
+    public override void CreateRecord(Input Input)
     {
+        var (pawn, hediff, part) = Input;
         var recordDef = HistoryRecordDefOf.LightningStriked;
         var desc = recordDef.Description(pawn)
             .AddRule("POSSESSIVE", pawn.Possessive())
@@ -64,7 +64,7 @@ internal class LightningStrikeRecorder : RecorderBase
         AddRecord(recordDef, pawn, desc);
     }
 
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         scenario.Pawn(10)
             .WithPosition(Find.CurrentMap.Center, 8)

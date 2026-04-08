@@ -4,10 +4,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class RescueJoinedEvent(Pawn pawn) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-}
+public record RescueJoinedEvent(Pawn Pawn) : GameEventBase;
 
 class RescueJoinedContext
 {

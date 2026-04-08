@@ -9,13 +9,18 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class PrisonerCapturedRecorder : RecorderBase
+public class PrisonerCapturedRecorder : RecorderBase<PrisonerCapturedRecorder.Input>
 {
+    public record Input(Pawn Prisoner, Pawn Captor, string quality);
+
     public override void Register()
     {
         GameEventBus.Subscribe<PrisonerCapturedEvent>(e =>
         {
-            HandleCapturedEvent(e);
+            var impressiveScore = e.Room.GetStat(RoomStatDefOf.Impressiveness);
+            var quality = RoomStatDefOf.Impressiveness.GetScoreStage(impressiveScore).label;
+
+            CreateRecord(new Input(e.Prisoner, e.Captor, quality));
         });
     }
 
@@ -31,19 +36,18 @@ internal class PrisonerCapturedRecorder : RecorderBase
             .Resolve();
     }
 
-    private void HandleCapturedEvent(PrisonerCapturedEvent e)
+    public override void CreateRecord(Input input)
     {
+        var (prisoner, captor, quality) = input;
         var recordDef = HistoryRecordDefOf.PrisonerCaptured;
-        var impressiveScore = e.Room.GetStat(RoomStatDefOf.Impressiveness);
-        var quality = RoomStatDefOf.Impressiveness.GetScoreStage(impressiveScore).label;
-        var desc = GetDescription(e.Captor, e.Prisoner, quality);
+        var desc = GetDescription(captor, prisoner, quality);
 
-        AddRecord(recordDef, e.Captor, desc, [e.Prisoner]);
-        AddRecord(recordDef, e.Prisoner, desc, [e.Captor]);
+        AddRecord(recordDef, captor, desc, [prisoner]);
+        AddRecord(recordDef, prisoner, desc, [captor]);
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         scenario.SpeedUp();
 

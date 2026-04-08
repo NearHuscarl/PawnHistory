@@ -7,11 +7,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class BirthdayEvent(Pawn pawn, List<HediffDef> agingHediffs) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-    public List<HediffDef> AgingHediffs { get; } = agingHediffs;
-}
+public record BirthdayEvent(Pawn Pawn, List<HediffDef> AgingHediffs) : GameEventBase;
 
 [HarmonyPatch(typeof(LetterStack), nameof(LetterStack.ReceiveLetter), [typeof(TaggedString), typeof(TaggedString), typeof(LetterDef), typeof(LookTargets), typeof(Faction), typeof(Quest), typeof(List<ThingDef>), typeof(string), typeof(int), typeof(bool)])]
 public static class LetterStack_ReceiveLetter_Patch

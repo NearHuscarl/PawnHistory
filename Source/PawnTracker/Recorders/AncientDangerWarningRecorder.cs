@@ -7,7 +7,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class AncientDangerWarningRecorder : RecorderBase
+public class AncientDangerWarningRecorder : RecorderBase<Pawn>
 {
     private static readonly string LetterLabel = "LetterLabelAncientShrineWarning".Translate();
 
@@ -21,12 +21,15 @@ internal class AncientDangerWarningRecorder : RecorderBase
             if (e.Pawns.FirstOrDefault() == null)
                 return;
 
-            HandleAncientDangerWarningEvent(e.Pawns.FirstOrDefault());
+            CreateRecord(e.Pawns.FirstOrDefault());
         });
     }
 
-    private void HandleAncientDangerWarningEvent(Pawn pawn)
+    public override void CreateRecord(Pawn pawn)
     {
+        if (!ShouldRecord(pawn))
+            return;
+
         var recordDef = HistoryRecordDefOf.AncientDangerWarning;
         var desc = recordDef.Description(pawn)
             .Resolve();
@@ -40,6 +43,10 @@ internal class AncientDangerWarningRecorder : RecorderBase
         var map = Find.CurrentMap;
 
         scenario.SpeedUp();
+        scenario.Pawn(3)
+            .Colonist()
+            .Do(p => p.Position = CellFinder.RandomEdgeCell(map)) // so pawn does not end up in the ancient temple
+            .Execute();
         scenario.Map().GenerateAncientTemple(8, 8).Execute();
         scenario.Pawn()
             .Colonist()

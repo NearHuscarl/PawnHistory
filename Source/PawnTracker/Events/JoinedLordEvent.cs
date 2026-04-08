@@ -5,11 +5,7 @@ using Verse.AI.Group;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class JoinedLordEvent(IEnumerable<Pawn> pawns, Lord lord) : GameEventBase
-{
-    public IEnumerable<Pawn> Pawns { get; } = pawns;
-    public Lord Lord { get; } = lord;
-}
+public record JoinedLordEvent(IEnumerable<Pawn> Pawns, Lord Lord) : GameEventBase;
 
 [HarmonyPatch(typeof(Lord), nameof(Lord.AddPawn))]
 public static class Lord_AddPawn_Patch

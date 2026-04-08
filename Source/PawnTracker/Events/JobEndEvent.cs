@@ -4,12 +4,7 @@ using Verse.AI;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class JobEndEvent(Pawn pawn, Job currentJob, JobCondition condition) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-    public Job CurrentJob { get; } = currentJob;
-    public JobCondition Condition { get; } = condition;
-}
+public record JobEndEvent(Pawn Pawn, Job CurrentJob, JobCondition Condition) : GameEventBase;
 
 [HarmonyPatch(typeof(Pawn_JobTracker), "CleanupCurrentJob")]
 public static class Pawn_JobTracker_CleanupCurrentJob_Patch

@@ -6,21 +6,9 @@ using static Verse.DamageWorker;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class HediffAddEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-    public Hediff Hediff { get; } = hediff;
-    public BodyPartRecord Part { get; } = part;
-    public DamageInfo? Dinfo { get; } = dinfo;
-}
+public record HediffAddEvent(Pawn Pawn, Hediff Hediff, BodyPartRecord Part, DamageInfo? Dinfo) : GameEventBase;
 
-public class HediffAddedEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, DamageInfo? dinfo) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-    public Hediff Hediff { get; } = hediff;
-    public BodyPartRecord Part { get; } = part;
-    public DamageInfo? Dinfo { get; } = dinfo;
-}
+public record HediffAddedEvent(Pawn Pawn, Hediff Hediff, BodyPartRecord Part, DamageInfo? Dinfo) : GameEventBase;
 
 [HarmonyPatch(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.AddHediff), [typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo?), typeof(DamageResult)])]
 internal class Pawn_HealthTracker_AddHediff_Patch

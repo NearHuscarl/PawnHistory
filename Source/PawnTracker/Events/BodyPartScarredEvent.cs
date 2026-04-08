@@ -11,14 +11,7 @@ public enum ScarReason
     Scarification,
 }
 
-public class BodyPartScarredEvent(Pawn pawn, Hediff hediff, BodyPartRecord part, Thing instigator, ScarReason reason) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-    public Hediff Hediff { get; } = hediff;
-    public BodyPartRecord Part { get; } = part;
-    public Thing Instigator { get; } = instigator;
-    public ScarReason Reason { get; } = reason;
-}
+public record BodyPartScarredEvent(Pawn Pawn, Hediff Hediff, BodyPartRecord Part, Thing Instigator, ScarReason Reason) : GameEventBase;
 
 public class HediffComp_History : HediffComp
 {

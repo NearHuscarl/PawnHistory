@@ -6,33 +6,30 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class HediffRecorder : RecorderBase
+public class HediffRecorder : RecorderBase<HediffAddedEvent>
 {
     public override void Register()
     {
         GameEventBus.Subscribe<HediffAddedEvent>(e =>
         {
-            var pawn = e.Pawn;
-            var hediff = e.Hediff;
-
-            if (!ShouldRecord(pawn))
-                return;
-
-            if (hediff.def == HediffDefOf.Anesthetic)
-                HandleAnesthetizedEvent(pawn, hediff);
+            if (e.Hediff.def == HediffDefOf.Anesthetic)
+                CreateRecord(e);
         });
     }
 
-    private void HandleAnesthetizedEvent(Pawn pawn, Hediff hediff)
+    public override void CreateRecord(HediffAddedEvent e)
     {
-        var desc = HistoryRecordDefOf.Anesthetized.Description(pawn)
-            .AddRule("Anesthetic", hediff)
+        if (!ShouldRecord(e.Pawn))
+            return;
+
+        var desc = HistoryRecordDefOf.Anesthetized.Description(e.Pawn)
+            .AddRule("Anesthetic", e.Hediff)
             .Format();
 
-        AddRecord(HistoryRecordDefOf.Anesthetized, pawn, desc);
+        AddRecord(HistoryRecordDefOf.Anesthetized, e.Pawn, desc);
     }
 
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var patient = scenario.Pawn()
             .ThatMatches(ShouldRecord)

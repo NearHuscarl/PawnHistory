@@ -6,13 +6,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class DiseaseEvent(Pawn pawn, IEnumerable<Pawn> group, IncidentDef incidentDef, BodyPartRecord bodyPart) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-    public IEnumerable<Pawn> Group { get; } = group;
-    public IncidentDef IncidentDef { get; } = incidentDef;
-    public BodyPartRecord BodyPart { get; } = bodyPart;
-}
+public record DiseaseEvent(Pawn Pawn, IEnumerable<Pawn> Group, IncidentDef IncidentDef, BodyPartRecord BodyPart) : GameEventBase;
 
 internal class DiseaseContext
 {

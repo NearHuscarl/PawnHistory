@@ -5,21 +5,18 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class LeaderChangedRecorder : RecorderBase
+public class LeaderChangedRecorder : RecorderBase<LeaderChangedEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<LeaderChangedEvent>(e =>
-        {
-            if (!ShouldRecord(e.NewLeader))
-                return;
-
-            HandleLeaderChangedEvent(e);
-        });
+        GameEventBus.Subscribe<LeaderChangedEvent>(CreateRecord);
     }
 
-    private void HandleLeaderChangedEvent(LeaderChangedEvent e)
+    public override void CreateRecord(LeaderChangedEvent e)
     {
+        if (!ShouldRecord(e.NewLeader))
+            return;
+
         var recordDef = HistoryRecordDefOf.LeaderChanged;
         var desc = recordDef.Description(e.NewLeader)
             .AddRule("OldLeader", e.OldLeader)

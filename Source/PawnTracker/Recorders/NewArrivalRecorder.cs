@@ -3,34 +3,33 @@ using PawnHistory.Source.PawnTracker.Test;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class NewArrivalRecorder : RecorderBase
+public class NewArrivalRecorder : RecorderBase<ScenarioStartEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<ScenarioStartEvent>(e =>
-        {
-            HandleNewArrivalEvent(e);
-        });
+        GameEventBus.Subscribe<ScenarioStartEvent>(CreateRecord);
     }
 
-    private void HandleNewArrivalEvent(ScenarioStartEvent e)
+    public override void CreateRecord(ScenarioStartEvent e)
     {
         var recordDef = HistoryRecordDefOf.NewArrival;
+        var (startingPawns, arriveMethod) = e;
 
-        foreach (var pawn in e.StartingPawns)
+        foreach (var pawn in startingPawns)
         {
-            if (!ShouldRecord(pawn)) continue;
+            if (!ShouldRecord(pawn))
+                continue;
 
             // TODO: handle animal if whitelisted
             var desc = recordDef.Description(pawn)
-                .WithOthers(e.StartingPawns)
-                .AddConstant("method", e.ArriveMethod)
+                .WithOthers(startingPawns)
+                .AddConstant("method", arriveMethod)
                 .Resolve();
-            AddRecord(recordDef, pawn, desc, e.StartingPawns);
+            AddRecord(recordDef, pawn, desc, startingPawns);
         }
     }
 
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(3)
             .Colonist()

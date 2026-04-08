@@ -3,13 +3,27 @@ using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Verse;
 using Verse.AI.Group;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class PartyRecorder : RecorderBase
+public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRecord<PartyRecorder.PartyJoinedInput>, IRecord<PartyRecorder.PartyCancelledInput>
 {
+    public enum CancelledReason
+    {
+        Unknown,
+        Timeout,
+        PawnKilled,
+        OrganizerLeft,
+        DangerousMap,
+    }
+
+    public record PartyStartedInput(Pawn Organizer);
+    public record PartyJoinedInput(Pawn Organizer, List<Pawn> Partygoers, IEnumerable<Pawn> NewJoiners);
+    public record PartyCancelledInput(Pawn Organizer, List<Pawn> Partygoers, CancelledReason reason, Pawn deadPawn);
+
     public override void Register()
     {
         GameEventBus.Subscribe<LordToilChangeEvent>(e =>
@@ -18,9 +32,12 @@ internal class PartyRecorder : RecorderBase
                 return;
 
             if (e.CurrentToil == null && e.NextToil is LordToil_Party)
-                HandlePartyStartedEvent(partyJob.Organizer);
+                CreateRecord(new PartyStartedInput(partyJob.Organizer));
             if (e.NextToil is LordToil_End)
-                HandlePartyCancelled(e.Lord, e.Trigger, partyJob.Organizer, e.Signal);
+            {
+                var cancelledReason = GetCancelledReason(e.Lord, e.Trigger, partyJob.Organizer, e.Signal, out var deadPawn);
+                CreateRecord(new PartyCancelledInput(partyJob.Organizer, e.Lord.ownedPawns, cancelledReason, deadPawn));
+            }
         });
 
         // pawn joins party over time, not instantly at the start
@@ -28,12 +45,13 @@ internal class PartyRecorder : RecorderBase
         {
             if (e.Lord.LordJob is not LordJob_Joinable_Party partyJob)
                 return;
-            HandlePartyJoinedEvent(e.Lord, partyJob.Organizer, e.Pawns);
+            CreateRecord(new PartyJoinedInput(partyJob.Organizer, e.Lord.ownedPawns.ToList(), e.Pawns));
         });
     }
 
-    private void HandlePartyStartedEvent(Pawn organizer)
+    public override void CreateRecord(PartyStartedInput input)
     {
+        var organizer = input.Organizer;
         if (!ShouldRecord(organizer))
             return;
 
@@ -46,21 +64,15 @@ internal class PartyRecorder : RecorderBase
         AddRecord(recordDef, organizer, desc);
     }
 
-    enum CancelledReason
+    private CancelledReason GetCancelledReason(Lord lord, Trigger trigger, Pawn organizer, TriggerSignal? signal, out Pawn deadPawn)
     {
-        Unknown,
-        PawnKilled,
-        OrganizerLeft,
-        DangerousMap,
-    }
+        deadPawn = null;
 
-    private void HandlePartyCancelled(Lord lord, Trigger trigger, Pawn organizer, TriggerSignal? signal)
-    {
         if (trigger is Trigger_TicksPassed)
-            return; // party is finished
+            return CancelledReason.Timeout; // party is finished
 
         var reason = CancelledReason.Unknown;
-        var deadPawn = signal?.condition == PawnLostCondition.Killed ? signal?.Pawn : null;
+        deadPawn = signal?.condition == PawnLostCondition.Killed ? signal?.Pawn : null;
 
         if (trigger is Trigger_PawnKilled)
             reason = CancelledReason.PawnKilled;
@@ -69,9 +81,18 @@ internal class PartyRecorder : RecorderBase
         else if (trigger is Trigger_TickCondition && !GatheringsUtility.AcceptableGameConditionsToContinueGathering(lord.LordJob.Map))
             reason = CancelledReason.DangerousMap;
 
+        return reason;
+    }
+
+    public void CreateRecord(PartyCancelledInput input)
+    {
+        var (organizer, partygoers, reason, deadPawn) = input;
         var recordDef = HistoryRecordDefOf.PartyCancelled;
 
-        foreach (var pawn in lord.ownedPawns)
+        if (reason == CancelledReason.Timeout)
+            return;
+
+        foreach (var pawn in partygoers)
         {
             if (!ShouldRecord(pawn)) continue;
 
@@ -86,10 +107,10 @@ internal class PartyRecorder : RecorderBase
         }
     }
 
-    private void HandlePartyJoinedEvent(Lord lord, Pawn organizer, IEnumerable<Pawn> newJoiners)
+    public void CreateRecord(PartyJoinedInput input)
     {
+        var (organizer, partygoers, newJoiners) = input;
         var recordDef = HistoryRecordDefOf.JoinedParty;
-        var joiners = lord.ownedPawns.Where(p => p != organizer).ToList();
 
         foreach (var pawn in newJoiners)
         {
@@ -98,7 +119,7 @@ internal class PartyRecorder : RecorderBase
 
             var desc = recordDef
                 .Description(pawn)
-                .WithOthers(joiners)
+                .WithOthers(partygoers)
                 .AddRule("Organizer", organizer)
                 .AddConstant("isOrganizer", false)
                 .Resolve();

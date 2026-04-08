@@ -3,23 +3,24 @@ using PawnHistory.Source.PawnTracker.Test;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class WildManWanderedInRecorder : RecorderBase
+public class WildManWanderedInRecorder : RecorderBase<WandererJoinedEvent>
 {
     public override void Register()
     {
         GameEventBus.Subscribe<WandererJoinedEvent>(e =>
         {
-            if (!ShouldRecord(e.Pawn))
-                return;
             if (e.IncidentDef?.defName != "WildManWandersIn")
                 return;
 
-            HandleWildManWanderedInEvent(e);
+            CreateRecord(e);
         });
     }
 
-    private void HandleWildManWanderedInEvent(WandererJoinedEvent e)
+    public override void CreateRecord(WandererJoinedEvent e)
     {
+        if (!ShouldRecord(e.Pawn))
+            return;
+
         var recordDef = HistoryRecordDefOf.WildManWanderedIn;
         var desc = recordDef.Description(e.Pawn)
             .IncludePawnGrammar()
@@ -28,7 +29,7 @@ internal class WildManWanderedInRecorder : RecorderBase
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         scenario.Incident("WildManWandersIn").Execute();
     }

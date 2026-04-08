@@ -7,7 +7,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class SkillLevelChangedRecorder : RecorderBase
+public class SkillLevelChangedRecorder : RecorderBase<SkillLevelChangedEvent>
 {
     private static readonly List<RecordDef> CombatRecords = [
         RecordDefOf.Kills,
@@ -39,19 +39,21 @@ internal class SkillLevelChangedRecorder : RecorderBase
 
     public override void Register()
     {
-        GameEventBus.Subscribe<SkillLevelChangedEvent>(e =>
-        {
-            if (!ShouldRecord(e.Pawn))
-                return;
-
-            if (e.NewLevel > e.OldLevel)
-                HandleLeveledUpEvent(e);
-            else
-                HandleLeveledDownEvent(e);
-        });
+        GameEventBus.Subscribe<SkillLevelChangedEvent>(CreateRecord);
     }
 
-    private void HandleLeveledUpEvent(SkillLevelChangedEvent e)
+    public override void CreateRecord(SkillLevelChangedEvent e)
+    {
+        if (!ShouldRecord(e.Pawn))
+            return;
+
+        if (e.NewLevel > e.OldLevel)
+            RecordLeveledUp(e);
+        else
+            RecordLeveledDown(e);
+    }
+
+    private void RecordLeveledUp(SkillLevelChangedEvent e)
     {
         var historyComp = CompHistoryManager.GetComp(e.Pawn);
         var recordDef = HistoryRecordDefOf.SkillLeveledUp;
@@ -73,7 +75,7 @@ internal class SkillLevelChangedRecorder : RecorderBase
         AddRecord(recordDef, e.Pawn, builder.Resolve());
     }
 
-    private void HandleLeveledDownEvent(SkillLevelChangedEvent e)
+    private void RecordLeveledDown(SkillLevelChangedEvent e)
     {
         var recordDef = HistoryRecordDefOf.SkillLeveledDown;
         var desc = recordDef.Description(e.Pawn)

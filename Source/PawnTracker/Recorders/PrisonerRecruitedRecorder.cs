@@ -8,17 +8,14 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class PrisonerRecruitedRecorder : RecorderBase
+public class PrisonerRecruitedRecorder : RecorderBase<PrisonerRecruitedEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<PrisonerRecruitedEvent>(e =>
-        {
-            HandlePrisonerRecruitedEvent(e);
-        });
+        GameEventBus.Subscribe<PrisonerRecruitedEvent>(CreateRecord);
     }
 
-    private void HandlePrisonerRecruitedEvent(PrisonerRecruitedEvent e)
+    public override void CreateRecord(PrisonerRecruitedEvent e)
     {
         var recordDef = HistoryRecordDefOf.PrisonerRecruited;
         // remove Sentence_RecruitAttemptAccepted
@@ -36,7 +33,7 @@ internal class PrisonerRecruitedRecorder : RecorderBase
             AddRecord(recordDef, e.Prisoner, desc, [e.Recruiter]);
     }
 
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         DebugSettings.instantRecruit = true;
 

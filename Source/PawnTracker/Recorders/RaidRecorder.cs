@@ -8,22 +8,26 @@ using Verse.Grammar;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class RaidRecorder : RecorderBase
+public class RaidRecorder : RecorderBase<RaidStartedEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<RaidStartedEvent>(e =>
-        {
-            var pawns = e.Pawns.Where(ShouldRecord).ToList();
-
-            if (e.IsFriendly)
-                HandleRaidFriendlyStartedEvent(pawns, e.Faction);
-            else
-                HandleRaidEnemyStartedEvent(pawns, e.Faction, e.RaidStrategy, e.RaidArrivalMode);
-        });
+        GameEventBus.Subscribe<RaidStartedEvent>(CreateRecord);
     }
 
-    private void HandleRaidFriendlyStartedEvent(List<Pawn> pawns, Faction faction)
+    public override void CreateRecord(RaidStartedEvent input)
+    {
+        var (pawns, faction, raidStrategy, raidArrivalMode, isFriendly) = input;
+        
+        pawns = pawns.Where(ShouldRecord).ToList();
+        
+        if (isFriendly)
+            RecordRaidFriendlyStarted(pawns, faction);
+        else
+            RecordRaidEnemyStarted(pawns, faction, raidStrategy, raidArrivalMode);
+    }
+
+    private void RecordRaidFriendlyStarted(List<Pawn> pawns, Faction faction)
     {
         var recordDef = HistoryRecordDefOf.RaidFriendly;
         var hostileFaction = pawns[0].MapHeld.lordManager.lords
@@ -54,7 +58,7 @@ internal class RaidRecorder : RecorderBase
         CenterDrop,
     }
 
-    private void HandleRaidEnemyStartedEvent(List<Pawn> pawns, Faction faction, RaidStrategyDef raidStrategy, PawnsArrivalModeDef raidArrivalMode)
+    private void RecordRaidEnemyStarted(List<Pawn> pawns, Faction faction, RaidStrategyDef raidStrategy, PawnsArrivalModeDef raidArrivalMode)
     {
         var raidProperty = RaidProperty.None;
 

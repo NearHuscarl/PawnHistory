@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>default</LangVersion>
+    <LangVersion>14.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -31,7 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>true</DebugSymbols>
-    <LangVersion>default</LangVersion>
+    <LangVersion>14.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <RuntimeIdentifiers>win;win-x64</RuntimeIdentifiers>
@@ -173,6 +173,7 @@
     <Compile Include="Source\PawnTracker\Test\TestManager.cs" />
     <Compile Include="Source\PawnTracker\Test\TestScenario.cs" />
     <Compile Include="Source\PawnTracker\Test\ThingBuilder.cs" />
+    <Compile Include="Source\RecordFix.cs" />
     <Compile Include="Source\WorldPawn\InfoCard.cs" />
     <Compile Include="Source\WorldPawn\PawnColumnWorker_History.cs" />
     <Compile Include="Source\WorldPawn\PawnColumnWorker_Health.cs" />

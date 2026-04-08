@@ -8,39 +8,43 @@ using Verse.AI.Group;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class CaravanRecorder : RecorderBase
+public record CaravanArrivedInput(Faction faction, List<Pawn> pawns);
+
+public record CaravanLeftInput(LordToil nextToil, Lord lord, List<Pawn> pawns, Trigger trigger, TriggerSignal? signal);
+
+public class CaravanRecorder : RecorderBase<CaravanArrivedInput>, IRecord<CaravanLeftInput>
 {
     public override void Register()
     {
         GameEventBus.Subscribe<LordToilChangeEvent>(e =>
         {
-            var lord = e.Lord;
-            var currentToil = e.CurrentToil;
-            var nextToil = e.NextToil;
-            var trigger = e.Trigger;
-            var pawns = lord.ownedPawns.Where(ShouldRecord).ToList();
+            var (currentToil, nextToil, trigger, lord, signal) = e;
+            var pawns = lord.ownedPawns;
             var isStartingLord = currentToil == null;
 
             if (lord.LordJob is not LordJob_TradeWithColony)
                 return;
 
             if (isStartingLord)
-                HandleCaravanTradeArrivedEvents(lord, pawns);
+                CreateRecord(new CaravanArrivedInput(lord.faction, pawns));
             if (!isStartingLord)
-                HandleCaravanTradeLeftEvents(nextToil, lord, pawns, trigger, e.Signal);
+                CreateRecord(new CaravanLeftInput(nextToil, lord, pawns, trigger, signal));
         });
     }
 
-    private void HandleCaravanTradeArrivedEvents(Lord lord, List<Pawn> pawns)
+    public override void CreateRecord(CaravanArrivedInput input)
     {
+        var (faction, pawns) = input;
         var recordDef = HistoryRecordDefOf.TradeCaravanArrived;
         var trader = pawns.FirstOrDefault(p => p.trader != null);
         var traderKind = trader?.trader?.traderKind?.label ?? "caravan";
 
         foreach (var pawn in pawns)
         {
+            if (!ShouldRecord(pawn)) continue;
+
             var desc = recordDef.Description(pawn)
-                .AddRule("Faction", lord.faction)
+                .AddRule("Faction", faction)
                 .AddRule("TraderKind", traderKind)
                 .Resolve();
             AddRecord(recordDef, pawn, desc);
@@ -58,8 +62,9 @@ internal class CaravanRecorder : RecorderBase
         PawnLost,
     }
 
-    private void HandleCaravanTradeLeftEvents(LordToil nextToil, Lord lord, List<Pawn> pawns, Trigger trigger, TriggerSignal? signal)
+    public void CreateRecord(CaravanLeftInput input)
     {
+        var (nextToil, lord, pawns, trigger, signal) = input;
         if (nextToil is not LordToil_ExitMapAndEscortCarriers && nextToil is not LordToil_ExitMap && nextToil is not LordToil_ExitMapTraderFighting)
             return;
 

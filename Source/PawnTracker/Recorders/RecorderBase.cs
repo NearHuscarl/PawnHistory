@@ -1,19 +1,24 @@
 ﻿using PawnHistory.Source.Helper;
-using PawnHistory.Source.PawnTracker.Test;
 using System.Collections.Generic;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
+public interface IRecord<in T>
+{
+    void CreateRecord(T input);
+}
+
 public abstract class RecorderBase
 {
-    protected bool ShouldRecord(Pawn pawn) => RecorderManager.ShouldRecord(pawn);
+    internal RecorderBase() { } // only allow RecorderBase<T> to create instance
 
+    protected bool ShouldRecord(Pawn pawn) => RecorderManager.ShouldRecord(pawn);
     public abstract void Register();
 
     protected IEnumerable<HistoryRecord> GeRecordsOfType(Pawn pawn, HistoryRecordDef def, int limit = 100)
     {
-        var records = CompHistoryManager.GetComp(pawn).records;
+        var records = pawn.GetHistoryRecords();
 
         for (var i = records.Count - 1; i >= 0; i--)
         {
@@ -28,9 +33,10 @@ public abstract class RecorderBase
     {
         pawn.GetHistoryRecords().Add(new HistoryRecord(def, pawn, resolvedDesc, concerns, location));
     }
+}
 
-    public virtual void Test(TestScenario testScenario)
-    {
-        Log.Message($"Test in {GetType().Name} is not implemented yet.");
-    }
+public abstract class RecorderBase<TInput> : RecorderBase, IRecord<TInput>
+{
+    public override abstract void Register();
+    public abstract void CreateRecord(TInput input);
 }

@@ -52,17 +52,13 @@ public static class RecorderManager
     {
         foreach (var testMethodInfo in GetTestMethods())
         {
-            var label = testMethodInfo.Label;
-            var recorder = testMethodInfo.Recorder;
-            var debugValues = testMethodInfo.DebugValues;
-            var method = testMethodInfo.Method;
-            var skipTest = testMethodInfo.SkipTest;
+            var (label, recorder, method, debugValues, skipTest) = testMethodInfo;
 
             if (debugValues != null)
-                return;
+                continue;
 
             if (skipTest)
-                return;
+                continue;
 
             TestManager.EnqueueTest(() => method.Invoke(recorder, [testScenario]), label);
         }
@@ -83,10 +79,7 @@ public static class RecorderManager
 
         foreach (var testMethodInfo in GetTestMethods())
         {
-            var label = testMethodInfo.Label;
-            var recorder = testMethodInfo.Recorder;
-            var debugValues = testMethodInfo.DebugValues;
-            var method = testMethodInfo.Method;
+            var (label, recorder, method, debugValues, skipTest) = testMethodInfo;
             var parameters = method.GetParameters();
 
             if (debugValues == null)
@@ -133,21 +126,15 @@ public static class RecorderManager
         return actionNodes;
     }
 
-    struct TestMethodInfo
-    {
-        public string Label;
-        public RecorderBase Recorder;
-        public MethodInfo Method;
-        public int[] DebugValues;
-        public bool SkipTest;
-    }
+    record TestMethodInfo(string Label, RecorderBase Recorder, MethodInfo Method, int[] DebugValues, bool SkipTest);
 
-    private static IEnumerable<TestMethodInfo> GetTestMethods()
+    private static List<TestMethodInfo> GetTestMethods()
     {
+        var testMethods = new List<TestMethodInfo>();
+
         foreach (var recorder in activeRecorders)
         {
             var type = recorder.GetType();
-            var testMethod = type.GetMethod("Test", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var buttonName = type.Name.Replace("Recorder", "");
             var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
@@ -181,16 +168,11 @@ public static class RecorderManager
 
                 var skipTest = method.GetCustomAttribute<SkipTestAttribute>();
 
-                yield return new TestMethodInfo
-                {
-                    Label = label,
-                    Recorder = recorder,
-                    Method = method,
-                    DebugValues = debugValues,
-                    SkipTest = skipTest != null
-                };
+                testMethods.Add(new TestMethodInfo(label, recorder, method, debugValues, skipTest != null));
             }
         }
+
+        return testMethods;
     }
 
     [NearDebugOutput]

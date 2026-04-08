@@ -6,31 +6,29 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class Surgery_RemovePartRecorder : SurgeryRecorder
+public class Surgery_RemovePartRecorder : SurgeryRecorder<SurgeryRemoveBodyPartEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<SurgeryRemoveBodyPartEvent>(e =>
-        {
-            if (!ShouldRecord(e.Patient))
-                return;
-
-            if (e.Outcome.failure)
-            {
-                var botched = HistoryRecordDefOf.BodyPartRemoved.Description(e.Patient)
-                    .AddRule("Part", e.Part)
-                    .AddConstant("intent", e.Intent)
-                    .Resolve("BotchedSurgery")
-                    .ToLower();
-                HandleBotchSurgeryEvent(e, botched);
-            }
-            else
-                HandleBodyPartRemovedEvent(e);
-        });
+        GameEventBus.Subscribe<SurgeryRemoveBodyPartEvent>(CreateRecord);
     }
 
-    private void HandleBodyPartRemovedEvent(SurgeryRemoveBodyPartEvent e)
+    public override void CreateRecord(SurgeryRemoveBodyPartEvent e)
     {
+        if (!ShouldRecord(e.Patient))
+            return;
+
+        if (e.Outcome.failure)
+        {
+            var botched = HistoryRecordDefOf.BodyPartRemoved.Description(e.Patient)
+                .AddRule("Part", e.Part)
+                .AddConstant("intent", e.Intent)
+                .Resolve("BotchedSurgery")
+                .ToLower();
+            RecordBotchedSurgery(e, botched);
+            return;
+        }
+
         var recordDef = HistoryRecordDefOf.BodyPartRemoved;
         var desc = recordDef.Description(e.Patient)
             .AddRule("Doctor", e.Doctor)

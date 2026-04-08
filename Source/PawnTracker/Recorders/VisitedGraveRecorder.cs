@@ -5,8 +5,10 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class VisitedGraveRecorder : HistoryTaleRecorder
+public class VisitedGraveRecorder : HistoryTaleRecorder<VisitedGraveRecorder.Input>
 {
+    public record Input(Pawn pawn, Pawn deadPawn);
+
     private static readonly TaleDef VisitedGrave = DefDatabase<TaleDef>.GetNamed("VisitedGrave");
 
     public override void Register()
@@ -18,28 +20,28 @@ internal class VisitedGraveRecorder : HistoryTaleRecorder
             if (e.Tale.def != VisitedGrave)
                 return;
 
-            HandleVisitedGraveEvent(e);
+            CreateRecord(new Input(e.Pawn, e.Params[0] as Pawn));
         });
     }
 
-    private void HandleVisitedGraveEvent(TaleRecordedEvent e)
+    public override void CreateRecord(Input input)
     {
+        var (pawn, deadPawn) = input;
         var recordDef = HistoryRecordDefOf.VisitedGrave;
-        var corpse = e.Params[0] as Pawn;
-        var desc = recordDef.Description(e.Pawn)
+        var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
-            .AddRule("Corpse", corpse)
+            .AddRule("Corpse", deadPawn)
             .Resolve();
 
-        if (!ShouldRecordTale(e.Pawn, recordDef, desc))
+        if (!ShouldRecordTale(pawn, recordDef, desc))
             return;
 
-        AddRecord(recordDef, e.Pawn, desc, [corpse]);
-        AddRecord(recordDef, corpse, desc, [e.Pawn]);
+        AddRecord(recordDef, pawn, desc, [deadPawn]);
+        AddRecord(recordDef, deadPawn, desc, [pawn]);
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(5).Colonist().Execute();
 

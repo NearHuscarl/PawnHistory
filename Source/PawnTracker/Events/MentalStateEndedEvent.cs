@@ -4,11 +4,7 @@ using Verse.AI;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class MentalStateEndedEvent(Pawn pawn, MentalState mentalState) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-    public MentalState MentalState { get; } = mentalState;
-}
+public record MentalStateEndedEvent(Pawn Pawn, MentalState MentalState) : GameEventBase;
 
 [HarmonyPatch(typeof(MentalState), nameof(MentalState.RecoverFromState))]
 static class RecoverFromState_RecoverFromState_Patch

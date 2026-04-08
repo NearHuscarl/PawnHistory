@@ -9,8 +9,11 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class CasualtyRecorder : RecorderBase
+public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecord<CasualtyRecorder.KilledOrDownedInput>
 {
+    public record KillInput(Pawn Subject, Pawn Initiator, string combatLogText, string transitionText, Pawn originalTargetPawn);
+    public record KilledOrDownedInput(Pawn Subject, Pawn Initiator, CasualtyType Casualty, HediffDef CulpritHediff, string combatLogText, string transitionText, Pawn originalTargetPawn, bool isLeader);
+
     public override void Register()
     {
         GameEventBus.Subscribe<CasualtyLogAddedEvent>(e =>
@@ -28,40 +31,56 @@ internal class CasualtyRecorder : RecorderBase
                     originalTargetPawn = Accessor.BattleLogEntry_RangedImpact.OriginalTargetPawn(rangedEntry);
 
                 if (e.Casualty == CasualtyType.Killed)
-                    HandleKillEvent(e, combatLogText, originalTargetPawn);
+                {
+                    var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Initiator);
+                    CreateRecord(new KillInput(e.Subject, e.Initiator, combatLogText, transitionText, originalTargetPawn));
+                }
                 if (e.CulpritHediff != HediffDefOf.Anesthetic)
-                    HandleDownOrDeathEvent(e, combatLogText, originalTargetPawn, isLeader);
+                {
+                    var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Subject);
+                    CreateRecord(new KilledOrDownedInput(e.Subject, e.Initiator, e.Casualty, e.CulpritHediff, combatLogText, transitionText, originalTargetPawn, isLeader));
+                }
             });
         });
     }
 
-    private void HandleDownOrDeathEvent(CasualtyLogAddedEvent e, string combatLogText, Pawn originalTarget, bool isLeader)
+    public override void CreateRecord(KillInput input)
     {
-        if (!RecorderManager.ShouldRecord(e.Subject))
+        var (subject, initiator, combatLogText, transitionText, originalTarget) = input;
+        if (!ShouldRecord(initiator))
             return;
 
-        var isKillLog = e.Casualty == CasualtyType.Killed;
+        var desc = $"{combatLogText} {transitionText}";
+        AddRecord(HistoryRecordDefOf.Kill, initiator, desc, [subject, originalTarget]);
+    }
+
+    public void CreateRecord(KilledOrDownedInput input)
+    {
+        var (subject, initiator, casualty, culpritHediff, combatLogText, transitionText, originalTarget, isLeader) = input;
+        if (!ShouldRecord(subject))
+            return;
+
+        var isKillLog = casualty == CasualtyType.Killed;
         var recordDef = isKillLog ? HistoryRecordDefOf.Death : HistoryRecordDefOf.Downed;
-        var historyRecords = e.Subject.GetHistoryRecords();
+        var historyRecords = subject.GetHistoryRecords();
         var lastRecord = historyRecords.LastOrDefault();
 
         if (isKillLog && lastRecord?.def == HistoryRecordDefOf.Downed && lastRecord.date == GenTicks.TicksAbs)
         {
-            Log.Message($"[PawnHistory] Received death & downed transitions from {e.Subject.NameShortColored} in the same tick. Skipping down transition..");
+            Log.Message($"[PawnHistory] Received death & downed transitions from {subject.NameShortColored} in the same tick. Skipping down transition..");
             historyRecords.Pop();
         }
 
-        var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Subject);
         string desc;
         // combatLogText is null when:
         // - Log entry is not associated with any active battle. Non-combat dead needs to be handled manually (e.g. BloodLoss, ToxicBuildup...)
         // - LastDamageEntry may not match any current hediff if the same hediff was linked to an earlier combat log entry.
         if (combatLogText == null)
         {
-            var hediffInt = e.Subject.health.hediffSet.hediffs.LastOrDefault(h => h.def == e.CulpritHediff && h.ageTicks == 0);
-            hediffInt ??= e.Subject.health.hediffSet.hediffs.LastOrDefault(h => h.ageTicks == 0 && h.def.isBad); // sometimes IF it does not find anything, use bruteforce
+            var hediffInt = subject.health.hediffSet.hediffs.LastOrDefault(h => h.def == culpritHediff && h.ageTicks == 0);
+            hediffInt ??= subject.health.hediffSet.hediffs.LastOrDefault(h => h.ageTicks == 0 && h.def.isBad); // sometimes IF it does not find anything, use bruteforce
             var rootKeyword = isKillLog ? "killedEntry" : "downedEntry";
-            desc = recordDef.Description(e.Subject)
+            desc = recordDef.Description(subject)
                 .IncludePawnGrammar()
                 .AddConstant("factionLeader", isLeader)
                 .AddRule("HediffInPart", hediffInt?.LabelNounPretty())
@@ -71,20 +90,20 @@ internal class CasualtyRecorder : RecorderBase
         else
             desc = $"{combatLogText} {transitionText}";
 
-        AddRecord(recordDef, e.Subject, desc, [e.Initiator, originalTarget]);
+        AddRecord(recordDef, subject, desc, [initiator, originalTarget]);
 
         if (isKillLog)
-            HandleRelativeDeathEvent(e.Subject, e.Initiator, originalTarget, combatLogText, transitionText, desc);
+            RecordRelativeDeath(subject, initiator, originalTarget, combatLogText, transitionText, desc);
     }
 
-    private void HandleRelativeDeathEvent(Pawn deceased, Pawn initiator, Pawn originalTarget, string combatLogText, string transitionText, string deathDesc)
+    private void RecordRelativeDeath(Pawn deceased, Pawn initiator, Pawn originalTarget, string combatLogText, string transitionText, string deathDesc)
     {
         var recordDef = HistoryRecordDefOf.RelativeDeath;
         var deceasedName = deceased.NameDef();
 
         foreach (var relative in deceased.relations.PotentiallyRelatedPawns)
         {
-            if (!RecorderManager.ShouldRecord(relative))
+            if (!ShouldRecord(relative))
                 continue;
 
             var relationDef = relative.GetMostImportantRelation(deceased);
@@ -104,16 +123,6 @@ internal class CasualtyRecorder : RecorderBase
         }
     }
 
-    private void HandleKillEvent(CasualtyLogAddedEvent e, string combatLogText, Pawn originalTarget)
-    {
-        if (!RecorderManager.ShouldRecord(e.Initiator))
-            return;
-
-        var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Initiator);
-        var desc = $"{combatLogText} {transitionText}";
-        AddRecord(HistoryRecordDefOf.Kill, e.Initiator, desc, [e.Subject, originalTarget]);
-    }
-
     protected override void AddRecord(HistoryRecordDef def, Pawn pawn, TaggedString resolvedDesc, IEnumerable<Thing> concerns = null, RecordLocation location = null)
     {
         if (def == HistoryRecordDefOf.Death)
@@ -125,9 +134,9 @@ internal class CasualtyRecorder : RecorderBase
         if (def == HistoryRecordDefOf.RelativeDeath)
         {
             var deathRelative = concerns.FirstOrDefault() as Pawn;
-            var lastRecord = deathRelative?.GetHistoryRecords().LastOrDefault();
-            if (lastRecord?.def == HistoryRecordDefOf.Crushed)
-                location = lastRecord?.location;
+            var lastTwoRecords = deathRelative?.GetHistoryRecords().TakeLast(2).ToList();
+            if (lastTwoRecords.Count == 2 && lastTwoRecords[0].def == HistoryRecordDefOf.Crushed && lastTwoRecords[1].def == HistoryRecordDefOf.Death)
+                location = lastTwoRecords[0]?.location;
         }
 
         base.AddRecord(def, pawn, resolvedDesc, concerns, location);

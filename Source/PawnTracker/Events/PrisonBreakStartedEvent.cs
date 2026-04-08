@@ -5,13 +5,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class PrisonBreakStartedEvent(Pawn initiator, List<Pawn> escapingPrisoners, PrisonBreakReason reason, string logEntryText = null) : GameEventBase
-{
-    public Pawn Initiator { get; } = initiator;
-    public List<Pawn> EscapingPrisoners { get; } = escapingPrisoners ?? [];
-    public PrisonBreakReason Reason { get; } = reason;
-    public string LogEntryText { get; } = logEntryText;
-}
+public record PrisonBreakStartedEvent(Pawn Initiator, List<Pawn> EscapingPrisoners, PrisonBreakReason Reason, string LogEntryText = null) : GameEventBase;
 
 public enum PrisonBreakReason
 {

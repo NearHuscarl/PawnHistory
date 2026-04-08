@@ -6,11 +6,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-internal class SurgeryInstallNaturalPartEvent(Pawn patient, Pawn doctor, BodyPartRecord part, Hediff hediffToRemove, Hediff badHediff) : SurgeryEvent(patient, doctor, part)
-{
-    public Hediff HediffToRemove { get; } = hediffToRemove;
-    public Hediff BadHediff { get; } = badHediff;
-}
+public record SurgeryInstallNaturalPartEvent(Pawn Patient, Pawn Doctor, BodyPartRecord Part, Hediff HediffToRemove, Hediff BadHediff) : SurgeryEvent(Patient, Doctor, Part);
 
 class InstallNaturalPartContext : SurgeryContext<SurgeryInstallNaturalPartEvent> { }
 

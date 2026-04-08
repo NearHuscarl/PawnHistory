@@ -6,14 +6,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-internal class SurgeryEvent(Pawn patient, Pawn doctor, BodyPartRecord part) : GameEventBase
-{
-    public Pawn Patient { get; } = patient;
-    public Pawn Doctor { get; } = doctor;
-    public BodyPartRecord Part { get; } = part;
-    public List<Hediff> NewInjuries { get; set; }
-    public SurgeryOutcome Outcome { get; set; }
-}
+public record SurgeryEvent(Pawn Patient, Pawn Doctor, BodyPartRecord Part, List<Hediff> NewInjuries = null, SurgeryOutcome Outcome = null) : GameEventBase;
 
 // Call order:
 // Recipe_Surgery.ApplyOnPawn() prefix
@@ -47,10 +40,11 @@ internal class SurgeryContext<T> where T : SurgeryEvent
 
         // Injury hediffs are those added to the part during the failed surgery
         // (e.g. surgical cut, etc.) - compare snapshot to current state
-        ctx.e.NewInjuries = GetInjurySnapshot(patient)
+        var newInjuries = GetInjurySnapshot(patient)
             .Except(ctx.injurySnapshot)
             .OrderByDescending(h => h.Severity)
             .ToList();
+        ctx.e = ctx.e with { NewInjuries = newInjuries };
 
         GameEventBus.Publish(ctx.e);
     }
@@ -59,7 +53,7 @@ internal class SurgeryContext<T> where T : SurgeryEvent
     {
         if (!PendingSurgeries.TryGetValue(GetSurgeryId(patient), out var ctx))
             return;
-        ctx.e.Outcome = __result;
+        ctx.e = ctx.e with { Outcome = __result };
     }
 
     public static string GetSurgeryId(Pawn pawn)

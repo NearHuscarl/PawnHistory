@@ -4,13 +4,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class SkillLevelChangedEvent(Pawn pawn, SkillDef def, int oldLevel, int newLevel) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-    public SkillDef Def { get; } = def;
-    public int OldLevel { get; } = oldLevel;
-    public int NewLevel { get; } = newLevel;
-}
+public record SkillLevelChangedEvent(Pawn Pawn, SkillDef Def, int OldLevel, int NewLevel) : GameEventBase;
 
 [HarmonyPatch(typeof(SkillRecord), nameof(SkillRecord.Learn))]
 internal static class SkillRecord_Learn_Patch

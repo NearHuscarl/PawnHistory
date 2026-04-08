@@ -5,11 +5,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class ScenarioStartEvent(List<Pawn> startingPawns, PlayerPawnsArriveMethod arriveMethod) : GameEventBase
-{
-    public List<Pawn> StartingPawns { get; } = startingPawns;
-    public PlayerPawnsArriveMethod ArriveMethod { get; } = arriveMethod;
-}
+public record ScenarioStartEvent(List<Pawn> StartingPawns, PlayerPawnsArriveMethod ArriveMethod) : GameEventBase;
 
 [HarmonyPatch(typeof(ScenPart_PlayerPawnsArriveMethod), nameof(ScenPart_PlayerPawnsArriveMethod.GenerateIntoMap))]
 internal class ScenPart_PlayerPawnsArriveMethod_GenerateIntoMap_Patch

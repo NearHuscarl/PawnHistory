@@ -6,7 +6,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
 
-public class GameEventBase() { }
+public record GameEventBase() { }
 
 public class GameEventBus
 {

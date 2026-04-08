@@ -6,23 +6,11 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class Surgery_InstallPartRecorder : SurgeryRecorder
+public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNaturalPartEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<SurgeryInstallNaturalPartEvent>(e =>
-        {
-            if (e.Outcome.failure)
-            {
-                var botched = HistoryRecordDefOf.BodyPartInstalled.Description(e.Patient)
-                    .AddRule("AddedPart", e.Part, addSubsymbols: true)
-                    .Resolve("BotchedSurgery")
-                    .ToLower();
-                HandleBotchSurgeryEvent(e, botched);
-            }
-            else
-                HandleBodyPartInstalledEvent(e);
-        });
+        GameEventBus.Subscribe<SurgeryInstallNaturalPartEvent>(CreateRecord);
     }
 
     enum SurgeryType
@@ -41,10 +29,20 @@ internal class Surgery_InstallPartRecorder : SurgeryRecorder
         return SurgeryType.Replace;
     }
 
-    private void HandleBodyPartInstalledEvent(SurgeryInstallNaturalPartEvent e)
+    public override void CreateRecord(SurgeryInstallNaturalPartEvent e)
     {
         if (!ShouldRecord(e.Patient))
             return;
+
+        if (e.Outcome.failure)
+        {
+            var botched = HistoryRecordDefOf.BodyPartInstalled.Description(e.Patient)
+                .AddRule("AddedPart", e.Part, addSubsymbols: true)
+                .Resolve("BotchedSurgery")
+                .ToLower();
+            RecordBotchedSurgery(e, botched);
+            return;
+        }
 
         var recordDef = HistoryRecordDefOf.BodyPartInstalled;
         var desc = recordDef.Description(e.Patient)

@@ -5,8 +5,10 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class AnimalHuntedRecorder : HistoryTaleRecorder
+public class AnimalHuntedRecorder : HistoryTaleRecorder<AnimalHuntedRecorder.Input>
 {
+    public record Input(Pawn pawn, Pawn prey);
+
     public override void Register()
     {
         DaysToRecordAgain = 6f;
@@ -19,12 +21,13 @@ internal class AnimalHuntedRecorder : HistoryTaleRecorder
             if (e.Params[0] is not Pawn prey || !prey.RaceProps.Animal)
                 return;
 
-            HandleHuntedEvent(e.Pawn, prey);
+            CreateRecord(new Input(e.Pawn, prey));
         });
     }
 
-    private void HandleHuntedEvent(Pawn pawn, Pawn prey)
+    public override void CreateRecord(Input input)
     {
+        var (pawn, prey) = input;
         var recordDef = HistoryRecordDefOf.Hunted;
         var desc = recordDef.Description(pawn)
             .AddRule("Prey", prey, addSubsymbols: true)
@@ -36,7 +39,7 @@ internal class AnimalHuntedRecorder : HistoryTaleRecorder
         AddRecord(recordDef, pawn, desc, [prey]);
     }
 
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(15).Colonist().Execute();
 

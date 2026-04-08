@@ -9,33 +9,32 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class CasketDropRecorder : RecorderBase
+public class CasketDropRecorder : RecorderBase<CasketDropEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<CasketDropEvent>(e =>
-        {
-            if (!ShouldRecord(e.Pawn))
-                return;
-
-            HandleCasketDropEvent(e);
-        });
+        GameEventBus.Subscribe<CasketDropEvent>(CreateRecord);
     }
 
-    private void HandleCasketDropEvent(CasketDropEvent e)
+    public override void CreateRecord(CasketDropEvent e)
     {
-        var isAwakened = !e.Pawn.GetHistoryRecords().Any();
+        var (pawn, casket, reason, opener) = e;
+
+        if (!ShouldRecord(pawn))
+            return;
+
+        var isAwakened = !pawn.GetHistoryRecords().Any();
         var recordDef = isAwakened ? HistoryRecordDefOf.CasketAwakened : HistoryRecordDefOf.CasketDrop;
-        var desc = recordDef.Description(e.Pawn)
-            .AddRule("Faction", e.Pawn.Faction)
-            .AddRule("Opener", e.Opener)
-            .AddRule("Casket", e.Casket.def, addSubsymbols: true)
-            .AddConstant("reason", e.Reason)
-            .AddConstant("isCorpse", e.Pawn.Dead) // is removed from a corpse container (e.g. grave/sarcophagus)
-            .AddConstant("hasOpener", e.Opener != null)
+        var desc = recordDef.Description(pawn)
+            .AddRule("Faction", pawn.Faction)
+            .AddRule("Opener", opener)
+            .AddRule("Casket", casket.def, addSubsymbols: true)
+            .AddConstant("reason", reason)
+            .AddConstant("isCorpse", pawn.Dead) // is removed from a corpse container (e.g. grave/sarcophagus)
+            .AddConstant("hasOpener", opener != null)
             .AddConstant("isAwakened", isAwakened)
             .Resolve();
-        AddRecord(recordDef, e.Pawn, desc, [e.Casket, e.Opener]);
+        AddRecord(recordDef, pawn, desc, [casket, opener]);
     }
 
     public void LogAllCasketClasses()

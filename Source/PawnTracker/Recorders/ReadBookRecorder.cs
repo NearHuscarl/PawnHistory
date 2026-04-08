@@ -5,8 +5,10 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class ReadBookRecorder : HistoryTaleRecorder
+public class ReadBookRecorder : HistoryTaleRecorder<ReadBookRecorder.Input>
 {
+    public record Input(Pawn pawn, Book book);
+
     public override void Register()
     {
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
@@ -14,28 +16,28 @@ internal class ReadBookRecorder : HistoryTaleRecorder
             if (e.Tale.def != TaleDefOf.ReadBook)
                 return;
 
-            HandleReadBookEvent(e);
+            CreateRecord(new Input(e.Pawn, e.Params[0] as Book));
         });
     }
 
-    private void HandleReadBookEvent(TaleRecordedEvent e)
+    public override void CreateRecord(Input input)
     {
+        var (pawn, book) = input;
         var recordDef = HistoryRecordDefOf.ReadBook;
-        var book = e.Params[0] as Book;
         var bookTitle = book.Title.Colorize(ColoredText.SubtleGrayColor);
-        var desc = recordDef.Description(e.Pawn)
+        var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
             .AddRule("Book", bookTitle)
             .Resolve();
 
-        if (!ShouldRecordTale(e.Pawn, recordDef, desc))
+        if (!ShouldRecordTale(pawn, recordDef, desc))
             return;
 
-        AddRecord(recordDef, e.Pawn, desc, [book]);
+        AddRecord(recordDef, pawn, desc, [book]);
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(15).Colonist().Execute();
 

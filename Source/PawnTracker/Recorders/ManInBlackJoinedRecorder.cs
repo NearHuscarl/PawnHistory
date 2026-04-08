@@ -4,37 +4,39 @@ using RimWorld;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class ManInBlackJoinedRecorder : RecorderBase
+public class ManInBlackJoinedRecorder : RecorderBase<WandererJoinedEvent>
 {
     public override void Register()
     {
         GameEventBus.Subscribe<WandererJoinedEvent>(e =>
         {
-            if (!ShouldRecord(e.Pawn))
-                return;
             if (e.IncidentDef?.defName != "StrangerInBlackJoin")
                 return;
 
-            HandleManInBlackJoinEvent(e);
+            CreateRecord(e);
         });
     }
 
-    private void HandleManInBlackJoinEvent(WandererJoinedEvent e)
+    public override void CreateRecord(WandererJoinedEvent e)
     {
+        if (!ShouldRecord(e.Pawn))
+            return;
+
+        var pawn = e.Pawn;
         var recordDef = HistoryRecordDefOf.ManInBlackJoin;
-        var relative = PawnRelationUtility.GetMostImportantColonyRelative(e.Pawn);
-        var relation = relative?.GetMostImportantRelation(e.Pawn)?.GetGenderSpecificLabel(e.Pawn);
-        var desc = recordDef.Description(e.Pawn)
+        var relative = PawnRelationUtility.GetMostImportantColonyRelative(pawn);
+        var relation = relative?.GetMostImportantRelation(pawn)?.GetGenderSpecificLabel(pawn);
+        var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
             .AddRule("Other", relative, addSubsymbols: true)
             .AddRule("Relation", relation)
             .AddConstant("hasRelation", relative != null)
             .Resolve();
-        AddRecord(recordDef, e.Pawn, desc, [relative]);
+        AddRecord(recordDef, pawn, desc, [relative]);
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         scenario.Incident("StrangerInBlackJoin").Execute();
     }

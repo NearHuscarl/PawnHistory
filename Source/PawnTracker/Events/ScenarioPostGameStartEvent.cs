@@ -3,9 +3,7 @@ using RimWorld;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class ScenarioPostGameStartEvent() : GameEventBase
-{
-}
+public record ScenarioPostGameStartEvent() : GameEventBase;
 
 [HarmonyPatch(typeof(Scenario), nameof(Scenario.PostGameStart))]
 internal class Scenario_PostGameStart_Patch

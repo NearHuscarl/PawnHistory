@@ -8,22 +8,22 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class PrisonBreakRecorder : RecorderBase
+public class PrisonBreakRecorder : RecorderBase<PrisonBreakStartedEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<PrisonBreakStartedEvent>(e =>
-        {
-            if (!ShouldRecord(e.Initiator)) return;
-
-            if (e.Reason == PrisonBreakReason.Rebellion)
-                HandlePrisonBreakEvent(e);
-            else
-                HandleJailbreakEvent(e);
-        });
+        GameEventBus.Subscribe<PrisonBreakStartedEvent>(CreateRecord);
     }
 
-    private void HandlePrisonBreakEvent(PrisonBreakStartedEvent e)
+    public override void CreateRecord(PrisonBreakStartedEvent e)
+    {
+        if (e.Reason == PrisonBreakReason.Rebellion)
+            RecordPrisonBreak(e);
+        else
+            RecordJailbreak(e);
+    }
+
+    private void RecordPrisonBreak(PrisonBreakStartedEvent e)
     {
         var recordDef = HistoryRecordDefOf.PrisonBreak;
         var joiners = e.EscapingPrisoners.Where(p => p != e.Initiator).ToList();
@@ -46,13 +46,15 @@ internal class PrisonBreakRecorder : RecorderBase
         }
     }
 
-    private void HandleJailbreakEvent(PrisonBreakStartedEvent e)
+    private void RecordJailbreak(PrisonBreakStartedEvent e)
     {
         var recordDef = HistoryRecordDefOf.PrisonBreak;
         var concerns = e.EscapingPrisoners.Concat(e.Initiator).Cast<Thing>();
 
         foreach (var pawn in e.EscapingPrisoners)
         {
+            if (!ShouldRecord(pawn)) continue;
+
             var desc = recordDef.Description(pawn)
                 .WithOthers(e.EscapingPrisoners)
                 .AddRule("Reason", e.LogEntryText)

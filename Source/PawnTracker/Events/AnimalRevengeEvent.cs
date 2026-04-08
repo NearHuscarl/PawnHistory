@@ -11,12 +11,7 @@ public enum RevengeReason
     Tame,
 }
 
-public class AnimalRevengeEvent(List<Pawn> animals, Pawn instigator, RevengeReason reason) : GameEventBase
-{
-    public List<Pawn> Animals { get; } = animals;
-    public Pawn Instigator { get; } = instigator;
-    public RevengeReason Reason { get; } = reason;
-}
+public record AnimalRevengeEvent(List<Pawn> Animals, Pawn Instigator, RevengeReason Reason) : GameEventBase;
 
 static class AnimalRevengeContext
 {

@@ -11,13 +11,7 @@ public enum DropReason
     CasketDestroyed,
 }
 
-internal class CasketDropEvent(Pawn pawn, Building_Casket casket, DropReason reason, Pawn opener) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-    public Building_Casket Casket { get; } = casket;
-    public DropReason Reason { get; } = reason;
-    public Pawn Opener { get; } = opener;
-}
+public record CasketDropEvent(Pawn Pawn, Building_Casket Casket, DropReason Reason, Pawn Opener) : GameEventBase;
 
 class CasketDropContext
 {

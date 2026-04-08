@@ -8,21 +8,6 @@ using Verse;
 
 namespace PawnHistory.Source.DebugTools;
 
-public class DumpConfig
-{
-    public int IndentSize { get; set; } = 2;
-    public int MaxDepth { get; set; } = 3;
-    public int MaxCollectionItems { get; set; } = 10;
-
-    public HashSet<Type> LeafTypes { get; set; } = [
-        typeof(Pawn),
-        typeof(Map),
-        typeof(Thing),
-        typeof(Hediff),
-        typeof(Faction),
-        ];
-}
-
 public static class DebugUtility
 {
     public static string Format(object obj)

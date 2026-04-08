@@ -1,11 +1,14 @@
 ﻿using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
+using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class WalkNakedRecorder : HistoryTaleRecorder
+public class WalkNakedRecorder : HistoryTaleRecorder<WalkNakedRecorder.Input>
 {
+    public record Input(Pawn pawn);
+
     public override void Register()
     {
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
@@ -13,25 +16,26 @@ internal class WalkNakedRecorder : HistoryTaleRecorder
             if (e.Tale.def != TaleDefOf.WalkedNaked)
                 return;
 
-            HandleWalkNakedEvent(e);
+            CreateRecord(new Input(e.Pawn));
         });
     }
 
-    private void HandleWalkNakedEvent(TaleRecordedEvent e)
+    public override void CreateRecord(Input e)
     {
+        var pawn = e.pawn;
         var recordDef = HistoryRecordDefOf.WalkNaked;
-        var desc = recordDef.Description(e.Pawn)
+        var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
             .Resolve();
 
-        if (!ShouldRecordTale(e.Pawn, recordDef, desc))
+        if (!ShouldRecordTale(pawn, recordDef, desc))
             return;
 
-        AddRecord(recordDef, e.Pawn, desc);
+        AddRecord(recordDef, pawn, desc);
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(15).Colonist().StripNaked().Execute();
 

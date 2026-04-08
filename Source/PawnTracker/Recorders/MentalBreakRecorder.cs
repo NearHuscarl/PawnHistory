@@ -10,8 +10,10 @@ using Verse.AI;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class MentalBreakRecorder : RecorderBase
+public class MentalBreakRecorder : RecorderBase<MentalBreakRecorder.Input>
 {
+    public record Input(Pawn pawn, MentalBreakDef mentalBreak, string reason, Pawn target = null);
+
     public override void Register()
     {
         // TODO: move this to Events/
@@ -20,7 +22,7 @@ internal class MentalBreakRecorder : RecorderBase
             if (!ShouldRecord(e.Pawn)) return;
             if (e.MentalBreakWorker is not MentalBreakWorker_RunWild) return;
 
-            HandleMentalBreaksEvent(e.Pawn, e.MentalBreakWorker.def, e.Reason);
+            CreateRecord(new Input(e.Pawn, e.MentalBreakWorker.def, e.Reason));
         });
         GameEventBus.Subscribe<MentalBreakStartedEvent>(e =>
         {
@@ -30,7 +32,7 @@ internal class MentalBreakRecorder : RecorderBase
             if (e.Pawn.MentalState is MentalState_Slaughterer || e.Pawn.MentalState is MentalState_Jailbreaker)
                 OnGoingMentalStates[e.Pawn] = (e.MentalBreakWorker.def, e.Reason, false);
             else
-                HandleMentalBreaksEvent(e.Pawn, e.MentalBreakWorker.def, e.Reason);
+                CreateRecord(new Input(e.Pawn, e.MentalBreakWorker.def, e.Reason));
         });
         GameEventBus.Subscribe<JobStartedEvent>(e =>
         {
@@ -45,7 +47,7 @@ internal class MentalBreakRecorder : RecorderBase
             || mentalState is MentalState_Jailbreaker && e.NewJob.def == JobDefOf.InducePrisonerToEscape)
             {
                 OnGoingMentalStates[e.Pawn] = ongoingState with { hasRecord = true };
-                HandleMentalBreaksEvent(e.Pawn, ongoingState.mentalBreak, ongoingState.reason, e.NewJob.targetA.Pawn);
+                CreateRecord(new Input(e.Pawn, ongoingState.mentalBreak, ongoingState.reason, e.NewJob.targetA.Pawn));
             }
         });
         GameEventBus.Subscribe<MentalStateEndedEvent>(e => OnGoingMentalStates.Remove(e.Pawn));
@@ -53,8 +55,9 @@ internal class MentalBreakRecorder : RecorderBase
 
     private static readonly Dictionary<Pawn, (MentalBreakDef mentalBreak, string reason, bool hasRecord)> OnGoingMentalStates = [];
 
-    private void HandleMentalBreaksEvent(Pawn pawn, MentalBreakDef mentalBreak, string reason, Pawn target = null)
+    public override void CreateRecord(Input input)
     {
+        var (pawn, mentalBreak, reason, target) = input;
         target ??= TryFindTarget(pawn.MentalState);
 
         var mentalState = pawn.MentalState; // mentalState could be null in some MentalBreak
@@ -192,7 +195,7 @@ internal class MentalBreakRecorder : RecorderBase
     ];
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         scenario.Map()
             .BuildRoom(7, 7, "Bedroom")

@@ -5,12 +5,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class CrushedEvent(IEnumerable<Pawn> pawns, Map map, IntVec3 position) : GameEventBase
-{
-    public IEnumerable<Pawn> Pawns { get; } = pawns;
-    public Map Map { get; } = map;
-    public IntVec3 Position { get; } = position;
-}
+public record CrushedEvent(IEnumerable<Pawn> Pawns, Map Map, IntVec3 Position) : GameEventBase;
 
 public class CrushedContext
 {

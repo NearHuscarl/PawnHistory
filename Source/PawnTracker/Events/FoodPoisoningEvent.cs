@@ -4,13 +4,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class FoodPoisoningEvent(Pawn victim, Thing ingestible, FoodPoisonCause cause, Pawn cook) : GameEventBase
-{
-    public Pawn Victim { get; } = victim;
-    public Thing Ingestible { get; } = ingestible;
-    public FoodPoisonCause Cause { get; } = cause;
-    public Pawn Cook { get; } = cook;
-}
+public record FoodPoisoningEvent(Pawn Victim, Thing Ingestible, FoodPoisonCause Cause, Pawn Cook) : GameEventBase;
 
 public class CompCookTracker : ThingComp
 {

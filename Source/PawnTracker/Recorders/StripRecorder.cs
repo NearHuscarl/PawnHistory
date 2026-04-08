@@ -5,8 +5,10 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class StripRecorder : HistoryTaleRecorder
+public class StripRecorder : HistoryTaleRecorder<StripRecorder.Input>
 {
+    public record Input(Pawn pawn, Pawn strippedPawn);
+
     private static readonly TaleDef Stripped = DefDatabase<TaleDef>.GetNamed("Stripped");
 
     public override void Register()
@@ -18,26 +20,26 @@ internal class StripRecorder : HistoryTaleRecorder
             if (e.Tale.def != Stripped)
                 return;
 
-            HandleStripEvent(e);
+            CreateRecord(new Input(e.Pawn, e.Params[0] as Pawn));
         });
     }
 
-    private void HandleStripEvent(TaleRecordedEvent e)
+    public override void CreateRecord(Input input)
     {
+        var (pawn, strippedPawn) = input;
         var recordDef = HistoryRecordDefOf.Stripped;
-        var strippedPawn = e.Params[0] as Pawn;
-        var desc = recordDef.Description(e.Pawn)
+        var desc = recordDef.Description(pawn)
             .AddRule("STRIPPED", strippedPawn, addSubsymbols: true)
             .Resolve();
 
-        if (!ShouldRecordTale(e.Pawn, recordDef, desc))
+        if (!ShouldRecordTale(pawn, recordDef, desc))
             return;
 
-        AddRecord(recordDef, e.Pawn, desc, [strippedPawn]);
+        AddRecord(recordDef, pawn, desc, [strippedPawn]);
     }
 
     [SkipTest]
-    public override void Test(TestScenario scenario)
+    public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(15).Colonist().Execute();
 

@@ -7,19 +7,9 @@ using Verse.AI;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class MentalBreakStartEvent(Pawn pawn, string reason, MentalBreakWorker mentalBreakWorker) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-    public string Reason { get; } = reason;
-    public MentalBreakWorker MentalBreakWorker { get; } = mentalBreakWorker;
-}
+public record MentalBreakStartEvent(Pawn Pawn, string Reason, MentalBreakWorker MentalBreakWorker) : GameEventBase;
 
-public class MentalBreakStartedEvent(Pawn pawn, string reason, MentalBreakWorker mentalBreakWorker) : GameEventBase
-{
-    public Pawn Pawn { get; } = pawn;
-    public string Reason { get; } = reason;
-    public MentalBreakWorker MentalBreakWorker { get; } = mentalBreakWorker;
-}
+public record MentalBreakStartedEvent(Pawn Pawn, string Reason, MentalBreakWorker MentalBreakWorker) : GameEventBase;
 
 [HarmonyPatch]
 public static class MentalBreakWorker_TryStart_Patch

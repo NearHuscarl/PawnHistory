@@ -6,16 +6,18 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-internal class HistoryTaleRecorder : RecorderBase
+public abstract class HistoryTaleRecorder<TInput> : RecorderBase<TInput>
 {
     protected bool skipDateCheck = false;
     protected bool skipOverlapCheck = false;
 
     protected float DaysToRecordAgain { get; set; } = 1f;
 
-    public override void Register() { }
+    public abstract override void Register();
 
-    protected bool ShouldRecordTale(Pawn pawn, HistoryRecordDef recordDef, string description)
+    public abstract override void CreateRecord(TInput input);
+
+    protected virtual bool ShouldRecordTale(Pawn pawn, HistoryRecordDef recordDef, string description)
     {
         if (!ShouldRecord(pawn))
             return false;

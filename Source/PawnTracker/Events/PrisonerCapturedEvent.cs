@@ -4,12 +4,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public class PrisonerCapturedEvent(Pawn prisoner, Pawn captor, Room room) : GameEventBase
-{
-    public Pawn Prisoner { get; } = prisoner;
-    public Pawn Captor { get; } = captor;
-    public Room Room { get; } = room;
-}
+public record PrisonerCapturedEvent(Pawn Prisoner, Pawn Captor, Room Room) : GameEventBase;
 
 [HarmonyPatch(typeof(Pawn_GuestTracker), nameof(Pawn_GuestTracker.CapturedBy))]
 internal class Pawn_GuestTracker_CapturedBy_Patch
