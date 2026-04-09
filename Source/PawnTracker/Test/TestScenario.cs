@@ -13,6 +13,7 @@ public class TestScenario
     public static CellRect LastRoomRect { get; internal set; }
     public static Dictionary<string, CellRect> TaggedRooms { get; internal set; } = [];
     public static HashSet<Pawn> ProcessedPawns { get; internal set; } = [];
+    internal static readonly HashSet<Pawn> DeathOnNextHitPawns = [];
 
     public static void ClearAll()
     {
@@ -27,8 +28,8 @@ public class TestScenario
     public IncidentBuilder Incident(IncidentDef def) => new(def);
     public IncidentBuilder Incident(string defName) => new(DefDatabase<IncidentDef>.GetNamed(defName));
     public MapBuilder Map(IntVec3? pos = null) => new(pos);
-    public ThingBuilder Thing(ThingDef thingDef) => new(thingDef);
-    public ThingBuilder Thing(string defName) => new(DefDatabase<ThingDef>.GetNamed(defName));
+    public ThingBuilder Thing(ThingDef thingDef, ThingDef stuffDef = null) => new(thingDef, stuffDef);
+    public ThingBuilder Thing(string defName, ThingDef stuffDef = null) => new(DefDatabase<ThingDef>.GetNamed(defName), stuffDef);
 
     public IncidentBuilder Siege()
     {

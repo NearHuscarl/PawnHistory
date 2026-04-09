@@ -74,7 +74,7 @@
     <Compile Include="Source\PawnTracker\Events\RescueJoinedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\BirthdayEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\BodyPartScarredEvent.cs" />
-    <Compile Include="Source\PawnTracker\Events\CasketAcceptedEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\FriendlyTrapHitEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\CasketDropEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\DiseaseEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\JobEndEvent.cs" />
@@ -102,6 +102,7 @@
     <Compile Include="Source\PawnTracker\HistoryDescriptionBuilder.cs" />
     <Compile Include="Source\PawnTracker\HistoryRecordCategory.cs" />
     <Compile Include="Source\PawnTracker\Recorders\AnimalRevengeRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\FriendlyTrapHitRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\CrushedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HealthComplicationRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\AncientDangerWarningRecorder.cs" />
@@ -164,6 +165,7 @@
     <Compile Include="Source\PawnTracker\Test\GatheringBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\IncidentBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\MapBuilder.cs" />
+    <Compile Include="Source\PawnTracker\Test\Mocks\DeathOnNextHit.cs" />
     <Compile Include="Source\PawnTracker\Test\PawnBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\DebugValuesAttribute.cs" />
     <Compile Include="Source\PawnTracker\Test\PawnHistoryAssertions.cs" />

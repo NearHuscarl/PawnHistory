@@ -270,6 +270,11 @@ public class PawnBuilder(int count = 1)
         });
     }
 
+    public PawnBuilder DiesOnNextHit()
+    {
+        return Do(pawn => TestScenario.DeathOnNextHitPawns.Add(pawn));
+    }
+
     public PawnBuilder Heal()
     {
         return Do(pawn =>

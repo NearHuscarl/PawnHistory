@@ -68,6 +68,16 @@
 		<importance>Debug</importance>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>FriendlyTrapHit</defName>
+		<label>friendly trap hit</label>
+		<description>{PAWN} was struck by a spike trap.</description>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>None</li>
+		</categories>
+		<importance>Debug</importance>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Anesthetized</defName>
 		<label>anesthetized</label>
 		<description>{PAWN} was put under {Anesthetic}.</description>

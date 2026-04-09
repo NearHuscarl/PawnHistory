@@ -159,7 +159,7 @@ public class MapBuilder
             var rect = TestScenario.LastRoomRect;
             for (var i = 0; i < bedCount; i++)
             {
-                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Execute<Building_Bed>();
+                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Create<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
             }
         });
@@ -173,7 +173,7 @@ public class MapBuilder
             var rect = TestScenario.LastRoomRect;
             for (var i = 0; i < bedCount; i++)
             {
-                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Execute<Building_Bed>();
+                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Create<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
                 bed.Medical = true;
                 beds?.Add(bed);
@@ -191,7 +191,7 @@ public class MapBuilder
 
             for (var i = 0; i < bedCount; i++)
             {
-                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Execute<Building_Bed>();
+                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Create<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
                 bed.ForPrisoners = true;
             }
@@ -248,7 +248,7 @@ public class MapBuilder
                 .Map(map)
                 .At(interior.CenterCell)
                 .Faction(Faction.OfPlayer)
-                .Execute<Building_Casket>();
+                .Create<Building_Casket>();
 
             if (occupied)
             {

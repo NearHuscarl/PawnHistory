@@ -131,15 +131,17 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         if (def == HistoryRecordDefOf.Death)
         {
             var lastRecord = pawn.GetHistoryRecords().LastOrDefault();
-            if (lastRecord?.def == HistoryRecordDefOf.Crushed)
+            if (lastRecord?.def == HistoryRecordDefOf.Crushed || lastRecord?.def == HistoryRecordDefOf.FriendlyTrapHit)
                 location = lastRecord.location;
         }
         if (def == HistoryRecordDefOf.RelativeDeath)
         {
             var deathRelative = concerns.FirstOrDefault() as Pawn;
             var lastTwoRecords = deathRelative.GetHistoryRecords().TakeLast(2).ToList();
-            if (lastTwoRecords.Count == 2 && lastTwoRecords[0].def == HistoryRecordDefOf.Crushed && lastTwoRecords[1].def == HistoryRecordDefOf.Death)
-                location = lastTwoRecords[0]?.location;
+            var secondLastRecord = lastTwoRecords.FirstOrDefault();
+            var lastRecord = lastTwoRecords.LastOrDefault();
+            if (lastTwoRecords.Count == 2 && (secondLastRecord.def == HistoryRecordDefOf.Crushed || secondLastRecord.def == HistoryRecordDefOf.FriendlyTrapHit) && lastRecord.def == HistoryRecordDefOf.Death)
+                location = lastRecord?.location;
         }
 
         base.AddRecord(def, pawn, resolvedDesc, concerns, location);

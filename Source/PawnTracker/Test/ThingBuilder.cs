@@ -70,7 +70,7 @@ public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
     /// <summary>
     /// Creates and spawns the thing.
     /// </summary>
-    public T Execute<T>() where T : Thing
+    public T Create<T>() where T : Thing
     {
         var thing = ThingMaker.MakeThing(def, stuff);
         
@@ -87,7 +87,7 @@ public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
 
         return thing as T;
     }
-    public Thing Create() => Execute<Thing>();
+    public Thing Create() => Create<Thing>();
 }
 
 public static class ThingBuilderExtensions
