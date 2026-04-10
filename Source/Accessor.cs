@@ -45,8 +45,8 @@ public static class Accessor
     {
         public static readonly AccessTools.FieldRef<Verse.Pawn_HealthTracker, Pawn> Pawn = AccessTools.FieldRefAccess<Verse.Pawn_HealthTracker, Pawn>("pawn");
 
-        public static readonly Action<Verse.Pawn_HealthTracker, DamageInfo?, Hediff> MakeDowned =
-            AccessTools.MethodDelegate<Action<Verse.Pawn_HealthTracker, DamageInfo?, Hediff>>(AccessTools.Method(typeof(Verse.Pawn_HealthTracker), "MakeDowned"));
+        public static readonly Action<Verse.Pawn_HealthTracker, DamageInfo?, Verse.Hediff> MakeDowned =
+            AccessTools.MethodDelegate<Action<Verse.Pawn_HealthTracker, DamageInfo?, Verse.Hediff>>(AccessTools.Method(typeof(Verse.Pawn_HealthTracker), "MakeDowned"));
     }
 
     public class Pawn_JobTracker
@@ -77,8 +77,8 @@ public static class Accessor
 
     public class HediffGiver
     {
-        public static readonly Action<Verse.HediffGiver, Pawn, Hediff> SendLetter =
-            AccessTools.MethodDelegate<Action<Verse.HediffGiver, Pawn, Hediff>>(AccessTools.Method(typeof(Verse.HediffGiver), "SendLetter"));
+        public static readonly Action<Verse.HediffGiver, Pawn, Verse.Hediff> SendLetter =
+            AccessTools.MethodDelegate<Action<Verse.HediffGiver, Pawn, Verse.Hediff>>(AccessTools.Method(typeof(Verse.HediffGiver), "SendLetter"));
     }
 
     public class LogLineDisplayableLog

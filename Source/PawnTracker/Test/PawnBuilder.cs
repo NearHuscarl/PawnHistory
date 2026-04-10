@@ -270,6 +270,11 @@ public class PawnBuilder(int count = 1)
         });
     }
 
+    public PawnBuilder StopMentalState()
+    {
+        return Do(pawn => pawn.mindState.mentalStateHandler.CurState?.RecoverFromState());
+    }
+
     public PawnBuilder DiesOnNextHit()
     {
         return Do(pawn => TestScenario.DeathOnNextHitPawns.Add(pawn));

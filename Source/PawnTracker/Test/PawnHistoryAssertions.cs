@@ -65,7 +65,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
         });
     }
 
-    public void ToHaveHistoryRecord(string descriptionTemplate, int index = -1, bool exactMatch = false)
+    public void ToHaveHistoryRecord(string descriptionTemplate, int index, bool exactMatch = false)
     {
         RunAssertion(() =>
         {
@@ -82,6 +82,30 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
                 result,
                 $"Expected description to match template\nExpected template [exactMatch={exactMatch}]:\n{descriptionTemplate}\nActual resolved description:\n{actual}",
                 $"Expected description NOT to match template\nExpected template [exactMatch={exactMatch}]:\n{descriptionTemplate}\nActual resolved description:\n{actual}."
+            );
+        });
+    }
+
+    public void ToHaveHistoryRecord(string descriptionTemplate, HistoryRecordDef recordDef = null, bool exactMatch = false, int ticksAgo = 0)
+    {
+        RunAssertion(() =>
+        {
+            string actual = "";
+            var result = pawns.Any(p =>
+            {
+                var record = p.GetHistoryRecords().LastOrDefault(r => (recordDef == null || r.def == recordDef) && r.date >= Find.TickManager.TicksGame - ticksAgo);
+                if (record == null)
+                    return false;
+                actual = record.description.StripTags();
+                return LangUtility.IsStructurallyTheSame(descriptionTemplate, actual, exactMatch);
+            });
+
+            var input = $"[def={recordDef},ticksAgo={ticksAgo},exactMatch={exactMatch}]";
+
+            AssertCondition(
+                result,
+                $"Expected description to match template\nExpected template {input}:\n{descriptionTemplate}\nActual resolved description:\n{actual}",
+                $"Expected description NOT to match template\nExpected template {input}:\n{descriptionTemplate}\nActual resolved description:\n{actual}."
             );
         });
     }

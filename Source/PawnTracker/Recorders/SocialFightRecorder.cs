@@ -1,7 +1,6 @@
 ﻿using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
-using System.Collections.Generic;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
@@ -31,7 +30,6 @@ public class SocialFightRecorder : RecorderBase<SocialFightRecorder.Input>
             AddRecord(HistoryRecordDefOf.SocialFight, recipient, recipientPov, [initiator]);
     }
 
-    [SkipTest]
     public void Test(TestScenario scenario)
     {
         var oldDebugValue = DebugSettings.alwaysSocialFight;
@@ -44,6 +42,8 @@ public class SocialFightRecorder : RecorderBase<SocialFightRecorder.Input>
                 .GroupTogether()
                 .Do((p, i, pawns) => p.interactions.TryInteractWith(pawns[(i + 1) % pawns.Count], InteractionDefOf.Insult))
                 .Execute();
+
+            Expect.AnyPawnOnMap().ToHaveHistoryRecord("This drove [RECIPIENT] into a rage and [RECIPIENT] began a fight!", HistoryRecordDefOf.SocialFight);
         }
         finally
         {

@@ -51,7 +51,7 @@ namespace PawnHistory.Source.PawnTracker;
 // Craft a legendary item
 // - Mental breaks
 //  + Base game
-//  - DLC breaks
+//  - DLC breaks: MentalBreakWorker_WildDecree, MentalBreakWorker_HumanityBreak, MentalBreakWorker_IdeoChange, MentalBreakWorker_FireTerror[NO]
 // - Relationships (breakup, cheating, new love..)
 // Raid type: seige with a different icon
 // Ideology convert, belief reduced

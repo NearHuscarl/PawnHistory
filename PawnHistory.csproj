@@ -70,6 +70,7 @@
     <Compile Include="Source\PawnTracker\Events\AnimalRevengeEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\LeaderChangedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\HealthComplicationEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\MentalBreakStartedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ReceiveLetterEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\RescueJoinedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\BirthdayEvent.cs" />
@@ -91,11 +92,9 @@
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallArtificialPartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallNaturalPartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallImplantEvent.cs" />
-    <Compile Include="Source\PawnTracker\Events\MentalBreakStartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryRemoveBodyPartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SocialFightStartedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PrisonBreakStartedEvent.cs" />
-    <Compile Include="Source\PawnTracker\Events\MentalStateEndedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\JobStartedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\CasualtyLogAddedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryEvent.cs" />
