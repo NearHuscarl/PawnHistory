@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Verse;
 using Verse.Grammar;
 
@@ -140,6 +138,51 @@ internal static class LangUtility
 
         // Handle case where template ends with a placeholder [Rule]
         if (expectingContent && searchFrom >= actual.Length)
+            return false;
+
+        return true;
+    }
+
+    public static bool MatchesTranslationTemplate(this string text, string translationKey, bool exactMatch = false)
+    {
+        if (!translationKey.CanTranslate() || string.IsNullOrEmpty(text))
+        {
+            return false;
+        }
+
+        var translation = translationKey.TranslateSimple();
+        var segments = Regex.Matches(translation, @"(?<namedArg>{[^}]+})|(?<literal>[^{]+)", RegexOptions.Compiled);
+        int searchFrom = 0;
+        var expectingContent = false;
+
+        foreach (Match m in segments)
+        {
+            if (m.Groups["namedArg"].Success)
+            {
+                expectingContent = true;
+                continue;
+            }
+
+            var literal = m.Groups["literal"].Value;
+            var index = text.IndexOf(literal, searchFrom, StringComparison.OrdinalIgnoreCase);
+
+            // The text following a namedArg wasn't found
+            if (index == -1)
+                return false;
+
+            // The placeholder was empty (literal found immediately at current position)
+            if (expectingContent && index == searchFrom)
+                return false;
+
+            searchFrom = index + literal.Length;
+            expectingContent = false;
+        }
+
+        if (exactMatch && searchFrom != text.Length)
+            return false;
+
+        // Handle case where template ends with a placeholder {namedArg}
+        if (expectingContent && searchFrom >= text.Length)
             return false;
 
         return true;

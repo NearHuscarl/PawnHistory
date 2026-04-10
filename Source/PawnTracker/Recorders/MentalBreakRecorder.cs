@@ -328,7 +328,9 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         for (var i = 0; i < 5000; i++)
             hediff.TickInterval(int.MaxValue);
 
-        Expect.That(pawn).ToHaveHistoryRecord($"This happened because of: [Hediff].");
+        var recordDef = pawn.MentalState.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
+
+        Expect.That(pawn).ToHaveHistoryRecord($"[MentalBreak]. This happened because of: Resurrection psychosis (total).", recordDef);
     }
 
     public void TestHediff2(TestScenario scenario)
@@ -348,7 +350,9 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         for (var i = 0; i < 500; i++)
             hediff.TickInterval(int.MaxValue);
 
-        Expect.That(pawn).ToHaveHistoryRecord($"This happened because of: [Hediff].");
+        var recordDef = pawn.MentalState.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
+        
+        Expect.That(pawn).ToHaveHistoryRecord($"[MentalBreak]. This happened because of: Luciferium need (unmet).", recordDef);
     }
 
     public void TestTrait(TestScenario scenario)
@@ -375,7 +379,6 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             if (trait.CurrentData.MentalStateGiver.CheckGive(pawn, int.MaxValue))
                 break;
         }
-
-        Expect.That(pawn).ToHaveHistoryRecord($"This happened because of the trait: [Trait].");
+        Expect.That(pawn).ToHaveHistoryRecord($"[PAWN] pigged out on food. This happened because of the trait: Gourmand.");
     }
 }

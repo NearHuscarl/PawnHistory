@@ -134,6 +134,16 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Inspiration</defName>
+		<label>inspiration</label>
+		<descriptionMaker>PawnEvent_Inspiration</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Work</li>
+		</categories>
+		<importance>Minor</importance>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BodyPartDestroyed</defName>
 		<label>body part destroyed</label>
 		<descriptionMaker>PawnEvent_BodyPartDestroyed</descriptionMaker>

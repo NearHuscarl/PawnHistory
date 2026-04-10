@@ -1,4 +1,5 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+﻿using HarmonyLib;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Recorders;
 using System.Reflection;
 using Verse;
@@ -47,6 +48,11 @@ namespace PawnHistory.Source.PawnTracker;
 // - Recruited
 //  + prisoner
 //  ^ quest
+// - Inspiration
+//  + Core: HighMood, Trait
+//  - Royalty: PsychicInspiration, ThroneSpeech
+//  - Odyssey: Psilocap
+//  - Ideology: LeaderSpeech, Trial (Speech), Sacrifice (Ritual), CelebratedDate_Consumable (Ritual)
 // Catching fire: handle with permanent/missing hediffs.
 // Craft a legendary item
 // - Mental breaks
@@ -95,9 +101,10 @@ namespace PawnHistory.Source.PawnTracker;
 [StaticConstructorOnStartup]
 internal class PawnTracker
 {
+    public static Harmony Harmony = new("rimworld.mod.nearhuscarl.pawnhistory");
     static PawnTracker()
     {
-        new HarmonyLib.Harmony("rimworld.mod.nearhuscarl.pawnhistory").PatchAllUncategorized(Assembly.GetExecutingAssembly());
+        Harmony.PatchAllUncategorized(Assembly.GetExecutingAssembly());
 
         CompHistoryManager.AttachHistoryComp();
         HediffComp_History.InjectComp();

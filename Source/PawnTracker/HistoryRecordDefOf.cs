@@ -20,6 +20,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef Birthday;
     public static HistoryRecordDef SkillLeveledUp;
     public static HistoryRecordDef SkillLeveledDown;
+    public static HistoryRecordDef Inspiration;
     public static HistoryRecordDef BodyPartDestroyed;
     public static HistoryRecordDef BodyPartScarred;
     public static HistoryRecordDef BodyPartRemoved;

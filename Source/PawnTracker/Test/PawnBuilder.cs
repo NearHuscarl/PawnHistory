@@ -318,6 +318,21 @@ public class PawnBuilder(int count = 1)
         });
     }
 
+    public PawnBuilder GiveTrait(string traitDefName, int degree = 0, Action<Trait> traitCreated = null) => GiveTrait(DefDatabase<TraitDef>.GetNamed(traitDefName), degree, traitCreated);
+
+    public PawnBuilder GiveTrait(TraitDef traitDef, int degree = 0, Action<Trait> traitCreated = null)
+    {
+        return Do(p =>
+        {
+            if (!p.story?.traits.HasTrait(traitDef) ?? false)
+            {
+                var newTrait = new Trait(traitDef, degree, forced: true);
+                p.story?.traits?.GainTrait(newTrait);
+                traitCreated?.Invoke(newTrait);
+            }
+        });
+    }
+
     public PawnBuilder ResetSkillLevel(SkillDef skillDef, int level)
     {
         return Do(pawn =>

@@ -284,6 +284,20 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_Inspiration</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(reason==HighMood)           ->Thanks to high mood, [PAWN] gained an inspiration: [Inspiration].</li>
+				<li>entry(reason==Psilocap)           ->After taking psilocaps, [PAWN] gained an inspiration: [Inspiration].</li>
+				<li>entry(reason==PsychicInspiration) ->Thanks to [Initiator]'s psychic suggestion, [PAWN] gained an inspiration: [Inspiration].</li>
+				<li>entry(reason==Ritual)             ->After a satisfying [Ritual], [PAWN] gained an inspiration: [Inspiration].</li>
+				<li>entry(reason==Speech)             ->Thanks to [Initiator]'s remarkable speech, [PAWN] gained an inspiration: [Inspiration].</li>
+				<li>entry(reason==Trait)              ->After a mental break, [PAWN], who has the [Trait] trait, gained an inspiration: [Inspiration].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_LeaderChanged</defName>
 		<rulePack>
 			<rulesStrings>
