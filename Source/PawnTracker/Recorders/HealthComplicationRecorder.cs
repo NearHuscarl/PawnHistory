@@ -85,6 +85,6 @@ public class HealthComplicationRecorder : RecorderBase<HealthComplicationEvent>
         if (giver.TryApply(pawn))
             Accessor.HediffGiver.SendLetter(giver, pawn, null);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] developed a heart attack.", -2 /* offset incapacitated record */, exactMatch: true);
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] developed a heart attack.", HistoryRecordDefOf.HealthComplication, exactMatch: true);
     }
 }

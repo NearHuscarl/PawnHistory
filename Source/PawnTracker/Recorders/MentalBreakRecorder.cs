@@ -20,7 +20,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
 
     public override void CreateRecord(MentalBreakStartedEvent input)
     {
-        var (pawn, reason, cause, mentalBreak, mentalStateDef, target, hediff) = input;
+        var (pawn, reason, mentalBreak, mentalStateDef, target) = input;
         var mentalState = pawn.MentalState; // mentalState could be null in some MentalBreak
 
         if (!ShouldRecord(pawn))
@@ -28,7 +28,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
 
         var defName = mentalBreak?.defName ?? mentalStateDef.defName;
 
-        if (cause == MentalBreakCause.Other)
+        if (reason.Cause == MentalBreakCause.Other)
         {
             Log.Warning($"[PawnHistory] {defName} MentalBreak is not supported. {DebugUtility.Format(input)}");
             return;
@@ -40,7 +40,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         var descBuilder = recordDef.Description(pawn)
             .WithFaction(pawn.Faction)
             .IncludePawnGrammar()
-            .AddRule("Reason", GetReason(reason, cause, recordDef, hediff, pawn))
+            .AddRule("Reason", GetReason(reason, recordDef, pawn))
             .AddRule("Target", target, addSubsymbols: true)
             .AddConstant("name", defName);
 
@@ -91,30 +91,37 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         );
     }
 
-    private static string GetReason(string inputReason, MentalBreakCause cause, HistoryRecordDef recordDef, Hediff hediff, Pawn pawn)
+    private static string GetReason(MentalBreakReason reason, HistoryRecordDef recordDef, Pawn pawn)
     {
-        if (cause == MentalBreakCause.Mood)
-            return ParsePoorMoodReason(inputReason);
-
-        if (cause == MentalBreakCause.Hediff)
+        if (reason.Cause == MentalBreakCause.Hediff)
             return recordDef.Description(pawn)
-                .AddRule("Hediff", hediff.LabelNounInBracket())
+                .AddRule("Hediff", reason.Hediff.LabelNounInBracket())
                 .Resolve("ReasonHediff");
 
-        return inputReason;
+        if (reason.Cause == MentalBreakCause.Trait)
+            return recordDef.Description(pawn)
+                .AddRule("Trait", reason.Trait.Colorize(NeedsCardUtility.MoodColorNegative))
+                .Resolve("ReasonTrait");
+
+        if (reason.Cause == MentalBreakCause.Mood)
+            return recordDef.Description(pawn)
+                .AddRule("Mood", ParsePoorMoodReason(reason.InGameReason).Colorize(NeedsCardUtility.MoodColorNegative))
+                .Resolve("ReasonMood");
+
+        return reason.InGameReason;
     }
 
-    // This happened because of poor mood. The final straw was: {0} -> This happened because of poor mood: {0}
+    // This happened because of poor mood. The final straw was: {0} -> {0}
     private static string ParsePoorMoodReason(string fullReason)
     {
-        var thisHappenedBecauseOfPoorMood = "MentalStateReason_Mood".Translate().ToString();
-
         if (fullReason.NullOrEmpty())
             return string.Empty;
 
+        var thisHappenedBecauseOfPoorMood = "MentalStateReason_Mood".Translate().ToString();
         var theFinalStrawWas = "FinalStraw".Translate("{0}").ToString();
         var template = $"{thisHappenedBecauseOfPoorMood}\n\n{theFinalStrawWas}";
         var parts = template.Split(["{0}"], StringSplitOptions.None);
+
         if (parts.Length != 2)
             return string.Empty;
 
@@ -123,11 +130,10 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
 
         if (fullReason.StartsWith(prefix) && fullReason.EndsWith(suffix))
         {
-            var reason = fullReason.Substring(prefix.Length, fullReason.Length - prefix.Length - suffix.Length);
-            return $"{thisHappenedBecauseOfPoorMood.Trim('.')}: {reason.Colorize(NeedsCardUtility.MoodColorNegative)}";
+            return fullReason.Substring(prefix.Length, fullReason.Length - prefix.Length - suffix.Length);
         }
-
-        return fullReason;
+        
+        return string.Empty;
     }
 
     [SkipTest]
@@ -169,7 +175,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         MentalBreakDefOf.CorpseObsession,
     ];
 
-    private static readonly string Reason = "This happened because of poor mood: [Reason]";
+    private static readonly string Reason = "This happened because of poor mood: [Reason].";
 
     public void Test(TestScenario scenario)
     {
@@ -195,7 +201,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .ThatMatches(ShouldRecord)
             .StopMentalState()
             .WithPosition(TestScenario.TaggedRooms["Common"].CenterCell, 4)
-            .Do(p => p.story?.traits?.GainTrait(new Trait(TraitDefOf.Pyromaniac))) // FireStartingSpree
+            .GiveTrait(TraitDefOf.Pyromaniac) // FireStartingSpree
             .Do((p, i) =>
             {
                 if (mentalBreaks[i].defName == "BedroomTantrum" || mentalBreaks[i].defName.Contains("Wander_OwnRoom"))
@@ -269,8 +275,9 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         Expect.That(pawn).ToHaveHistoryRecord($"[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. {Reason}");
     }
 
-    public void TestPrisonBreak(TestScenario scenario)
+    public Action TestPrisonBreak(TestScenario scenario)
     {
+        scenario.SpeedUp();
         scenario.Map()
             .BuildRoom(6, 6, tag: "Prison")
             .AsPrison(prisonerCount: 2) // Jailbreaker
@@ -285,6 +292,8 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .CreateSingle();
 
         Expect.That(pawn).Eventually().ToHaveHistoryRecord($"[PAWN] had a mental breakdown and was going to induce [Prisoners] to escape. {Reason}");
+
+        return () => scenario.SlowDown();
     }
 
     public void TestCorpseObsession(TestScenario scenario)
@@ -319,7 +328,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         for (var i = 0; i < 5000; i++)
             hediff.TickInterval(int.MaxValue);
 
-        Expect.That(pawn).ToHaveHistoryRecord($"This happened because of: [Hediff]");
+        Expect.That(pawn).ToHaveHistoryRecord($"This happened because of: [Hediff].");
     }
 
     public void TestHediff2(TestScenario scenario)
@@ -339,6 +348,34 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         for (var i = 0; i < 500; i++)
             hediff.TickInterval(int.MaxValue);
 
-        Expect.That(pawn).ToHaveHistoryRecord($"This happened because of: [Hediff]");
+        Expect.That(pawn).ToHaveHistoryRecord($"This happened because of: [Hediff].");
+    }
+
+    public void TestTrait(TestScenario scenario)
+    {
+        // <randomMentalState>
+        scenario.Map()
+            .BuildRoom(5, 5, "Freezer")
+            .WithThing(ThingDefOf.MealFine, 100) // Binging_Food
+            .Execute();
+
+        var trait = (Trait)null;
+        var pawn = scenario.Pawn()
+            .Colonist()
+            .StopMentalState()
+            .Heal()
+            .GiveTrait("Gourmand", traitCreated: t => trait = t)
+            .CreateSingle();
+
+        pawn.needs.mood.CurLevel = 0;
+        pawn.needs.food.CurLevel = 0;
+
+        for (var i = 0; i < 500; i++)
+        {
+            if (trait.CurrentData.MentalStateGiver.CheckGive(pawn, int.MaxValue))
+                break;
+        }
+
+        Expect.That(pawn).ToHaveHistoryRecord($"This happened because of the trait: [Trait].");
     }
 }

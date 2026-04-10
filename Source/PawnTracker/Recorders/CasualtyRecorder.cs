@@ -159,7 +159,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
 
         scenario.Pawn(friends.Concat(enemies))
             .ThatMatches(ShouldRecord)
-            .FullHeal()
+            .DiesOnNextHit()
             .SetRandomRelations(5)
             .Execute();
 
