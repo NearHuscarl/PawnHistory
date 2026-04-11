@@ -9,8 +9,8 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record BirthdayEvent(Pawn Pawn, List<HediffDef> AgingHediffs) : GameEventBase;
 
-[HarmonyPatch(typeof(LetterStack), nameof(LetterStack.ReceiveLetter), [typeof(TaggedString), typeof(TaggedString), typeof(LetterDef), typeof(LookTargets), typeof(Faction), typeof(Quest), typeof(List<ThingDef>), typeof(string), typeof(int), typeof(bool)])]
-public static class LetterStack_ReceiveLetter_Patch
+[HarmonyPatch(typeof(LetterStack), nameof(LetterStack.ReceiveLetter), typeof(TaggedString), typeof(TaggedString), typeof(LetterDef), typeof(LookTargets), typeof(Faction), typeof(Quest), typeof(List<ThingDef>), typeof(string), typeof(int), typeof(bool))]
+internal static class LetterStack_ReceiveLetter_Patch
 {
     private static readonly string LetterLabelBirthday = "LetterLabelBirthday".Translate();
 

@@ -62,7 +62,7 @@ public class CompCookTracker : ThingComp
 [HarmonyPatch(typeof(CompFoodPoisonable), nameof(CompFoodPoisonable.Notify_RecipeProduced))]
 internal class CompFoodPoisonable_Notify_RecipeProduced_Patch
 {
-    static void Postfix(CompFoodPoisonable __instance, Pawn pawn)
+    private static void Postfix(CompFoodPoisonable __instance, Pawn pawn)
     {
         __instance.parent.TryGetComp<CompCookTracker>()?.cook = pawn;
     }
@@ -71,7 +71,7 @@ internal class CompFoodPoisonable_Notify_RecipeProduced_Patch
 [HarmonyPatch(typeof(FoodUtility), nameof(FoodUtility.AddFoodPoisoningHediff))]
 internal class FoodUtility_AddFoodPoisoningHediff_Patch
 {
-    static void Postfix(Pawn pawn, Thing ingestible, FoodPoisonCause cause)
+    private static void Postfix(Pawn pawn, Thing ingestible, FoodPoisonCause cause)
     {
         var cook = ingestible.TryGetComp<CompCookTracker>()?.cook;
         GameEventBus.Publish(new FoodPoisoningEvent(pawn, ingestible, cause, cook));

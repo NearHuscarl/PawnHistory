@@ -55,7 +55,7 @@ public class LightningStrikeRecorder : RecorderBase<LightningStrikeRecorder.Inpu
     public override void CreateRecord(Input Input)
     {
         var (pawn, hediff, part) = Input;
-        var recordDef = HistoryRecordDefOf.LightningStriked;
+        var recordDef = HistoryRecordDefOf.LightningStrike;
         var desc = recordDef.Description(pawn)
             .AddRule("POSSESSIVE", pawn.Possessive())
             .AddRule("PART", part.Label.Colorize(hediff.LabelColor))

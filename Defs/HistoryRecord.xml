@@ -438,6 +438,24 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>NewLover</defName>
+		<label>new lover</label>
+		<descriptionMaker>PawnEvent_NewLover</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Relationship</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>NewAffair</defName>
+		<label>new affair</label>
+		<descriptionMaker>PawnEvent_NewAffair</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Relationship</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonerCaptured</defName>
 		<label>prisoner captured</label>
 		<descriptionMaker>PawnEvent_PrisonerCaptured</descriptionMaker>
@@ -465,7 +483,7 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>LightningStriked</defName>
+		<defName>LightningStrike</defName>
 		<label>hit by lightning strike</label>
 		<description>{PAWN} was struck by lightning, burning {POSSESSIVE} {PART}.</description>
 		<icon>EventIcons/Flashstorm</icon>

@@ -6,29 +6,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using PawnHistory.Source.PawnTracker.Recorders;
 using UnityEngine.Profiling;
 using Verse;
 
-namespace PawnHistory.Source.PawnTracker.Recorders;
+namespace PawnHistory.Source.PawnTracker;
 
 public static class RecorderManager
 {
     public static bool ShouldRecord(ThingDef thingDef) => thingDef.race?.intelligence == Intelligence.Humanlike;
     public static bool ShouldRecord(Pawn pawn) => pawn != null && pawn.RaceProps.Humanlike;
 
-    private static readonly List<RecorderBase> activeRecorders = [];
-    private static readonly TestScenario testScenario = new();
+    private static readonly List<RecorderBase> ActiveRecorders = [];
+    private static readonly TestScenario TestScenario = new();
 
     public static void Initialize()
     {
-        activeRecorders.Clear();
+        ActiveRecorders.Clear();
 
-        foreach (var type in GenTypes.AllSubclassesNonAbstract(typeof(RecorderBase)))
+        foreach (var type in typeof(RecorderBase).AllSubclassesNonAbstract())
         {
             var recorder = (RecorderBase)Activator.CreateInstance(type);
             
             recorder.Register();
-            activeRecorders.Add(recorder);
+            ActiveRecorders.Add(recorder);
         }
     }
 
@@ -60,7 +61,7 @@ public static class RecorderManager
             if (skipTest)
                 continue;
 
-            TestManager.EnqueueTest(() => method.Invoke(recorder, [testScenario]), label);
+            TestManager.EnqueueTest(() => method.Invoke(recorder, [TestScenario]), label);
         }
         TestManager.Run();
     }
@@ -88,7 +89,7 @@ public static class RecorderManager
                 {
                     try
                     {
-                        TestManager.ExecuteTestMethod(label, () => method.Invoke(recorder, [testScenario]));
+                        TestManager.ExecuteTestMethod(label, () => method.Invoke(recorder, [TestScenario]));
                     }
                     catch (Exception ex)
                     {
@@ -102,13 +103,13 @@ public static class RecorderManager
                 {
                     var options = new List<DebugMenuOption>();
 
-                    foreach (int count in debugValues)
+                    foreach (var count in debugValues)
                     {
                         options.Add(new DebugMenuOption($"{parameters[1].Name}: {count}", DebugMenuOptionMode.Action, () =>
                         {
                             try
                             {
-                                TestManager.ExecuteTestMethod(label, () => method.Invoke(recorder, [testScenario, count]));
+                                TestManager.ExecuteTestMethod(label, () => method.Invoke(recorder, [TestScenario, count]));
                             }
                             catch (Exception ex)
                             {
@@ -126,13 +127,13 @@ public static class RecorderManager
         return actionNodes;
     }
 
-    record TestMethodInfo(string Label, RecorderBase Recorder, MethodInfo Method, int[] DebugValues, bool SkipTest);
+    private record TestMethodInfo(string Label, RecorderBase Recorder, MethodInfo Method, int[] DebugValues, bool SkipTest);
 
     private static List<TestMethodInfo> GetTestMethods()
     {
         var testMethods = new List<TestMethodInfo>();
 
-        foreach (var recorder in activeRecorders)
+        foreach (var recorder in ActiveRecorders)
         {
             var type = recorder.GetType();
             var buttonName = type.Name.Replace("Recorder", "");
@@ -180,7 +181,7 @@ public static class RecorderManager
     {
         var options = new List<DebugMenuOption>();
 
-        foreach (var recorder in activeRecorders)
+        foreach (var recorder in ActiveRecorders)
         {
             var type = recorder.GetType();
             var recorderName = type.Name.Replace("Recorder", "");

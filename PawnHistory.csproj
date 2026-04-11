@@ -15,7 +15,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -72,6 +72,7 @@
     <Compile Include="Source\PawnTracker\Events\LeaderChangedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\HealthComplicationEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\MentalBreakStartedEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\NewLoverEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ReceiveLetterEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\RescueJoinedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\BirthdayEvent.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Source\PawnTracker\Recorders\FoodPoisoningRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\InspirationRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\LeaderChangedRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\NewLoverRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RescueJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PrisonerRecruitedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\SkillLevelChangedRecorder.cs" />

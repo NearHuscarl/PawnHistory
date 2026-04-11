@@ -209,7 +209,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
                     p.ownership.ClaimBedIfNonMedical(RestUtility.FindBedFor(p));
                 }
             })
-            .Do((p, i) => p.StartMentalBreakWithMadeupThought(mentalBreaks[i]))
+            .Do((p, i) => p.StartMentalBreakWithMadeUpThought(mentalBreaks[i]))
             .Execute();
 
         var mentalBreakTemplateLookup = new Dictionary<string, string>()
@@ -252,7 +252,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         var pawn = scenario.Pawn()
             .Colonist()
             .StopMentalState()
-            .Do((p, i) => p.StartMentalBreakWithMadeupThought(DefDatabase<MentalBreakDef>.GetNamed("Slaughterer")))
+            .Do((p, i) => p.StartMentalBreakWithMadeUpThought(DefDatabase<MentalBreakDef>.GetNamed("Slaughterer")))
             .CreateSingle();
 
         Expect.That(pawn).Eventually().ToHaveHistoryRecord($"[PAWN] had a mental breakdown and was going to vent [PAWN_possessive] anger by slaughtering [Target]. {Reason}");
@@ -269,7 +269,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .Colonist()
             .StopMentalState()
             .WithPosition(scenario.OutsideOf("Prison"))
-            .Do((p, i) => p.StartMentalBreakWithMadeupThought(DefDatabase<MentalBreakDef>.GetNamed("SadisticRage")))
+            .Do((p, i) => p.StartMentalBreakWithMadeUpThought(DefDatabase<MentalBreakDef>.GetNamed("SadisticRage")))
             .CreateSingle();
 
         Expect.That(pawn).ToHaveHistoryRecord($"[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. {Reason}");
@@ -288,7 +288,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .Colonist()
             .StopMentalState()
             .WithPosition(scenario.OutsideOf("Prison"))
-            .Do((p, i) => p.StartMentalBreakWithMadeupThought(jailbreakerBreak))
+            .Do((p, i) => p.StartMentalBreakWithMadeUpThought(jailbreakerBreak))
             .CreateSingle();
 
         Expect.That(pawn).Eventually().ToHaveHistoryRecord($"[PAWN] had a mental breakdown and was going to induce [Prisoners] to escape. {Reason}");
@@ -306,7 +306,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         var pawn = scenario.Pawn()
             .Colonist()
             .StopMentalState()
-            .Do((p, i) => p.StartMentalBreakWithMadeupThought(MentalBreakDefOf.CorpseObsession))
+            .Do((p, i) => p.StartMentalBreakWithMadeUpThought(MentalBreakDefOf.CorpseObsession))
             .CreateSingle();
 
         Expect.That(pawn).ToHaveHistoryRecord($"[PAWN] became obsessed with corpses. [PAWN_pronoun] was going to find and present [Target]'s corpse for all to see. {Reason}");

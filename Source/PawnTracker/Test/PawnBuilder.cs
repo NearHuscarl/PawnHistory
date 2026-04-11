@@ -159,15 +159,22 @@ public class PawnBuilder(int count = 1)
             p => !TestScenario.ProcessedPawns.Contains(p),
             p => p.IsFactionLeader(faction) == factionLeader,
         ]).ToList();
-        var pawns = reusePawns ? Find.CurrentMap.mapPawns.AllPawnsSpawned.Where(p => allFilters.All(f => f(p))).Take(count).ToList() : [];
-        var existingCount = pawns.Count;
+        var sourcedPawns = reusePawns ? Find.CurrentMap.mapPawns.AllPawnsSpawned.Where(p => allFilters.All(f => f(p))).Take(count).ToList() : [];
+        var existingCount = sourcedPawns.Count;
         var generateCount = count - existingCount;
+
+        foreach (var pawn in sourcedPawns)
+        {
+            pawn.Position = spawnPosition;
+            if (faction != pawn.Faction)
+                pawn.SetFaction(faction ?? pawn.Faction);
+        }
 
         for (var i = 0; i < generateCount; i++)
         {
             var generatedKind = kind ?? PawnKindDefOf.Colonist;
             var pawn = factionLeader
-                ? faction.leader
+                ? faction?.leader
                 : PawnGenerator.GeneratePawn(generatedKind, FactionUtility.DefaultFactionFrom(faction?.def ?? generatedKind.defaultFactionDef), new PlanetTile?(Find.CurrentMap.Tile));
             var spawnPos = CellFinder.RandomClosewalkCellNear(spawnPosition, Find.CurrentMap, spawnRadius);
 
@@ -176,10 +183,10 @@ public class PawnBuilder(int count = 1)
             if (guestStatus.HasValue)
                 pawn.guest?.SetGuestStatus(Faction.OfPlayer, guestStatus.Value);
 
-            pawns.Add(pawn);
+            sourcedPawns.Add(pawn);
         }
 
-        return pawns;
+        return sourcedPawns;
     }
 
     public List<Pawn> Execute(bool reusePawns = true)
@@ -564,7 +571,6 @@ static class PawnBuilderExtension
         return builder.Do((pawn) =>
         {
             pawn.relations.AddDirectRelation(relationDef, other);
-            other.relations.AddDirectRelation(relationDef, pawn);
         });
     }
 

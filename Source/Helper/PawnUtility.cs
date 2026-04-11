@@ -28,19 +28,21 @@ internal static class PawnUtility
         Accessor.Pawn_HealthTracker.MakeDowned(pawn.health, null, null);
         pawn.health.forceDowned = false;
     }
-
-    public static Pawn GetOperatingDoctor(this Pawn patient)
+    
+    public static bool IsHavingAffairBasedOnIdeo(this Pawn pawn)
     {
-        var comp = patient.CurrentBed()?.GetComp<CompAssignableToPawn_Bed>();
-        var medicalBill = patient.BillStack.Bills.OfType<Bill_Medical>().FirstOrDefault();
-
-        if (medicalBill == null) return null;
-
-        return patient.Map.mapPawns.AllPawnsSpawned
-            .FirstOrDefault(p => p.CurJob?.def == JobDefOf.DoBill && p.CurJob.bill == medicalBill);
+        return !new HistoryEvent(pawn.GetHistoryEventLoveRelationCount(), pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo();
+    }
+    
+    public static List<Pawn> GetCurrentSpouses(this Pawn pawn)
+    {
+        return pawn.relations.DirectRelations
+            .Where(r =>  r.def == PawnRelationDefOf.Spouse &&  r.otherPawn is { Dead: false })
+            .Select(r => r.otherPawn)
+            .ToList();
     }
 
-    public static void StartMentalBreakWithMadeupThought(this Pawn pawn, MentalBreakDef def)
+    public static void StartMentalBreakWithMadeUpThought(this Pawn pawn, MentalBreakDef def)
     {
         var randomNegativeThought = DefDatabase<ThoughtDef>.AllDefs
             .Where(t => t.stages != null && t.stages.Any(s => s != null && s.baseMoodEffect < 0) && (!t.label.NullOrEmpty() || !t.stages.First().label.NullOrEmpty()))

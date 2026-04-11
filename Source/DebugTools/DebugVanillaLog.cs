@@ -3,6 +3,7 @@ using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Recorders;
 using System.Collections.Generic;
 using System.Linq;
+using PawnHistory.Source.PawnTracker;
 using Verse;
 using static RimWorld.ITab_Pawn_Log_Utility;
 
@@ -42,6 +43,7 @@ public static class DebugVanillaLog
                 DebugTables.MakeTablesDialog(option.Logs,
                     new TableDataGetter<LogEntry>("Timestamp", l => l.Timestamp),
                     new TableDataGetter<LogEntry>("Class", l => l.GetType().Name),
+                    new TableDataGetter<LogEntry>("String", l => l.ToString()),
                     new TableDataGetter<LogEntry>("Text", l => l.ToGameStringFromPOV(option.Pawn)),
                     new TableDataGetter<LogEntry>("Concerns", l => l.GetConcerns().JoinToString())
                 );

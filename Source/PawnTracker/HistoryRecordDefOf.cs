@@ -1,9 +1,11 @@
-﻿using RimWorld;
+﻿using System.Diagnostics.CodeAnalysis;
+using RimWorld;
 
 namespace PawnHistory.Source.PawnTracker;
 
 #pragma warning disable CS0649
 [DefOf]
+[SuppressMessage("ReSharper", "UnassignedField.Global")]
 public class HistoryRecordDefOf
 {
     public static HistoryRecordDef Raid;
@@ -53,10 +55,12 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef AnimalRevenge;
     public static HistoryRecordDef SocialFight;
     public static HistoryRecordDef Rescued;
+    public static HistoryRecordDef NewLover;
+    public static HistoryRecordDef NewAffair;
     public static HistoryRecordDef PrisonerCaptured;
     public static HistoryRecordDef PrisonerRecruited;
     public static HistoryRecordDef PrisonBreak;
-    public static HistoryRecordDef LightningStriked;
+    public static HistoryRecordDef LightningStrike;
     public static HistoryRecordDef WalkNaked;
     public static HistoryRecordDef ReadBook;
     public static HistoryRecordDef Stripped;

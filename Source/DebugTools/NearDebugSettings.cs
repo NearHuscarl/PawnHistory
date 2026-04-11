@@ -10,7 +10,7 @@ namespace PawnHistory.Source.DebugTools;
 [HarmonyPatch(typeof(HediffComp_GetsPermanent), nameof(HediffComp_GetsPermanent.PreFinalizeInjury))]
 internal class HediffComp_GetsPermanent_PreFinalizeInjury_Patch
 {
-    static void Postfix(HediffComp_GetsPermanent __instance)
+    private static void Postfix(HediffComp_GetsPermanent __instance)
     {
         if (NearDebugSettings.ForceInjuryScar)
             __instance.IsPermanent = true;
@@ -20,7 +20,7 @@ internal class HediffComp_GetsPermanent_PreFinalizeInjury_Patch
 [HarmonyPatch(typeof(HediffComp_GetsPermanent), nameof(HediffComp_GetsPermanent.CompPostInjuryHeal))]
 internal class HediffComp_GetsPermanent_CompPostInjuryHeal_Patch
 {
-    static void Prefix(HediffComp_GetsPermanent __instance, float amount)
+    private static void Prefix(HediffComp_GetsPermanent __instance, float amount)
     {
         if (!NearDebugSettings.ForcePostHealScar)
             return;
@@ -31,12 +31,12 @@ internal class HediffComp_GetsPermanent_CompPostInjuryHeal_Patch
 }
 
 [HarmonyPatch(typeof(DebugTabMenu_Settings), nameof(DebugTabMenu_Settings.InitActions))]
-public static class Patch_DebugTabMenu_Settings_InitActions_Patch
+internal static class Patch_DebugTabMenu_Settings_InitActions_Patch
 {
     private static readonly Action<DebugTabMenu_Settings, FieldInfo, string> AddNode =
        AccessTools.MethodDelegate<Action<DebugTabMenu_Settings, FieldInfo, string>>(AccessTools.Method(typeof(DebugTabMenu_Settings), "AddNode"));
 
-    static void Postfix(DebugTabMenu_Settings __instance, DebugActionNode __result)
+    private static void Postfix(DebugTabMenu_Settings __instance, DebugActionNode __result)
     {
         var fields = typeof(NearDebugSettings).GetFields();
 
@@ -48,9 +48,9 @@ public static class Patch_DebugTabMenu_Settings_InitActions_Patch
 }
 
 [HarmonyPatch(typeof(PawnUtility), nameof(PawnUtility.GetManhunterChanceFactorForInstigator))]
-public static class PawnUtility_GetManhunterChanceFactorForInstigator_Patch
+internal static class PawnUtility_GetManhunterChanceFactorForInstigator_Patch
 {
-    static void Postfix(ref float __result)
+    private static void Postfix(ref float __result)
     {
         if (NearDebugSettings.ForceManhunterChance)
             __result = 10f;
@@ -58,11 +58,21 @@ public static class PawnUtility_GetManhunterChanceFactorForInstigator_Patch
 }
 
 [HarmonyPatch(typeof(Building_Trap), "SpringChance")]
-public static class Building_Trap_SpringChance_Patch
+internal static class Building_Trap_SpringChance_Patch
 {
-    static void Postfix(ref float __result)
+    private static void Postfix(ref float __result)
     {
         if (NearDebugSettings.ForceSpringTrap)
+            __result = 10f;
+    }
+}
+
+[HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), nameof(InteractionWorker_RomanceAttempt.SuccessChance))]
+internal static class InteractionWorker_RomanceAttempt_SuccessChance_Patch
+{
+    private static void Postfix(ref float __result)
+    {
+        if (NearDebugSettings.ForceRomanceSuccess)
             __result = 10f;
     }
 }
@@ -73,4 +83,5 @@ internal class NearDebugSettings
     public static bool ForcePostHealScar = false;
     public static bool ForceManhunterChance = false;
     public static bool ForceSpringTrap = false;
+    public static bool ForceRomanceSuccess = false;
 }

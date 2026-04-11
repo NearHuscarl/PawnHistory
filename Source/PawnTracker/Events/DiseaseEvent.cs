@@ -10,8 +10,7 @@ public record DiseaseEvent(Pawn Pawn, IEnumerable<Pawn> Group, IncidentDef Incid
 
 internal class DiseaseContext
 {
-    public List<Hediff> hediffSnapshot;
-    public Pawn pawn;
+    public List<Hediff> HediffSnapshot;
 
     public static readonly Dictionary<Pawn, DiseaseContext> Contexts = [];
 
@@ -19,34 +18,34 @@ internal class DiseaseContext
 }
 
 [HarmonyPatch(typeof(IncidentWorker_Disease), nameof(IncidentWorker_Disease.ApplyToPawns))]
-public static class IncidentWorker_Disease_ApplyToPawns_Patch
+internal static class IncidentWorker_Disease_ApplyToPawns_Patch
 {
-    public static void Prefix(IncidentWorker_Disease __instance, IEnumerable<Pawn> pawns, string blockedInfo)
+    private static void Prefix(IEnumerable<Pawn> pawns)
     {
         foreach (var pawn in pawns)
         {
             DiseaseContext.Contexts.Add(pawn, new DiseaseContext()
             {
-                pawn = pawn,
-                hediffSnapshot = DiseaseContext.GetHediffSnapshot(pawn)
+                HediffSnapshot = DiseaseContext.GetHediffSnapshot(pawn)
             });
         }
     }
-    public static void Postfix(IncidentWorker_Disease __instance, IEnumerable<Pawn> pawns, string blockedInfo)
+    private static void Postfix(IncidentWorker_Disease __instance, IEnumerable<Pawn> pawns)
     {
-        if (!pawns.Any() && blockedInfo.NullOrEmpty())
-            return;
-
         var group = pawns.ToList();
-        foreach (var pawn in pawns)
+        
+        if (group.Count == 0)
+            return;
+        
+        foreach (var pawn in group)
         {
             if (!DiseaseContext.Contexts.TryGetValue(pawn, out var context))
                 continue;
 
-            var hediff = DiseaseContext.GetHediffSnapshot(pawn).Except(context.hediffSnapshot).FirstOrDefault();
+            var hediff = DiseaseContext.GetHediffSnapshot(pawn).Except(context.HediffSnapshot).FirstOrDefault();
             GameEventBus.Publish(new DiseaseEvent(pawn, group, __instance.def, hediff?.Part));
         }
     }
 
-    static void Finalizer() => DiseaseContext.Contexts.Clear();
+    private static void Finalizer() => DiseaseContext.Contexts.Clear();
 }

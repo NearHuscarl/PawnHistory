@@ -9,7 +9,7 @@ public record PrisonerCapturedEvent(Pawn Prisoner, Pawn Captor, Room Room) : Gam
 [HarmonyPatch(typeof(Pawn_GuestTracker), nameof(Pawn_GuestTracker.CapturedBy))]
 internal class Pawn_GuestTracker_CapturedBy_Patch
 {
-    static void Postfix(Pawn_GuestTracker __instance, Pawn byPawn = null)
+    private static void Postfix(Pawn_GuestTracker __instance, Pawn byPawn = null)
     {
         if (__instance.GuestStatus != GuestStatus.Prisoner)
             return;

@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.DebugTools;
+﻿using System;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
@@ -33,7 +33,7 @@ public class PrisonerRecruitedRecorder : RecorderBase<PrisonerRecruitedEvent>
             AddRecord(recordDef, e.Prisoner, desc, [e.Recruiter]);
     }
 
-    public void Test(TestScenario scenario)
+    public Action Test(TestScenario scenario)
     {
         DebugSettings.instantRecruit = true;
 
@@ -52,19 +52,19 @@ public class PrisonerRecruitedRecorder : RecorderBase<PrisonerRecruitedEvent>
         recruiter.Faction.Name = null;
         scenario.SpeedUp();
 
-        GameEventBus.SubscribeOnce<PrisonerRecruitedEvent>(e =>
+        Expect.That(recruiter)
+            .Eventually()
+            .ToHaveHistoryRecord("[InteractionLog]. [Prisoner] accepted and joined [Recruiter_possessive] community.");
+
+        return () =>
         {
             DebugSettings.instantRecruit = false;
             scenario.SlowDown();
             scenario.OpenHistoryRecordTab(recruiter);
-        });
-
-        Expect.That(recruiter)
-            .Eventually()
-            .ToHaveHistoryRecord("[InteractionLog]. [Prisoner] accepted and joined [Recruiter_possessive] community.");
+        };
     }
 
-    public void TestNamedFaction(TestScenario scenario)
+    public Action TestNamedFaction(TestScenario scenario)
     {
         DebugSettings.instantRecruit = true;
 
@@ -83,15 +83,15 @@ public class PrisonerRecruitedRecorder : RecorderBase<PrisonerRecruitedEvent>
         recruiter.Faction.Name = "Deez Nuts";
         scenario.SpeedUp();
 
-        GameEventBus.SubscribeOnce<PrisonerRecruitedEvent>(e =>
+        Expect.That(recruiter)
+            .Eventually()
+            .ToHaveHistoryRecord("[InteractionLog]. [Prisoner] accepted and joined [Faction].");
+        
+        return () =>
         {
             DebugSettings.instantRecruit = false;
             scenario.SlowDown();
             scenario.OpenHistoryRecordTab(recruiter);
-        });
-
-        Expect.That(recruiter)
-            .Eventually()
-            .ToHaveHistoryRecord("[InteractionLog]. [Prisoner] accepted and joined [Faction].");
+        };
     }
 }

@@ -9,13 +9,13 @@ public static class TestManager
 {
     public static int Timeout = 5000;
     internal static TestContext Ctx;
-    private static readonly Queue<Action> queue = new();
+    private static readonly Queue<Action> Queue = new();
     private static bool isRunningTest;
     private static AutomaticPauseMode? curPauseMode = null;
 
     public static void EnqueueTest(Func<object> testAction, string label)
     {
-        queue.Enqueue(() =>
+        Queue.Enqueue(() =>
         {
             GameUtility.CreateTestGame(() =>
             {
@@ -42,14 +42,14 @@ public static class TestManager
 
     private static void RunNext()
     {
-        if (queue.Count == 0)
+        if (Queue.Count == 0)
         {
             isRunningTest = false;
             Log.Message("[PawnHistory] All tests finished.");
             return;
         }
 
-        var next = queue.Dequeue();
+        var next = Queue.Dequeue();
         next();
     }
 
@@ -71,7 +71,7 @@ public static class TestManager
         {
             Log.Error($"[PawnHistory] Failed during setup test for {label}\n\n{ex}");
             CleanupAfterTest();
-            onCompleted(false);
+            onCompleted?.Invoke(false);
             return;
         }
 
@@ -135,7 +135,7 @@ public static class TestManager
 
     public static void StopTestRun()
     {
-        queue.Clear();
+        Queue.Clear();
         isRunningTest = false;
     }
 }

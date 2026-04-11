@@ -9,7 +9,7 @@ public record SocialFightStartedEvent(PlayLogEntry_Interaction InteractionEntry,
 [HarmonyPatch(typeof(PlayLog), nameof(PlayLog.Add))]
 internal class PlayLog_Add_Patch
 {
-    static void Postfix(LogEntry entry)
+    internal static void Postfix(LogEntry entry)
     {
         if (entry is not PlayLogEntry_Interaction interactionEntry) return;
 

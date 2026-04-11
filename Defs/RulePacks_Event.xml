@@ -583,6 +583,28 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_NewLover</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[InteractionLog]. [Recipient] was attracted and became [Initiator]'s lover. [AffairClause]</li>
+				<li>entry->[InteractionLog]. [Recipient] responded well and became [Initiator]'s lover.</li>
+				<li>entry->[InteractionLog]. [Recipient] became aroused and agreed to be [Initiator]'s lover.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PawnEvent_NewAffair</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(isMarried==True) ->[PAWN], who married to [Ex], began an affair with [NewLover].</li>
+				<!-- lover, fiancé-->
+				<li>entry(isMarried==False)->[PAWN] and [Ex] were no longer in a relationship after [PAWN] had an affair with [NewLover].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_PrisonerCaptured</defName>
 		<rulePack>
 			<rulesStrings>

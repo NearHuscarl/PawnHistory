@@ -28,12 +28,12 @@ internal static class InspirationContext
 }
 
 [HarmonyPatch(typeof(InspirationHandler), nameof(InspirationHandler.TryStartInspiration))]
-public static class InspirationHandler_TryStartInspiration_Patch
+internal static class InspirationHandler_TryStartInspiration_Patch
 {
-    private static readonly string LetterInspirationBeginPsilocap = "LetterInspirationBeginPsilocap";
-    private static readonly string LetterInspirationBeginThanksToHighMoodPart = "LetterInspirationBeginThanksToHighMoodPart";
-    private static readonly string LetterPsychicInspiration = "LetterPsychicInspiration";
-    private static readonly string LetterSpeechInspiration = "LetterSpeechInspiration";
+    private const string LetterInspirationBeginPsilocap = "LetterInspirationBeginPsilocap";
+    private const string LetterInspirationBeginThanksToHighMoodPart = "LetterInspirationBeginThanksToHighMoodPart";
+    private const string LetterPsychicInspiration = "LetterPsychicInspiration";
+    private const string LetterSpeechInspiration = "LetterSpeechInspiration";
 
     public static void Postfix(bool __result, InspirationHandler __instance, InspirationDef def, string reason)
     {
@@ -60,16 +60,16 @@ public static class InspirationHandler_TryStartInspiration_Patch
     }
 }
 
-[HarmonyPatch(typeof(Trait), nameof(Trait.Notify_MentalStateEndedOn), [typeof(Pawn)])]
-public static class Trait_Notify_MentalStateEndedOn_Patch
+[HarmonyPatch(typeof(Trait), nameof(Trait.Notify_MentalStateEndedOn), typeof(Pawn))]
+internal static class Trait_Notify_MentalStateEndedOn_Patch
 {
-    static void Prefix(Trait __instance) => InspirationContext.TickingTrait = __instance;
-    static void Finalizer() => InspirationContext.TickingTrait = null;
+    private static void Prefix(Trait __instance) => InspirationContext.TickingTrait = __instance;
+    private static void Finalizer() => InspirationContext.TickingTrait = null;
 }
 
 [HarmonyPatch(typeof(RitualOutcomeEffectWorker_Consumable), "ApplyExtraOutcome")]
-public static class RitualOutcomeEffectWorker_Consumable_ApplyExtraOutcome_Patch
+internal static class RitualOutcomeEffectWorker_Consumable_ApplyExtraOutcome_Patch
 {
-    static void Prefix(LordJob_Ritual jobRitual) => InspirationContext.TickingRitual = jobRitual.Ritual.sourcePattern;
-    static void Finalizer() => InspirationContext.TickingRitual = null;
+    private static void Prefix(LordJob_Ritual jobRitual) => InspirationContext.TickingRitual = jobRitual.Ritual.sourcePattern;
+    private static void Finalizer() => InspirationContext.TickingRitual = null;
 }
