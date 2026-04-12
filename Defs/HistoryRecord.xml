@@ -441,7 +441,7 @@
 		<defName>NewLover</defName>
 		<label>new lover</label>
 		<descriptionMaker>PawnEvent_NewLover</descriptionMaker>
-		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<icon>Things/Mote/SpeechSymbols/Romance</icon>
 		<categories>
 			<li>Relationship</li>
 		</categories>
@@ -451,6 +451,15 @@
 		<label>new affair</label>
 		<descriptionMaker>PawnEvent_NewAffair</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Relationship</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Breakup</defName>
+		<label>breakup</label>
+		<descriptionMaker>PawnEvent_Breakup</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/Breakup</icon>
 		<categories>
 			<li>Relationship</li>
 		</categories>

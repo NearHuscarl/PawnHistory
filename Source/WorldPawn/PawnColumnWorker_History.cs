@@ -11,7 +11,7 @@ namespace PawnHistory.Source.WorldPawn
         private static readonly Texture2D LogIcon = ContentFinder<Texture2D>.Get("ButtonIcons/History");
         private static readonly Texture2D EmptyLogIcon = ContentFinder<Texture2D>.Get("ButtonIcons/HistoryEmpty");
 
-        protected override Texture2D GetIconFor(Pawn pawn) => pawn.GetHistoryRecords().Any() ? LogIcon : EmptyLogIcon;
+        protected override Texture2D GetIconFor(Pawn pawn) => pawn.HistoryRecords.Any() ? LogIcon : EmptyLogIcon;
 
         protected override void ClickedIcon(Pawn pawn)
         {

@@ -18,7 +18,7 @@ public abstract class RecorderBase
 
     protected IEnumerable<HistoryRecord> GeRecordsOfType(Pawn pawn, HistoryRecordDef def, int limit = 100)
     {
-        var records = pawn.GetHistoryRecords();
+        var records = pawn.HistoryRecords;
 
         for (var i = records.Count - 1; i >= 0; i--)
         {
@@ -31,12 +31,12 @@ public abstract class RecorderBase
 
     protected virtual void AddRecord(HistoryRecordDef def, Pawn pawn, TaggedString resolvedDesc, IEnumerable<Thing> concerns = null, RecordLocation location = null)
     {
-        pawn.GetHistoryRecords().Add(new HistoryRecord(def, pawn, resolvedDesc, concerns, location));
+        pawn.HistoryRecords.Add(new HistoryRecord(def, pawn, resolvedDesc, concerns, location));
     }
 }
 
 public abstract class RecorderBase<TInput> : RecorderBase, IRecord<TInput>
 {
-    public override abstract void Register();
+    public abstract override void Register();
     public abstract void CreateRecord(TInput input);
 }

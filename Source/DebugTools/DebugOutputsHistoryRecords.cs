@@ -39,12 +39,12 @@ public static class DebugOutputsHistoryRecords
     {
         var options = new List<DebugMenuOption>();
         var allPawns = PawnsFinder.AllMapsWorldAndTemporary_AliveOrDead.Where(RecorderManager.ShouldRecord)
-            .OrderByDescending(p => p.GetHistoryRecords().Count)
-            .ThenByDescending(p => p.GetHistoryRecords().LastOrDefault()?.date ?? 0);
+            .OrderByDescending(p => p.HistoryRecords.Count)
+            .ThenByDescending(p => p.HistoryRecords.LastOrDefault()?.date ?? 0);
 
         foreach (var pawn in allPawns)
         {
-            var historyRecords = pawn.GetHistoryRecords();
+            var historyRecords = pawn.HistoryRecords;
             var label = $"{pawn.Name} ({historyRecords.Count})";
 
             options.Add(new DebugMenuOption(label, DebugMenuOptionMode.Action, () =>
@@ -57,7 +57,7 @@ public static class DebugOutputsHistoryRecords
                     new TableDataGetter<HistoryRecord>("Concerns", r => r.ConcernedThings.Select(c =>
                     {
                         if (c == null) return "null";
-                        if (c is Pawn p) return p.NameDef();
+                        if (c is Pawn p) return p.NameDef;
                         return c.Label;
                     }).JoinToString()),
                     new TableDataGetter<HistoryRecord>("Position", r => r.location == null ? "" : $"{r.location.map} {r.location.position}"),

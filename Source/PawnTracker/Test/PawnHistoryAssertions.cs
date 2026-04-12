@@ -34,7 +34,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
         {
             var result = pawns.Any(p =>
             {
-                if (!p.GetHistoryRecords().TryAt(index, out HistoryRecord record))
+                if (!p.HistoryRecords.TryAt(index, out HistoryRecord record))
                     return false;
                 return record.def == def;
             });
@@ -54,7 +54,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
         RunAssertion(() =>
         {
             var pawn = pawns.First();
-            var actual = pawn.GetHistoryRecords().Count;
+            var actual = pawn.HistoryRecords.Count;
             var result = actual != expected;
 
             AssertCondition(
@@ -72,7 +72,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
             string actual = "";
             var result = pawns.Any(p =>
             {
-                if (!p.GetHistoryRecords().TryAt(index, out HistoryRecord record))
+                if (!p.HistoryRecords.TryAt(index, out HistoryRecord record))
                     return false;
                 actual = record.description.StripTags();
                 return LangUtility.IsStructurallyTheSame(descriptionTemplate, actual, exactMatch);
@@ -93,7 +93,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
             string actual = "";
             var result = pawns.Any(p =>
             {
-                var record = p.GetHistoryRecords().LastOrDefault(r => (recordDef == null || r.def == recordDef) && r.date >= Find.TickManager.TicksGame - ticksAgo);
+                var record = p.HistoryRecords.LastOrDefault(r => (recordDef == null || r.def == recordDef) && r.date >= Find.TickManager.TicksGame - ticksAgo);
                 if (record == null)
                     return false;
                 actual = record.description.StripTags();
@@ -116,7 +116,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
         {
             var result = pawns.Any(p =>
             {
-                if (!p.GetHistoryRecords().TryAt(index, out HistoryRecord record))
+                if (!p.HistoryRecords.TryAt(index, out HistoryRecord record))
                     return false;
                 return record.location?.position == position;
             });

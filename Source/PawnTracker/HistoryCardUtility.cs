@@ -75,7 +75,7 @@ public class HistoryCardUtility
         var anchor = Text.Anchor;
 
         var inRect = tabRect.ContractedBy(containerPadding);
-        var records = pawn.GetHistoryRecords().Where(r => r.def.importance != RecordImportance.Debug).ToList();
+        var records = pawn.HistoryRecords.Where(r => r.def.importance != RecordImportance.Debug).ToList();
 
         GUI.BeginGroup(inRect);
 
@@ -108,7 +108,7 @@ public class HistoryCardUtility
 
             GUI.color = Color.white;
             var iconCell = new Rect(colWidthDate, row.y + ((row.height - colWidthIcon) / 2), colWidthIcon, colWidthIcon);
-            GUI.DrawTexture(iconCell, record.GetIcon(), ScaleMode.ScaleToFit);
+            GUI.DrawTexture(iconCell, record.Icon, ScaleMode.ScaleToFit);
 
             GUI.color = Color.white; Text.Font = GameFont.Tiny; Text.Anchor = TextAnchor.MiddleLeft;
             var descCell = new Rect(colWidthDate + colWidthIcon + colGap, row.y, colWidthDesc, row.height);

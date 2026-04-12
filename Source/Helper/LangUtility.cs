@@ -9,7 +9,7 @@ namespace PawnHistory.Source.Helper;
 
 internal static class LangUtility
 {
-    public static TaggedString FormatList(List<Pawn> pawns) => FormatList(pawns, p => p.NameDef());
+    public static TaggedString FormatList(List<Pawn> pawns) => FormatList(pawns, p => p.NameDef);
 
     public static TaggedString FormatList<T>(List<T> items, Func<T, string> toString = null, string otherText = null)
     {

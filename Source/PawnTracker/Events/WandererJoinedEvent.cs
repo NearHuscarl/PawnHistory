@@ -9,7 +9,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record WandererJoinedEvent(Pawn Pawn, IEnumerable<Pawn> Group, IncidentDef IncidentDef = null, QuestScriptDef QuestScript = null) : GameEventBase;
 
-class WandererJoinContext
+internal static class WandererJoinContext
 {
     private static List<Pawn> Snapshot = [];
 

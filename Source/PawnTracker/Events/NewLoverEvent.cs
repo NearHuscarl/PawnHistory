@@ -14,11 +14,11 @@ internal static class NewLoverContext
 }
 
 // Call order:
-// InteractionWorker_RomanceAttempt.TryInteractWith() prefix
-// InteractionWorker_RomanceAttempt.Interacted()
-// - InteractionWorker_RomanceAttempt.TryAddCheaterThought()
-// Find.PlayLog.Add(entry) --> here
-// InteractionWorker_RomanceAttempt.TryInteractWith() postfix
+// Pawn_InteractionsTracker.TryInteractWith() prefix
+// - InteractionWorker_RomanceAttempt.Interacted()
+//  - InteractionWorker_RomanceAttempt.TryAddCheaterThought()
+// - Find.PlayLog.Add(entry) --> here
+// Pawn_InteractionsTracker.TryInteractWith() postfix
 
 [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "TryAddCheaterThought")]
 internal class InteractionWorker_RomanceAttempt_TryAddCheaterThought_Patch

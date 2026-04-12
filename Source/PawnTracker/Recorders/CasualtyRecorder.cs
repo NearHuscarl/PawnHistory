@@ -66,7 +66,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
 
         var isKillLog = casualty == CasualtyType.Killed;
         var recordDef = isKillLog ? HistoryRecordDefOf.Death : HistoryRecordDefOf.Downed;
-        var historyRecords = subject.GetHistoryRecords();
+        var historyRecords = subject.HistoryRecords;
         var lastRecord = historyRecords.LastOrDefault();
 
         if (isKillLog && lastRecord?.def == HistoryRecordDefOf.Downed && lastRecord.date == GenTicks.TicksAbs)
@@ -102,7 +102,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
     private void RecordRelativeDeath(Pawn deceased, Pawn initiator, Pawn originalTarget, string combatLogText, string transitionText, string deathDesc)
     {
         var recordDef = HistoryRecordDefOf.RelativeDeath;
-        var deceasedName = deceased.NameDef();
+        var deceasedName = deceased.NameDef;
 
         foreach (var relative in deceased.relations.PotentiallyRelatedPawns)
         {
@@ -130,14 +130,14 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
     {
         if (def == HistoryRecordDefOf.Death)
         {
-            var lastRecord = pawn.GetHistoryRecords().LastOrDefault();
+            var lastRecord = pawn.HistoryRecords.LastOrDefault();
             if (lastRecord?.def == HistoryRecordDefOf.Crushed || lastRecord?.def == HistoryRecordDefOf.FriendlyTrapHit)
                 location = lastRecord.location;
         }
         if (def == HistoryRecordDefOf.RelativeDeath)
         {
             var deathRelative = concerns.FirstOrDefault() as Pawn;
-            var lastTwoRecords = deathRelative.GetHistoryRecords().TakeLast(2).ToList();
+            var lastTwoRecords = deathRelative.HistoryRecords.TakeLast(2).ToList();
             var secondLastRecord = lastTwoRecords.FirstOrDefault();
             var lastRecord = lastTwoRecords.LastOrDefault();
             if (lastTwoRecords.Count == 2 && (secondLastRecord.def == HistoryRecordDefOf.Crushed || secondLastRecord.def == HistoryRecordDefOf.FriendlyTrapHit) && lastRecord.def == HistoryRecordDefOf.Death)

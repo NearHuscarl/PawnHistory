@@ -56,7 +56,7 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
     {
         if (pawn == null) return this;
 
-        AddRule(keyword, pawn.NameDef(), replaceIfExist);
+        AddRule(keyword, pawn.NameDef, replaceIfExist);
 
         if (addSubsymbols)
             return AddRules(GrammarUtility.RulesForPawn(keyword, pawn, extraConstants));
@@ -141,7 +141,7 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
             return "ERR: No description found";
         }
 
-        List<NamedArgument> args = [Pawn.NameDef().Named(Keyword)];
+        List<NamedArgument> args = [Pawn.NameDef.Named(Keyword)];
 
         foreach (var kvp in namedArgs)
             args.Add(kvp.Value.Named(kvp.Key));
@@ -160,7 +160,7 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
         var request = new GrammarRequest();
 
         request.Includes.Add(HistoryRecordDef.descriptionMaker);
-        request.Rules.Add(new Rule_String(Keyword, Pawn.NameDef()));
+        request.Rules.Add(new Rule_String(Keyword, Pawn.NameDef));
 
         if (includePawnRules)
             request.Rules.AddRange(GrammarUtility.RulesForPawn(Keyword, Pawn, extraConstants));

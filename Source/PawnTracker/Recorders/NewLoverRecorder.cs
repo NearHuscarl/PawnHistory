@@ -56,7 +56,6 @@ public class NewLoverRecorder : RecorderBase<NewLoverEvent>
     public Action Test(TestScenario scenario)
     {
         NearDebugSettings.ForceRomanceSuccess = true;
-        scenario.SpeedUp();
 
         var recipient = scenario.Pawn()
             .Colonist()
@@ -67,30 +66,21 @@ public class NewLoverRecorder : RecorderBase<NewLoverEvent>
             .Do((p, i, pawns) => p.interactions.TryInteractWith(recipient, InteractionDefOf.RomanceAttempt))
             .CreateSingle();
 
-        Expect.That(initiator)
-            .Eventually()
-            .ToHaveHistoryRecord("[InteractionLog]. [RomanceSuccessPrefix] [Initiator]'s lover.", HistoryRecordDefOf.NewLover);
-        Expect.That(recipient)
-            .Eventually()
-            .ToHaveHistoryRecord("[InteractionLog]. [RomanceSuccessPrefix] [Initiator]'s lover.", HistoryRecordDefOf.NewLover);
+        Expect.That(initiator).ToHaveHistoryRecord("[InteractionLog]. [RomanceSuccessPrefix] [Initiator]'s lover.", HistoryRecordDefOf.NewLover);
+        Expect.That(recipient).ToHaveHistoryRecord("[InteractionLog]. [RomanceSuccessPrefix] [Initiator]'s lover.", HistoryRecordDefOf.NewLover);
 
-        return () =>
-        {
-            NearDebugSettings.ForceRomanceSuccess = false;
-            scenario.SlowDown();
-        };
+        return () => NearDebugSettings.ForceRomanceSuccess = false;
     }
 
     public Action TestAffair(TestScenario scenario)
     {
         NearDebugSettings.ForceRomanceSuccess = true;
-        scenario.SpeedUp();
 
-        var cuckold = scenario.Pawn() .Colonist() .CreateSingle();
-        var cuckold2 = scenario.Pawn() .Colonist() .CreateSingle();
+        var cuckold1 = scenario.Pawn().Colonist().CreateSingle();
+        var cuckold2 = scenario.Pawn().Colonist().CreateSingle();
         var recipient = scenario.Pawn()
             .Colonist()
-            .SetRelation(cuckold, PawnRelationDefOf.Lover)
+            .SetRelation(cuckold1, PawnRelationDefOf.Lover)
             .CreateSingle();
         var initiator = scenario.Pawn()
             .Colonist()
@@ -99,36 +89,23 @@ public class NewLoverRecorder : RecorderBase<NewLoverEvent>
             .Do((p, i, pawns) => p.interactions.TryInteractWith(recipient, InteractionDefOf.RomanceAttempt))
             .CreateSingle();
 
-        Expect.That(initiator)
-            .Eventually()
-            .ToHaveHistoryRecord("[InteractionLog]. [RomanceSuccessPrefix] [Initiator]'s lover.", HistoryRecordDefOf.NewLover);
-        Expect.That(recipient)
-            .Eventually()
-            .ToHaveHistoryRecord("[InteractionLog]. [RomanceSuccessPrefix] [Initiator]'s lover.", HistoryRecordDefOf.NewLover);
-        Expect.That(cuckold)
-            .Eventually()
-            .ToHaveHistoryRecord("[PAWN] and [Ex] were no longer in a relationship after [PAWN] had an affair with [NewLover].", HistoryRecordDefOf.NewAffair);
-        Expect.That(cuckold2)
-            .Eventually()
-            .ToHaveHistoryRecord("[PAWN] and [Ex] were no longer in a relationship after [PAWN] had an affair with [NewLover].", HistoryRecordDefOf.NewAffair);
+        Expect.That(initiator).ToHaveHistoryRecord("[InteractionLog]. [RomanceSuccessPrefix] [Initiator]'s lover.", HistoryRecordDefOf.NewLover);
+        Expect.That(recipient).ToHaveHistoryRecord("[InteractionLog]. [RomanceSuccessPrefix] [Initiator]'s lover.", HistoryRecordDefOf.NewLover);
+        Expect.That(cuckold1).ToHaveHistoryRecord("[PAWN] and [Ex] were no longer in a relationship after [PAWN] had an affair with [NewLover].", HistoryRecordDefOf.NewAffair);
+        Expect.That(cuckold2).ToHaveHistoryRecord("[PAWN] and [Ex] were no longer in a relationship after [PAWN] had an affair with [NewLover].", HistoryRecordDefOf.NewAffair);
         
-        return () =>
-        {
-            NearDebugSettings.ForceRomanceSuccess = false;
-            scenario.SlowDown();
-        };
+        return () => NearDebugSettings.ForceRomanceSuccess = false;
     }
 
     public Action TestAffair2(TestScenario scenario)
     {
         NearDebugSettings.ForceRomanceSuccess = true;
-        scenario.SpeedUp();
 
-        var cuckold = scenario.Pawn() .Colonist() .CreateSingle();
-        var cuckold2 = scenario.Pawn() .Colonist() .CreateSingle();
+        var cuckold1 = scenario.Pawn().Colonist().CreateSingle();
+        var cuckold2 = scenario.Pawn().Colonist().CreateSingle();
         var recipient = scenario.Pawn()
             .Colonist()
-            .SetRelation(cuckold, PawnRelationDefOf.Spouse)
+            .SetRelation(cuckold1, PawnRelationDefOf.Spouse)
             .CreateSingle();
         var initiator = scenario.Pawn()
             .Colonist()
@@ -137,23 +114,11 @@ public class NewLoverRecorder : RecorderBase<NewLoverEvent>
             .Do((p, i, pawns) => p.interactions.TryInteractWith(recipient, InteractionDefOf.RomanceAttempt))
             .CreateSingle();
 
-        Expect.That(initiator)
-            .Eventually()
-            .ToHaveHistoryRecord("[InteractionLog]. [RomanceSuccessPrefix] [Initiator]'s lover.", HistoryRecordDefOf.NewLover);
-        Expect.That(recipient)
-            .Eventually()
-            .ToHaveHistoryRecord("[InteractionLog]. [RomanceSuccessPrefix] [Initiator]'s lover.", HistoryRecordDefOf.NewLover);
-        Expect.That(cuckold)
-            .Eventually()
-            .ToHaveHistoryRecord("[PAWN], who married to [Ex], began an affair with [NewLover].", HistoryRecordDefOf.NewAffair);
-        Expect.That(cuckold2)
-            .Eventually()
-            .ToHaveHistoryRecord("[PAWN], who married to [Ex], began an affair with [NewLover].", HistoryRecordDefOf.NewAffair);
+        Expect.That(initiator).ToHaveHistoryRecord("[InteractionLog]. [RomanceSuccessPrefix] [Initiator]'s lover.", HistoryRecordDefOf.NewLover);
+        Expect.That(recipient).ToHaveHistoryRecord("[InteractionLog]. [RomanceSuccessPrefix] [Initiator]'s lover.", HistoryRecordDefOf.NewLover);
+        Expect.That(cuckold1).ToHaveHistoryRecord("[PAWN], who married to [Ex], began an affair with [NewLover].", HistoryRecordDefOf.NewAffair);
+        Expect.That(cuckold2).ToHaveHistoryRecord("[PAWN], who married to [Ex], began an affair with [NewLover].", HistoryRecordDefOf.NewAffair);
         
-        return () =>
-        {
-            NearDebugSettings.ForceRomanceSuccess = false;
-            scenario.SlowDown();
-        };
+        return () => NearDebugSettings.ForceRomanceSuccess = false;
     }
 }

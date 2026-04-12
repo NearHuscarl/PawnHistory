@@ -22,7 +22,7 @@ public abstract class SurgeryRecorder<TInput> : RecorderBase<TInput>
     {
         var recordDef = HistoryRecordDefOf.BotchedSurgery;
         var injuredParts = e.NewInjuries.Select(h => h.Part).Distinct().ToList();
-        var bloodloss = e.Patient.GetBloodlossText();
+        var bloodloss = e.Patient.GetBloodLossText();
         var outcomeType = GetSurgeryOutcomeType(e.Outcome, e.Patient);
         var desc = recordDef.Description(e.Patient)
             .IncludePawnGrammar()
