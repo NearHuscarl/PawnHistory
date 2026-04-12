@@ -2,10 +2,13 @@
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Verse;
+// ReSharper disable InconsistentNaming
 
 namespace PawnHistory.Source;
 
+[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public static class Accessor
 {
     public static class BattleLogEntry_StateTransition
@@ -96,5 +99,10 @@ public static class Accessor
     {
         public static readonly AccessTools.FieldRef<RimWorld.ScenPart_PlayerPawnsArriveMethod, PlayerPawnsArriveMethod> Method =
             AccessTools.FieldRefAccess<RimWorld.ScenPart_PlayerPawnsArriveMethod, PlayerPawnsArriveMethod>("method");
+    }
+
+    public class GenFilePaths
+    {
+        public static readonly Func<string, string> FolderUnderSaveData = AccessTools.MethodDelegate<Func<string, string>>(AccessTools.Method(typeof(Verse.GenFilePaths), "FolderUnderSaveData"));
     }
 }

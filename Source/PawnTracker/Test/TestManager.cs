@@ -19,16 +19,7 @@ public static class TestManager
         {
             GameUtility.CreateTestGame(() =>
             {
-                ExecuteTestMethod(label, testAction, result =>
-                {
-                    isRunningTest = result;
-                    if (isRunningTest)
-                        RunNext();
-                    else
-                    {
-                        StopTestRun();
-                    }
-                });
+                ExecuteTestMethod(label, testAction, _ => RunNext());
             });
         });
     }
@@ -36,7 +27,8 @@ public static class TestManager
     public static void Run()
     {
         if (isRunningTest) return;
-        isRunningTest = true;
+        isRunningTest = true; 
+        TestReportManager.Reset();
         RunNext();
     }
 
@@ -46,6 +38,7 @@ public static class TestManager
         {
             isRunningTest = false;
             Log.Message("[PawnHistory] All tests finished.");
+            TestReportManager.SaveReport();
             return;
         }
 
@@ -69,7 +62,7 @@ public static class TestManager
         }
         catch (Exception ex)
         {
-            Log.Error($"[PawnHistory] Failed during setup test for {label}\n\n{ex}");
+            Log.Error($"[PawnHistory] Failed during test setup for {label}\n\n{ex}");
             CleanupAfterTest();
             onCompleted?.Invoke(false);
             return;
@@ -80,17 +73,21 @@ public static class TestManager
         {
             if (ctx.PendingEventually == 0)
             {
-                if (ctx.AssertionsFailed == 0 && ctx.AssertionsPassed > 0)
-                    ctx.Pass();
+                if (ctx.AssertionsFailed.Count == 0 && ctx.AssertionsPassed > 0)
+                    ctx.ReportPass();
                 a.Cancelled = true;
                 try
                 {
-                    testCleanup?.Invoke(); // user code, safeguard
+                    testCleanup?.Invoke(); /* user code, safeguard */
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"[PawnHistory] Failed during test cleanup for {label}\n\n{ex}");
                 }
                 finally
                 {
                     CleanupAfterTest();
-                    onCompleted?.Invoke(ctx.AssertionsFailed == 0);
+                    onCompleted?.Invoke(ctx.AssertionsFailed.Count == 0);
                 }
                 return;
             }
@@ -104,7 +101,8 @@ public static class TestManager
                 }
                 finally
                 {
-                    ctx.LogFailed($"Timeout waiting for test assertions of {label}.");
+                    var timeoutFailure = new TestFailureTimeout(label, $"Timeout waiting for test assertions of {label}.");
+                    ctx.Fail(new TestAssertionException(timeoutFailure));
                     CleanupAfterTest();
                     onCompleted?.Invoke(false);
                 }
@@ -129,7 +127,8 @@ public static class TestManager
             Prefs.AutomaticPauseMode = curPauseMode.Value;
             curPauseMode = null;
         }
-        TestScenario.ClearAll();
+        TestScenario.ClearAll(); 
+        TestReportManager.AddReportEntry(Ctx.CreateReportEntry());
         Ctx?.Cleanup();
     }
 

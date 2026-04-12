@@ -2,14 +2,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
 
-public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
+public enum MatchCondition
 {
-    private readonly IEnumerable<Pawn> pawns = pawns ?? throw new ArgumentNullException(nameof(pawns));
+    Any,
+    All,
+}
+
+public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchCondition matchCondition = MatchCondition.Any)
+{
+    private readonly List<Pawn> pawns = pawns?.ToList() ?? throw new ArgumentNullException(nameof(pawns));
 
     private bool isEventually;
     private int eventuallyTimeoutTicks;
@@ -22,30 +27,84 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
         return this;
     }
 
-    private void AssertCondition(bool condition, string positiveMessage, string negativeMessage)
+    private void Assert<T>(T expected, T actual, string positiveMessage, string negativeMessage, Dictionary<string, string> testParams = null, Func<T, T, bool> comparator = null)
     {
-        if (negate ? condition : !condition)
-            TestManager.Ctx.Fail(negate ? negativeMessage : positiveMessage);
+        var result = comparator?.Invoke(expected, actual) ?? EqualityComparer<T>.Default.Equals(expected, actual);
+        var comparatorFn = comparator?.Method.Name ?? $"{typeof(T).Name}.Equals";
+        var finalParams = testParams != null
+            ? new Dictionary<string, string>(testParams)
+            : new Dictionary<string, string>();
+
+        if (negate ? !result : result)
+            return;
+        
+        finalParams.Add("comparatorFn", comparatorFn);
+        
+        var ctx = TestManager.Ctx;
+        var message = negate ? negativeMessage : positiveMessage;
+        var failure = new TestFailure(
+            ctx.Name,
+            message,
+            expected?.ToString() ?? "null",
+            actual?.ToString() ?? "null",
+            negate,
+            finalParams
+        );
+        throw new TestAssertionException(failure);
+    }
+
+    private record AssertionData<T>(T Actual, string PositiveMessage, string NegativeMessage);
+    private void AssertCollection<T>(T expected, Func<Pawn, AssertionData<T>> getAssertionData, Dictionary<string, string> testParams = null, Func<T, T, bool> comparator = null)
+    {
+        if (matchCondition == MatchCondition.All)
+        {
+            foreach (var pawn in pawns)
+            {
+                var (actual, positiveMessage, negativeMessage) = getAssertionData(pawn);
+                Assert(expected, actual, positiveMessage, negativeMessage, testParams, comparator);
+            }
+        }
+
+        if (matchCondition == MatchCondition.Any)
+        {
+            Exception lastException = null;
+            foreach (var pawn in pawns)
+            {
+                var (actual, positiveMessage, negativeMessage) = getAssertionData(pawn);
+
+                try
+                {
+                    Assert(expected, actual, positiveMessage, negativeMessage, testParams, comparator);
+                }
+                catch (TestAssertionException ex)
+                {
+                    lastException = ex;
+                }
+            }
+
+            if (lastException != null)
+                throw lastException;
+        }
     }
 
     public void ToHaveHistoryRecordOf(HistoryRecordDef def, int index = -1)
     {
         RunAssertion(() =>
         {
-            var result = pawns.Any(p =>
-            {
-                if (!p.HistoryRecords.TryAt(index, out HistoryRecord record))
-                    return false;
-                return record.def == def;
-            });
+            var testParams =  new Dictionary<string, string> 
+            { 
+                { "index", index.ToString() } 
+            };
 
-            var pawn = pawns.Count() == 1 ? pawns.First() : null;
-            var forPawn = pawn == null ? "" : $"for {pawn} ";
-            AssertCondition(
-                result,
-                $"Expected record of type '{def.defName}' {forPawn}but none found.",
-                $"Expected NO record of type '{def.defName}' {forPawn}but one was found."
-            );
+            AssertCollection(
+                def,
+                pawn => new AssertionData<HistoryRecordDef>(
+                    !pawn.HistoryRecords.TryAt(index, out var record) ? null : record.def,
+                    $"Expect HistoryRecordDef to exist for {pawn} {ToString(testParams)}.\nExpected:\n{def}\nActual:\n{record?.def}.",
+                    $"Expect HistoryRecordDef NOT to exist for {pawn} {ToString(testParams)}.\nExpected:\n{def}\nActual:\n{record?.def}."
+                    ),
+                testParams
+                );
         });
     }
 
@@ -53,35 +112,47 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
     {
         RunAssertion(() =>
         {
-            var pawn = pawns.First();
-            var actual = pawn.HistoryRecords.Count;
-            var result = actual != expected;
-
-            AssertCondition(
-                result,
-                $"Expected {expected} number of records but got {actual}.",
-                $"Expected NOT {expected} number of records but got {actual}."
+            AssertCollection(
+                expected,
+                pawn => new AssertionData<int>(
+                    pawn.HistoryRecords.Count,
+                    $"Expect correct number of HistoryRecord for {pawn}.\nExpected:\n{expected}\nActual:\n{pawn.HistoryRecords.Count}.",
+                    $"Expect HistoryRecordDef NOT to match for {pawn}.\nExpected:\n{expected}\nActual:\n{pawn.HistoryRecords.Count}."
+                )
             );
         });
+    }
+
+    private static string ToString(Dictionary<string, string> testParams)
+    {
+        return "[" + testParams.Select(p => $"{p.Key}={p.Value}").JoinToString() + "]";
     }
 
     public void ToHaveHistoryRecord(string descriptionTemplate, int index, bool exactMatch = false)
     {
         RunAssertion(() =>
         {
-            string actual = "";
-            var result = pawns.Any(p =>
-            {
-                if (!p.HistoryRecords.TryAt(index, out HistoryRecord record))
-                    return false;
-                actual = record.description.StripTags();
-                return LangUtility.IsStructurallyTheSame(descriptionTemplate, actual, exactMatch);
-            });
-
-            AssertCondition(
-                result,
-                $"Expected description to match template\nExpected template [exactMatch={exactMatch}]:\n{descriptionTemplate}\nActual resolved description:\n{actual}",
-                $"Expected description NOT to match template\nExpected template [exactMatch={exactMatch}]:\n{descriptionTemplate}\nActual resolved description:\n{actual}."
+            var testParams =  new Dictionary<string, string> 
+            { 
+                { "index", index.ToString() },
+                { "exactMatch", exactMatch.ToString() },
+            };
+            
+            AssertCollection(
+                descriptionTemplate,
+                pawn =>
+                {
+                    pawn.HistoryRecords.TryAt(index, out var record);
+                    var actual = record.description.StripTags();
+                    
+                    return new AssertionData<string>(
+                        actual,
+                        $"Expect description to match template {ToString(testParams)}\nExpected template:\n{descriptionTemplate}\nActual resolved description:\n{actual}",
+                        $"Expect description NOT to match template {ToString(testParams)}\nExpected template:\n{descriptionTemplate}\nActual resolved description:\n{actual}."
+                        );
+                },
+                testParams, 
+                (a, b) => LangUtility.IsStructurallyTheSame(a, b, exactMatch)
             );
         });
     }
@@ -90,43 +161,56 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
     {
         RunAssertion(() =>
         {
-            string actual = "";
-            var result = pawns.Any(p =>
-            {
-                var record = p.HistoryRecords.LastOrDefault(r => (recordDef == null || r.def == recordDef) && r.date >= Find.TickManager.TicksGame - ticksAgo);
-                if (record == null)
-                    return false;
-                actual = record.description.StripTags();
-                return LangUtility.IsStructurallyTheSame(descriptionTemplate, actual, exactMatch);
-            });
-
-            var input = $"[def={recordDef},ticksAgo={ticksAgo},exactMatch={exactMatch}]";
-
-            AssertCondition(
-                result,
-                $"Expected description to match template\nExpected template {input}:\n{descriptionTemplate}\nActual resolved description:\n{actual}",
-                $"Expected description NOT to match template\nExpected template {input}:\n{descriptionTemplate}\nActual resolved description:\n{actual}."
+            var testParams =  new Dictionary<string, string> 
+            { 
+                { "recordDef", recordDef?.ToString() ?? "null" },
+                { "exactMatch", exactMatch.ToString() },
+                { "ticksAgo", ticksAgo.ToString() },
+            };
+            
+            AssertCollection(
+                descriptionTemplate,
+                pawn =>
+                {
+                    var record = pawn.HistoryRecords.LastOrDefault(r => (recordDef == null || r.def == recordDef) && r.date >= Find.TickManager.TicksGame - ticksAgo);
+                    var actual = record?.description.StripTags();
+                    
+                    return new AssertionData<string>(
+                        actual,
+                        $"Expect description to match template {ToString(testParams)}\nExpected template:\n{descriptionTemplate}\nActual resolved description:\n{actual}",
+                        $"Expect description NOT to match template {ToString(testParams)}\nExpected template:\n{descriptionTemplate}\nActual resolved description:\n{actual}."
+                    );
+                },
+                testParams, 
+                (a, b) => LangUtility.IsStructurallyTheSame(a, b, exactMatch)
             );
         });
     }
 
-    public void ToHaveHistoryRecordPosition(IntVec3 position, int index = -1)
+    public void ToHaveHistoryRecordPosition(IntVec3 position, HistoryRecordDef recordDef, int ticksAgo = 0)
     {
         RunAssertion(() =>
         {
-            var result = pawns.Any(p =>
-            {
-                if (!p.HistoryRecords.TryAt(index, out HistoryRecord record))
-                    return false;
-                return record.location?.position == position;
-            });
-            var pawn = pawns.Count() == 1 ? pawns.First() : null;
-            var forPawn = pawn == null ? "" : $"for {pawn} ";
-
-            AssertCondition(
-                result,
-                $"Expected record's position '{position}' {forPawn}but none found.",
-                $"Expected NO record's position '{position}' {forPawn}but none found."
+            var testParams =  new Dictionary<string, string> 
+            { 
+                { "recordDef", recordDef?.ToString() ?? "null" },
+                { "ticksAgo", ticksAgo.ToString() },
+            };
+            
+            AssertCollection(
+                position,
+                pawn =>
+                {
+                    var record = pawn.HistoryRecords.LastOrDefault(r => (recordDef == null || r.def == recordDef) && r.date >= Find.TickManager.TicksGame - ticksAgo);
+                    var actual = record?.location?.position;
+                    
+                    return new AssertionData<IntVec3?>(
+                        actual,
+                        $"Expect position to match for {pawn} {ToString(testParams)}\nExpected:\n{position}\nActual:\n{actual}",
+                        $"Expect position NOT to match for {pawn} {ToString(testParams)}\nExpected:\n{position}\nActual:\n{actual}."
+                    );
+                },
+                testParams
             );
         });
     }
@@ -142,7 +226,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
     private void RunAssertion(Action assertion)
     {
         TestManager.Ctx.PendingEventually++;
-        // don't run immediately, so Test method can return cleanup action if synchronous test call failed.
+        // don't run immediately, so Test method can return cleanup action even if synchronous test call failed.
         TickDelayManager.Delay(0, () => DoRunAssertion(assertion));
     }
 
@@ -159,33 +243,27 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns)
                 try
                 {
                     assertion();
-                    ctx.PendingEventually--;
-                    ctx.AssertionsPassed++;
-                    a.Cancelled = true;
+                    ctx.Pass();
                 }
                 catch (Exception ex)
                 {
-                    ctx.PendingEventually--;
-                    ctx.AssertionsFailed++;
-                    a.Cancelled = true;
-                    ctx.LogFailed(ex);
-                }
+                    ctx.Fail(ex);
+                } 
+                a.Cancelled = true;
                 return;
             }
 
             if (Find.TickManager.TicksGame - tickStart > eventuallyTimeoutTicks)
-            {
-                ctx.PendingEventually--;
-                ctx.AssertionsFailed++;
+            { 
+                var timeoutFailure = new TestFailureTimeout(ctx.Name, $"Test assertion failed after {eventuallyTimeoutTicks} ticks.");
+                ctx.Fail(new TestAssertionException(timeoutFailure, lastException));
                 a.Cancelled = true;
-                ctx.LogFailed(lastException, $"Test assertion failed after {eventuallyTimeoutTicks} ticks.");
             }
 
             try
             {
                 assertion();
-                ctx.PendingEventually--;
-                ctx.AssertionsPassed++;
+                ctx.Pass();
                 a.Cancelled = true;
             }
             catch (Exception ex)

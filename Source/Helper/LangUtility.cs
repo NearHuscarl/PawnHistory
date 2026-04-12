@@ -107,7 +107,7 @@ internal static class LangUtility
     public static bool IsStructurallyTheSame(string template, string actual, bool exactMatch = false)
     {
         var segments = Regex.Matches(template, @"(?<rule>\[[^\]]+\])|(?<literal>[^\[]+)", RegexOptions.Compiled);
-        int searchFrom = 0;
+        var searchFrom = 0;
         var expectingContent = false;
 
         foreach (Match m in segments)
@@ -152,7 +152,7 @@ internal static class LangUtility
 
         var translation = translationKey.TranslateSimple();
         var segments = Regex.Matches(translation, @"(?<namedArg>{[^}]+})|(?<literal>[^{]+)", RegexOptions.Compiled);
-        int searchFrom = 0;
+        var searchFrom = 0;
         var expectingContent = false;
 
         foreach (Match m in segments)

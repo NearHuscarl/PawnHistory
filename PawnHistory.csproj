@@ -178,6 +178,8 @@
     <Compile Include="Source\PawnTracker\Test\TestAssertionException.cs" />
     <Compile Include="Source\PawnTracker\Test\TestContext.cs" />
     <Compile Include="Source\PawnTracker\Test\TestManager.cs" />
+    <Compile Include="Source\PawnTracker\Test\TestReport.cs" />
+    <Compile Include="Source\PawnTracker\Test\TestReportManager.cs" />
     <Compile Include="Source\PawnTracker\Test\TestScenario.cs" />
     <Compile Include="Source\PawnTracker\Test\ThingBuilder.cs" />
     <Compile Include="Source\RecordFix.cs" />

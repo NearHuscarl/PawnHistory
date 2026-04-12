@@ -39,12 +39,23 @@ public static class RecorderManager
         var dataSource = GetTestMethods();
         var totalLabels = dataSource.Select(x => x.Label).Distinct().Count();
         var totalSkip = dataSource.Count(x => x.SkipTest);
+        var testReportEntries = TestReportManager.LoadLastReport().Entries.ToDictionary(x => x.Label, x => x);
 
         DebugTables.MakeTablesDialog(dataSource,
             new TableDataGetter<TestMethodInfo>($"Label ({totalLabels})", d => d.Label),
             new TableDataGetter<TestMethodInfo>("Method", d => d.Method.Name),
             new TableDataGetter<TestMethodInfo>($"Skip ({totalSkip})", d => d.SkipTest.ToStringCheckBlank()),
-            new TableDataGetter<TestMethodInfo>("DebugValues", d => d.DebugValues.JoinToString())
+            new TableDataGetter<TestMethodInfo>("DebugValues", d => d.DebugValues.JoinToString()),
+            new TableDataGetter<TestMethodInfo>("Passed/Total", d =>
+            {
+                var entry = testReportEntries.TryGetValue(d.Label);
+                return entry == null ? "?/?" : $"{entry.AssertionsPassed}/{entry.AssertionsPassed + entry.AssertionsFailures.Count}";
+            }),
+            new TableDataGetter<TestMethodInfo>("Failed Message", d =>
+            {
+                var entry = testReportEntries.TryGetValue(d.Label);
+                return entry?.AssertionsFailures.FirstOrDefault()?.message;
+            })
         );
     }
 
@@ -59,6 +70,34 @@ public static class RecorderManager
                 continue;
 
             if (skipTest)
+                continue;
+
+            TestManager.EnqueueTest(() => method.Invoke(recorder, [TestScenario]), label);
+        }
+        TestManager.Run();
+    }
+
+    [NearDebugAction]
+    public static void RunLastFailedTests()
+    {
+        var lastRunReport = TestReportManager.LoadLastReport();
+
+        if (lastRunReport == null)
+            return;
+        
+        var failedTests = new HashSet<string>(lastRunReport.Entries.Select(x => x.Label));
+        
+        foreach (var testMethodInfo in GetTestMethods())
+        {
+            var (label, recorder, method, debugValues, skipTest) = testMethodInfo;
+
+            if (debugValues != null)
+                continue;
+
+            if (skipTest)
+                continue;
+            
+            if (!failedTests.Contains(label))
                 continue;
 
             TestManager.EnqueueTest(() => method.Invoke(recorder, [TestScenario]), label);

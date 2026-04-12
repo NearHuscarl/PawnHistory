@@ -14,7 +14,7 @@ public static class GameUtility
 {
     // copied from Root_Play.SetupForQuickTestPlay() but changed the map size and world size
     // reference: Search for "DevQuickTest"
-    public static void CreateTestGame(Action onCompleted = null)
+    public static void CreateTestGame(Action runTest)
     {
         LongEventHandler.QueueLongEvent(() =>
         {
@@ -34,7 +34,7 @@ public static class GameUtility
             GameEventBus.SubscribeOnce<ScenarioPostGameStartEvent>((e) =>
             {
                 ClearUpMap();
-                onCompleted();
+                LongEventHandler.ExecuteWhenFinished(runTest);
             });
         }, "GeneratingMap", true, new Action<Exception>(GameAndMapInitExceptionHandlers.ErrorWhileGeneratingMap));
     }

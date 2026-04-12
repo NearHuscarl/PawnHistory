@@ -38,10 +38,9 @@ public class FriendlyTrapHitRecorder : RecorderBase<FriendlyTrapHitEvent>
 
         Expect.That(pawn).ToHaveHistoryRecordOf(HistoryRecordDefOf.FriendlyTrapHit, -2);
         Expect.That(pawn).ToHaveHistoryRecordOf(HistoryRecordDefOf.Death, -1);
-        Expect.That(pawn).ToHaveHistoryRecordPosition(pawn.Position);
+        Expect.That(pawn).ToHaveHistoryRecordPosition(pawn.Position, HistoryRecordDefOf.Death);
 
-        Expect.That(spouse).ToHaveHistoryRecordOf(HistoryRecordDefOf.RelativeDeath);
-        Expect.That(spouse).ToHaveHistoryRecordPosition(pawn.Position);
+        Expect.That(spouse).ToHaveHistoryRecordPosition(pawn.Position, HistoryRecordDefOf.RelativeDeath);
         
         return () => NearDebugSettings.ForceSpringTrap = false;
     }

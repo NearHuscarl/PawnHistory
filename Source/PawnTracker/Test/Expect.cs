@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Recorders;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Verse;
 
@@ -9,6 +9,11 @@ public static class Expect
     public static PawnHistoryAssertions That(Pawn pawn)
     {
         return new PawnHistoryAssertions([pawn]);
+    }
+    
+    public static PawnHistoryAssertions That(IEnumerable<Pawn> pawns)
+    {
+        return new PawnHistoryAssertions(pawns, MatchCondition.All);
     }
 
     public static PawnHistoryAssertions AnyPawnOnMap()

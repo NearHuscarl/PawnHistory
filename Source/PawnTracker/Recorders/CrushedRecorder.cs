@@ -39,9 +39,8 @@ public class CrushedRecorder : RecorderBase<CrushedEvent>
 
         Expect.That(pawn).ToHaveHistoryRecordOf(HistoryRecordDefOf.Crushed, -2);
         Expect.That(pawn).ToHaveHistoryRecordOf(HistoryRecordDefOf.Death, -1);
-        Expect.That(pawn).ToHaveHistoryRecordPosition(pawn.Position);
+        Expect.That(pawn).ToHaveHistoryRecordPosition(pawn.Position, HistoryRecordDefOf.Death);
 
-        Expect.That(spouse).ToHaveHistoryRecordOf(HistoryRecordDefOf.RelativeDeath);
-        Expect.That(spouse).ToHaveHistoryRecordPosition(pawn.Position);
+        Expect.That(spouse).ToHaveHistoryRecordPosition(pawn.Position, HistoryRecordDefOf.RelativeDeath);
     }
 }
