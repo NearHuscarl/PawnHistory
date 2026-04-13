@@ -6,13 +6,13 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record RescueJoinedEvent(Pawn Pawn) : GameEventBase;
 
-class RescueJoinedContext
+static class RescueJoinedContext
 {
     public static Faction PawnFaction;
 }
 
 [HarmonyPatch(typeof(Pawn_GuestTracker), "Notify_PawnUndowned")]
-public static class Pawn_GuestTracker_Notify_PawnUndowned_Patch
+internal static class Pawn_GuestTracker_Notify_PawnUndowned_Patch
 {
     public static void Prefix(Pawn_GuestTracker __instance)
     {

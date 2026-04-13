@@ -21,7 +21,7 @@ internal static class BreakupContext
 [HarmonyPatch(typeof(InteractionWorker_Breakup), nameof(InteractionWorker_Breakup.RandomBreakupReason))]
 internal class InteractionWorker_Breakup_RandomBreakupReason_Patch
 {
-    private static void Postfix(Thought __result) => BreakupContext.BreakupThought = __result.LabelCap;
+    private static void Postfix(Thought __result) => BreakupContext.BreakupThought = __result?.LabelCap;
 }
 
 [HarmonyPatch(typeof(PlayLog), nameof(PlayLog.Add))]

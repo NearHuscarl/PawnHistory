@@ -106,6 +106,9 @@ internal static class LangUtility
 
     public static bool IsStructurallyTheSame(string template, string actual, bool exactMatch = false)
     {
+        if (string.IsNullOrEmpty(template) || string.IsNullOrEmpty(actual))
+            return false;
+        
         var segments = Regex.Matches(template, @"(?<rule>\[[^\]]+\])|(?<literal>[^\[]+)", RegexOptions.Compiled);
         var searchFrom = 0;
         var expectingContent = false;
@@ -145,7 +148,7 @@ internal static class LangUtility
 
     public static bool MatchesTranslationTemplate(this string text, string translationKey, bool exactMatch = false)
     {
-        if (!translationKey.CanTranslate() || string.IsNullOrEmpty(text))
+        if (translationKey == null || !translationKey.CanTranslate() || string.IsNullOrEmpty(text))
         {
             return false;
         }

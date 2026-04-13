@@ -37,13 +37,13 @@ public class SocialFightRecorder : RecorderBase<SocialFightRecorder.Input>
 
         try
         {
-            scenario.Pawn(8)
+            var pawns = scenario.Pawn(8)
                 .ThatMatches(ShouldRecord)
                 .GroupTogether()
                 .Do((p, i, pawns) => p.interactions.TryInteractWith(pawns[(i + 1) % pawns.Count], InteractionDefOf.Insult))
                 .Execute();
 
-            Expect.AnyPawnOnMap().ToHaveHistoryRecord("This drove [RECIPIENT] into a rage and [RECIPIENT] began a fight!", HistoryRecordDefOf.SocialFight);
+            Expect.ThatAny(pawns).ToHaveHistoryRecord("This drove [RECIPIENT] into a rage and [RECIPIENT] began a fight!", HistoryRecordDefOf.SocialFight);
         }
         finally
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using Verse;
 
@@ -9,26 +10,41 @@ public static class TestReportManager
     private static readonly string FolderPath = Accessor.GenFilePaths.FolderUnderSaveData("PawnHistory");
     private static readonly string FilePath = Path.Combine(FolderPath, "LastTestRun.xml");
     
-    private static TestReport currentReport = new();
-    
+    private static readonly TestReport CurrentReport = new();
+    public static TestReport LastReport { get; private set; } = LoadLastReport();
+
     public static void Reset()
     {
-        currentReport.Entries.Clear();
+        CurrentReport.Entries.Clear();
     }
     
     public static void AddReportEntry(TestReportEntry reportEntry)
     {
-        currentReport.Entries.Add(reportEntry);
+        CurrentReport.Entries.Add(reportEntry);
+    }
+
+    public static void PrintReport()
+    {
+        var delta = CurrentReport.TimestampEnded - CurrentReport.TimestampStarted;
+        var elapsed = TimeSpan.FromSeconds((double)delta / Stopwatch.Frequency);
+        var time = elapsed.Hours > 0
+            ? $"{elapsed.Hours:D2}:{elapsed.Minutes:D2}:{elapsed.Seconds:D2}.{elapsed.Milliseconds:D3}"
+            : $"{elapsed.Minutes:D2}:{elapsed.Seconds:D2}.{elapsed.Milliseconds:D3}";
+
+        Log.Message($"[PawnHistory] All tests finished in {time}. {TestContext.Green($"Passed: {CurrentReport.AssertionsPassed}")}, {TestContext.Red($"Failed: {CurrentReport.TestFailures}")}");
     }
     
     public static void SaveReport()
     {
         try
         {
+            var newReport = LastReport.Upsert(CurrentReport);
             Scribe.saver.InitSaving(FilePath, "TestReport");
-            Scribe_Deep.Look(ref currentReport, "Report");
+            Scribe_Deep.Look(ref newReport, "Report");
             Scribe.saver.FinalizeSaving();
-            Log.Message($"[PawnHistory] Report saved to XML: {FilePath}");
+            Log.Message($"[PawnHistory] Test report saved: {FilePath}");
+            
+            LastReport = newReport;
         }
         catch (Exception ex)
         {

@@ -37,10 +37,10 @@ public class RescueRecorder : RecorderBase<RescueRecorder.Input>
             .IncludePawnGrammar()
             .AddRule("Rescuer", rescuer, addSubsymbols: true)
             .Resolve();
+        AddRecord(recordDef, rescuer, desc, [takee]);
         AddRecord(recordDef, takee, desc, [rescuer]);
     }
 
-    [SkipTest]
     public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(2).Colonist().Execute();
@@ -58,5 +58,7 @@ public class RescueRecorder : RecorderBase<RescueRecorder.Input>
         scenario.Pawn(rescuer)
             .StartJob(JobDefOf.Rescue, victim, RestUtility.FindBedFor(victim))
             .Execute();
+        
+        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] was rescued by [Rescuer]. [Tale].", HistoryRecordDefOf.Rescued);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
+using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -32,8 +33,12 @@ public class CrushedRecorder : RecorderBase<CrushedEvent>
     {
         var pawn = scenario.Pawn()
             .Colonist()
+            .WithPosition(Find.CurrentMap.Center)
             .CreateSingle();
-        var spouse = scenario.Pawn().SetRelation(pawn, PawnRelationDefOf.Spouse).CreateSingle();
+        var spouse = scenario.Pawn()
+            .WithPosition(CellFinder.RandomEdgeCell(Find.CurrentMap))
+            .SetRelation(pawn, PawnRelationDefOf.Spouse)
+            .CreateSingle();
 
         scenario.Map().CollapseRoofAndCrush(pawn);
 

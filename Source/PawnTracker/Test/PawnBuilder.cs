@@ -18,7 +18,7 @@ public class PawnBuilder(int count = 1)
     private readonly List<Predicate<Pawn>> filters = [];
     private readonly List<Action<Pawn, int, List<Pawn>>> processors = [];
     private int count = count;
-    private IntVec3 spawnPosition = Find.CameraDriver.MapPosition;
+    private IntVec3? spawnPosition;
     private int spawnRadius = 4;
     private bool humanLike = true;
     private bool factionLeader = false;
@@ -165,7 +165,8 @@ public class PawnBuilder(int count = 1)
 
         foreach (var pawn in sourcedPawns)
         {
-            pawn.Position = spawnPosition;
+            if (spawnPosition.HasValue)
+                pawn.Position = spawnPosition.Value;
             if (faction != pawn.Faction)
                 pawn.SetFaction(faction ?? pawn.Faction);
         }
@@ -176,7 +177,7 @@ public class PawnBuilder(int count = 1)
             var pawn = factionLeader
                 ? faction?.leader
                 : PawnGenerator.GeneratePawn(generatedKind, FactionUtility.DefaultFactionFrom(faction?.def ?? generatedKind.defaultFactionDef), new PlanetTile?(Find.CurrentMap.Tile));
-            var spawnPos = CellFinder.RandomClosewalkCellNear(spawnPosition, Find.CurrentMap, spawnRadius);
+            var spawnPos = CellFinder.RandomClosewalkCellNear(spawnPosition ?? Find.CameraDriver.MapPosition, Find.CurrentMap, spawnRadius);
 
             GenSpawn.Spawn(pawn, spawnPos, Find.CurrentMap);
 

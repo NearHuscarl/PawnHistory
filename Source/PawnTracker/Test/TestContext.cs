@@ -1,19 +1,20 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
 
 internal sealed class TestContext(string name)
 {
-    public string Name = name;
+    public readonly string Name = name;
     public int AssertionsPassed;
-    public readonly List<TestFailureBase> AssertionsFailed = [];
+    public readonly List<TestFailure> TestFailures = [];
     public int PendingEventually;
     public static string Red(object obj) => obj.ToString().ApplyTag(TagType.Red).Resolve();
     public static string Green(object obj) => obj.ToString().Colorize(ColoredText.FactionColor_Ally);
+    private readonly TestReportEntry testReportEntry = new();
 
     public void Pass()
     {
@@ -23,26 +24,33 @@ internal sealed class TestContext(string name)
 
     public void Fail(Exception ex)
     {
-        if (ex is not TestAssertionException tae)
+        if (ex is not TestException te)
         {
-            tae = new TestAssertionException(new TestFailureBase(Name, "Unknown error happened during a test run"), ex);
+            te = new TestException(new TestFailure(Name, "Unknown error happened during a test run"), ex);
         }
         
-        if (tae.Failure is TestFailureTimeout)
+        switch (te.Failure)
         {
-            while (PendingEventually > 0)
+            case TimeoutFailure:
             {
-                AssertionsFailed.Add(tae.Failure);
-                PendingEventually--;
+                while (PendingEventually > 0)
+                {
+                    TestFailures.Add(te.Failure);
+                    PendingEventually--;
+                }
+                break;
             }
-        }
-        else
-        { 
-            AssertionsFailed.Add(tae.Failure);
-            PendingEventually--;
+            case TestExecutionFailure:
+                TestFailures.Add(te.Failure);
+                PendingEventually = 0;
+                break;
+            default:
+                TestFailures.Add(te.Failure);
+                PendingEventually--;
+                break;
         }
         
-        Log.Error(tae.ToString());
+        Log.Error(te.ToString());
     }
 
     public void ReportPass()
@@ -53,7 +61,11 @@ internal sealed class TestContext(string name)
 
     public TestReportEntry CreateReportEntry()
     {
-        return new TestReportEntry(Name, AssertionsPassed, AssertionsFailed);
+        testReportEntry.Label = Name;
+        testReportEntry.AssertionsPassed = AssertionsPassed;
+        testReportEntry.TestFailures = TestFailures;
+        testReportEntry.timestampEnded = Stopwatch.GetTimestamp();
+        return testReportEntry;
     }
 
     private readonly List<Action> cleanupCallbacks = [];

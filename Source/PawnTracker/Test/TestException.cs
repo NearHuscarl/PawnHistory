@@ -3,9 +3,9 @@ using System.Text;
 
 namespace PawnHistory.Source.PawnTracker.Test;
 
-internal class TestAssertionException(TestFailureBase failure, Exception exception = null) : Exception(failure.message, exception)
+internal class TestException(TestFailure failure, Exception exception = null) : Exception(failure.message, exception)
 {
-    public TestFailureBase Failure { get; } = failure;
+    public TestFailure Failure { get; } = failure;
 
     public override string ToString()
     {
@@ -15,7 +15,7 @@ internal class TestAssertionException(TestFailureBase failure, Exception excepti
         sb.Append($"{Failure.message}\n{StackTrace}");
 
         if (InnerException != null)
-            sb.AppendLine("\n" + InnerException.StackTrace);
+            sb.AppendLine("\n" + InnerException);
 
         return sb.ToString();
     }

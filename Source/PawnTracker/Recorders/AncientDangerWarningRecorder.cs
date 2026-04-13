@@ -38,6 +38,7 @@ public class AncientDangerWarningRecorder : RecorderBase<Pawn>
         AddRecord(recordDef, pawn, desc, null, location);
     }
 
+    [TestTag("Flaky")]
     public Action Test(TestScenario scenario)
     {
         var map = Find.CurrentMap;

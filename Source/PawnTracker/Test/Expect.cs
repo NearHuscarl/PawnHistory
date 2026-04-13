@@ -11,9 +11,14 @@ public static class Expect
         return new PawnHistoryAssertions([pawn]);
     }
     
-    public static PawnHistoryAssertions That(IEnumerable<Pawn> pawns)
+    public static PawnHistoryAssertions ThatAll(IEnumerable<Pawn> pawns)
     {
         return new PawnHistoryAssertions(pawns, MatchCondition.All);
+    }
+    
+    public static PawnHistoryAssertions ThatAny(IEnumerable<Pawn> pawns)
+    {
+        return new PawnHistoryAssertions(pawns, MatchCondition.Any);
     }
 
     public static PawnHistoryAssertions AnyPawnOnMap()

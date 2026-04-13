@@ -94,11 +94,12 @@ public class HistoryCardUtility
         var viewRect = new Rect(0, 0, inRect.width - scrollWidth, totalHeight);
 
         Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
-        for (int i = 0; i < records.Count; i++)
+        var curY = 0f;
+        for (var i = 0; i < records.Count; i++)
         {
             var record = records[i];
             var rowHeight = GetRowHeight(record);
-            var row = new Rect(0, i * rowHeight, viewRect.width, rowHeight);
+            var row = new Rect(0, curY, viewRect.width, rowHeight);
             if (i % 2 == 0) Widgets.DrawHighlight(row);
 
             var dateCell = new Rect(row.x + cellPx, row.y, colWidthDate, row.height);
@@ -132,6 +133,7 @@ public class HistoryCardUtility
                 GUIUtility.systemCopyBuffer = LangUtility.StripColorTags(record.description);
                 Messages.Message("Record is copied to clipboard.", MessageTypeDefOf.NeutralEvent);
             }
+            curY += rowHeight;
         }
         Widgets.EndScrollView();
         GUI.EndGroup();

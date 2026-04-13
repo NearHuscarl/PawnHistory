@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
@@ -6,6 +9,35 @@ namespace PawnHistory.Source.PawnTracker.Test;
 public class TestReport : IExposable
 {
     public List<TestReportEntry> Entries = [];
+    public long TimestampStarted => Entries.FirstOrDefault()?.timestampStarted ?? 0;
+    public long TimestampEnded  => Entries.LastOrDefault()?.timestampEnded ?? 0;
+    public int AssertionsPassed  => Entries.Sum(e => e.AssertionsPassed);
+    public int TestFailures  => Entries.Sum(e => e.TestFailures.Count);
+
+    public TestReport Upsert(TestReport newReport)
+    {
+        if (newReport?.Entries == null)
+            return this;
+
+        var dict = Entries.ToDictionary(e => e.Label);
+
+        foreach (var incoming in newReport.Entries)
+        {
+            if (!dict.TryGetValue(incoming.Label, out var existing))
+            {
+                dict[incoming.Label] = incoming;
+                continue;
+            }
+
+            if (incoming.date > existing.date)
+                dict[incoming.Label] = incoming;
+        }
+
+        return new TestReport
+        {
+            Entries = dict.Values.ToList()
+        };
+    }
 
     public void ExposeData()
     {
@@ -17,76 +49,24 @@ public class TestReportEntry : IExposable
 {
     public string Label;
     public int AssertionsPassed;
-    public List<TestFailureBase> AssertionsFailures;
+    public List<TestFailure> TestFailures;
+    public long timestampStarted;
+    public long timestampEnded;
+    public long date;
 
-    public TestReportEntry() { }
-
-    public TestReportEntry(string label, int assertionsPassed, List<TestFailureBase> assertionsFailures)
+    public TestReportEntry()
     {
-        Label = label;
-        AssertionsPassed = assertionsPassed;
-        AssertionsFailures = assertionsFailures;
+        timestampStarted = Stopwatch.GetTimestamp();
+        date = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     }
 
     public void ExposeData()
     {
         Scribe_Values.Look(ref Label, "Label");
         Scribe_Values.Look(ref AssertionsPassed, "AssertionsPassed");
-        Scribe_Collections.Look(ref AssertionsFailures, "AssertionsFailed");
+        Scribe_Collections.Look(ref TestFailures, "TestFailures");
+        Scribe_Values.Look(ref timestampStarted, "timestampStarted");
+        Scribe_Values.Look(ref timestampEnded, "timestampEnded");
+        Scribe_Values.Look(ref date, "date");
     }
-}
-
-public class TestFailureBase : IExposable
-{
-    public string label;
-    public string message;
-    public int ticksAbs = GenTicks.TicksAbs;
-
-    public TestFailureBase() { }
-    
-    public TestFailureBase(string label, string message)
-    {
-        this.label = label;
-        this.message = message;
-    }
-
-    public virtual void ExposeData()
-    {
-        Scribe_Values.Look(ref label, "Label");
-        Scribe_Values.Look(ref message, "message");
-        Scribe_Values.Look(ref ticksAbs, "ticksAbs");
-    }
-}
-
-public class TestFailure : TestFailureBase
-{
-    public string expected;
-    public string actual;
-    public bool isNegated;
-    public Dictionary<string, string> testParams;
-
-    public TestFailure(string label, string message, string expected, string actual, bool isNegated, Dictionary<string, string> testParams) : base(label, message)
-    {
-        this.expected = expected;
-        this.actual = actual;
-        this.isNegated = isNegated;
-        this.testParams = testParams;
-    }
-    
-    public TestFailure() { }
-
-    public override void ExposeData()
-    {
-        base.ExposeData();
-        Scribe_Values.Look(ref expected, "expected");
-        Scribe_Values.Look(ref actual, "actual");
-        Scribe_Values.Look(ref isNegated, "isNegated");
-        Scribe_Collections.Look(ref testParams, "testParams");
-    }
-}
-
-public class TestFailureTimeout : TestFailureBase
-{
-    public TestFailureTimeout(string label, string message) : base(label, message) { }
-    public TestFailureTimeout() { }
 }

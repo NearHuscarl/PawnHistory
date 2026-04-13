@@ -36,9 +36,8 @@ internal class CompHistoryManager
     {
         var defsListForReading = DefDatabase<ThingDef>.AllDefsListForReading;
 
-        for (var i = 0; i < defsListForReading.Count; ++i)
+        foreach (var thingDef in defsListForReading)
         {
-            var thingDef = defsListForReading[i];
             if (RecorderManager.ShouldRecord(thingDef) && !thingDef.IsCorpse)
             {
                 thingDef.comps.Add(new CompProperties_History());

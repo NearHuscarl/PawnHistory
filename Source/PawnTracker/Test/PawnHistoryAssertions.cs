@@ -42,7 +42,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         
         var ctx = TestManager.Ctx;
         var message = negate ? negativeMessage : positiveMessage;
-        var failure = new TestFailure(
+        var failure = new TestAssertionFailure(
             ctx.Name,
             message,
             expected?.ToString() ?? "null",
@@ -50,7 +50,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             negate,
             finalParams
         );
-        throw new TestAssertionException(failure);
+        throw new TestException(failure);
     }
 
     private record AssertionData<T>(T Actual, string PositiveMessage, string NegativeMessage);
@@ -75,8 +75,9 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
                 try
                 {
                     Assert(expected, actual, positiveMessage, negativeMessage, testParams, comparator);
+                    return;
                 }
-                catch (TestAssertionException ex)
+                catch (TestException ex)
                 {
                     lastException = ex;
                 }
@@ -143,7 +144,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
                 pawn =>
                 {
                     pawn.HistoryRecords.TryAt(index, out var record);
-                    var actual = record.description.StripTags();
+                    var actual = record?.description.StripTags();
                     
                     return new AssertionData<string>(
                         actual,
@@ -255,8 +256,8 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
 
             if (Find.TickManager.TicksGame - tickStart > eventuallyTimeoutTicks)
             { 
-                var timeoutFailure = new TestFailureTimeout(ctx.Name, $"Test assertion failed after {eventuallyTimeoutTicks} ticks.");
-                ctx.Fail(new TestAssertionException(timeoutFailure, lastException));
+                var failure = new TimeoutFailure(ctx.Name, $"Test assertion failed after {eventuallyTimeoutTicks} ticks.");
+                ctx.Fail(new TestException(failure, lastException));
                 a.Cancelled = true;
             }
 

@@ -37,7 +37,7 @@ public static class TestManager
         if (Queue.Count == 0)
         {
             isRunningTest = false;
-            Log.Message("[PawnHistory] All tests finished.");
+            TestReportManager.PrintReport();
             TestReportManager.SaveReport();
             return;
         }
@@ -62,18 +62,19 @@ public static class TestManager
         }
         catch (Exception ex)
         {
-            Log.Error($"[PawnHistory] Failed during test setup for {label}\n\n{ex}");
+            var failure = new TestExecutionFailure(label, "Failed during test setup.");
+            ctx.Fail(new TestException(failure, ex));
             CleanupAfterTest();
             onCompleted?.Invoke(false);
             return;
         }
 
         var start = Find.TickManager.TicksGame;
-        var scheduled = TickDelayManager.Interval(1, (a) =>
+        var scheduled = TickDelayManager.Interval(1, a =>
         {
             if (ctx.PendingEventually == 0)
             {
-                if (ctx.AssertionsFailed.Count == 0 && ctx.AssertionsPassed > 0)
+                if (ctx.TestFailures.Count == 0 && ctx.AssertionsPassed > 0)
                     ctx.ReportPass();
                 a.Cancelled = true;
                 try
@@ -87,7 +88,7 @@ public static class TestManager
                 finally
                 {
                     CleanupAfterTest();
-                    onCompleted?.Invoke(ctx.AssertionsFailed.Count == 0);
+                    onCompleted?.Invoke(ctx.TestFailures.Count == 0);
                 }
                 return;
             }
@@ -101,8 +102,8 @@ public static class TestManager
                 }
                 finally
                 {
-                    var timeoutFailure = new TestFailureTimeout(label, $"Timeout waiting for test assertions of {label}.");
-                    ctx.Fail(new TestAssertionException(timeoutFailure));
+                    var failure = new TimeoutFailure(label, "Timeout waiting for test assertions.");
+                    ctx.Fail(new TestException(failure));
                     CleanupAfterTest();
                     onCompleted?.Invoke(false);
                 }

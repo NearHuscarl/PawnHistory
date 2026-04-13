@@ -11,8 +11,8 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecord<CasualtyRecorder.KilledOrDownedInput>
 {
-    public record KillInput(Pawn Subject, Pawn Initiator, string combatLogText, string transitionText, Pawn originalTargetPawn);
-    public record KilledOrDownedInput(Pawn Subject, Pawn Initiator, CasualtyType Casualty, HediffDef CulpritHediff, string combatLogText, string transitionText, Pawn originalTargetPawn, bool isLeader);
+    public record KillInput(Pawn Subject, Pawn Initiator, string CombatLogText, string TransitionText, Pawn OriginalTargetPawn);
+    public record KilledOrDownedInput(Pawn Subject, Pawn Initiator, CasualtyType Casualty, HediffDef CulpritHediff, string CombatLogText, string TransitionText, Pawn OriginalTargetPawn, bool IsLeader);
 
     public override void Register()
     {
@@ -69,7 +69,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         var historyRecords = subject.HistoryRecords;
         var lastRecord = historyRecords.LastOrDefault();
 
-        if (isKillLog && lastRecord?.def == HistoryRecordDefOf.Downed && lastRecord.date == GenTicks.TicksAbs)
+        if (isKillLog && lastRecord?.def == HistoryRecordDefOf.Downed && lastRecord?.date == GenTicks.TicksAbs)
         {
             Log.Message($"[PawnHistory] Received death & downed transitions from {subject.NameShortColored} in the same tick. Skipping down transition..");
             historyRecords.Pop();
@@ -157,18 +157,19 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
             .Point(500)
             .Execute();
 
-        scenario.Pawn(friends.Concat(enemies))
+        var pawns = friends.Concat(enemies).ToList();
+        
+        scenario.Pawn(pawns)
             .ThatMatches(ShouldRecord)
-            .DiesOnNextHit()
             .SetRandomRelations(5)
             .Execute();
 
         scenario.SpeedUp();
 
-        Expect.AnyPawnOnMap().Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Downed);
-        Expect.AnyPawnOnMap().Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Death);
-        Expect.AnyPawnOnMap().Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.RelativeDeath);
-        Expect.AnyPawnOnMap().Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Kill);
+        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Downed);
+        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Death);
+        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.RelativeDeath);
+        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Kill);
 
         return () => scenario.SlowDown();
     }
@@ -188,13 +189,14 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         var pawn = scenario.Pawn().CreateSingle();
         HealthUtility.DamageUntilDead(pawn);
 
-        var pawn2 = scenario.Pawn().CreateSingle();
+        var pawn2 = scenario.Pawn().FullHeal().CreateSingle();
         pawn2.Kill(null);
 
         Expect.That(pawn).ToHaveHistoryRecord("[PAWN] died because of [HediffInPart].");
         Expect.That(pawn2).ToHaveHistoryRecord("[PAWN] died.", exactMatch: true);
     }
 
+    [TestTag("Flaky")]
     public void TestDowned(TestScenario scenario)
     {
         var pawn = scenario.Pawn().Enemy().CreateSingle();

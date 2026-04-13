@@ -3,7 +3,6 @@ using RimWorld.BaseGen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
@@ -25,8 +24,9 @@ public class MapBuilder
 
     // Copied and modified from GenStep_ScatterShrines.ScatterAt()
     public MapBuilder GenerateAncientTemple(int width, int height)
-    {
+    { 
         var rect = map.Center.RectAbout(width, height);
+        MovePawnsOutside(rect);
         var resolveParams = new ResolveParams();
         resolveParams.rect = rect;
         resolveParams.disableSinglePawn = true;
@@ -48,7 +48,7 @@ public class MapBuilder
         return this;
     }
 
-    public void BuildRoomPhysical(CellRect rect, ThingDef wallDef = null, ThingDef stuff = null, TerrainDef floorDef = null, string tag = null)
+    private void BuildRoomPhysical(CellRect rect, ThingDef wallDef = null, ThingDef stuff = null, TerrainDef floorDef = null, string tag = null)
     {
         wallDef ??= ThingDefOf.Wall;
         stuff ??= ThingDefOf.Plasteel;
@@ -114,6 +114,21 @@ public class MapBuilder
 
         stockpile.GetStoreSettings().filter.SetAllowAll(null);
     }
+    
+    private void MovePawnsOutside(CellRect rect)
+    {
+        foreach (var pawn in map.mapPawns.AllPawnsSpawned.ToList())
+        {
+            if (!rect.Contains(pawn.Position))
+                continue;
+
+            if (!CellFinder.TryFindRandomCell(map, c => c.Standable(map) && !rect.Contains(c), out var newCell))
+                continue;
+
+            pawn.DeSpawn();
+            GenSpawn.Spawn(pawn, newCell, map);
+        }
+    }
 
     /// <summary>
     /// Builds a generic room with walls and floor.
@@ -124,6 +139,7 @@ public class MapBuilder
 
         actions.Add(_ =>
         {
+            MovePawnsOutside(rect);
             BuildRoomPhysical(rect, wallDef, stuff, floorDef, tag);
             if (!tag.NullOrEmpty())
                 TestScenario.TaggedRooms[tag] = rect;
@@ -208,9 +224,9 @@ public class MapBuilder
         actions.Add(c =>
         {
             var interior = TestScenario.LastRoomRect.ContractedBy(1);
-            int limit = thingDef.stackLimit;
-            int fullStacks = totalCount / limit;
-            int remainder = totalCount % limit;
+            var limit = thingDef.stackLimit;
+            var fullStacks = totalCount / limit;
+            var remainder = totalCount % limit;
 
             for (var i = 0; i < fullStacks; i++)
             {
@@ -250,19 +266,18 @@ public class MapBuilder
                 .Faction(Faction.OfPlayer)
                 .Create<Building_Casket>();
 
-            if (occupied)
-            {
-                var victim = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+            if (!occupied)
+                return;
 
-                if (casket is Building_CorpseCasket)
-                {
-                    victim.Kill(null);
-                    var corpse = victim.Corpse;
-                    casket.TryAcceptThing(victim.Corpse);
-                }
-                else
-                    casket.TryAcceptThing(victim);
+            var victim = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+
+            if (casket is Building_CorpseCasket)
+            {
+                victim.Kill(null);
+                casket.TryAcceptThing(victim.Corpse);
             }
+            else
+                casket.TryAcceptThing(victim);
         });
         return this;
     }
