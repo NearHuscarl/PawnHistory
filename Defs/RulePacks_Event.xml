@@ -175,7 +175,11 @@
 				<li>Died(hasReason==False)  ->died</li>
 				<li>Died(hasReason==True)   ->died because of [HediffInPart]</li>
 
-				<li>relativePov->[PAWN]'s [Relation], [Subject],</li>
+				<!-- replace the first deseased pawn's name -->
+				<li>povRelative->[PAWN]'s [Relation], [Subject],</li>
+				<li>povBondedAnimal(hasName==True) ->[PAWN]'s bonded [AnimalKind], [Subject],</li>
+				<li>povBondedAnimal(hasName==False)->[PAWN]'s bonded [AnimalKind]</li>
+				
 				<li>downedEntry->[PAWN] [Downed].</li>
 				<li>killedEntry(factionLeader==True)->[PAWN], a faction leader of [PAWN_factionName], [Died].</li>
 				<li>killedEntry(factionLeader!=True)->[PAWN] [Died].</li>

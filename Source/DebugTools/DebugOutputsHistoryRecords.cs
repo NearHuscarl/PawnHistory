@@ -45,7 +45,7 @@ public static class DebugOutputsHistoryRecords
         foreach (var pawn in allPawns)
         {
             var historyRecords = pawn.HistoryRecords;
-            var label = $"{pawn.Name} ({historyRecords.Count})";
+            var label = $"{pawn.Name?.ToString() ?? pawn.KindLabelDefinite()} ({historyRecords.Count})";
 
             options.Add(new DebugMenuOption(label, DebugMenuOptionMode.Action, () =>
             {

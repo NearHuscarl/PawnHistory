@@ -49,6 +49,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>BondedAnimalDeath</defName>
+		<label>bonded animal death</label>
+		<descriptionMaker>PawnEvent_Casualty</descriptionMaker>
+		<icon>EventIcons/RelativeDeath</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Downed</defName>
 		<label>downed</label>
 		<descriptionMaker>PawnEvent_Casualty</descriptionMaker>

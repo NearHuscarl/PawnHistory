@@ -15,8 +15,24 @@ internal static class PawnUtility
 
         public string NameDef =>
             pawn.Name != null
-                ? Find.ActiveLanguageWorker .WithDefiniteArticlePostProcessed(pawn.Name.ToStringShort, pawn.gender, name: true) .ApplyTag(TagType.Name).Resolve()
+                ? Find.ActiveLanguageWorker.WithDefiniteArticlePostProcessed(pawn.Name.ToStringShort, pawn.gender, name: true).ApplyTag(TagType.Name).Resolve()
                 : pawn.KindLabelDefinite().ApplyTag(TagType.Name).Resolve();
+
+        public bool TryGetBondedHumans(out List<Pawn> bondedHumans)
+        {
+            bondedHumans = [];
+
+            if (pawn?.RaceProps is not { Animal: true })
+                return false;
+
+            foreach (var rel in pawn.relations?.DirectRelations ?? [])
+            {
+                if (rel.def == PawnRelationDefOf.Bond)
+                    bondedHumans.Add(rel.otherPawn);
+            }
+
+            return bondedHumans.Count > 0;
+        }
 
         public List<HistoryRecord> HistoryRecords => CompHistoryManager.GetComp(pawn).records;
 

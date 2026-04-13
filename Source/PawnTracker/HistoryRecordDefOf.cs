@@ -13,6 +13,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef Kill;
     public static HistoryRecordDef Death;
     public static HistoryRecordDef RelativeDeath;
+    public static HistoryRecordDef BondedAnimalDeath;
     public static HistoryRecordDef Downed;
     public static HistoryRecordDef Crushed;
     public static HistoryRecordDef FriendlyTrapHit;

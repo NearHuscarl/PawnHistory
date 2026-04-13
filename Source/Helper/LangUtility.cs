@@ -29,9 +29,9 @@ internal static class LangUtility
         return "NH_PH_List_Many".Translate(n1, n2, count - 2, Find.ActiveLanguageWorker.Pluralize(otherText));
     }
 
-    public static string ReplaceFirstMatch(this string text, string search, string replace)
+    public static string ReplaceFirstMatch(this string text, string search, string replace, StringComparison comparisonType = StringComparison.CurrentCulture)
     {
-        int pos = text.IndexOf(search);
+        var pos = text.IndexOf(search, comparisonType);
         if (pos < 0) return text;
         return text[..pos] + replace + text[(pos + search.Length)..];
     }

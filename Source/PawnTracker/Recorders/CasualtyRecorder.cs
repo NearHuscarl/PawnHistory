@@ -96,33 +96,58 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         AddRecord(recordDef, subject, desc, [initiator, originalTarget]);
 
         if (isKillLog)
-            RecordRelativeDeath(subject, initiator, originalTarget, combatLogText, transitionText, desc);
+            CreatePovDeathRecord(subject, initiator, originalTarget, combatLogText, transitionText, desc);
     }
 
-    private void RecordRelativeDeath(Pawn deceased, Pawn initiator, Pawn originalTarget, string combatLogText, string transitionText, string deathDesc)
+    private void CreatePovDeathRecord(Pawn deceased, Pawn initiator, Pawn originalTarget, string combatLogText, string transitionText, string deathDesc)
     {
-        var recordDef = HistoryRecordDefOf.RelativeDeath;
-        var deceasedName = deceased.NameDef;
-
         foreach (var relative in deceased.relations.PotentiallyRelatedPawns)
         {
             if (!ShouldRecord(relative))
                 continue;
 
             var relationDef = relative.GetMostImportantRelation(deceased);
-            if (relationDef == null) continue;
+            if (relationDef == null || (relative.relations?.DirectRelationExists(PawnRelationDefOf.Bond, deceased) ?? false)) continue;
 
-            var relativePov = recordDef.Description(relative)
+            var recordDef = HistoryRecordDefOf.RelativeDeath;
+            var pov = recordDef.Description(relative)
                 .AddRule("Relation", relationDef.GetGenderSpecificLabel(deceased))
                 .AddRule("Subject", deceased)
-                .Resolve("relativePov");
-
-            // "A died" -> "C's brother, A, died"
-            var desc = combatLogText != null
-                ? transitionText.ReplaceFirstMatch(deceasedName, relativePov) + " " + combatLogText
-                : deathDesc.ReplaceFirstMatch(deceasedName, relativePov).ReplaceFirstMatch(",,", ","); // factionLeader==True + relativePov
+                .Resolve("povRelative");
+            var desc = CreatePovDescription(deceased, pov);
 
             AddRecord(recordDef, relative, desc, [deceased, initiator, originalTarget]);
+        }
+
+        if (!deceased.TryGetBondedHumans(out var bondedHumans))
+            return;
+
+        foreach (var human in bondedHumans)
+        {
+            if (!ShouldRecord(human))
+                continue;
+
+            var recordDef = HistoryRecordDefOf.BondedAnimalDeath;
+            var pov = recordDef.Description(human)
+                .AddRule("AnimalKind", deceased.kindDef)
+                .AddRule("Subject", deceased)
+                .AddConstant("hasName", deceased.Name != null)
+                .Resolve("povBondedAnimal");
+            var desc = CreatePovDescription(deceased, pov);
+
+            AddRecord(recordDef, human, desc, [deceased, initiator, originalTarget]);
+        }
+
+        return;
+
+        string CreatePovDescription(Pawn deadPawn, string pov)
+        {
+            const StringComparison comparisonType = StringComparison.OrdinalIgnoreCase; // 'the elephant' is capitalized as the first word 
+            var name = deadPawn.NameDef;
+            // "A died" -> "C's brother, A, died"
+            return combatLogText != null
+                ? transitionText.ReplaceFirstMatch(name, pov, comparisonType) + " " + combatLogText
+                : deathDesc.ReplaceFirstMatch(name, pov, comparisonType).ReplaceFirstMatch(",,", ","); // factionLeader==True + relativePov
         }
     }
 
@@ -174,14 +199,46 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         return () => scenario.SlowDown();
     }
 
+    public void TestRelativeDead(TestScenario scenario)
+    {
+        var victim = scenario.Pawn().CreateSingle();
+        var friend = scenario.Pawn().SetRelation(victim, PawnRelationDefOf.Lover).CreateSingle();
+        HealthUtility.DamageUntilDead(victim);
+
+        Expect.That(victim).ToHaveHistoryRecord("[PAWN] died because of [HediffInPart].", HistoryRecordDefOf.Death);
+        Expect.That(friend).ToHaveHistoryRecord("[PAWN]'s lover, [Subject], died because of [HediffInPart].", HistoryRecordDefOf.RelativeDeath);
+    }
+
+    public void TestBondedAnimalDead(TestScenario scenario)
+    {
+        var bondedAnimal = scenario.Pawn().Animal(DefLookup.PawnKind.Husky).CreateSingle();
+        var human = scenario.Pawn().Colonist().SetRelation(bondedAnimal, PawnRelationDefOf.Bond).CreateSingle();
+        
+        HealthUtility.DamageUntilDead(bondedAnimal);
+
+        Expect.That(bondedAnimal).ToHaveHistoryRecord("The husky died because of [HediffInPart].", HistoryRecordDefOf.Death);
+        Expect.That(human).ToHaveHistoryRecord("[PAWN]'s bonded husky died because of [HediffInPart].", HistoryRecordDefOf.BondedAnimalDeath);
+    }
+
+    public void TestBondedAnimalDead2(TestScenario scenario)
+    {
+        var bondedAnimal = scenario.Pawn().Animal(PawnKindDefOf.Alphabeaver).Do(p => p.Name = new NameSingle("Steve")).CreateSingle();
+        var human = scenario.Pawn().Colonist().SetRelation(bondedAnimal, PawnRelationDefOf.Bond) .CreateSingle();
+        
+        HealthUtility.DamageUntilDead(bondedAnimal);
+
+        Expect.That(bondedAnimal).ToHaveHistoryRecord("Steve died because of [HediffInPart].", HistoryRecordDefOf.Death);
+        Expect.That(human).ToHaveHistoryRecord("[PAWN]'s bonded alphabeaver, Steve, died because of [HediffInPart].", HistoryRecordDefOf.BondedAnimalDeath);
+    }
+
     public void TestLeaderDead(TestScenario scenario)
     {
         var leader = scenario.Pawn().FactionLeader(Faction.OfPirates).CreateSingle();
-        var spouse = scenario.Pawn().SetRelation(leader, PawnRelationDefOf.Spouse).CreateSingle();
+        var spouse = scenario.Pawn().SetRelation(leader, PawnRelationDefOf.ExLover).CreateSingle();
         HealthUtility.DamageUntilDead(leader);
 
-        Expect.That(leader).ToHaveHistoryRecord("[PAWN], a faction leader of [PAWN_factionName], died because of [HediffInPart].");
-        Expect.That(spouse).ToHaveHistoryRecord("[PAWN]'s [Relation], [Subject], a faction leader of [PAWN_factionName], died because of [HediffInPart].");
+        Expect.That(leader).ToHaveHistoryRecord("[PAWN], a faction leader of [PAWN_factionName], died because of [HediffInPart].", HistoryRecordDefOf.Death);
+        Expect.That(spouse).ToHaveHistoryRecord("[PAWN]'s ex-lover, [Subject], a faction leader of [PAWN_factionName], died because of [HediffInPart].", HistoryRecordDefOf.RelativeDeath);
     }
 
     public void TestDead(TestScenario scenario)

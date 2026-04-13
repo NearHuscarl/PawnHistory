@@ -45,4 +45,9 @@ public static class DefLookup
     {
         public static RaidStrategyDef Siege => field ??= DefDatabase<RaidStrategyDef>.GetNamed("Siege");
     }
+
+    public static class PawnKind
+    {
+        public static PawnKindDef Husky => field ??= DefDatabase<PawnKindDef>.GetNamed("Husky");
+    }
 }

@@ -65,6 +65,7 @@ namespace PawnHistory.Source.PawnTracker;
 // Pawn.Notify_PassedToWorld() event?
 // TaleRecorder.RecordTale()
 // Letter.xml
+// Core\Languages\English\Keyed\Messages.xml
 // Search for <IncidentDef>
 // - HistoryEventDefOf.cs
 //  - ".RecordEvent("
@@ -75,6 +76,9 @@ namespace PawnHistory.Source.PawnTracker;
 // - Docs
 //  - DescriptionBuilder and rulepack
 //  - TaggedTestAttribute, Run last failed tests...
+
+// Should I add:
+// - LetterAcceptedProposal_NameChange
 
 // WorldPawn window
 // + Add a column to see the history of dead AND destroyed pawn. Concerned dead & destroyed pawn will open a dedicated history window.
@@ -103,7 +107,7 @@ namespace PawnHistory.Source.PawnTracker;
 [StaticConstructorOnStartup]
 internal class PawnTracker
 {
-    public static Harmony Harmony = new("rimworld.mod.nearhuscarl.pawnhistory");
+    public static readonly Harmony Harmony = new("rimworld.mod.nearhuscarl.pawnhistory");
     static PawnTracker()
     {
         Harmony.PatchAllUncategorized(Assembly.GetExecutingAssembly());

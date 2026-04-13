@@ -7,14 +7,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using PawnHistory.Source.PawnTracker.Recorders;
+using RimWorld;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
 
 public static class RecorderManager
 {
-    public static bool ShouldRecord(ThingDef thingDef) => thingDef.race?.intelligence == Intelligence.Humanlike;
-    public static bool ShouldRecord(Pawn pawn) => pawn != null && pawn.RaceProps.Humanlike;
+    public static bool ShouldRecord(ThingDef thingDef) => thingDef.race?.intelligence >= Intelligence.Animal;
+    public static bool ShouldRecord(Pawn pawn)
+    {
+        return pawn != null && (pawn.RaceProps.Humanlike || (pawn.RaceProps.Animal && pawn.relations?.GetFirstDirectRelationPawn(PawnRelationDefOf.Bond) != null));
+    }
 
     private static readonly List<RecorderBase> ActiveRecorders = [];
     private static readonly TestScenario TestScenario = new();
