@@ -31,13 +31,6 @@ public class TestScenario
     public ThingBuilder Thing(ThingDef thingDef, ThingDef stuffDef = null) => new(thingDef, stuffDef);
     public ThingBuilder Thing(string defName, ThingDef stuffDef = null) => new(DefDatabase<ThingDef>.GetNamed(defName), stuffDef);
 
-    public IncidentBuilder Siege()
-    {
-        var siegeStrategy = DefDatabase<RaidStrategyDef>.GetNamed("Siege");
-        return Incident(IncidentDefOf.RaidEnemy)
-            .RaidStrategy(siegeStrategy);
-    }
-
     public IncidentBuilder RaidFriendly()
     {
         return Incident(IncidentDefOf.RaidFriendly)

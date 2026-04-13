@@ -55,6 +55,7 @@
     <Compile Include="Source\DebugTools\NearDebugOutputAttribute.cs" />
     <Compile Include="Source\DebugTools\NearDebugSettings.cs" />
     <Compile Include="Source\DebugTools\ReloadableAttribute.cs" />
+    <Compile Include="Source\DefLookup.cs" />
     <Compile Include="Source\Helper\GameUtility.cs" />
     <Compile Include="Source\Helper\LangUtility.cs" />
     <Compile Include="Source\Helper\ListExtensions.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Source\PawnTracker\Events\AnimalRevengeEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\LeaderChangedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\HealthComplicationEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\MarriageProposalEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\MentalBreakStartedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\NewLoverEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ReceiveLetterEvent.cs" />
@@ -116,6 +118,7 @@
     <Compile Include="Source\PawnTracker\Recorders\FoodPoisoningRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\InspirationRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\LeaderChangedRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\MarriageProposalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\NewLoverRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RescueJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PrisonerRecruitedRecorder.cs" />

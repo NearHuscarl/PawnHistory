@@ -30,16 +30,17 @@ public class DiseaseRecorder : RecorderBase<DiseaseEvent>
         AddRecord(recordDef, pawn, desc);
     }
 
-    [SkipTest]
     public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(8).Colonist().Execute();
-        scenario.Incident("Disease_OrganDecay").Execute();
-        scenario.Incident("Disease_Malaria").Execute();
-        scenario.Incident("Disease_SleepingSickness").Execute();
-        scenario.Incident("Disease_SensoryMechanites").Execute();
+        scenario.Incident(DefLookup.Incident.Disease_Malaria).Execute();
+        scenario.Incident(DefLookup.Incident.Disease_SleepingSickness).Execute();
+        scenario.Incident(DefLookup.Incident.Disease_SensoryMechanites).Execute();
+        scenario.Incident(DefLookup.Incident.Disease_OrganDecay).Execute();
 
-        var pawnWithOrganDecay = pawns.First(p => p.health.hediffSet.hediffs.Any(h => h.def.defName == "OrganDecay"));
-        scenario.OpenHistoryRecordTab(pawnWithOrganDecay);
+        Expect.ThatAny(pawns).ToHaveHistoryRecord("[PAWN] got sick from malaria along with [n] [Others].", HistoryRecordDefOf.Disease);
+        Expect.ThatAny(pawns).ToHaveHistoryRecord("[PAWN] got sick from sleeping sickness along with [n] [Others].", HistoryRecordDefOf.Disease);
+        Expect.ThatAny(pawns).ToHaveHistoryRecord("[PAWN] got sick from sensory mechanites along with [n] [Others].", HistoryRecordDefOf.Disease);
+        Expect.ThatAny(pawns).ToHaveHistoryRecord("[PAWN] developed a flesh-eating infection known as organ decay in [His] [Part].", HistoryRecordDefOf.Disease);
     }
 }

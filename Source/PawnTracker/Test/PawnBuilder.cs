@@ -484,15 +484,15 @@ static class PawnBuilderExtension
         });
     }
 
-    public static PawnBuilder EquipWeapon(this PawnBuilder builder, string weaponDefName, Func<Pawn, int, bool> ShouldEquip = null)
+    public static PawnBuilder EquipWeapon(this PawnBuilder builder, string weaponDefName, Func<Pawn, int, bool> shouldEquip = null)
     {
-        return builder.EquipWeapon(DefDatabase<ThingDef>.GetNamed(weaponDefName), ShouldEquip);
+        return builder.EquipWeapon(DefDatabase<ThingDef>.GetNamed(weaponDefName), shouldEquip);
     }
-    public static PawnBuilder EquipWeapon(this PawnBuilder builder, ThingDef weaponDef, Func<Pawn, int, bool> ShouldEquip = null)
+    public static PawnBuilder EquipWeapon(this PawnBuilder builder, ThingDef weaponDef, Func<Pawn, int, bool> shouldEquip = null)
     {
         return builder.Do((pawn, i) =>
         {
-            if (pawn.Dead || (ShouldEquip?.Invoke(pawn, i) ?? false)) return;
+            if (pawn.Dead || (shouldEquip?.Invoke(pawn, i) ?? false)) return;
 
             var weapon = ThingMaker.MakeThing(weaponDef);
 
@@ -561,7 +561,7 @@ static class PawnBuilderExtension
 
                 var damage = currentHp - 1;
                 var injury = HediffMaker.MakeHediff(bruise, pawn, part) as Hediff_Injury;
-                injury.Severity = damage;
+                injury?.Severity = damage;
                 pawn.health.AddHediff(injury);
             }
         });

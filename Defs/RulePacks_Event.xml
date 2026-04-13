@@ -656,6 +656,17 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_MarriageProposal</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(outcome==Accepted)          ->[InteractionLog]. [PAWN] agreed and the two became engaged.</li>
+				<li>entry(outcome==Rejected)          ->[InteractionLog]. [PAWN] rejected the proposal.</li>
+				<li>entry(outcome==RejectedAndBrokeUp)->[InteractionLog]. [PAWN] rejected the proposal. The rejection was too much for the relationship, and the two broke up.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_PrisonerCaptured</defName>
 		<rulePack>
 			<rulesStrings>

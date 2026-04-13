@@ -44,7 +44,7 @@ namespace PawnHistory.Source.PawnTracker;
 // - Scarred body part
 //  + Instant from injury damage
 //  + Post heal
-//  - Scarfication ritual
+//  - Scarification ritual
 // - Recruited
 //  + prisoner
 //  ^ quest
@@ -67,28 +67,31 @@ namespace PawnHistory.Source.PawnTracker;
 // Letter.xml
 // Search for <IncidentDef>
 // - HistoryEventDefOf.cs
-//  - .RecordEvent(
+//  - ".RecordEvent("
 // - Guest transition: Prisoner/Slave/Guest
 //  - "SetGuestStatus("
 // - ^ Mod options
 //  - Prune less important records
 // - Docs
 //  - DescriptionBuilder and rulepack
-// - Test
-//  - TestManager should collect all failing tests instead of stopping on first failure
-//  - TestManager should re-run failed tests from previous run first
+//  - TaggedTestAttribute, Run last failed tests...
 
-// Create a filter in WorldPawn window (All/Alive/Dead)
-// - Add a column to see the history of dead AND destroyed pawn. Concerned dead&destoryed pawn will open a dedicated history window.
+// WorldPawn window
+// + Add a column to see the history of dead AND destroyed pawn. Concerned dead & destroyed pawn will open a dedicated history window.
+// - Add filters (All/Alive/Dead)
 
 // - UI
 //  - Pagination
-//  - Cache icon texture2d
+//  - Get all icons to find missing Texture2D
 //  - Filtering
+//  - Jump to relative record
 // - Test Framework
 //  - Create ITestable interface to decouple from RecorderBase
 //  - Show time elapsed for all test runs
 //  - Add test runner to scan for test methods.
+
+// Refactor:
+// - move from DefDatabase<>.GetNamed() to DefLookup
 
 // Bug:
 // - Test multiple maps to see if CasualtyRecorder use the correct battle log?
@@ -96,7 +99,6 @@ namespace PawnHistory.Source.PawnTracker;
 // - Killed: handle turret & animal
 // -- kill record POV is wrong for the killer
 // -- In-memory information > Exposable
-//  - BodyPartScarredContext.InstigatorLookup
 
 [StaticConstructorOnStartup]
 internal class PawnTracker

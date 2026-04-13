@@ -10,7 +10,7 @@ public record NewLoverEvent(Pawn Initiator, Pawn Recipient, string LogEntryText,
 
 internal static class NewLoverContext
 {
-    public static readonly Dictionary<Pawn, Pawn> CheaterVictims = [];
+    public static readonly Dictionary<Pawn, Pawn> CheatedLover = [];
 }
 
 // Call order:
@@ -27,7 +27,7 @@ internal class InteractionWorker_RomanceAttempt_TryAddCheaterThought_Patch
     {
         if (pawn.Dead)
             return;
-        NewLoverContext.CheaterVictims.Add(cheater, pawn);
+        NewLoverContext.CheatedLover.Add(cheater, pawn);
     }
 }
 
@@ -57,10 +57,10 @@ internal class PlayLog_Add_Patch_4
         var initiatorVictims = initiator.IsHavingAffairBasedOnIdeo() ? initiator.GetCurrentSpouses() : [];
         var recipientVictims = recipient.IsHavingAffairBasedOnIdeo() ? recipient.GetCurrentSpouses() : [];
         
-        if (NewLoverContext.CheaterVictims.TryGetValue(initiator, out var initiatorEx)) initiatorVictims.Add(initiatorEx);
-        if (NewLoverContext.CheaterVictims.TryGetValue(recipient, out var recipientEx)) recipientVictims.Add(recipientEx);
+        if (NewLoverContext.CheatedLover.TryGetValue(initiator, out var initiatorEx)) initiatorVictims.Add(initiatorEx);
+        if (NewLoverContext.CheatedLover.TryGetValue(recipient, out var recipientEx)) recipientVictims.Add(recipientEx);
         
         GameEventBus.Publish(new NewLoverEvent(initiator, recipient, logEntryText, initiatorVictims,  recipientVictims));
-        NewLoverContext.CheaterVictims.Clear();
+        NewLoverContext.CheatedLover.Clear();
     }
 }

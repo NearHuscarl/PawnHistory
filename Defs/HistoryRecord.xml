@@ -465,6 +465,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>MarriageProposal</defName>
+		<label>marriage proposal</label>
+		<descriptionMaker>PawnEvent_MarriageProposal</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/MarriageProposal</icon>
+		<categories>
+			<li>Relationship</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonerCaptured</defName>
 		<label>prisoner captured</label>
 		<descriptionMaker>PawnEvent_PrisonerCaptured</descriptionMaker>

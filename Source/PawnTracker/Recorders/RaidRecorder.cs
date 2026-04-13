@@ -90,10 +90,11 @@ public class RaidRecorder : RecorderBase<RaidStartedEvent>
         scenario.Incident(IncidentDefOf.RaidEnemy).Point(point).Execute();
     }
 
-    [SkipTest]
     public void TestSiege(TestScenario scenario)
     {
-        scenario.Siege().Point(500).Execute();
+        var pawns = scenario.Incident(IncidentDefOf.RaidEnemy).RaidStrategy(DefLookup.RaidStrategy.Siege).Point(500).Execute();
+        
+        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN] and [n] others from [FACTION] besieged the colony.", HistoryRecordDefOf.Raid);
     }
 
     [SkipTest]

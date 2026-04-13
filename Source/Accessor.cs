@@ -42,6 +42,9 @@ public static class Accessor
 
         public static readonly AccessTools.FieldRef<Verse.PlayLogEntry_Interaction, InteractionDef> InteractionDef =
             AccessTools.FieldRefAccess<Verse.PlayLogEntry_Interaction, InteractionDef>("intDef");
+
+        public static readonly AccessTools.FieldRef<Verse.PlayLogEntry_Interaction, List<RulePackDef>> ExtraSentencePacks =
+            AccessTools.FieldRefAccess<Verse.PlayLogEntry_Interaction, List<RulePackDef>>("extraSentencePacks");
     }
 
     public class Pawn_HealthTracker

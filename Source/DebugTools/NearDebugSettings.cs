@@ -77,6 +77,18 @@ internal static class InteractionWorker_RomanceAttempt_SuccessChance_Patch
     }
 }
 
+[HarmonyPatch(typeof(InteractionWorker_MarriageProposal), nameof(InteractionWorker_MarriageProposal.AcceptanceChance))]
+internal static class InteractionWorker_MarriageProposal_AcceptanceChance_Patch
+{
+    private static void Postfix(ref float __result)
+    {
+        if (NearDebugSettings.ForceMarriageProposalAccepted)
+            __result = 10f;
+        else if (NearDebugSettings.ForceMarriageProposalRejected)
+            __result = 0f;
+    }
+}
+
 internal class NearDebugSettings
 {
     public static bool ForceInjuryScar = false;
@@ -84,4 +96,6 @@ internal class NearDebugSettings
     public static bool ForceManhunterChance = false;
     public static bool ForceSpringTrap = false;
     public static bool ForceRomanceSuccess = false;
+    public static bool ForceMarriageProposalAccepted = false;
+    public static bool ForceMarriageProposalRejected = false;
 }

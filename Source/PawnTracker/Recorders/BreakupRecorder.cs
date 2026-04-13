@@ -32,7 +32,6 @@ public class BreakupRecorder : RecorderBase<BreakupEvent>
 
     public void Test(TestScenario scenario)
     {
-        var breakupInteraction = DefDatabase<InteractionDef>.GetNamed("Breakup");
         var recipient = scenario.Pawn()
             .Colonist()
             .CreateSingle();
@@ -40,7 +39,7 @@ public class BreakupRecorder : RecorderBase<BreakupEvent>
             .Colonist()
             .SetRelation(recipient, PawnRelationDefOf.Lover)
             .WithPosition(recipient.Position) 
-            .Do((p, i, pawns) => p.interactions.TryInteractWith(recipient, breakupInteraction))
+            .Do(p => p.interactions.TryInteractWith(recipient, DefLookup.Interaction.Breakup))
             .CreateSingle();
 
         Expect.That(initiator).ToHaveHistoryRecord("[Dumper] broke up with [Rejected]. [Tale]", HistoryRecordDefOf.Breakup);
@@ -49,7 +48,6 @@ public class BreakupRecorder : RecorderBase<BreakupEvent>
 
     public void TestWithReason(TestScenario scenario)
     {
-        var breakupInteraction = DefDatabase<InteractionDef>.GetNamed("Breakup");
         var recipient = scenario.Pawn()
             .Colonist()
             .CreateSingle();
@@ -57,8 +55,8 @@ public class BreakupRecorder : RecorderBase<BreakupEvent>
             .Colonist()
             .SetRelation(recipient, PawnRelationDefOf.Lover)
             .WithPosition(recipient.Position) 
-            .Do((p, i, pawns) => p.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.CheatedOnMe, recipient))
-            .Do((p, i, pawns) => p.interactions.TryInteractWith(recipient, breakupInteraction))
+            .Do(p => p.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.CheatedOnMe, recipient))
+            .Do(p => p.interactions.TryInteractWith(recipient, DefLookup.Interaction.Breakup))
             .CreateSingle();
 
         Expect.That(initiator).ToHaveHistoryRecord("[Dumper] broke up with [Rejected]. [Tale]. The final straw was: Cheated on me.", HistoryRecordDefOf.Breakup);
