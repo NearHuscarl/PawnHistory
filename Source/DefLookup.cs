@@ -19,6 +19,8 @@ public static class DefLookup
         public static HediffDef BadBack => field ??= DefDatabase<HediffDef>.GetNamed("BadBack");
         public static HediffDef Frail => field ??= DefDatabase<HediffDef>.GetNamed("Frail");
         public static HediffDef HeartArteryBlockage => field ??= DefDatabase<HediffDef>.GetNamed("HeartArteryBlockage");
+        public static HediffDef WakeUpTolerance => field ??= DefDatabase<HediffDef>.GetNamed("WakeUpTolerance");
+        public static HediffDef AlcoholTolerance => field ??= DefDatabase<HediffDef>.GetNamed("AlcoholTolerance");
     }
 
     public static class BodyPart

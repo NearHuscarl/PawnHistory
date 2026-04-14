@@ -569,20 +569,17 @@ static class PawnBuilderExtension
 
     public static PawnBuilder SetRelation(this PawnBuilder builder, Pawn other, PawnRelationDef relationDef)
     {
-        return builder.Do((pawn) =>
-        {
-            pawn.relations.AddDirectRelation(relationDef, other);
-        });
+        return builder.Do(pawn => pawn.relations.AddDirectRelation(relationDef, other));
     }
 
     public static PawnBuilder SetRandomRelations(this PawnBuilder builder, int relationsPerPawn)
     {
-        var possibleRelations = DefDatabase<PawnRelationDef>.AllDefsListForReading.Where(def => def != null && !def.implied && def.defName != "Bond").ToList();
+        var possibleRelations = DefDatabase<PawnRelationDef>.AllDefsListForReading.Where(def => def is { implied: false } && def.defName != "Bond").ToList();
 
         return builder.Do((pawn, _, pawns) =>
         {
             var pawnsToCreateRelation = pawns
-                .Where(p => p != null && p.relations != null && p.RaceProps?.Humanlike == true)
+                .Where(p => p is { relations: not null, RaceProps.Humanlike: true })
                 .ToList();
 
             if (pawnsToCreateRelation.Count < 2)
@@ -600,17 +597,19 @@ static class PawnBuilderExtension
         });
     }
 
-    public static PawnBuilder StartMentalBreak(this PawnBuilder builder, MentalBreakDef def)
+    public static PawnBuilder ForceAddictionTo(this PawnBuilder builder, Thing drug)
     {
-        var randomNegativeThought = DefDatabase<ThoughtDef>.AllDefs
-            .Where(t => t.stages != null && t.stages.Any(s => s != null && s.baseMoodEffect < 0) && (!t.label.NullOrEmpty() || !t.stages.First().label.NullOrEmpty()))
-            .RandomElementWithFallback();
-        var reason = "MentalStateReason_Mood".Translate() + "\n\n" + "FinalStraw".Translate((NamedArgument)randomNegativeThought.LabelCap);
-
-        return builder.Do((pawn, _, pawns) =>
+        return builder.Do(pawn =>
         {
-            if (!pawn.mindState.mentalBreaker.TryDoMentalBreak(reason, def))
-                Log.Warning($"[PawnHistory] Failed to force mental break {def.defName} on {pawn.LabelShort}");
+            if (!drug.TryGetComp<CompDrug>(out var comp))
+                return;
+
+            for (var i = 0; i < 300; i++)
+            {
+                comp.PrePostIngested(pawn);
+                if (pawn.health.hediffSet.HasHediff(comp.Props.chemical.addictionHediff))
+                    break;
+            }
         });
     }
 }

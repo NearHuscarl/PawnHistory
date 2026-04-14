@@ -13,10 +13,10 @@ public enum RevengeReason
 
 public record AnimalRevengeEvent(List<Pawn> Animals, Pawn Instigator, RevengeReason Reason) : GameEventBase;
 
-static class AnimalRevengeContext
+internal static class AnimalRevengeContext
 {
     public static bool PendingRevenge = false;
-    public static List<Pawn> Manhunters = [];
+    public static readonly List<Pawn> Manhunters = [];
     public static void Clear()
     {
         PendingRevenge = false;
@@ -30,7 +30,7 @@ static class AnimalRevengeContext
 // - Pawn_MindState.StartManhunterBecauseOfPawnAction() postfix
 
 [HarmonyPatch(typeof(Pawn_MindState), "StartManhunterBecauseOfPawnAction")]
-public static class Pawn_MindState_StartManhunterBecauseOfPawnAction_Patch
+internal static class Pawn_MindState_StartManhunterBecauseOfPawnAction_Patch
 {
     public static void Prefix()
     {
@@ -46,11 +46,11 @@ public static class Pawn_MindState_StartManhunterBecauseOfPawnAction_Patch
         GameEventBus.Publish(new AnimalRevengeEvent(AnimalRevengeContext.Manhunters, instigator, reason));
     }
 
-    static void Finalizer() => AnimalRevengeContext.Clear();
+    private static void Finalizer() => AnimalRevengeContext.Clear();
 }
 
 [HarmonyPatch(typeof(MentalStateHandler), nameof(MentalStateHandler.TryStartMentalState))]
-public static class MentalStateHandler_TryStartMentalState_Patch
+internal static class MentalStateHandler_TryStartMentalState_Patch
 {
     public static void Postfix(bool __result, MentalStateHandler __instance)
     {

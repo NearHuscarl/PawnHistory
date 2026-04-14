@@ -27,23 +27,21 @@ public static class PrisonBreakStartedContext
 
 // Call order:
 // Pawn_InteractionsTracker.TryInteractWith() prefix
-// PrisonBreakUtility.StartPrisonBreak()
-// PlayLog.Add()
+// - InteractionWorker_SparkJailbreak.Interacted()
+//  - PrisonBreakUtility.StartPrisonBreak()
+// - PlayLog.Add()
 // Pawn_InteractionsTracker.TryInteractWith() postfix
 
 [HarmonyPatch(typeof(Pawn_InteractionsTracker), nameof(Pawn_InteractionsTracker.TryInteractWith))]
-public static class Pawn_InteractionsTracker_TryInteractWith_Patch
+internal static class Pawn_InteractionsTracker_TryInteractWith_Patch
 {
-    static void Prefix(InteractionDef intDef)
+    private static void Prefix(InteractionDef intDef)
     {
         if (intDef == InteractionDefOf.SparkJailbreak)
             PrisonBreakStartedContext.Reason = PrisonBreakReason.JailBreaker;
     }
 
-    static void Finalizer()
-    {
-        PrisonBreakStartedContext.Reset();
-    }
+    private static void Finalizer() => PrisonBreakStartedContext.Reset();
 }
 
 [HarmonyPatch(
@@ -52,7 +50,7 @@ public static class Pawn_InteractionsTracker_TryInteractWith_Patch
     [typeof(Pawn), typeof(string), typeof(string), typeof(LetterDef), typeof(List<Pawn>)],
     [ArgumentType.Normal, ArgumentType.Out, ArgumentType.Out, ArgumentType.Out, ArgumentType.Out]
 )]
-public static class PrisonBreakUtility_StartPrisonBreak_Patch
+internal static class PrisonBreakUtility_StartPrisonBreak_Patch
 {
     public static void Postfix(Pawn initiator, List<Pawn> escapingPrisoners)
     {
@@ -68,7 +66,7 @@ public static class PrisonBreakUtility_StartPrisonBreak_Patch
 [HarmonyPatch(typeof(PlayLog), nameof(PlayLog.Add))]
 internal class PlayLog_Add_Patch_2
 {
-    static void Postfix(LogEntry entry)
+    private static void Postfix(LogEntry entry)
     {
         if (PrisonBreakStartedContext.Reason == PrisonBreakReason.JailBreaker)
         {

@@ -24,7 +24,7 @@ internal static class IncidentWorker_Disease_ApplyToPawns_Patch
     {
         foreach (var pawn in pawns)
         {
-            DiseaseContext.Contexts.Add(pawn, new DiseaseContext()
+            DiseaseContext.Contexts.Add(pawn, new DiseaseContext
             {
                 HediffSnapshot = DiseaseContext.GetHediffSnapshot(pawn)
             });

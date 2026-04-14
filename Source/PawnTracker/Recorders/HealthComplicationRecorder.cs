@@ -22,7 +22,7 @@ public class HealthComplicationRecorder : RecorderBase<HealthComplicationEvent>
         if (!ShouldRecord(pawn))
             return;
         var recordDef = HistoryRecordDefOf.HealthComplication;
-        var part = pawn.health.hediffSet.hediffs.LastOrDefault(h => h.def == condition && h.ageTicks == 0).Part;
+        var part = pawn.health.hediffSet.hediffs.LastOrDefault(h => h.def == condition && h.ageTicks == 0)?.Part;
         var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
             .AddRule("Condition", condition.LabelNounColored())
@@ -38,7 +38,7 @@ public class HealthComplicationRecorder : RecorderBase<HealthComplicationEvent>
     public void LogAllHediffGiverSubClasses()
     {
         var baseType = typeof(HediffGiver);
-        var types = GenTypes.AllSubclassesNonAbstract(baseType);
+        var types = baseType.AllSubclassesNonAbstract();
 
         DebugTables.MakeTablesDialog(types,
             new TableDataGetter<Type>("Class Name", t => t.Name)
@@ -50,8 +50,8 @@ public class HealthComplicationRecorder : RecorderBase<HealthComplicationEvent>
         var cause = (Hediff)null;
         var cause2 = (Hediff)null;
         var pawn = scenario.Pawn()
-            .AddHediff("WakeUpTolerance", hediffCreated: h => cause = h)
-            .AddHediff("AlcoholTolerance", hediffCreated: h => cause2 = h)
+            .AddHediff(DefLookup.Hediff.WakeUpTolerance, hediffCreated: h => cause = h)
+            .AddHediff(DefLookup.Hediff.AlcoholTolerance, hediffCreated: h => cause2 = h)
             .CreateSingle();
         var giver = cause.def.hediffGivers
             .OfType<HediffGiver_RandomDrugEffect>()

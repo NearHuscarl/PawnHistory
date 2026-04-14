@@ -115,6 +115,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>DrugAddicted</defName>
+		<label>drug addicted</label>
+		<descriptionMaker>PawnEvent_DrugAddicted</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Health</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Birthday</defName>
 		<label>birthday</label>
 		<descriptionMaker>PawnEvent_Birthday</descriptionMaker>
