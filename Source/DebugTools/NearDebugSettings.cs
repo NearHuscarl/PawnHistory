@@ -2,10 +2,26 @@
 using LudeonTK;
 using RimWorld;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
+using RimWorld.Planet;
+using RimWorld.QuestGen;
 using Verse;
 
 namespace PawnHistory.Source.DebugTools;
+
+[HarmonyPatch(typeof(TickManager), nameof(TickManager.Pause))]
+internal class TickManager_Pause_Patch
+{
+    private static void Postfix(TickManager __instance)
+    {
+        if (NearDebugSettings.NeverEverEverPause)
+        {
+            if (__instance.CurTimeSpeed == TimeSpeed.Paused)
+                __instance.CurTimeSpeed = __instance.prePauseTimeSpeed;
+        }
+    }
+}
 
 [HarmonyPatch(typeof(HediffComp_GetsPermanent), nameof(HediffComp_GetsPermanent.PreFinalizeInjury))]
 internal class HediffComp_GetsPermanent_PreFinalizeInjury_Patch
@@ -89,8 +105,34 @@ internal static class InteractionWorker_MarriageProposal_AcceptanceChance_Patch
     }
 }
 
+[HarmonyPatch(typeof(GetOrGenerateMapUtility), nameof(GetOrGenerateMapUtility.GetOrGenerateMap), typeof(PlanetTile), typeof(IntVec3), typeof(WorldObjectDef), typeof(IEnumerable<GenStepWithParams>), typeof(bool))]
+internal static class GetOrGenerateMapUtility_GetOrGenerateMap_Patch
+{
+    private static void Prefix(ref IntVec3 size)
+    {
+        if (NearDebugSettings.ForceDebugMapSize)
+            size = new IntVec3(25, 1, 25);
+    }
+}
+
+[HarmonyPatch(typeof(QuestNode_EndGame_ShipEscape_FindShipTile), "TryFindDestinationTile", [typeof(PlanetTile), typeof(PlanetTile)], [ArgumentType.Normal, ArgumentType.Out])]
+internal class QuestNode_EndGame_ShipEscape_FindShipTile_TryFindDestinationTile_Patch
+{
+    private static void Postfix(ref PlanetTile tile)
+    {
+        if (NearDebugSettings.ShipEscapeSpawnNearby)
+        {
+            var homeTile = Find.AnyPlayerHomeMap.Tile;
+            var neighbors = new List<PlanetTile>();
+            Find.WorldGrid.GetTileNeighbors(homeTile, neighbors);
+            tile = neighbors.FirstOrDefault(t => Find.WorldGrid[t].HillinessLabel != Hilliness.Impassable);
+        }
+    }
+}
+
 internal class NearDebugSettings
 {
+    public static bool NeverEverEverPause = false;
     public static bool ForceInjuryScar = false;
     public static bool ForcePostHealScar = false;
     public static bool ForceManhunterChance = false;
@@ -98,4 +140,6 @@ internal class NearDebugSettings
     public static bool ForceRomanceSuccess = false;
     public static bool ForceMarriageProposalAccepted = false;
     public static bool ForceMarriageProposalRejected = false;
+    public static bool ForceDebugMapSize = false;
+    public static bool ShipEscapeSpawnNearby = false;
 }

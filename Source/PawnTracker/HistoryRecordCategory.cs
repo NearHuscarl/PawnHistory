@@ -13,4 +13,5 @@ public enum HistoryRecordCategory
     Work,
     Gathering,
     Relationship,
+    World,
 }

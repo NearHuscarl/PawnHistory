@@ -62,6 +62,7 @@
     <Compile Include="Source\Helper\LookTargetsUtility.cs" />
     <Compile Include="Source\Helper\PawnUtility.cs" />
     <Compile Include="Source\Helper\EnumerableExtensions.cs" />
+    <Compile Include="Source\Helper\WorldObjectUtility.cs" />
     <Compile Include="Source\PawnTracker\CompProperties_History.cs" />
     <Compile Include="Source\PawnTracker\CompHistory.cs" />
     <Compile Include="Source\DebugTools\DebugOutputsHistoryRecords.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Source\PawnTracker\Events\MarriageProposalEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\MentalBreakStartedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\NewLoverEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\PlayerCaravanArriveEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ReceiveLetterEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\RescueJoinedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\BirthdayEvent.cs" />
@@ -86,7 +88,7 @@
     <Compile Include="Source\PawnTracker\Events\DiseaseEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\JobEndEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\JoinedLordEvent.cs" />
-    <Compile Include="Source\PawnTracker\Events\PawnTradedEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\TradedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\FoodPoisoningEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PrisonerRecruitedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ScenarioPostGameStartEvent.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Source\PawnTracker\Recorders\LeaderChangedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\MarriageProposalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\NewLoverRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\PlayerCaravanArrivalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RescueJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PrisonerRecruitedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\SkillLevelChangedRecorder.cs" />
@@ -171,6 +174,7 @@
     <Compile Include="Source\PawnTracker\Recorders\BodyPartDestroyedRecorder.cs" />
     <Compile Include="Source\Helper\ThingUtility.cs" />
     <Compile Include="Source\PawnTracker\Recorders\SocialFightRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Test\CaravanBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\Expect.cs" />
     <Compile Include="Source\PawnTracker\Test\GatheringBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\IncidentBuilder.cs" />
@@ -189,6 +193,7 @@
     <Compile Include="Source\PawnTracker\Test\TestScenario.cs" />
     <Compile Include="Source\PawnTracker\Test\TestTagAttribute.cs" />
     <Compile Include="Source\PawnTracker\Test\ThingBuilder.cs" />
+    <Compile Include="Source\PawnTracker\Test\TradeSessionBuilder.cs" />
     <Compile Include="Source\RecordFix.cs" />
     <Compile Include="Source\WorldPawn\InfoCard.cs" />
     <Compile Include="Source\WorldPawn\PawnColumnWorker_History.cs" />

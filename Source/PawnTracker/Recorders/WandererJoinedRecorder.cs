@@ -31,6 +31,6 @@ public class WandererJoinedRecorder : RecorderBase<WandererJoinedEvent>
     [SkipTest]
     public void Test(TestScenario scenario)
     {
-        scenario.Incident("WandererJoin").Execute();
+        scenario.Incident(DefLookup.Incident.WandererJoin).Execute();
     }
 }

@@ -26,9 +26,8 @@ public class IncidentBuilder
         return this;
     }
 
-    public IncidentBuilder TraderKind(string traderKindDefName)
+    public IncidentBuilder TraderKind(TraderKindDef traderKindDef)
     {
-        var traderKindDef = DefDatabase<TraderKindDef>.GetNamed(traderKindDefName);
         parms.traderKind = traderKindDef;
         return this;
     }
@@ -49,6 +48,12 @@ public class IncidentBuilder
     {
         parms.faction = faction;
         return this;
+    }
+
+    public IncidentBuilder NonHostileFaction()
+    {
+        var faction = Find.FactionManager.AllFactions.FirstOrDefault(f => f.PlayerRelationKind == FactionRelationKind.Neutral && !f.def.hidden);
+        return Faction(faction);
     }
 
     private bool IsTradeIncident()

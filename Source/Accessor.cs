@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using RimWorld.Planet;
 using Verse;
 // ReSharper disable InconsistentNaming
 
@@ -107,5 +108,41 @@ public static class Accessor
     public class GenFilePaths
     {
         public static readonly Func<string, string> FolderUnderSaveData = AccessTools.MethodDelegate<Func<string, string>>(AccessTools.Method(typeof(Verse.GenFilePaths), "FolderUnderSaveData"));
+    }
+
+    public class CaravanArrivalAction_AttackSettlement
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.CaravanArrivalAction_AttackSettlement, Settlement> Settlement =
+            AccessTools.FieldRefAccess<RimWorld.Planet.CaravanArrivalAction_AttackSettlement, Settlement>("settlement");
+    }
+
+    public class CaravanArrivalAction_Enter
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.CaravanArrivalAction_Enter, MapParent> MapParent =
+            AccessTools.FieldRefAccess<RimWorld.Planet.CaravanArrivalAction_Enter, MapParent>("mapParent");
+    }
+
+    public class CaravanArrivalAction_VisitEscapeShip
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.CaravanArrivalAction_VisitEscapeShip, MapParent> Target =
+            AccessTools.FieldRefAccess<RimWorld.Planet.CaravanArrivalAction_VisitEscapeShip, MapParent>("target");
+    }
+
+    public class CaravanArrivalAction_VisitPeaceTalks
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.CaravanArrivalAction_VisitPeaceTalks, PeaceTalks> PeaceTalks =
+            AccessTools.FieldRefAccess<RimWorld.Planet.CaravanArrivalAction_VisitPeaceTalks, PeaceTalks>("peaceTalks");
+    }
+
+    public class CaravanArrivalAction_VisitSite
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.CaravanArrivalAction_VisitSite, Site> Site =
+            AccessTools.FieldRefAccess<RimWorld.Planet.CaravanArrivalAction_VisitSite, Site>("site");
+    }
+
+    public class CaravanArrivalAction_VisitSettlement
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.CaravanArrivalAction_VisitSettlement, Settlement> Settlement =
+            AccessTools.FieldRefAccess<RimWorld.Planet.CaravanArrivalAction_VisitSettlement, Settlement>("settlement");
     }
 }

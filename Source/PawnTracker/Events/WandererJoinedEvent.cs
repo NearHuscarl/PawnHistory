@@ -3,6 +3,7 @@ using RimWorld;
 using RimWorld.QuestGen;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
@@ -75,47 +76,28 @@ internal class QuestPart_PawnsArrive_Notify_QuestSignalReceived_Patch
 [HarmonyPatch(typeof(QuestNode_Root_RefugeePodCrash), nameof(QuestNode_Root_RefugeePodCrash.GeneratePawn))]
 internal class QuestNode_Root_RefugeePodCrash_GeneratePawn_Patch
 {
-    static void Postfix(Pawn __result)
+    private static void Postfix(Pawn __result)
     {
         GameEventBus.Publish(new WandererJoinedEvent(__result, [], null, QuestGen.quest.root));
     }
 }
 
-[HarmonyPatch(typeof(IncidentWorker_WandererJoin), "TryExecuteWorker")]
-public static class IncidentWorker_WandererJoin_TryExecuteWorker_Patch
+[HarmonyPatch]
+internal static class IncidentWorker_TryExecuteWorker_Patch
 {
-    static void Prefix(IncidentParms parms) => WandererJoinContext.Prefix(parms);
+    private static IEnumerable<MethodBase> TargetMethods()
+    {
+        yield return AccessTools.Method(typeof(IncidentWorker_WandererJoin), "TryExecuteWorker"); // man in black
+        yield return AccessTools.Method(typeof(IncidentWorker_GameEndedWanderersJoin), "TryExecuteWorker");
+        yield return AccessTools.Method(typeof(IncidentWorker_WildManWandersIn), "TryExecuteWorker");
+    }
+    
+    private static void Prefix(IncidentParms parms) => WandererJoinContext.Prefix(parms);
 
-    static void Postfix(IncidentParms parms, IncidentWorker_WandererJoin __instance, bool __result)
+    private static void Postfix(IncidentParms parms, IncidentWorker __instance, bool __result)
     {
         WandererJoinContext.Postfix(parms, __instance, __result);
     }
 
-    static void Finalizer() => WandererJoinContext.Finalizer();
-}
-
-[HarmonyPatch(typeof(IncidentWorker_GameEndedWanderersJoin), "TryExecuteWorker")]
-public static class IncidentWorker_GameEndedWanderersJoin_TryExecuteWorker_Patch
-{
-    static void Prefix(IncidentParms parms) => WandererJoinContext.Prefix(parms);
-
-    static void Postfix(IncidentParms parms, IncidentWorker_GameEndedWanderersJoin __instance, bool __result)
-    {
-        WandererJoinContext.Postfix(parms, __instance, __result);
-    }
-
-    static void Finalizer() => WandererJoinContext.Finalizer();
-}
-
-[HarmonyPatch(typeof(IncidentWorker_WildManWandersIn), "TryExecuteWorker")]
-public static class IncidentWorker_WildManWandersIn_TryExecuteWorker_Patch
-{
-    static void Prefix(IncidentParms parms) => WandererJoinContext.Prefix(parms);
-
-    static void Postfix(IncidentParms parms, IncidentWorker_WildManWandersIn __instance, bool __result)
-    {
-        WandererJoinContext.Postfix(parms, __instance, __result);
-    }
-
-    static void Finalizer() => WandererJoinContext.Finalizer();
+    private static void Finalizer() => WandererJoinContext.Finalizer();
 }

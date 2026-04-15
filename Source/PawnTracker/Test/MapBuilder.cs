@@ -319,8 +319,11 @@ public class MapBuilder
 
     public MapBuilder CollapseRoofAndCrush(Pawn pawn)
     {
-        Find.CurrentMap.roofGrid.SetRoof(pawn.Position, RoofDefOf.RoofRockThick);
-        RoofCollapserImmediate.DropRoofInCells([pawn.Position], map, []);
+        actions.Add(_ =>
+        {
+            Find.CurrentMap.roofGrid.SetRoof(pawn.Position, RoofDefOf.RoofRockThick);
+            RoofCollapserImmediate.DropRoofInCells([pawn.Position], map, []);
+        });
 
         return this;
     }

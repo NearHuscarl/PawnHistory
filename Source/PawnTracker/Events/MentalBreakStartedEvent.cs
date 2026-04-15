@@ -18,12 +18,12 @@ public record MentalBreakReason(MentalBreakCause Cause, string InGameReason, Hed
 
 public record MentalBreakStartedEvent(Pawn Pawn, MentalBreakReason Reason, MentalBreakDef MentalBreak, MentalStateDef MentalState = null, Pawn Target = null) : GameEventBase;
 
-internal class MentalBreakContext
+internal static class MentalBreakContext
 {
     public static readonly Dictionary<Pawn, (MentalStateDef mentalState, string reason, bool causedByMood, bool hasRecord)> OnGoingMentalStates = [];
     public static Hediff CurrentTickingHediff;
     public static TraitDegreeData CurrentTickingTraitData;
-    public static HashSet<string> IgnoredMentalBreaks = [
+    public static readonly HashSet<string> IgnoredMentalBreaks = [
         "PanicFleeFire", // Happens too frequently
         "SocialFighting", // Handled by SocialFightStartedEvent
     ];
@@ -36,7 +36,7 @@ internal class MentalBreakContext
         return new MentalBreakReason(cause, inGameReason, hediff, trait?.label);
     }
 
-    public static MentalBreakCause GetCause(bool causedByMood)
+    private static MentalBreakCause GetCause(bool causedByMood)
     {
         if (CurrentTickingHediff != null)
             return MentalBreakCause.Hediff;
@@ -54,16 +54,16 @@ internal class MentalBreakContext
 
         if (mentalState is MentalState_MurderousRage mr)
             return mr.target;
-        else if (mentalState is MentalState_InsultingSpree isp)
+        if (mentalState is MentalState_InsultingSpree isp)
             return isp.target;
-        else if (mentalState is MentalState_CorpseObsession co)
+        if (mentalState is MentalState_CorpseObsession co)
             return co.corpse.InnerPawn;
         return null;
     }
 }
 
 [HarmonyPatch(typeof(MentalStateHandler), nameof(MentalStateHandler.TryStartMentalState))]
-public static class MentalStateHandler_TryStartMentalState_Patch_2
+internal static class MentalStateHandler_TryStartMentalState_Patch_2
 {
     public static void Postfix(bool __result, MentalStateHandler __instance, string reason, bool causedByMood, bool transitionSilently)
     {
@@ -79,7 +79,7 @@ public static class MentalStateHandler_TryStartMentalState_Patch_2
         if (MentalBreakContext.IgnoredMentalBreaks.Contains(mentalState.defName))
             return;
 
-        if (pawn.MentalState is MentalState_Slaughterer || pawn.MentalState is MentalState_Jailbreaker)
+        if (pawn.MentalState is MentalState_Slaughterer or MentalState_Jailbreaker)
         {
             MentalBreakContext.OnGoingMentalStates[pawn] = (mentalState, reason, causedByMood, hasRecord: false);
             return;
@@ -92,9 +92,9 @@ public static class MentalStateHandler_TryStartMentalState_Patch_2
 }
 
 [HarmonyPatch(typeof(Pawn_JobTracker), nameof(Pawn_JobTracker.StartJob))]
-public static class Pawn_JobTracker_StartJob_Patch_2
+internal static class Pawn_JobTracker_StartJob_Patch_2
 {
-    public static void Postfix(Pawn_JobTracker __instance, Job newJob)
+    private static void Postfix(Pawn_JobTracker __instance, Job newJob)
     {
         var pawn = Accessor.Pawn_JobTracker.Pawn(__instance);
         var mentalState = pawn.MentalState;
@@ -116,15 +116,15 @@ public static class Pawn_JobTracker_StartJob_Patch_2
 }
 
 [HarmonyPatch(typeof(MentalState), nameof(MentalState.RecoverFromState))]
-static class RecoverFromState_RecoverFromState_Patch
+internal static class RecoverFromState_RecoverFromState_Patch
 {
-    static void Postfix(MentalState __instance) => MentalBreakContext.OnGoingMentalStates.Remove(__instance.pawn);
+    private static void Postfix(MentalState __instance) => MentalBreakContext.OnGoingMentalStates.Remove(__instance.pawn);
 }
 
 // -- Mental breaks without Mental State --
 
 [HarmonyPatch(typeof(MentalBreakWorker_RunWild), nameof(MentalBreakWorker_RunWild.TryStart))]
-public static class MentalBreakWorker_RunWild_TryStart_Patch
+internal static class MentalBreakWorker_RunWild_TryStart_Patch
 {
     public static void Prefix(MentalBreakWorker_RunWild __instance, Pawn pawn, string reason, bool causedByMood)
     {
@@ -135,7 +135,7 @@ public static class MentalBreakWorker_RunWild_TryStart_Patch
 }
 
 [HarmonyPatch(typeof(MentalBreakWorker_Catatonic), nameof(MentalBreakWorker_Catatonic.TryStart))]
-public static class MentalBreakWorker_Catatonic_TryStart_Patch
+internal static class MentalBreakWorker_Catatonic_TryStart_Patch
 {
     public static void Postfix(MentalBreakWorker_Catatonic __instance, Pawn pawn, string reason, bool causedByMood)
     {
@@ -153,8 +153,8 @@ public static class MentalBreakWorker_Catatonic_TryStart_Patch
 [HarmonyPatch(typeof(Hediff), nameof(Hediff.TickInterval))]
 internal static class Hediff_TickInterval_Patch
 {
-    static void Prefix(Hediff __instance) => MentalBreakContext.CurrentTickingHediff = __instance;
-    static void Finalizer() => MentalBreakContext.CurrentTickingHediff = null;
+    private static void Prefix(Hediff __instance) => MentalBreakContext.CurrentTickingHediff = __instance;
+    private static void Finalizer() => MentalBreakContext.CurrentTickingHediff = null;
 }
 
 // Call order:
@@ -165,6 +165,6 @@ internal static class Hediff_TickInterval_Patch
 [HarmonyPatch(typeof(TraitMentalStateGiver), nameof(TraitMentalStateGiver.CheckGive))]
 internal static class TraitMentalStateGiver_CheckGive_Patch
 {
-    static void Prefix(TraitMentalStateGiver __instance) => MentalBreakContext.CurrentTickingTraitData = __instance.traitDegreeData;
-    static void Finalizer() => MentalBreakContext.CurrentTickingTraitData = null;
+    private static void Prefix(TraitMentalStateGiver __instance) => MentalBreakContext.CurrentTickingTraitData = __instance.traitDegreeData;
+    private static void Finalizer() => MentalBreakContext.CurrentTickingTraitData = null;
 }

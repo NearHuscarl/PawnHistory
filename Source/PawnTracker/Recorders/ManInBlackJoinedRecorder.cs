@@ -38,6 +38,6 @@ public class ManInBlackJoinedRecorder : RecorderBase<WandererJoinedEvent>
     [SkipTest]
     public void Test(TestScenario scenario)
     {
-        scenario.Incident("StrangerInBlackJoin").Execute();
+        scenario.Incident(DefLookup.Incident.StrangerInBlackJoin).Execute();
     }
 }

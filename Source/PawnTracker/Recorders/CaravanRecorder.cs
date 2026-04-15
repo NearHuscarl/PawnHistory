@@ -8,9 +8,9 @@ using Verse.AI.Group;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public record CaravanArrivedInput(Faction faction, List<Pawn> pawns);
+public record CaravanArrivedInput(Faction Faction, List<Pawn> Pawns);
 
-public record CaravanLeftInput(LordToil nextToil, Lord lord, List<Pawn> pawns, Trigger trigger, TriggerSignal? signal);
+public record CaravanLeftInput(LordToil NextToil, Lord Lord, List<Pawn> Pawns, Trigger Trigger, TriggerSignal? Signal);
 
 public class CaravanRecorder : RecorderBase<CaravanArrivedInput>, IRecord<CaravanLeftInput>
 {
@@ -91,7 +91,7 @@ public class CaravanRecorder : RecorderBase<CaravanArrivedInput>, IRecord<Carava
                 packAnimal = signal?.Pawn;
             }
         }
-        else if (trigger is Trigger_PawnLost || trigger is Trigger_FractionPawnsLost)
+        else if (trigger is Trigger_PawnLost or Trigger_FractionPawnsLost)
             reason = CaravanLeftReason.PawnLost;
 
         var traderKind = trader?.trader?.traderKind?.label ?? "trader";

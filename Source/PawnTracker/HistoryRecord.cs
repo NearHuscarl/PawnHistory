@@ -34,14 +34,10 @@ public class HistoryRecord : IExposable
         this.description = desc.Resolve();
         this.concerns = (concerns ?? []).Where(p => p != null && p != pawn).Distinct().ToList();
         this.date = GenTicks.TicksAbs;
-
-        if (pawn.IsWorldPawn())
-        {
-            Log.Message($"{nameof(HistoryRecord)} is initialized but cannot locate WorldPawn location, falling back to PlayerHomeMap..\n\n{DebugUtility.Format(this)}");
-            this.tileId = Find.AnyPlayerHomeMap.Tile.tileId;
-        }
-        else
-            this.tileId = pawn.WorldLocation().tileId;
+        this.tileId = pawn.WorldLocation()?.tileId ?? pawn.GetCaravan()?.Tile.tileId ?? Find.AnyPlayerHomeMap.Tile.tileId;
+        
+        if (this.tileId == Find.AnyPlayerHomeMap.Tile.tileId)
+            Log.Message($"{nameof(HistoryRecord)} for {pawn} is initialized but cannot locate WorldPawn location, falling back to PlayerHomeMap..\n\n{DebugUtility.Format(this)}");
 
         this.location = location;
 

@@ -31,6 +31,6 @@ public class WildManWanderedInRecorder : RecorderBase<WandererJoinedEvent>
     [SkipTest]
     public void Test(TestScenario scenario)
     {
-        scenario.Incident("WildManWandersIn").Execute();
+        scenario.Incident(DefLookup.Incident.WildManWandersIn).Execute();
     }
 }

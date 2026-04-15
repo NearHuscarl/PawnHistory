@@ -167,7 +167,7 @@ public class PawnBuilder(int count = 1)
         {
             if (spawnPosition.HasValue)
                 pawn.Position = spawnPosition.Value;
-            if (faction != pawn.Faction)
+            if (faction != null && faction != pawn.Faction)
                 pawn.SetFaction(faction ?? pawn.Faction);
         }
 
@@ -522,24 +522,6 @@ static class PawnBuilderExtension
             job.count = 1;
             job.playerForced = true;
             pawn.jobs.StartJob(job, JobCondition.InterruptForced);
-        });
-    }
-
-    public static PawnBuilder StripNaked(this PawnBuilder builder)
-    {
-        return builder.Do(pawn =>
-        {
-            if (pawn?.apparel == null)
-                return;
-
-            var worn = pawn.apparel.WornApparel.ToList();
-
-            foreach (var apparel in worn)
-            {
-                pawn.apparel.Remove(apparel);
-                if (pawn.Spawned)
-                    GenPlace.TryPlaceThing(apparel, pawn.Position, pawn.Map, ThingPlaceMode.Near);
-            }
         });
     }
 

@@ -8,7 +8,7 @@ namespace PawnHistory.Source.PawnTracker.Test;
 
 public class TestScenario
 {
-    public bool neverForceNormalSpeed = DebugViewSettings.neverForceNormalSpeed;
+    public bool NeverForceNormalSpeed = DebugViewSettings.neverForceNormalSpeed;
 
     public static CellRect LastRoomRect { get; internal set; }
     public static Dictionary<string, CellRect> TaggedRooms { get; internal set; } = [];
@@ -26,18 +26,13 @@ public class TestScenario
     public PawnBuilder Pawn(Pawn pawn) => Pawn([pawn]);
     public GatheringBuilder Incident(GatheringDef def) => new(def);
     public IncidentBuilder Incident(IncidentDef def) => new(def);
-    public IncidentBuilder Incident(string defName) => new(DefDatabase<IncidentDef>.GetNamed(defName));
+    public IncidentBuilder RaidFriendly() => Incident(IncidentDefOf.RaidFriendly).NonHostileFaction();
     public MapBuilder Map(IntVec3? pos = null) => new(pos);
     public ThingBuilder Thing(ThingDef thingDef, ThingDef stuffDef = null) => new(thingDef, stuffDef);
-    public ThingBuilder Thing(string defName, ThingDef stuffDef = null) => new(DefDatabase<ThingDef>.GetNamed(defName), stuffDef);
+    public CaravanBuilder Caravan(List<Pawn> pawns) => new(pawns);
+    public TradeSessionBuilder Trade(Pawn trader, Pawn negotiator) => new(trader, negotiator);
 
-    public IncidentBuilder RaidFriendly()
-    {
-        return Incident(IncidentDefOf.RaidFriendly)
-            .Faction(Find.FactionManager.AllFactions.FirstOrDefault(f => f.PlayerRelationKind == FactionRelationKind.Neutral && !f.def.hidden));
-    }
-
-    internal void OpenHistoryRecordTab(Pawn pawn)
+    public void OpenHistoryRecordTab(Pawn pawn)
     {
         CameraJumper.TryJumpAndSelect(pawn);
 
@@ -78,7 +73,7 @@ public static class TestScenarioExtensions
 
     public static TestScenario SpeedUp(this TestScenario scenario)
     {
-        scenario.neverForceNormalSpeed = DebugViewSettings.neverForceNormalSpeed;
+        scenario.NeverForceNormalSpeed = DebugViewSettings.neverForceNormalSpeed;
         DebugViewSettings.neverForceNormalSpeed = true;
         Find.TickManager.CurTimeSpeed = TimeSpeed.Ultrafast;
         return scenario;
@@ -86,14 +81,18 @@ public static class TestScenarioExtensions
 
     public static TestScenario SlowDown(this TestScenario scenario)
     {
-        DebugViewSettings.neverForceNormalSpeed = scenario.neverForceNormalSpeed;
+        DebugViewSettings.neverForceNormalSpeed = scenario.NeverForceNormalSpeed;
         Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
         return scenario;
     }
 
     public static TestScenario RunOnceOn<T>(this TestScenario scenario, Func<T, bool> runWhen, Action<T> listener) where T : GameEventBase
     {
-        void wrapper(T evt)
+        GameEventBus.Subscribe((Action<T>)Wrapper);
+
+        return scenario;
+
+        void Wrapper(T evt)
         {
             if (!runWhen(evt))
                 return;
@@ -104,12 +103,9 @@ public static class TestScenarioExtensions
             }
             finally
             {
-                GameEventBus.Unsubscribe((Action<T>)wrapper);
+                GameEventBus.Unsubscribe((Action<T>)Wrapper);
             }
         }
-        GameEventBus.Subscribe((Action<T>)wrapper);
-
-        return scenario;
     }
 
     public static TestScenario RunUntil(this TestScenario scenario, Func<bool> stopCondition, Action action, Action onFinish = null, int interval = 1)

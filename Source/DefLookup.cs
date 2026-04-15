@@ -41,6 +41,11 @@ public static class DefLookup
         public static IncidentDef Disease_Malaria => field ??= DefDatabase<IncidentDef>.GetNamed("Disease_Malaria");
         public static IncidentDef Disease_SleepingSickness => field ??= DefDatabase<IncidentDef>.GetNamed("Disease_SleepingSickness");
         public static IncidentDef Disease_SensoryMechanites => field ??= DefDatabase<IncidentDef>.GetNamed("Disease_SensoryMechanites");
+        public static IncidentDef StrangerInBlackJoin => field ??= DefDatabase<IncidentDef>.GetNamed("StrangerInBlackJoin");
+        public static IncidentDef RefugeePodCrash => field ??= DefDatabase<IncidentDef>.GetNamed("RefugeePodCrash");
+        public static IncidentDef WandererJoin => field ??= DefDatabase<IncidentDef>.GetNamed("WandererJoin");
+        public static IncidentDef WildManWandersIn => field ??= DefDatabase<IncidentDef>.GetNamed("WildManWandersIn");
+        public static IncidentDef GiveQuest_EndGame_ShipEscape => field ??= DefDatabase<IncidentDef>.GetNamed("GiveQuest_EndGame_ShipEscape");
     }
 
     public static class RaidStrategy
@@ -51,5 +56,15 @@ public static class DefLookup
     public static class PawnKind
     {
         public static PawnKindDef Husky => field ??= DefDatabase<PawnKindDef>.GetNamed("Husky");
+    }
+
+    public static class TraderKind
+    {
+        public static TraderKindDef Caravan_Neolithic_Slaver => field ??= DefDatabase<TraderKindDef>.GetNamed("Caravan_Neolithic_Slaver");
+    }
+
+    public static class QuestScript
+    {
+        public static QuestScriptDef OpportunitySite_PeaceTalks => field ??= DefDatabase<QuestScriptDef>.GetNamed("OpportunitySite_PeaceTalks");
     }
 }

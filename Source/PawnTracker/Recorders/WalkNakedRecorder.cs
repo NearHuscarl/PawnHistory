@@ -7,7 +7,7 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class WalkNakedRecorder : HistoryTaleRecorder<WalkNakedRecorder.Input>
 {
-    public record Input(Pawn pawn);
+    public record Input(Pawn Pawn);
 
     public override void Register()
     {
@@ -22,7 +22,7 @@ public class WalkNakedRecorder : HistoryTaleRecorder<WalkNakedRecorder.Input>
 
     public override void CreateRecord(Input e)
     {
-        var pawn = e.pawn;
+        var pawn = e.Pawn;
         var recordDef = HistoryRecordDefOf.WalkNaked;
         var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
@@ -37,7 +37,7 @@ public class WalkNakedRecorder : HistoryTaleRecorder<WalkNakedRecorder.Input>
     [SkipTest]
     public void Test(TestScenario scenario)
     {
-        var pawns = scenario.Pawn(15).Colonist().StripNaked().Execute();
+        var pawns = scenario.Pawn(15).Colonist().Do(p => p.Strip()).Execute();
 
         foreach (var pawn in pawns)
         {

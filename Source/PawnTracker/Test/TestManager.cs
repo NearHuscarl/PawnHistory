@@ -1,6 +1,7 @@
 ﻿using PawnHistory.Source.Helper;
 using System;
 using System.Collections.Generic;
+using PawnHistory.Source.DebugTools;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
@@ -11,7 +12,6 @@ public static class TestManager
     internal static TestContext Ctx;
     private static readonly Queue<Action> Queue = new();
     private static bool isRunningTest;
-    private static AutomaticPauseMode? curPauseMode = null;
 
     public static void EnqueueTest(Func<object> testAction, string label)
     {
@@ -117,17 +117,15 @@ public static class TestManager
     {
         Ctx = new TestContext(label);
 
-        curPauseMode = Prefs.AutomaticPauseMode;
+        NearDebugSettings.ForceDebugMapSize = true;
+        NearDebugSettings.NeverEverEverPause = true;
         Prefs.AutomaticPauseMode = AutomaticPauseMode.Never;
     }
 
     private static void CleanupAfterTest()
     {
-        if (curPauseMode.HasValue)
-        {
-            Prefs.AutomaticPauseMode = curPauseMode.Value;
-            curPauseMode = null;
-        }
+        NearDebugSettings.ForceDebugMapSize = false;
+        NearDebugSettings.NeverEverEverPause = false;
         TestScenario.ClearAll(); 
         TestReportManager.AddReportEntry(Ctx.CreateReportEntry());
         Ctx?.Cleanup();

@@ -32,6 +32,6 @@ public class RefugeePodCrashedRecorder : RecorderBase<WandererJoinedEvent>
     [SkipTest]
     public void Test(TestScenario scenario)
     {
-        scenario.Incident("RefugeePodCrash").Execute();
+        scenario.Incident(DefLookup.Incident.RefugeePodCrash).Execute();
     }
 }

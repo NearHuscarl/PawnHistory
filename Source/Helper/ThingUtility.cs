@@ -5,18 +5,15 @@ namespace PawnHistory.Source.PawnTracker;
 
 public static class ThingUtility
 {
-    public static PlanetTile WorldLocation(this Thing thing)
+    public static PlanetTile? WorldLocation(this Thing thing)
     {
-        PlanetTile tile;
+        PlanetTile? tile = null;
         var spawnedThing = thing.SpawnedParentOrMe;
 
-        if (spawnedThing != null && spawnedThing.Spawned)
+        if (spawnedThing is { Spawned: true })
             tile = thing.Tile;
         else
-        {
             Log.Warning($"[PawnHistory] Cannot get location of {thing}");
-            tile = PlanetTile.Invalid; // fallback to player home location
-        }
 
         return tile;
     }

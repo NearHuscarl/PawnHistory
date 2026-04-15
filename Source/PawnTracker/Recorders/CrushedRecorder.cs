@@ -40,7 +40,7 @@ public class CrushedRecorder : RecorderBase<CrushedEvent>
             .SetRelation(pawn, PawnRelationDefOf.Spouse)
             .CreateSingle();
 
-        scenario.Map().CollapseRoofAndCrush(pawn);
+        scenario.Map().CollapseRoofAndCrush(pawn).Execute();
 
         Expect.That(pawn).ToHaveHistoryRecordOf(HistoryRecordDefOf.Crushed, -2);
         Expect.That(pawn).ToHaveHistoryRecordOf(HistoryRecordDefOf.Death, -1);

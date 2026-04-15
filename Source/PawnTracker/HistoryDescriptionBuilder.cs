@@ -41,10 +41,9 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
         return this;
     }
 
-    public HistoryDescriptionBuilder AddRule(string keyword, TaggedString value, bool replaceIfExist = false)
+    public HistoryDescriptionBuilder AddRule(string keyword, TaggedString value, bool addSubsymbols = false, bool replaceIfExist = false)
     {
-        if (value == null) return this;
-        return AddRule(keyword, value.Resolve(), replaceIfExist);
+        return AddRule(keyword, value.Resolve(), addSubsymbols, replaceIfExist);
     }
 
     public HistoryDescriptionBuilder AddRule(string keyword, int value, bool replaceIfExist = false)

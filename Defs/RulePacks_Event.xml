@@ -349,6 +349,26 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_PlayerCaravanArrived</defName>
+		<include>
+			<li>PawnEvent_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(action==Attack)               ->[PAWN]'s caravan arrived at [WorldObject] to attack [Faction] [WithOthers].</li>
+				<li>entry(action==Enter,isColony==True) ->[PAWN]'s caravan arrived at the colony [WithOthers].</li>
+				<li>entry(action==Enter,isColony==False)->[PAWN]'s caravan arrived at [WorldObject] of [Faction] [WithOthers].</li>
+				<li>entry(action==OfferGifts)           ->[PAWN]'s caravan arrived at [WorldObject] [WithOthers] to offer gifts to [Faction].</li>
+				<li>entry(action==Trade)                ->[PAWN]'s caravan arrived at [WorldObject] [WithOthers] to trade with [Faction].</li>
+				<li>entry(action==VisitEscapeShip)      ->[PAWN]'s caravan arrived at the starship [WithOthers] that can be used to escape the planet.</li>
+				<li>entry(action==VisitPeaceTalks)      ->[PAWN]'s caravan arrived for peace talks [WithOthers] to negotiate with [Leader], [Faction_leaderTitle] of [Faction].</li>
+				<li>entry(action==VisitSite)            ->[PAWN]'s caravan arrived at [WorldObject_definite] [WithOthers].</li>
+				<li>entry(action==VisitSettlement)      ->[PAWN]'s caravan visited [WorldObject] of [Faction] [WithOthers].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_TradeCaravanArrived</defName>
 		<rulePack>
 			<rulesStrings>
@@ -757,12 +777,15 @@
 				<li>nude_action->tiptoed</li>
 				<li>nude_action->promenaded</li>
 				<li>nude_action->surveyed the area</li>
+				<li>nude_action->meandered aimlessly</li>
+				<li>nude_action->lingered awkwardly</li>
 
 				<li>circumstance_phrase->with a sense of purpose</li>
 				<li>circumstance_phrase->with no hint of shame</li>
-				<li>circumstance_phrase->while others looked on</li>
 				<li>circumstance_phrase->for no apparent reason</li>
 				<li>circumstance_phrase->while confused animals looked on</li>
+				<li>circumstance_phrase->as if nothing was unusual</li>
+				<li>circumstance_phrase->with unsettling confidence</li>
 
 				<li>image->[PAWN] [nude_action] while in a state of nature [circumstance_phrase]</li>
 				<li>image->[PAWN] [nude_action] in the nude [circumstance_phrase]</li>
