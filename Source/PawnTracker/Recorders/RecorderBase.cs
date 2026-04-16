@@ -29,9 +29,9 @@ public abstract class RecorderBase
         }
     }
 
-    protected virtual void AddRecord(HistoryRecordDef def, Pawn pawn, TaggedString resolvedDesc, IEnumerable<Thing> concerns = null, RecordLocation location = null)
+    protected virtual void AddRecord(HistoryRecordDef def, Pawn pawn, TaggedString resolvedDesc, IEnumerable<Thing> concerns = null, RecordLocation location = null, int? tileId = null)
     {
-        pawn.HistoryRecords.Add(new HistoryRecord(def, pawn, resolvedDesc, concerns, location));
+        pawn.HistoryRecords.Add(new HistoryRecord(def, pawn, resolvedDesc, concerns, location, tileId));
     }
 }
 

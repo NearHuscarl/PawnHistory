@@ -49,7 +49,7 @@ Build artifact:
 ## Environment
 
 - This project is worked on in Windows. Prefer PowerShell-native commands for file discovery, searching, and inspection instead of `rg`.
-- For RimWorld assembly inspection, use `Mono.Cecil` on `RimWorldWin64_Data/Managed/Assembly-CSharp.dll`; NuGet reference assemblies may fail under normal runtime reflection.
+- Do not inspect RimWorld DLLs.
 
 ## Testing
 
@@ -71,6 +71,7 @@ Testing conventions:
 
 - Keep tests next to the recorder they validate.
 - Prefer scenario builders (`Pawn`, `Map`, `Incident`, `Thing`) over manual setup.
+- For integration-style recorder tests, trigger the real RimWorld game code path that reaches the Harmony patch; do not call `GameEventBus.Publish()` directly from tests.
 - If a test needs parameters, use `DebugValuesAttribute` rather than custom menus.
 - Running tests and interpreting failures in RimWorld is a human step; keep agent guidance focused on writing and adjusting test code.
 
@@ -83,7 +84,7 @@ Observed conventions in the codebase:
 - Keep recorder logic small and event-focused.
 - Naming is literal and feature-based: `XyzEvent`, `XyzRecorder`, `HistoryRecordDefOf.Xyz`.
 - Recorder tests live in the same class as the recorder.
-- Use `DefLookup` for named def access; do not call `DefDatabase<...>.GetNamed(...)` outside `Source/DefLookup.cs`.
+- Prefer RimWorld `DefOf` classes for named defs; use `Source/DefLookup.cs` only for named defs that do not have a suitable `DefOf` entry.
 - Put reflected field/method accessors in `Source/Accessor.cs`; prefer cached `AccessTools` delegates there over ad hoc Harmony `Traverse` usage.
 
 When adding a new event/recorder:
@@ -114,19 +115,3 @@ Important behavior:
 - Local machine paths are baked into the project file for Harmony. Do not replace them blindly without confirming the developer environment.
 - The mod runs inside the game process. Logging, debug actions, and test helpers should fail safely and avoid breaking live saves.
 - Network access is not part of the mod's runtime model; keep features offline and deterministic.
-
-## Practical workflow next time
-
-If the task is feature work on a pawn event:
-
-1. Read the closest existing recorder first.
-2. Check whether the event already exists in `Events/`.
-3. Update XML defs and localization alongside code.
-4. Add tests only for the behaviors that matter for the feature.
-5. Hand off RimWorld validation to the human and iterate on the reported failure.
-
-If the task is build-related:
-
-1. Inspect `PawnHistory.csproj` first.
-2. Verify local RimWorld and Harmony reference paths.
-3. Prefer Rider `Ctrl+Shift+B` or the Visual Studio MSBuild path above; do not assume `msbuild` is on `PATH`.

@@ -375,7 +375,18 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry->[PAWN] arrived at [WorldObject_definite] in a transport pod [WithOthers].</li>
+				<li>Holder(transporter==TransportPod)->transport pod</li>
+				<li>Holder(transporter==Shuttle)     ->shuttle</li>
+				<li>entry(action==Attack)               ->[PAWN] arrived at [WorldObject] in a [Holder] [WithOthers] to attack [Faction].</li>
+				<li>entry(action==Enter,isColony==True) ->[PAWN] arrived at the colony in a [Holder] [WithOthers].</li>
+				<li>entry(action==Enter,isColony==False)->[PAWN] arrived at [WorldObject] of [Faction] in a [Holder] [WithOthers].</li>
+				<li>entry(action==ArriveAsGift)         ->[PAWN] arrived at [WorldObject] in a [Holder] [WithOthers] as a gift to [Faction].</li>
+				<li>entry(action==AddedToCaravan)       ->[PAWN] was added to [WorldObject] from a [Holder] [WithOthers].</li>
+				<li>entry(action==FormCaravan)          ->[PAWN] arrived from a [Holder] [WithOthers] to form a new caravan.</li>
+				<li>entry(action==VisitSite)            ->[PAWN] arrived at [WorldObject_definite] in a [Holder] [WithOthers].</li>
+				<li>entry(action==VisitSpace)           ->[PAWN] arrived at [WorldObject_definite] in a [Holder] [WithOthers].</li>
+				<li>entry(action==VisitSettlement)      ->[PAWN] visited [WorldObject] of [Faction] in a [Holder] [WithOthers].</li>
+				<li>entry(action==TransportShip)        ->[PAWN] arrived at [WorldObject_definite] in a [Holder] [WithOthers].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

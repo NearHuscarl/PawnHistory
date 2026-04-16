@@ -151,4 +151,52 @@ public static class Accessor
         public static readonly AccessTools.FieldRef<RimWorld.Planet.TransportersArrivalAction_VisitSite, Site> Site =
             AccessTools.FieldRefAccess<RimWorld.Planet.TransportersArrivalAction_VisitSite, Site>("site");
     }
+
+    public class TransportersArrivalAction_AttackSettlement
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.TransportersArrivalAction_AttackSettlement, Settlement> Settlement =
+            AccessTools.FieldRefAccess<RimWorld.Planet.TransportersArrivalAction_AttackSettlement, Settlement>("settlement");
+    }
+
+    public class TransportersArrivalAction_GiveGift
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.TransportersArrivalAction_GiveGift, Settlement> Settlement =
+            AccessTools.FieldRefAccess<RimWorld.Planet.TransportersArrivalAction_GiveGift, Settlement>("settlement");
+    }
+
+    public class TransportersArrivalAction_GiveToCaravan
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.TransportersArrivalAction_GiveToCaravan, Caravan> Caravan =
+            AccessTools.FieldRefAccess<RimWorld.Planet.TransportersArrivalAction_GiveToCaravan, Caravan>("caravan");
+    }
+
+    public class TransportersArrivalAction_LandInSpecificCell
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.TransportersArrivalAction_LandInSpecificCell, MapParent> MapParent =
+            AccessTools.FieldRefAccess<RimWorld.Planet.TransportersArrivalAction_LandInSpecificCell, MapParent>("mapParent");
+    }
+
+    public class TransportersArrivalAction_Trade
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.TransportersArrivalAction_Trade, Settlement> Settlement =
+            AccessTools.FieldRefAccess<RimWorld.Planet.TransportersArrivalAction_Trade, Settlement>("settlement");
+    }
+
+    public class TransportersArrivalAction_VisitSettlement
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.TransportersArrivalAction_VisitSettlement, Settlement> Settlement =
+            AccessTools.FieldRefAccess<RimWorld.Planet.TransportersArrivalAction_VisitSettlement, Settlement>("settlement");
+    }
+
+    public class TransportersArrivalAction_VisitSpace
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.TransportersArrivalAction_VisitSpace, MapParent> Parent =
+            AccessTools.FieldRefAccess<RimWorld.Planet.TransportersArrivalAction_VisitSpace, MapParent>("parent");
+    }
+
+    public class TransportersArrivalAction_TransportShip
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.TransportersArrivalAction_TransportShip, MapParent> MapParent =
+            AccessTools.FieldRefAccess<RimWorld.TransportersArrivalAction_TransportShip, MapParent>("mapParent");
+    }
 }

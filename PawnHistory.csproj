@@ -63,6 +63,7 @@
     <Compile Include="Source\Helper\LookTargetsUtility.cs" />
     <Compile Include="Source\Helper\PawnUtility.cs" />
     <Compile Include="Source\Helper\EnumerableExtensions.cs" />
+    <Compile Include="Source\Helper\WorldGridUtility.cs" />
     <Compile Include="Source\Helper\WorldObjectUtility.cs" />
     <Compile Include="Source\PawnTracker\CompProperties_History.cs" />
     <Compile Include="Source\PawnTracker\CompHistory.cs" />
@@ -175,7 +176,6 @@
     <Compile Include="Source\PawnTracker\PawnTracker.cs" />
     <Compile Include="Source\PawnTracker\RecorderManager.cs" />
     <Compile Include="Source\PawnTracker\Recorders\BodyPartDestroyedRecorder.cs" />
-    <Compile Include="Source\Helper\ThingUtility.cs" />
     <Compile Include="Source\PawnTracker\Recorders\SocialFightRecorder.cs" />
     <Compile Include="Source\PawnTracker\Test\CaravanBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\Expect.cs" />
