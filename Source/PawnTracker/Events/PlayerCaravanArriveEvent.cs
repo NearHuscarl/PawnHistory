@@ -6,7 +6,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public record PlayerCaravanArriveEvent(List<Pawn> Pawns, string Caravan, CaravanArrivalAction ArrivalAction) : GameEventBase;
+public record PlayerCaravanArriveEvent(List<Pawn> Pawns, CaravanArrivalAction ArrivalAction) : GameEventBase;
 
 [HarmonyPatch]
 internal static class CaravanArrivalAction_Arrived_Patch
@@ -26,8 +26,6 @@ internal static class CaravanArrivalAction_Arrived_Patch
     // caravan is destroyed if run in postfix in certain subclasses
     private static void Prefix(CaravanArrivalAction __instance, Caravan caravan)
     {
-        GameEventBus.Publish(new PlayerCaravanArriveEvent(caravan.pawns.InnerListForReading, caravan.Label, __instance));
+        GameEventBus.Publish(new PlayerCaravanArriveEvent(caravan.pawns.InnerListForReading, __instance));
     }
-
-    private static void Finalizer() => WandererJoinContext.Finalizer();
 }

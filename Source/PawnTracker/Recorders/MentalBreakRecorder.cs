@@ -169,9 +169,9 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
     }
 
     private static readonly List<MentalBreakDef> InvididuallyTestedMentalBreaks = [
-        DefDatabase<MentalBreakDef>.GetNamed("Slaughterer"),
-        DefDatabase<MentalBreakDef>.GetNamed("Jailbreaker"),
-        DefDatabase<MentalBreakDef>.GetNamed("SadisticRage"),
+        DefLookup.MentalBreak.Slaughterer,
+        DefLookup.MentalBreak.Jailbreaker,
+        DefLookup.MentalBreak.SadisticRage,
         MentalBreakDefOf.CorpseObsession,
     ];
 
@@ -252,7 +252,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         var pawn = scenario.Pawn()
             .Colonist()
             .StopMentalState()
-            .Do((p, i) => p.StartMentalBreakWithMadeUpThought(DefDatabase<MentalBreakDef>.GetNamed("Slaughterer")))
+            .Do((p, i) => p.StartMentalBreakWithMadeUpThought(DefLookup.MentalBreak.Slaughterer))
             .CreateSingle();
 
         Expect.That(pawn).Eventually().ToHaveHistoryRecord($"[PAWN] had a mental breakdown and was going to vent [PAWN_possessive] anger by slaughtering [Target]. {Reason}");
@@ -269,7 +269,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .Colonist()
             .StopMentalState()
             .WithPosition(scenario.OutsideOf("Prison"))
-            .Do((p, i) => p.StartMentalBreakWithMadeUpThought(DefDatabase<MentalBreakDef>.GetNamed("SadisticRage")))
+            .Do((p, i) => p.StartMentalBreakWithMadeUpThought(DefLookup.MentalBreak.SadisticRage))
             .CreateSingle();
 
         Expect.That(pawn).ToHaveHistoryRecord($"[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. {Reason}");
@@ -283,7 +283,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .AsPrison(prisonerCount: 2) // Jailbreaker
             .Execute();
 
-        var jailbreakerBreak = DefDatabase<MentalBreakDef>.GetNamed("Jailbreaker");
+        var jailbreakerBreak = DefLookup.MentalBreak.Jailbreaker;
         var pawn = scenario.Pawn()
             .Colonist()
             .StopMentalState()
@@ -341,7 +341,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .Colonist()
             .StopMentalState()
             .Heal()
-            .AddHediff("LuciferiumAddiction", hediffCreated: h => hediff = h)
+            .AddHediff(DefLookup.Hediff.LuciferiumAddiction, hediffCreated: h => hediff = h)
             .CreateSingle();
 
         hediff.Severity = .01f;
@@ -368,7 +368,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .Colonist()
             .StopMentalState()
             .Heal()
-            .GiveTrait("Gourmand", traitCreated: t => trait = t)
+            .GiveTrait(DefLookup.Trait.Gourmand, traitCreated: t => trait = t)
             .CreateSingle();
 
         pawn.needs.mood.CurLevel = 0;

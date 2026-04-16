@@ -145,4 +145,10 @@ public static class Accessor
         public static readonly AccessTools.FieldRef<RimWorld.Planet.CaravanArrivalAction_VisitSettlement, Settlement> Settlement =
             AccessTools.FieldRefAccess<RimWorld.Planet.CaravanArrivalAction_VisitSettlement, Settlement>("settlement");
     }
+
+    public class TransportersArrivalAction_VisitSite
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Planet.TransportersArrivalAction_VisitSite, Site> Site =
+            AccessTools.FieldRefAccess<RimWorld.Planet.TransportersArrivalAction_VisitSite, Site>("site");
+    }
 }

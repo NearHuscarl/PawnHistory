@@ -95,7 +95,7 @@ public class PrisonBreakRecorder : RecorderBase<PrisonBreakStartedEvent>
             .AsPrison(prisonerCount, prisoners: prisoners)
             .Execute();
 
-        var jailbreakerBreak = DefDatabase<MentalBreakDef>.GetNamed("Jailbreaker");
+        var jailbreakerBreak = DefLookup.MentalBreak.Jailbreaker;
         var pawn = scenario.Pawn()
             .WithPosition(scenario.OutsideOf("Prison"))
             .ThatMatches(ShouldRecord)

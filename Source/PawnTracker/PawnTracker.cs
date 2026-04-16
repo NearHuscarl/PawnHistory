@@ -95,7 +95,6 @@ namespace PawnHistory.Source.PawnTracker;
 //  - Add test runner to scan for test methods.
 
 // Refactor:
-// - move from DefDatabase<>.GetNamed() to DefLookup
 
 // Bug:
 // - Test multiple maps to see if CasualtyRecorder use the correct battle log?

@@ -67,9 +67,9 @@ public class BodyPartDestroyedRecorder : RecorderBase<HediffAddedEvent>
             BodyPartDefOf.Hand,
             BodyPartDefOf.Eye,
             BodyPartDefOf.Shoulder,
-            DefDatabase<BodyPartDef>.GetNamed("Nose"),
-            DefDatabase<BodyPartDef>.GetNamed("Ear"),
-            DefDatabase<BodyPartDef>.GetNamed("Foot"),
+            DefLookup.BodyPart.Nose,
+            DefLookup.BodyPart.Ear,
+            DefLookup.BodyPart.Foot,
         ];
 
         var pawns1 = scenario.Incident(IncidentDefOf.RaidEnemy)
@@ -83,9 +83,9 @@ public class BodyPartDestroyedRecorder : RecorderBase<HediffAddedEvent>
             .Execute();
 
         scenario.Pawn(pawns1.Concat(pawns2))
-            .AddHediff("Painstopper", "Brain")
-            .AddHediff("GoJuiceHigh", "Brain")
-            .EquipWeapon("Weapon_GrenadeFrag", (_, i) => i % 2 == 0)
+            .AddHediff(DefLookup.Hediff.Painstopper, DefLookup.BodyPart.Brain)
+            .AddHediff(DefLookup.Hediff.GoJuiceHigh, DefLookup.BodyPart.Brain)
+            .EquipWeapon(DefLookup.Thing.Weapon_GrenadeFrag, (_, i) => i % 2 == 0)
             .WeakenParts(nonVitalParts, oneSide: true)
             .Execute();
 
@@ -101,8 +101,8 @@ public class BodyPartDestroyedRecorder : RecorderBase<HediffAddedEvent>
             BodyPartDefOf.Eye,
             BodyPartDefOf.Shoulder,
             BodyPartDefOf.Leg,
-            DefDatabase<BodyPartDef>.GetNamed("Nose"),
-            DefDatabase<BodyPartDef>.GetNamed("Ear"),
+            DefLookup.BodyPart.Nose,
+            DefLookup.BodyPart.Ear,
         ];
 
         var pawns = scenario.RaidFriendly()
@@ -111,8 +111,8 @@ public class BodyPartDestroyedRecorder : RecorderBase<HediffAddedEvent>
             .Execute();
 
         scenario.Pawn(pawns)
-            .AddHediff("Painstopper", "Brain")
-            .AddHediff("GoJuiceHigh", "Brain")
+            .AddHediff(DefLookup.Hediff.Painstopper, DefLookup.BodyPart.Brain)
+            .AddHediff(DefLookup.Hediff.GoJuiceHigh, DefLookup.BodyPart.Brain)
             .WeakenParts(nonVitalParts, true)
             .Execute();
 

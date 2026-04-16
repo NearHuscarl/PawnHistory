@@ -9,7 +9,7 @@ public class StripRecorder : HistoryTaleRecorder<StripRecorder.Input>
 {
     public record Input(Pawn pawn, Pawn strippedPawn);
 
-    private static readonly TaleDef Stripped = DefDatabase<TaleDef>.GetNamed("Stripped");
+    private static readonly TaleDef Stripped = DefLookup.Tale.Stripped;
 
     public override void Register()
     {

@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AGENTS.md" />
     <Content Include="Defs\RulePacks_Event.xml" />
     <Compile Include="Source\Accessor.cs" />
     <Compile Include="Source\DebugTools\DebugActionLord.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Source\PawnTracker\Events\MentalBreakStartedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\NewLoverEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PlayerCaravanArriveEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\PlayerTransporterArriveEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ReceiveLetterEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\RescueJoinedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\BirthdayEvent.cs" />
@@ -125,6 +127,7 @@
     <Compile Include="Source\PawnTracker\Recorders\MarriageProposalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\NewLoverRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PlayerCaravanArrivalRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\PlayerTransporterArrivalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RescueJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PrisonerRecruitedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\SkillLevelChangedRecorder.cs" />
@@ -193,6 +196,7 @@
     <Compile Include="Source\PawnTracker\Test\TestScenario.cs" />
     <Compile Include="Source\PawnTracker\Test\TestTagAttribute.cs" />
     <Compile Include="Source\PawnTracker\Test\ThingBuilder.cs" />
+    <Compile Include="Source\PawnTracker\Test\DropPodBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\TradeSessionBuilder.cs" />
     <Compile Include="Source\RecordFix.cs" />
     <Compile Include="Source\WorldPawn\InfoCard.cs" />

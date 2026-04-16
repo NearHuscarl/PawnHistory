@@ -9,7 +9,7 @@ public class VisitedGraveRecorder : HistoryTaleRecorder<VisitedGraveRecorder.Inp
 {
     public record Input(Pawn pawn, Pawn deadPawn);
 
-    private static readonly TaleDef VisitedGrave = DefDatabase<TaleDef>.GetNamed("VisitedGrave");
+    private static readonly TaleDef VisitedGrave = DefLookup.Tale.VisitedGrave;
 
     public override void Register()
     {

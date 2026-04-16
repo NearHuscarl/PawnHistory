@@ -52,7 +52,7 @@ public class Surgery_ImplantRecorder : SurgeryRecorder<SurgeryInstallImplantEven
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, DefDatabase<RecipeDef>.GetNamed("InstallJoywire"), DefDatabase<BodyPartDef>.GetNamed("Brain"))
+            .DoSurgery(patient, DefLookup.Recipe.InstallJoywire, DefLookup.BodyPart.Brain)
             .CreateSingle();
     }
 
@@ -72,7 +72,7 @@ public class Surgery_ImplantRecorder : SurgeryRecorder<SurgeryInstallImplantEven
         scenario.Pawn()
             .Colonist()
             .SetDoctor(isBadDoctor: true)
-            .DoSurgery(patient, DefDatabase<RecipeDef>.GetNamed("InstallJoywire"), DefDatabase<BodyPartDef>.GetNamed("Brain"), instant: true)
+            .DoSurgery(patient, DefLookup.Recipe.InstallJoywire, DefLookup.BodyPart.Brain, instant: true)
             .CreateSingle();
     }
 }

@@ -94,8 +94,6 @@ public class PawnBuilder(int count = 1)
         return this;
     }
 
-    public PawnBuilder Animal(string pawnKindDefName) => Animal(DefDatabase<PawnKindDef>.GetNamed(pawnKindDefName));
-
     public PawnBuilder Animal(PawnKindDef def = null)
     {
         return WithKind(def ?? DefDatabase<PawnKindDef>.AllDefs.Where(k => k.RaceProps?.Animal ?? false).RandomElement());
@@ -207,8 +205,8 @@ public class PawnBuilder(int count = 1)
         return res;
     }
 
-    private static readonly BackstoryDef Childhood = DefDatabase<BackstoryDef>.GetNamed("MusicalKid86");
-    private static readonly BackstoryDef Adulthood = DefDatabase<BackstoryDef>.GetNamed("NavyScientist52");
+    private static readonly BackstoryDef Childhood = DefLookup.Backstory.MusicalKid86;
+    private static readonly BackstoryDef Adulthood = DefLookup.Backstory.NavyScientist52;
     private void MakePawnCapable(Pawn pawn)
     {
         if (!pawn.RaceProps.Humanlike)
@@ -233,12 +231,6 @@ public class PawnBuilder(int count = 1)
         pawn.Notify_DisabledWorkTypesChanged();
     }
 
-    public PawnBuilder AddHediff(string defName, BodyPartDef partDef = null, Action<Hediff> hediffCreated = null, int partIndex = 0)
-    {
-        var hediffDef = DefDatabase<HediffDef>.GetNamed(defName);
-        return AddHediff(hediffDef, partDef, hediffCreated, partIndex);
-    }
-
     public PawnBuilder AddHediff(HediffDef def, BodyPartDef partDef = null, Action<Hediff> hediffCreated = null, int partIndex = 0)
     {
         return Do(pawn =>
@@ -251,13 +243,6 @@ public class PawnBuilder(int count = 1)
             pawn.health.AddHediff(hediff, part);
             hediffCreated?.Invoke(hediff);
         });
-    }
-
-    public PawnBuilder AddHediff(string defName, string partDefName)
-    {
-        var hediffDef = DefDatabase<HediffDef>.GetNamed(defName);
-        var partDef = DefDatabase<BodyPartDef>.GetNamed(partDefName);
-        return AddHediff(hediffDef, partDef);
     }
 
     public PawnBuilder TendInjuries(float quality = 1f)
@@ -326,8 +311,6 @@ public class PawnBuilder(int count = 1)
         });
     }
 
-    public PawnBuilder GiveTrait(string traitDefName, int degree = 0, Action<Trait> traitCreated = null) => GiveTrait(DefDatabase<TraitDef>.GetNamed(traitDefName), degree, traitCreated);
-
     public PawnBuilder GiveTrait(TraitDef traitDef, int degree = 0, Action<Trait> traitCreated = null)
     {
         return Do(p =>
@@ -371,7 +354,7 @@ public class PawnBuilder(int count = 1)
             if (!isBadDoctor)
             {
                 var arms = pawn.RaceProps.body.GetPartsWithDef(BodyPartDefOf.Arm).ToList();
-                var archotechArm = DefDatabase<HediffDef>.GetNamed("ArchotechArm");
+                var archotechArm = DefLookup.Hediff.ArchotechArm;
 
                 foreach (var arm in arms)
                     pawn.health.AddHediff(archotechArm, arm);
@@ -384,7 +367,7 @@ public class PawnBuilder(int count = 1)
 
                 foreach (var part in arms.Concat(eyes))
                     pawn.health.AddHediff(HediffDefOf.MissingBodyPart, part);
-                pawn.health.AddHediff(DefDatabase<HediffDef>.GetNamed("SmokeleafHigh"), torso);
+                pawn.health.AddHediff(DefLookup.Hediff.SmokeleafHigh, torso);
             }
 
             pawn.inventory.innerContainer.TryAdd(ThingMaker.MakeThing(ThingDefOf.MedicineUltratech), 4);
@@ -484,10 +467,6 @@ static class PawnBuilderExtension
         });
     }
 
-    public static PawnBuilder EquipWeapon(this PawnBuilder builder, string weaponDefName, Func<Pawn, int, bool> shouldEquip = null)
-    {
-        return builder.EquipWeapon(DefDatabase<ThingDef>.GetNamed(weaponDefName), shouldEquip);
-    }
     public static PawnBuilder EquipWeapon(this PawnBuilder builder, ThingDef weaponDef, Func<Pawn, int, bool> shouldEquip = null)
     {
         return builder.Do((pawn, i) =>
@@ -527,7 +506,7 @@ static class PawnBuilderExtension
 
     public static PawnBuilder WeakenParts(this PawnBuilder builder, HashSet<BodyPartDef> weakenParts, bool oneSide = false)
     {
-        var bruise = DefDatabase<HediffDef>.GetNamed("Bruise");
+        var bruise = DefLookup.Hediff.Bruise;
         return builder.Do(pawn =>
         {
             var hediffSet = pawn.health.hediffSet;

@@ -47,7 +47,7 @@ public class InspirationRecorder : RecorderBase<InspirationStartedEvent>
         var trait = (Trait)null;
         var pawn = scenario.Pawn()
             .Colonist()
-            .GiveTrait("TorturedArtist", traitCreated: t => trait = t)
+            .GiveTrait(DefLookup.Trait.TorturedArtist, traitCreated: t => trait = t)
             .CreateSingle();
 
         trait.Notify_MentalStateEndedOn(pawn);

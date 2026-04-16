@@ -75,7 +75,7 @@ public class HealthComplicationRecorder : RecorderBase<HealthComplicationEvent>
     public void TestNoCause(TestScenario scenario)
     {
         var pawn = scenario.Pawn()
-            .AddHediff("HeartAttack")
+            .AddHediff(DefLookup.Hediff.HeartAttack)
             .CreateSingle();
         var giver = pawn.def.race.hediffGiverSets
             .SelectMany(set => set.hediffGivers)

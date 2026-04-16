@@ -30,6 +30,7 @@ public class TestScenario
     public MapBuilder Map(IntVec3? pos = null) => new(pos);
     public ThingBuilder Thing(ThingDef thingDef, ThingDef stuffDef = null) => new(thingDef, stuffDef);
     public CaravanBuilder Caravan(List<Pawn> pawns) => new(pawns);
+    public DropPodBuilder DropPod(List<Pawn> pawns) => new(pawns);
     public TradeSessionBuilder Trade(Pawn trader, Pawn negotiator) => new(trader, negotiator);
 
     public void OpenHistoryRecordTab(Pawn pawn)

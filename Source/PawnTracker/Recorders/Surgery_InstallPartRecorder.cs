@@ -74,7 +74,7 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, DefDatabase<RecipeDef>.GetNamed("InstallNaturalLung"), BodyPartDefOf.Lung)
+            .DoSurgery(patient, DefLookup.Recipe.InstallNaturalLung, BodyPartDefOf.Lung)
             .CreateSingle();
     }
 
@@ -89,14 +89,14 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
 
         var patient = scenario.Pawn()
             .Colonist()
-            .AddHediff("SimpleProstheticHeart", BodyPartDefOf.Heart)
+            .AddHediff(DefLookup.Hediff.SimpleProstheticHeart, BodyPartDefOf.Heart)
             .CreateSingle();
 
         scenario.Pawn()
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, DefDatabase<RecipeDef>.GetNamed("InstallNaturalHeart"), BodyPartDefOf.Heart)
+            .DoSurgery(patient, DefLookup.Recipe.InstallNaturalHeart, BodyPartDefOf.Heart)
             .CreateSingle();
     }
 
@@ -111,14 +111,14 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
 
         var patient = scenario.Pawn()
             .Colonist()
-            .AddHediff("HeartArteryBlockage", BodyPartDefOf.Heart)
+            .AddHediff(DefLookup.Hediff.HeartArteryBlockage, BodyPartDefOf.Heart)
             .CreateSingle();
 
         scenario.Pawn()
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, DefDatabase<RecipeDef>.GetNamed("InstallNaturalHeart"), BodyPartDefOf.Heart)
+            .DoSurgery(patient, DefLookup.Recipe.InstallNaturalHeart, BodyPartDefOf.Heart)
             .CreateSingle();
     }
 
@@ -138,7 +138,7 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
         scenario.Pawn()
             .Colonist()
             .SetDoctor(isBadDoctor: true)
-            .DoSurgery(patient, DefDatabase<RecipeDef>.GetNamed("InstallNaturalKidney"), DefDatabase<BodyPartDef>.GetNamed("Kidney"), instant: true)
+            .DoSurgery(patient, DefLookup.Recipe.InstallNaturalKidney, DefLookup.BodyPart.Kidney, instant: true)
             .CreateSingle();
     }
 }

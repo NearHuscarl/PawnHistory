@@ -369,6 +369,18 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PawnEvent_PlayerTransporterArrived</defName>
+		<include>
+			<li>PawnEvent_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] arrived at [WorldObject_definite] in a transport pod [WithOthers].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PawnEvent_TradeCaravanArrived</defName>
 		<rulePack>
 			<rulesStrings>

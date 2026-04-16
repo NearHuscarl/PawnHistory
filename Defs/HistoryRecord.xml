@@ -280,6 +280,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PlayerTransporterArrived</defName>
+		<label>player transporter arrived</label>
+		<descriptionMaker>PawnEvent_PlayerTransporterArrived</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>World</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TradeCaravanArrived</defName>
 		<label>trade caravan arrived</label>
 		<descriptionMaker>PawnEvent_TradeCaravanArrived</descriptionMaker>
