@@ -1,30 +1,12 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
+using PawnHistory.Source.Helper;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
 public record CrushedEvent(IEnumerable<Pawn> Pawns, Map Map, IntVec3 Position) : GameEventBase;
-
-internal static class CrushedContext
-{
-    public static IntVec3 GetCenter(IEnumerable<IntVec3> cells)
-    {
-        var list = cells.ToList();
-        if (!list.Any())
-            return IntVec3.Invalid;
-
-        int x = 0, z = 0;
-        foreach (var c in list)
-        {
-            x += c.x;
-            z += c.z;
-        }
-
-        return new IntVec3(x / list.Count, 0, z / list.Count);
-    }
-}
 
 [HarmonyPatch(typeof(RoofCollapserImmediate), nameof(RoofCollapserImmediate.DropRoofInCells), [typeof(IntVec3), typeof(Map), typeof(List<Thing>)])]
 internal static class RoofCollapserImmediate_DropRoofInCells_Patch
@@ -46,7 +28,7 @@ internal static class RoofCollapserImmediate_DropRoofInCells_Patch_2
         if (outCrushedThings == null || !outCrushedThings.Any())
             return;
 
-        GameEventBus.Publish(new CrushedEvent(outCrushedThings.OfType<Pawn>(), map, CrushedContext.GetCenter(cells)));
+        GameEventBus.Publish(new CrushedEvent(outCrushedThings.OfType<Pawn>(), map, IntVec3Helper.GetCenter(cells)));
     }
 }
 
@@ -58,6 +40,6 @@ internal static class RoofCollapserImmediate_DropRoofInCells_Patch_3
         if (outCrushedThings == null || !outCrushedThings.Any())
             return;
 
-        GameEventBus.Publish(new CrushedEvent(outCrushedThings.OfType<Pawn>(), map, CrushedContext.GetCenter(cells)));
+        GameEventBus.Publish(new CrushedEvent(outCrushedThings.OfType<Pawn>(), map, IntVec3Helper.GetCenter(cells)));
     }
 }

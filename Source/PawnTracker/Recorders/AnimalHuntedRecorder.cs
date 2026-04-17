@@ -7,12 +7,11 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class AnimalHuntedRecorder : HistoryTaleRecorder<AnimalHuntedRecorder.Input>
 {
-    public record Input(Pawn pawn, Pawn prey);
+    public record Input(Pawn Pawn, Pawn Prey);
+    protected override float DaysToRecordAgain => 6f;
 
     public override void Register()
     {
-        DaysToRecordAgain = 6f;
-
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
         {
             if (e.Tale.def != TaleDefOf.Hunted)

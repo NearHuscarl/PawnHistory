@@ -71,6 +71,8 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef ReadBook;
     public static HistoryRecordDef Stripped;
     public static HistoryRecordDef MinedValuable;
+    public static HistoryRecordDef LongRangeMineralFound;
+    public static HistoryRecordDef DeepMineralFound;
     public static HistoryRecordDef VisitedGrave;
     public static HistoryRecordDef Hunted;
 

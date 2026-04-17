@@ -8,7 +8,7 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class MinedValuableRecorder : HistoryTaleRecorder<MinedValuableRecorder.Input>
 {
-    public record Input(Pawn pawn, ThingDef mineableThing);
+    public record Input(Pawn Pawn, ThingDef MineableThing);
 
     public override void Register()
     {

@@ -113,6 +113,7 @@ public static class DefLookup
     {
         public static ThingDef PodLauncher => field ??= DefDatabase<ThingDef>.GetNamed("PodLauncher");
         public static ThingDef Weapon_GrenadeFrag => field ??= DefDatabase<ThingDef>.GetNamed("Weapon_GrenadeFrag");
+        public static ThingDef LongRangeMineralScanner => field ??= DefDatabase<ThingDef>.GetNamed("LongRangeMineralScanner");
     }
 
     public static class Backstory

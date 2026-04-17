@@ -54,7 +54,7 @@ public class ReadBookRecorder : HistoryTaleRecorder<ReadBookRecorder.Input>
     [SkipTest]
     public void TestSkipValidation(TestScenario scenario)
     {
-        skipDateCheck = true;
+        SkipDateCheck = true;
         var pawns = scenario.Pawn(15).Colonist().Execute();
 
         foreach (var pawn in pawns)
@@ -69,7 +69,7 @@ public class ReadBookRecorder : HistoryTaleRecorder<ReadBookRecorder.Input>
             TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
             TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
         }
-        skipDateCheck = false;
-        skipOverlapCheck = false;
+        SkipDateCheck = false;
+        SkipOverlapCheck = false;
     }
 }

@@ -33,6 +33,27 @@ public static class Accessor
             AccessTools.FieldRefAccess<Verse.BattleLogEntry_RangedImpact, Pawn>("originalTargetPawn");
     }
 
+    public class CompLongRangeMineralScanner
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.CompLongRangeMineralScanner, ThingDef> TargetMineable =
+            AccessTools.FieldRefAccess<RimWorld.CompLongRangeMineralScanner, ThingDef>("targetMineable");
+
+        public static readonly Action<RimWorld.CompLongRangeMineralScanner, Pawn> DoFind =
+            AccessTools.MethodDelegate<Action<RimWorld.CompLongRangeMineralScanner, Pawn>>(AccessTools.Method(typeof(RimWorld.CompLongRangeMineralScanner), "DoFind"));
+    }
+
+    public class CompDeepScanner
+    {
+        public static readonly Action<RimWorld.CompDeepScanner, Pawn> DoFind =
+            AccessTools.MethodDelegate<Action<RimWorld.CompDeepScanner, Pawn>>(AccessTools.Method(typeof(RimWorld.CompDeepScanner), "DoFind"));
+    }
+
+    public class DeepResourceGrid
+    {
+        public static readonly AccessTools.FieldRef<Verse.DeepResourceGrid, Map> Map =
+            AccessTools.FieldRefAccess<Verse.DeepResourceGrid, Map>("map");
+    }
+
     public static class PlayLogEntry_Interaction
     {
         public static readonly AccessTools.FieldRef<Verse.PlayLogEntry_Interaction, Pawn> Initiator =

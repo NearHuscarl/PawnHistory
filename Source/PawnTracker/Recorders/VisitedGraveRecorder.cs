@@ -7,17 +7,15 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class VisitedGraveRecorder : HistoryTaleRecorder<VisitedGraveRecorder.Input>
 {
-    public record Input(Pawn pawn, Pawn deadPawn);
+    public record Input(Pawn Pawn, Pawn DeadPawn);
 
-    private static readonly TaleDef VisitedGrave = DefLookup.Tale.VisitedGrave;
-
+    protected override float DaysToRecordAgain => 3f;
+    
     public override void Register()
     {
-        DaysToRecordAgain = 3f;
-
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
         {
-            if (e.Tale.def != VisitedGrave)
+            if (e.Tale.def != DefLookup.Tale.VisitedGrave)
                 return;
 
             CreateRecord(new Input(e.Pawn, e.Params[0] as Pawn));
@@ -47,9 +45,9 @@ public class VisitedGraveRecorder : HistoryTaleRecorder<VisitedGraveRecorder.Inp
 
         for (var i = 0; i < pawns.Count; i++)
         {
-            TaleRecorder.RecordTale(VisitedGrave, pawns[i], pawns[(i + 1) % pawns.Count]);
-            TaleRecorder.RecordTale(VisitedGrave, pawns[i], pawns[(i + 1) % pawns.Count]);
-            TaleRecorder.RecordTale(VisitedGrave, pawns[i], pawns[(i + 1) % pawns.Count]);
+            TaleRecorder.RecordTale(DefLookup.Tale.VisitedGrave, pawns[i], pawns[(i + 1) % pawns.Count]);
+            TaleRecorder.RecordTale(DefLookup.Tale.VisitedGrave, pawns[i], pawns[(i + 1) % pawns.Count]);
+            TaleRecorder.RecordTale(DefLookup.Tale.VisitedGrave, pawns[i], pawns[(i + 1) % pawns.Count]);
         }
     }
 }

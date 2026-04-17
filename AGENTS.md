@@ -83,6 +83,9 @@ Observed conventions in the codebase:
 - Prefer modern C# features already present in the repo: `record`, collection expressions `[]`, concise APIs.
 - Keep recorder logic small and event-focused.
 - Naming is literal and feature-based: `XyzEvent`, `XyzRecorder`, `HistoryRecordDefOf.Xyz`.
+- For Harmony patches that need transient cross-method or prefix/postfix state, create a dedicated `XyzContext` class in the event file.
+- Put named fields and helper methods on that context class; avoid generic Harmony state variables like `__state` when a named context is clearer.
+- Reset or restore context in `Finalizer()` when the patch can throw or be re-entrant.
 - Recorder tests live in the same class as the recorder.
 - Prefer RimWorld `DefOf` classes for named defs; use `Source/DefLookup.cs` only for named defs that do not have a suitable `DefOf` entry.
 - Put reflected field/method accessors in `Source/Accessor.cs`; prefer cached `AccessTools` delegates there over ad hoc Harmony `Traverse` usage.

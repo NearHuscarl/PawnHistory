@@ -7,17 +7,15 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class StripRecorder : HistoryTaleRecorder<StripRecorder.Input>
 {
-    public record Input(Pawn pawn, Pawn strippedPawn);
+    public record Input(Pawn Pawn, Pawn StrippedPawn);
 
-    private static readonly TaleDef Stripped = DefLookup.Tale.Stripped;
+    protected override float DaysToRecordAgain => 5f;
 
     public override void Register()
     {
-        DaysToRecordAgain = 5f;
-
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
         {
-            if (e.Tale.def != Stripped)
+            if (e.Tale.def != DefLookup.Tale.Stripped)
                 return;
 
             CreateRecord(new Input(e.Pawn, e.Params[0] as Pawn));
@@ -45,9 +43,9 @@ public class StripRecorder : HistoryTaleRecorder<StripRecorder.Input>
 
         for (var i = 0; i < pawns.Count; i++)
         {
-            TaleRecorder.RecordTale(Stripped, pawns[i], pawns[(i + 1) % pawns.Count]);
-            TaleRecorder.RecordTale(Stripped, pawns[i], pawns[(i + 1) % pawns.Count]);
-            TaleRecorder.RecordTale(Stripped, pawns[i], pawns[(i + 1) % pawns.Count]);
+            TaleRecorder.RecordTale(DefLookup.Tale.Stripped, pawns[i], pawns[(i + 1) % pawns.Count]);
+            TaleRecorder.RecordTale(DefLookup.Tale.Stripped, pawns[i], pawns[(i + 1) % pawns.Count]);
+            TaleRecorder.RecordTale(DefLookup.Tale.Stripped, pawns[i], pawns[(i + 1) % pawns.Count]);
         }
     }
 }

@@ -588,6 +588,25 @@
 		<importance>Minor</importance>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>LongRangeMineralFound</defName>
+		<label>long-range mineral found</label>
+		<description>{PAWN} found a lump of {Material} some distance away using the long-range mineral scanner..</description>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Work</li>
+		</categories>
+		<importance>Minor</importance>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>DeepMineralFound</defName>
+		<label>deep mineral found</label>
+		<description>{PAWN} found a lump of buried {Material} using the ground-penetrating scanner.</description>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Work</li>
+		</categories>
+		<importance>Minor</importance>
+	</HistoryRecordDef>
 		<defName>VisitedGrave</defName>
 		<label>visited grave</label>
 		<descriptionMaker>PH_VisitedGrave</descriptionMaker>

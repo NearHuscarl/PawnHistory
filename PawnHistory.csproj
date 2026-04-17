@@ -57,6 +57,7 @@
     <Compile Include="Source\DebugTools\ReloadableAttribute.cs" />
     <Compile Include="Source\DefLookup.cs" />
     <Compile Include="Source\Helper\GameUtility.cs" />
+    <Compile Include="Source\Helper\IntVec3Helper.cs" />
     <Compile Include="Source\Helper\LangUtility.cs" />
     <Compile Include="Source\Helper\ListExtensions.cs" />
     <Compile Include="Source\Helper\LookTargetsUtility.cs" />
@@ -99,6 +100,8 @@
     <Compile Include="Source\PawnTracker\Events\SkillLevelChangedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\WandererJoinedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\TaleRecordedEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\LongRangeMineralFoundEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\DeepMineralFoundEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallArtificialPartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallNaturalPartEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\SurgeryInstallImplantEvent.cs" />
@@ -133,6 +136,7 @@
     <Compile Include="Source\PawnTracker\Recorders\SkillLevelChangedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RescueRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\MinedValuableRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\MineralFoundRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\VisitedGraveRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\AnimalHuntedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WandererJoinedRecorder.cs" />

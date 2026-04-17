@@ -3,7 +3,6 @@ using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Verse;
 using Verse.AI.Group;
 
@@ -28,14 +27,14 @@ public class FactionArrivalRecorder : RecorderBase<FactionArrivalRecorder.Input>
             var currentToil = e.CurrentToil;
             var pawns = lord.ownedPawns;
             var isStartingLord = currentToil == null;
-            var factionArrivalType = FactionArrivalType.None;
+            var arrivalType = FactionArrivalType.None;
 
             if (isStartingLord && lord.LordJob is LordJob_TravelAndExit)
-                factionArrivalType = FactionArrivalType.TravelerGroup;
+                arrivalType = FactionArrivalType.TravelerGroup;
             if (isStartingLord && lord.LordJob is LordJob_VisitColony)
-                factionArrivalType = FactionArrivalType.VisitorGroup;
+                arrivalType = FactionArrivalType.VisitorGroup;
 
-            CreateRecord(new Input(lord.faction, pawns, factionArrivalType));
+            CreateRecord(new Input(lord.faction, pawns, arrivalType));
         });
     }
 

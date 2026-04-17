@@ -1,6 +1,4 @@
 ﻿using PawnHistory.Source.Helper;
-using RimWorld;
-using System;
 using System.Linq;
 using Verse;
 
@@ -8,10 +6,9 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public abstract class HistoryTaleRecorder<TInput> : RecorderBase<TInput>
 {
-    protected bool skipDateCheck = false;
-    protected bool skipOverlapCheck = false;
-
-    protected float DaysToRecordAgain { get; set; } = 1f;
+    protected bool SkipDateCheck = false;
+    protected bool SkipOverlapCheck = false;
+    protected override float DaysToRecordAgain => 1f;
 
     public abstract override void Register();
 
@@ -22,14 +19,13 @@ public abstract class HistoryTaleRecorder<TInput> : RecorderBase<TInput>
         if (!ShouldRecord(pawn))
             return false;
 
-        var recentRecords = GeRecordsOfType(pawn, recordDef).Take(3).ToList();
-
-        if (IsTooSoonToRecordAgain(recentRecords.FirstOrDefault()))
+        if (IsTooSoonToRecordAgain(pawn, recordDef))
         {
             Log.Message($"[PawnHistory] Skipped recording {pawn}'s {recordDef.defName} event | TooSoon");
-            if (!skipDateCheck) return false;
+            if (!SkipDateCheck) return false;
         }
 
+        var recentRecords = GeRecordsOfType(pawn, recordDef).Take(3).ToList();
         foreach (var record in recentRecords)
         {
             var overlapScore = LangUtility.GetOverlapScore(description, record.description);
@@ -37,17 +33,9 @@ public abstract class HistoryTaleRecorder<TInput> : RecorderBase<TInput>
                 continue;
 
             Log.Message($"[PawnHistory] Skipped recording {pawn}'s {recordDef.defName} event | TooSimilar({overlapScore})\n\n{description}\n\n{record.description}");
-            if (!skipOverlapCheck) return false;
+            if (!SkipOverlapCheck) return false;
         }
         
         return true;
-    }
-
-    protected bool IsTooSoonToRecordAgain(HistoryRecord lastRecord)
-    {
-        if (lastRecord == null)
-            return false;
-
-        return GenTicks.TicksAbs - lastRecord.date < GenDate.DaysToTicks(DaysToRecordAgain);
     }
 }
