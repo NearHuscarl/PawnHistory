@@ -72,6 +72,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef WalkNaked;
     public static HistoryRecordDef ReadBook;
     public static HistoryRecordDef Stripped;
+    public static HistoryRecordDef CraftedQualityThing;
     public static HistoryRecordDef MinedValuable;
     public static HistoryRecordDef LongRangeMineralFound;
     public static HistoryRecordDef DeepMineralFound;

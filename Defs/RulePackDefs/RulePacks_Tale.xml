@@ -91,6 +91,33 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_CraftedQualityItem</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_Job.xml#CompletedLongCraftingProject-->
+				<li>circumstance_phrase->with a gleam in [PAWN_possessive] eye</li>
+				<li>circumstance_phrase->while wiping the sweat from [PAWN_possessive] forehead</li>
+				<li>circumstance_phrase->while covered in grime</li>
+				<li>circumstance_phrase->while smiling proudly</li>
+				<li>circumstance_phrase->wearing a look of deep satisfaction</li>
+				
+				<li>image->[PAWN_pronoun] worked on it [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] polished the surface of it [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] added fine detail to it [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] inscribed [PAWN_possessive] name on it [circumstance_phrase]</li>
+
+				<li>desc_sentence->[PAWN] stepped back to examine the work.</li>
+				<li>desc_sentence->[PAWN] gave a final, careful inspection.</li>
+				<li>desc_sentence->[PAWN] paused, taking in the finished piece.</li>
+				<li>desc_sentence->[PAWN] nodded, satisfied with the result.</li>
+				<li>desc_sentence->[PAWN] took a moment to admire the craftsmanship.</li>
+
+				<li>entry->[PAWN] completed work on a [Quality] [Crafted]. [image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_MinedValuable</defName>
 		<rulePack>
 			<rulesStrings>

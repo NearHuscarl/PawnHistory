@@ -587,6 +587,15 @@
 		<importance>Minor</importance>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>CraftedQualityThing</defName>
+		<label>crafted quality thing</label>
+		<descriptionMaker>PH_CraftedQualityItem</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Work</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>MinedValuable</defName>
 		<label>mined valuable</label>
 		<descriptionMaker>PH_MinedValuable</descriptionMaker>

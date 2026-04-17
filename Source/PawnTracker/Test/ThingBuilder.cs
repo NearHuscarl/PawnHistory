@@ -54,6 +54,15 @@ public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
         return this;
     }
 
+    public ThingBuilder Quality(QualityCategory quality)
+    {
+        return Do(thing =>
+        {
+            if (thing.TryGetComp<CompQuality>(out var comp))
+                comp.SetQuality(quality, null);
+        });
+    }
+
     private IntVec3 ResolvePosition()
     {
         if (position.HasValue)
@@ -62,9 +71,10 @@ public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
         return map.Center;
     }
 
-    public void Do(Action<Thing> action)
+    public ThingBuilder Do(Action<Thing> action)
     {
         processors.Add(action);
+        return this;
     }
 
     /// <summary>
