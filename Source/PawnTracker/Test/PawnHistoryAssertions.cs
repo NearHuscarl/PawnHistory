@@ -216,6 +216,34 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         });
     }
 
+    public void ToHaveHistoryRecordConcern(Thing concern, HistoryRecordDef recordDef, int ticksAgo = 0)
+    {
+        RunAssertion(() =>
+        {
+            var testParams = new Dictionary<string, string>
+            {
+                { "recordDef", recordDef?.ToString() ?? "null" },
+                { "ticksAgo", ticksAgo.ToString() },
+            };
+
+            AssertCollection(
+                concern,
+                pawn =>
+                {
+                    var record = pawn.HistoryRecords.LastOrDefault(r => (recordDef == null || r.def == recordDef) && r.date >= Find.TickManager.TicksGame - ticksAgo);
+                    var actual = record?.concerns?.FirstOrDefault(c => c == concern);
+
+                    return new AssertionData<Thing>(
+                        actual,
+                        $"Expect concern to match for {pawn} {ToString(testParams)}\nExpected:\n{concern}\nActual:\n{actual}",
+                        $"Expect concern NOT to match for {pawn} {ToString(testParams)}\nExpected:\n{concern}\nActual:\n{actual}."
+                    );
+                },
+                testParams
+            );
+        });
+    }
+
     public PawnHistoryAssertions Eventually(int timeoutTicks = 3000, int pollIntervalTicks = 25)
     {
         isEventually = true;

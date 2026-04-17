@@ -33,9 +33,8 @@ public class AncientDangerWarningRecorder : RecorderBase<Pawn>
         var recordDef = HistoryRecordDefOf.AncientDangerWarning;
         var desc = recordDef.Description(pawn)
             .Resolve();
-        var location = new RecordLocation { position = pawn.Position, map = pawn.Map };
 
-        AddRecord(recordDef, pawn, desc, null, location);
+        AddRecord(recordDef, pawn, desc, null, RecordLocation.Of(pawn));
     }
 
     [TestTag("Flaky")]

@@ -14,6 +14,12 @@ public class RecordLocation : IExposable
     public IntVec3 position;
     public Map map;
 
+    public static RecordLocation Of(Thing thing) => new()
+    {
+        position = thing.Position,
+        map = thing.Map
+    };
+
     public void ExposeData()
     {
         Scribe_Values.Look(ref position, "position");

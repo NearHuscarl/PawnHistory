@@ -16,7 +16,7 @@ public class CrushedRecorder : RecorderBase<CrushedEvent>
     {
         var (pawns, map, position) = e;
 
-        // This is just an intermidate record to store the crushed position so the Death record can reference it later.
+        // This is just an intermediate record to store the crushed position so the Death record can reference it later.
         var recordDef = HistoryRecordDefOf.Crushed;
         foreach (var pawn in pawns)
         {

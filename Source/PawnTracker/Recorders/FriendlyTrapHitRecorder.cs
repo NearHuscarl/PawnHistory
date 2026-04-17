@@ -16,11 +16,11 @@ public class FriendlyTrapHitRecorder : RecorderBase<FriendlyTrapHitEvent>
 
     public override void CreateRecord(FriendlyTrapHitEvent e)
     {
-        // This is just an intermidate record to store the crushed position so the Death record can reference it later.
+        // This is just an intermediate record to store the crushed position so the Death record can reference it later.
         var recordDef = HistoryRecordDefOf.FriendlyTrapHit;
         var pawn = e.Pawn;
         var desc = recordDef.Description(pawn).Format();
-        var location = new RecordLocation { position = pawn.SpawnedParentOrMe.Position, map = pawn.SpawnedParentOrMe.Map };
+        var location = RecordLocation.Of(pawn.SpawnedParentOrMe);
 
         AddRecord(recordDef, pawn, desc, location: location);
     }

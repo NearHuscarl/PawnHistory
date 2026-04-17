@@ -124,6 +124,7 @@
     <Compile Include="Source\PawnTracker\Recorders\CasketDropRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\GameEndedWanderersJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\DiseaseRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\LungRotRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\BirthdayRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\FoodPoisoningRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\InspirationRecorder.cs" />

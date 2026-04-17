@@ -22,6 +22,8 @@ public class PawnBuilder(int count = 1)
     private int spawnRadius = 4;
     private bool humanLike = true;
     private bool factionLeader = false;
+    private bool isKilled = false;
+    private bool isRotten = false;
 
     public PawnBuilder WithPosition(IntVec3 position, int radius = 3)
     {
@@ -74,10 +76,18 @@ public class PawnBuilder(int count = 1)
         return this;
     }
 
-    public PawnBuilder FactionLeader(Faction faction)
+    public PawnBuilder Corpse(bool rotten = false)
+    {
+        isKilled = true;
+        isRotten = rotten;
+
+        return this;
+    }
+
+    public PawnBuilder FactionLeader(Faction faction1)
     {
         factionLeader = true;
-        return HumanLike().WithFaction(faction);
+        return HumanLike().WithFaction(faction1);
     }
 
     public PawnBuilder Enemy(bool value = true)
@@ -135,12 +145,6 @@ public class PawnBuilder(int count = 1)
         return this;
     }
 
-    public PawnBuilder Count(int count)
-    {
-        this.count = count;
-        return this;
-    }
-
     public Pawn CreateSingle(bool reusePawns = true)
     {
         return Execute(reusePawns).FirstOrDefault();
@@ -149,10 +153,10 @@ public class PawnBuilder(int count = 1)
     private List<Pawn> SourcePawns(bool reusePawns)
     {
         var allFilters = filters.Concat([
-            p => !p.DeadOrDowned,
+            p => isKilled == p.Dead,
             p => kind == null || p.kindDef == kind,
             p => faction == null || p.Faction == faction,
-            p => p.GuestStatus == null || p.GuestStatus == guestStatus,
+            p => guestStatus == null || p.GuestStatus == guestStatus,
             p => p.RaceProps.Humanlike == humanLike,
             p => !TestScenario.ProcessedPawns.Contains(p),
             p => p.IsFactionLeader(faction) == factionLeader,
@@ -183,6 +187,18 @@ public class PawnBuilder(int count = 1)
                 pawn.guest?.SetGuestStatus(Faction.OfPlayer, guestStatus.Value);
 
             sourcedPawns.Add(pawn);
+        }
+
+        foreach (var pawn in sourcedPawns)
+        {
+            if (isKilled && !pawn.Dead)
+                HealthUtility.DamageUntilDead(pawn);
+            if (isRotten && pawn.Dead && pawn.Corpse.TryGetComp<CompRottable>(out var rot))
+            {
+                var corpse = pawn.Corpse;
+                rot.RotImmediately();
+                corpse.Map.gasGrid.AddGas(corpse.Position, GasType.RotStink, 1000); // don't know where this shit comes from
+            }
         }
 
         return sourcedPawns;

@@ -54,6 +54,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef JoinedParty;
     public static HistoryRecordDef PartyCancelled;
     public static HistoryRecordDef Disease;
+    public static HistoryRecordDef LungRot;
     public static HistoryRecordDef MentalBreak;
     public static HistoryRecordDef MentalBreakViolent;
     public static HistoryRecordDef AnimalRevenge;

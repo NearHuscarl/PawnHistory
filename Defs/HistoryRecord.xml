@@ -428,6 +428,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>LungRot</defName>
+		<label>lung rot</label>
+		<descriptionMaker>PH_LungRot</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Health</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>MentalBreak</defName>
 		<label>mental break</label>
 		<descriptionMaker>PH_MentalBreak</descriptionMaker>
