@@ -80,6 +80,7 @@ public static class DefLookup
     public static class PawnKind
     {
         public static PawnKindDef Husky => field ??= DefDatabase<PawnKindDef>.GetNamed("Husky");
+        public static PawnKindDef Cougar => field ??= DefDatabase<PawnKindDef>.GetNamed("Cougar");
     }
 
     public static class TraderKind

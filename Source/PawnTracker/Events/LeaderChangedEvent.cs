@@ -13,10 +13,10 @@ public enum LeaderChangeReason
 
 public record LeaderChangedEvent(Pawn NewLeader, Pawn OldLeader, LeaderChangeReason Reason) : GameEventBase;
 
-internal class LeaderChangedContext
+internal static class LeaderChangedContext
 {
-    public static Pawn oldLeader;
-    public static bool receivedLetter;
+    public static Pawn OldLeader;
+    public static bool ReceivedLetter;
 }
 
 // Call order:
@@ -29,48 +29,48 @@ internal class LeaderChangedContext
 // - Faction.Notify_LeaderDied() postfix
 
 [HarmonyPatch(typeof(Faction), nameof(Faction.Notify_LeaderLost))]
-public static class Faction_Notify_LeaderLost_Patch
+internal static class Faction_Notify_LeaderLost_Patch
 {
-    public static void Prefix(Faction __instance)
+    private static void Prefix(Faction __instance)
     {
-        LeaderChangedContext.oldLeader = __instance.leader;
+        LeaderChangedContext.OldLeader = __instance.leader;
     }
 
-    public static void Postfix(Faction __instance)
+    private static void Postfix(Faction __instance)
     {
-        if (!LeaderChangedContext.receivedLetter)
+        if (!LeaderChangedContext.ReceivedLetter)
             return;
 
-        GameEventBus.Publish(new LeaderChangedEvent(__instance.leader, LeaderChangedContext.oldLeader, LeaderChangeReason.Lost));
+        GameEventBus.Publish(new LeaderChangedEvent(__instance.leader, LeaderChangedContext.OldLeader, LeaderChangeReason.Lost));
     }
 
-    static void Finalizer() => LeaderChangedContext.receivedLetter = false;
+    private static void Finalizer() => LeaderChangedContext.ReceivedLetter = false;
 }
 
 [HarmonyPatch(typeof(Faction), nameof(Faction.Notify_LeaderDied))]
-public static class Faction_Notify_LeaderDied_Patch
+internal static class Faction_Notify_LeaderDied_Patch
 {
-    public static void Prefix(Faction __instance)
+    private static void Prefix(Faction __instance)
     {
-        LeaderChangedContext.oldLeader = __instance.leader;
+        LeaderChangedContext.OldLeader = __instance.leader;
     }
 
-    public static void Postfix(Faction __instance)
+    private static void Postfix(Faction __instance)
     {
-        if (!LeaderChangedContext.receivedLetter)
+        if (!LeaderChangedContext.ReceivedLetter)
             return;
 
-        GameEventBus.Publish(new LeaderChangedEvent(__instance.leader, LeaderChangedContext.oldLeader, LeaderChangeReason.Death));
+        GameEventBus.Publish(new LeaderChangedEvent(__instance.leader, LeaderChangedContext.OldLeader, LeaderChangeReason.Death));
     }
 
-    static void Finalizer() => LeaderChangedContext.receivedLetter = false;
+    private static void Finalizer() => LeaderChangedContext.ReceivedLetter = false;
 }
 
 [HarmonyPatch(typeof(LetterStack), nameof(LetterStack.ReceiveLetter), [typeof(TaggedString), typeof(TaggedString), typeof(LetterDef), typeof(LookTargets), typeof(Faction), typeof(Quest), typeof(List<ThingDef>), typeof(string), typeof(int), typeof(bool)])]
-public static class LetterStack_ReceiveLetter_Patch_3
+internal static class LetterStack_ReceiveLetter_Patch_3
 {
-    public static void Postfix()
+    private static void Postfix()
     {
-        LeaderChangedContext.receivedLetter = true;
+        LeaderChangedContext.ReceivedLetter = true;
     }
 }

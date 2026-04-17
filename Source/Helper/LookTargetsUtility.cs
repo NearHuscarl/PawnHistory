@@ -11,7 +11,7 @@ internal static class LookTargetsUtility
 
         foreach (var target in targets.targets)
         {
-            if (target.HasThing && target.Thing is Pawn pawn)
+            if (target is { HasThing: true, Thing: Pawn pawn })
             {
                 yield return pawn;
             }

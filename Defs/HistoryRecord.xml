@@ -607,6 +607,16 @@
 		</categories>
 		<importance>Minor</importance>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PredatorHuntingColonist</defName>
+		<label>predator hunting colonist</label>
+		<descriptionMaker>PH_PredatorHuntingColonist</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>VisitedGrave</defName>
 		<label>visited grave</label>
 		<descriptionMaker>PH_VisitedGrave</descriptionMaker>

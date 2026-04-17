@@ -7,17 +7,17 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public record ReceiveLetterEvent(TaggedString Label, IEnumerable<Pawn> Pawns) : GameEventBase;
+public record ReceiveLetterEvent(TaggedString Label, TaggedString Text, IEnumerable<Pawn> Pawns) : GameEventBase;
 
-[HarmonyPatch(typeof(LetterStack), nameof(LetterStack.ReceiveLetter), [typeof(TaggedString), typeof(TaggedString), typeof(LetterDef), typeof(LookTargets), typeof(Faction), typeof(Quest), typeof(List<ThingDef>), typeof(string), typeof(int), typeof(bool)])]
-public static class LetterStack_ReceiveLetter_Patch_2
+[HarmonyPatch(typeof(LetterStack), nameof(LetterStack.ReceiveLetter), typeof(TaggedString), typeof(TaggedString), typeof(LetterDef), typeof(LookTargets), typeof(Faction), typeof(Quest), typeof(List<ThingDef>), typeof(string), typeof(int), typeof(bool))]
+internal static class LetterStack_ReceiveLetter_Patch_2
 {
-    public static void Prefix(TaggedString label, LookTargets lookTargets)
+    public static void Prefix(TaggedString label, TaggedString text, LookTargets lookTargets)
     {
-        var pawns = lookTargets.GetPawns();
-        if (pawns == null || !pawns.Any())
+        var pawns = lookTargets.GetPawns().ToList();
+        if (!pawns.Any())
             return;
 
-        GameEventBus.Publish(new ReceiveLetterEvent(label, pawns));
+        GameEventBus.Publish(new ReceiveLetterEvent(label, text, pawns));
     }
 }

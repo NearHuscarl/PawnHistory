@@ -54,6 +54,18 @@ public static class Accessor
             AccessTools.FieldRefAccess<Verse.DeepResourceGrid, Map>("map");
     }
 
+    public class JobDriver
+    {
+        public static readonly AccessTools.FieldRef<Verse.AI.JobDriver, Pawn> Pawn =
+            AccessTools.FieldRefAccess<Verse.AI.JobDriver, Pawn>("pawn");
+    }
+
+    public class JobDriver_PredatorHunt
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.JobDriver_PredatorHunt, bool> NotifiedPlayerAttacking =
+            AccessTools.FieldRefAccess<RimWorld.JobDriver_PredatorHunt, bool>("notifiedPlayerAttacking");
+    }
+
     public static class PlayLogEntry_Interaction
     {
         public static readonly AccessTools.FieldRef<Verse.PlayLogEntry_Interaction, Pawn> Initiator =

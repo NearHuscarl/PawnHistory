@@ -383,4 +383,13 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_PredatorHuntingColonist</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] was hunted by [Predator_indefinite] for food.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>

@@ -84,6 +84,7 @@
     <Compile Include="Source\PawnTracker\Events\PlayerTransporterArriveEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ReceiveLetterEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\RescueJoinedEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\PredatorHuntingColonistEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\BirthdayEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\BodyPartScarredEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\FriendlyTrapHitEvent.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Source\PawnTracker\Recorders\RescueRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\MinedValuableRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\MineralFoundRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\PredatorHuntingColonistRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\VisitedGraveRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\AnimalHuntedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WandererJoinedRecorder.cs" />
