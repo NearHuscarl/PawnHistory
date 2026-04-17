@@ -36,21 +36,21 @@ public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
         return this;
     }
 
-    public ThingBuilder Map(Map map)
+    public ThingBuilder Map(Map map1)
     {
-        this.map = map;
+        this.map = map1;
         return this;
     }
 
-    public ThingBuilder Faction(Faction faction)
+    public ThingBuilder Faction(Faction faction1)
     {
-        this.faction = faction;
+        this.faction = faction1;
         return this;
     }
 
-    public ThingBuilder PlaceMode(ThingPlaceMode placeMode)
+    public ThingBuilder PlaceMode(ThingPlaceMode placeMode1)
     {
-        this.placeMode = placeMode;
+        this.placeMode = placeMode1;
         return this;
     }
 

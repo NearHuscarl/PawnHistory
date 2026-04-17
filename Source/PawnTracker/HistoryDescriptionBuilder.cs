@@ -181,7 +181,7 @@ public static class HistoryDescriptionBuilderExtensions
         return builder.AddRule("FACTION", faction.NameColored.Resolve());
     }
 
-    private static readonly RulePackDef VarRulePack = DefLookup.RulePack.PawnEvent_Var;
+    private static readonly RulePackDef VarRulePack = DefLookup.RulePack.PH_Var;
     public static string GetOtherText(string ruleName, int otherCount)
     {
         var request = new GrammarRequest();

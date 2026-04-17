@@ -40,7 +40,6 @@ Observed Rider build characteristics:
 
 - Rider delegates to MSBuild.
 - Shell builds can use `C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\Bin\MSBuild.exe PawnHistory.csproj /t:Build /p:Configuration=Debug`.
-- `msbuild` may not be on `PATH`, even when Rider builds work.
 
 Build artifact:
 
@@ -49,7 +48,8 @@ Build artifact:
 ## Environment
 
 - This project is worked on in Windows. Prefer PowerShell-native commands for file discovery, searching, and inspection instead of `rg`.
-- Do not inspect RimWorld DLLs.
+- Do not inspect RimWorld DLLs unless requested.
+  - to inspect assembly on request, use `Mono.Cecil` on `RimWorldWin64_Data/Managed/Assembly-CSharp.dll`; NuGet reference assemblies may fail under normal runtime reflection.
 
 ## Testing
 

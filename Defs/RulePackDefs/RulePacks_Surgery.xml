@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RulePackDef>
+		<defName>PH_BotchedSurgery</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>NewInjuries(injuryCount==0)->no injuries (a bug)</li>
+				<li>NewInjuries(injuryCount==1)->a wound on [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
+				<li>NewInjuries(injuryCount>=2)->multiple wounds on [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
+
+				<li>Severity(outcomeType==Minor)->slightly</li>
+				<li>Severity(outcomeType==Major)->catastrophically</li>
+				<li>Severity(outcomeType==Death)->fatally</li>
+				<li>Severity(outcomeType==Sterilized)->hilariously</li>
+
+				<li>entry->[Doctor] [Severity] [BotchedSurgery], causing [NewInjuries].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_BodyPartRemoved</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(intent==Harvest)   ->[PAWN]'s [Part] was harvested by [Doctor].</li>
+				<li>entry(intent==Amputate)  ->[PAWN]'s [Part] was amputated by [Doctor] due to [BadHediff].</li>
+
+				<li>BotchedSurgery(intent==Amputate)->botched an amputation on [PAWN]'s [Part]</li>
+				<li>BotchedSurgery(intent==Harvest) ->botched a harvest on [PAWN]'s [Part]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_BodyPartImplanted</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[Doctor] installed [ImplantHediff_indefinite] in [PAWN]'s [EnhancedPart].</li>
+				
+				<li>BotchedSurgery->botched the implantation of [ImplantHediff_indefinite] on [PAWN]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_BodyPartInstalled</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(type==Install)->[Doctor] installed [AddedPart_indefinite] on [PAWN].</li>
+				<li>entry(type==Replace)->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedPart_indefinite].</li>
+				<li>entry(type==Fix)    ->[Doctor] installed a healthy [AddedPart] on [PAWN] to treat [BadHediff].</li>
+
+				<li>BotchedSurgery->botched the installation of [AddedPart_indefinite] on [PAWN]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_BodyPartModded</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>ViolationNote(isViolation==True) ->, violating [PAWN_possessive] body</li>
+				<li>ViolationNote(isViolation==False)-></li>
+				
+				<li>entry(type==Install)->[Doctor] installed [AddedHediff_indefinite] on [PAWN][ViolationNote].</li>
+				<li>entry(type==Replace)->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedHediff_indefinite][ViolationNote].</li>
+				<li>entry(type==Fix)    ->[Doctor] installed a [AddedHediff] on [PAWN] to treat [BadHediff][ViolationNote].</li>
+
+				<li>BotchedSurgery->botched the installation of [AddedHediff_indefinite] on [PAWN]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+</Defs>

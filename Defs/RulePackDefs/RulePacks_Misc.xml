@@ -1,0 +1,386 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <RulePackDef>
+        <defName>PH_BodyPartDestroyed</defName>
+        <rulePack>
+            <rulesStrings>
+                <li>entry(hasInstigator==True, hasDmgSource==True) ->[PAWN]'s [Part] was [Destroyed] by [Instigator]'s [DmgSource].</li>
+                <li>entry(hasInstigator==True, hasDmgSource==False)->[PAWN]'s [Part] was [Destroyed] by [Instigator].</li>
+                <li>entry(hasInstigator==False,hasDmgSource==True) ->[PAWN]'s [Part] was [Destroyed] by [DmgSource].</li>
+                <li>entry(hasInstigator==False,hasDmgSource==False)->[PAWN]'s [Part] was [Destroyed].</li>
+            </rulesStrings>
+        </rulePack>
+    </RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_BodyPartScarred</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>InBodyPart(hasInstigator==True)                     ->in [PAWN_possessive] [Part] by [Instigator]'s [DmgSource]</li>
+				<li>InBodyPart(hasInstigator==False,hasDmgSource==True) ->in [PAWN_possessive] [Part] by [DmgSource]</li>
+				<li>InBodyPart(hasInstigator==False,hasDmgSource==False)->in [PAWN_possessive] [Part]</li>
+
+				<li>entry(reason==InstantDamage)->[PAWN] had [Hediff_indefinite] [InBodyPart].</li>
+				<li>entry(reason==PostHeal)     ->[PAWN] recovered with [Hediff_indefinite] [InBodyPart].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_Casualty</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>Downed(hasReason==False)->was incapacitated</li>
+				<li>Downed(hasReason==True) ->was incapacitated due to [HediffInPart]</li>
+				<li>Died(hasReason==False)  ->died</li>
+				<li>Died(hasReason==True)   ->died because of [HediffInPart]</li>
+
+				<!-- replace the first deceased pawn's name -->
+				<li>povRelative->[PAWN]'s [Relation], [Subject],</li>
+				<li>povBondedAnimal(hasName==True) ->[PAWN]'s bonded [AnimalKind], [Subject],</li>
+				<li>povBondedAnimal(hasName==False)->[PAWN]'s bonded [AnimalKind]</li>
+				
+				<li>downedEntry->[PAWN] [Downed].</li>
+				<li>killedEntry(factionLeader==True)->[PAWN], a faction leader of [PAWN_factionName], [Died].</li>
+				<li>killedEntry(factionLeader!=True)->[PAWN] [Died].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_FoodPoisoning</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>CauseClause(hasCook==True,cause==IncompetentCook) ->[Cause] [Cook]</li>
+				<li>CauseClause(hasCook==False)                       ->[Cause]</li>
+				<li>entry(cause==Unknown)->[PAWN] got food poisoning from [Ingestible_indefinite].</li>
+				<li>entry(cause!=Unknown)->[PAWN] got food poisoning from [Ingestible_indefinite] because of [CauseClause].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_HealthComplication</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>InHisPart(priority=1,hediff==OrganDecay)             -> in [PAWN_possessive] [Part]</li>
+				<li>InHisPart(priority=1,hediff==Carcinoma)              -> in [PAWN_possessive] [Part]</li>
+				<li>InHisPart(priority=1,hediff==ChemicalDamageModerate) -> in [PAWN_possessive] [Part]</li>
+				<li>InHisPart(priority=1,hediff==ChemicalDamageSevere)   -> in [PAWN_possessive] [Part]</li>
+				<li>InHisPart(priority=0)                                -></li>
+				
+				<li>entry(hasCause==False)->[PAWN] developed [Condition][InHisPart].</li>
+				<li>entry(hasCause==True) ->[PAWN] developed [Condition][InHisPart]. It was caused by [Cause].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_DrugAddicted</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] developed [Addiction_indefinite].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_Birthday</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(isCancer==False)->[PAWN] turned [PAWN_age] and began suffering from [Hediffs] due to aging.</li>
+				<li>entry(isCancer==True) ->[PAWN] turned [PAWN_age] and began suffering from [Hediffs] in [PAWN_possessive] [Part] due to aging.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_SkillLeveledUp</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>DoXThings(record==Kills)                ->killing [RecordCount] creatures</li>
+				<li>DoXThings(record==KillsHumanlikes)      ->killing [RecordCount] humanlike characters</li>
+				<li>DoXThings(record==KillsAnimals)         ->hunting [RecordCount] animals</li>
+				<li>DoXThings(record==KillsMechanoids)      ->killing [RecordCount] mechanoids</li>
+				<li>DoXThings(record==KillsEntities)        ->killing [RecordCount] entities</li>
+				<li>DoXThings(record==PawnsDowned)          ->incapacitated [RecordCount] creatures</li>
+				<li>DoXThings(record==PawnsDownedHumanlikes)->incapacitated [RecordCount] humanlike characters</li>
+				<li>DoXThings(record==PawnsDownedAnimals)   ->incapacitated [RecordCount] animals</li>
+				<li>DoXThings(record==PawnsDownedMechanoids)->incapacitated [RecordCount] mechanoids</li>
+				<li>DoXThings(record==PawnsDownedEntities)  ->incapacitated [RecordCount] entities</li>
+				<li>DoXThings(record==ShotsFired)           ->firing [RecordCount] shots</li>
+				<li>DoXThings(record==Headshots)            ->having [RecordCount] headshots</li>
+				<li>DoXThings(record==OperationsPerformed)  ->performing [RecordCount] medical operations</li>
+				<li>DoXThings(record==TimesTendedOther)     ->tending others' medical conditions [RecordCount] times</li>
+				<li>DoXThings(record==ThingsCrafted)        ->crafting [RecordCount] things</li>
+				<li>DoXThings(record==CellsMined)           ->mining out [RecordCount] cells</li>
+				<li>DoXThings(record==PlantsSown)           ->sowing [RecordCount] plants</li>
+				<li>DoXThings(record==PlantsHarvested)      ->harvesting [RecordCount] plants</li>
+				<li>DoXThings(record==MealsCooked)          ->cooking [RecordCount] meals</li>
+				<li>DoXThings(record==ThingsConstructed)    ->constructing [RecordCount] things</li>
+				<li>DoXThings(record==ThingsRepaired)       ->repairing [RecordCount] things</li>
+				<li>DoXThings(record==ThingsDeconstructed)  ->deconstructing [RecordCount] things</li>
+				<li>DoXThings(record==AnimalsTamed)         ->taming [RecordCount] animals</li>
+				<li>DoXThings(record==PrisonersRecruited)   ->recruiting [RecordCount] prisoners</li>
+				<li>DoXThings(record==PrisonersChatted)     ->chatting with [RecordCount] prisoners</li>
+				<li>DoXThings(record==ResearchPointsResearched)->gaining [RecordCount] research points</li>
+
+				<li>AfterDoingXThings(record==)-></li>
+				<li>AfterDoingXThings(record!=)-> after [DoXThings]</li>
+				
+				<li>entry->[PAWN] reached level [NewLevel] in [Skill][AfterDoingXThings].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_SkillLeveledDown</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] dropped to level [NewLevel] in [Skill].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_Inspiration</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(reason==HighMood)           ->Thanks to high mood, [PAWN] gained an inspiration: [Inspiration].</li>
+				<li>entry(reason==Psilocap)           ->After taking psilocaps, [PAWN] gained an inspiration: [Inspiration].</li>
+				<li>entry(reason==PsychicInspiration) ->Thanks to [Initiator]'s psychic suggestion, [PAWN] gained an inspiration: [Inspiration].</li>
+				<li>entry(reason==Ritual)             ->After a satisfying [Ritual], [PAWN] gained an inspiration: [Inspiration].</li>
+				<li>entry(reason==Speech)             ->Thanks to [Initiator]'s remarkable speech, [PAWN] gained an inspiration: [Inspiration].</li>
+				<li>entry(reason==Trait)              ->After a mental break, [PAWN], who has the [Trait] trait, gained an inspiration: [Inspiration].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_AncientDangerWarning</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] felt a deep sense of foreboding while approaching an ancient structure, sensing great danger within.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_CasketDrop</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>Intro(isAwakened==True) ->[PAWN], a member of [Faction],</li>
+				<li>Intro(isAwakened==False)->[PAWN]</li>
+
+				<li>ByOpener(hasOpener==True) -> by [Opener]</li>
+				<li>ByOpener(hasOpener==False)-></li>
+				
+				<li>Removed(isCorpse==True) ->removed</li>
+				<li>Removed(isCorpse==False)->ejected</li>
+
+				<li>entry(reason==Ejected)        ->[Intro] was [Removed] from [Casket_indefinite][ByOpener].</li>
+				<li>entry(reason==CasketDestroyed)->[Intro] was violently [Removed] from [Casket_indefinite] after it was destroyed[ByOpener].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_PawnSold</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(action==PlayerSells)->[Negotiator] sold [PAWN] into slavery to [Faction] for [Price] silvers.</li>
+				<li>entry(action==PlayerBuys) ->[Negotiator] bought [PAWN] from [Faction] for [Price] silvers.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_JoinedParty</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(isOrganizer==True) ->[PAWN] threw a party for the colony.</li>
+				<li>entry(isOrganizer==False)->[PAWN] attended [Organizer]'s party[WithOthers].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_PartyCancelled</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(reason==Unknown)      ->[Organizer]'s party was cancelled.</li>
+				<li>entry(reason==PawnKilled)   ->[Organizer]'s party was cancelled after [DeadPawn] died.</li>
+				<li>entry(reason==OrganizerLeft)->[Organizer]'s party was cancelled after [Organizer_pronoun] left.</li>
+				<li>entry(reason==DangerousMap) ->[Organizer]'s party was cancelled due to nearby threats.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_Disease</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(disease!=OrganDecay)->[PAWN] got sick from [Disease][AlongWithOthers].</li>
+				<li>entry(disease==OrganDecay)->[PAWN] developed a flesh-eating infection known as [Disease] in [PAWN_possessive] [Part].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_MentalBreak</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>ReasonMood  ->This happened because of poor mood: [Mood].</li>
+				<li>ReasonHediff->This happened because of: [Hediff].</li>
+				<li>ReasonTrait ->This happened because of the trait: [Trait].</li>
+				
+				<li>entry(priority=1,name==Berserk)             ->[PAWN] went berserk. [PAWN_pronoun] was going to attack anyone [PAWN_pronoun] sees. [Reason]</li>
+				<li>entry(priority=1,name==FireStartingSpree)   ->[PAWN] was on a fire starting spree. [PAWN_pronoun] wandered around for a while, randomly starting fires. [Reason]</li>
+				<li>entry(priority=1,name==Catatonic)           ->[PAWN] suffered a total mental breakdown and entered a catatonic state for several days. [Reason]</li>
+				<li>entry(priority=1,name==Jailbreaker)         ->[PAWN] had a mental breakdown and was going to induce [Prisoners] to escape. [Reason]</li>
+				<li>entry(priority=1,name==RunWild)             ->[PAWN] was fed up with civilization. [PAWN_pronoun] decided to leave [FACTION] to live with the animals in the wild. [Reason]</li>
+				<li>entry(priority=1,name==GiveUpExit)          ->[PAWN] gave up on this community. [PAWN_pronoun] decided to leave and pursue a better life elsewhere. [Reason]</li>
+				<li>entry(priority=1,name==Binging_DrugExtreme) ->[PAWN] binged on [Drug] during an extreme mental break. [Reason]</li>
+				<li>entry(priority=1,name==Binging_DrugMajor)   ->[PAWN] binged on [Drug] during a major mental break. [Reason]</li>
+				<li>entry(priority=1,name==Binging_Food)        ->[PAWN] pigged out on food. [Reason]</li>
+				<li>entry(priority=1,name==Wander_Psychotic)    ->[PAWN] wandered around in a psychotic state. [Reason]</li>
+				<li>entry(priority=1,name==Wander_Sad)          ->[PAWN] broke down and wandered around in sadness. [Reason]</li>
+				<li>entry(priority=1,name==Wander_OwnRoom)      ->[PAWN] hid in [PAWN_possessive] room. [Reason]</li>
+				<li>entry(priority=1,name==Tantrum)             ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash up random furniture, items and structures. [Reason]</li>
+				<li>entry(priority=1,name==TargetedTantrum)     ->[PAWN] had a tantrum. [PAWN_pronoun] was going to destroy [Thing]. [Reason]</li>
+				<li>entry(priority=1,name==BedroomTantrum)      ->[PAWN] had a tantrum. [PAWN_pronoun] was going to smash things in [PAWN_possessive] room. [Reason]</li>
+				<li>entry(priority=1,name==SadisticRage)        ->[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. [Reason]</li>
+				<li>entry(priority=1,name==InsultingSpree)      ->[PAWN] was on an insulting spree. [PAWN_pronoun] was going to wander around, randomly insulting others. [Reason]</li>
+				<li>entry(priority=1,name==Slaughterer)         ->[PAWN] had a mental breakdown and was going to vent [PAWN_possessive] anger by slaughtering [Target]. [Reason]</li>
+				<li>entry(priority=1,name==TargetedInsultingSpree)  ->[PAWN] fixated [PAWN_possessive] rage on [Target]. [PAWN_pronoun] was going to follow [Target_objective] around, hurling insults. [Reason]</li>
+				<li>entry(priority=1,name==CorpseObsession)     ->[PAWN] became obsessed with corpses. [PAWN_pronoun] was going to find and present [Target]'s corpse for all to see. [Reason]</li>
+				<li>entry(priority=1,name==MurderousRage)       ->[PAWN] flew into a murderous rage and decided to kill [Target]. [Reason]</li>
+				<li>entry(priority=0)                           ->[InGameDesc]. [Reason]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_AnimalRevenge</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>OthersRevenge(packRevenge==True) ->, [Others] nearby also became enraged!</li>
+				<li>OthersRevenge(packRevenge==False)->.</li>
+				
+				<li>entry(reason==Hunt)->[MadAnimal] went manhunter after being harmed by [PAWN][OthersRevenge]</li>
+				<li>entry(reason==Tame)->[MadAnimal] went manhunter after [PAWN] failed to tame it[OthersRevenge]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_Rescued</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>tale_noun->[PAWN] was rescued by [Rescuer].</li>
+
+				<li>circumstance_phrase->as [PAWN_pronoun] lay barely conscious</li>
+				<li>circumstance_phrase->as [PAWN_pronoun] struggled to stay awake</li>
+				<li>circumstance_phrase->with careful precision</li>
+				<li>circumstance_phrase->with urgency</li>
+				<li>circumstance_phrase->in a hurry</li>
+				<li>circumstance_phrase->amid the chaos</li>
+				<li>circumstance_phrase->with visible concern</li>
+				<li>circumstance_phrase->while calling out reassurance</li>
+
+				<li>image->[Rescuer_pronoun] carried [PAWN] to safety [circumstance_phrase]</li>
+				<li>image->[Rescuer_pronoun] pulled [PAWN] from danger [circumstance_phrase]</li>
+				<li>image->[Rescuer_pronoun] lifted [PAWN] onto [Rescuer_possessive] shoulder [circumstance_phrase]</li>
+				<li>image->[Rescuer_pronoun] dragged [PAWN] away from the threat [circumstance_phrase]</li>
+				<li>image->[Rescuer_pronoun] supported [PAWN] as they moved to safety [circumstance_phrase]</li>
+				<li>image->[Rescuer_pronoun] rushed [PAWN] toward shelter [circumstance_phrase]</li>
+
+				<li>desc_sentence->[Rescuer] checked [PAWN_possessive] condition with urgency.</li>
+				<li>desc_sentence->[PAWN] winced in pain but remained conscious.</li>
+				<li>desc_sentence->[PAWN] clung weakly to [Rescuer].</li>
+				<li>desc_sentence->[PAWN] seemed relieved to be found.</li>
+				<li>desc_sentence->[Rescuer] urged [PAWN_objective] to hold on.</li>
+				<li>desc_sentence->[Rescuer] steadied [PAWN_objective] with firm support.</li>
+				<li>desc_sentence->[Rescuer] reassured [PAWN_objective] that help was near.</li>
+				<li>desc_sentence->[PAWN] drifted in and out of awareness.</li>
+				<li>desc_sentence->[Rescuer] moved as quickly as possible without worsening the injuries.</li>
+				<li>desc_sentence->[PAWN] tried to speak but could barely manage a whisper.</li>
+
+				<li>entry->[tale_noun] [image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_PrisonerCaptured</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>circumstance_phrase->as [Prisoner_pronoun] writhed on the ground</li>
+				<li>circumstance_phrase->as [Prisoner_pronoun] twisted in pain</li>
+				<li>circumstance_phrase->with professional efficiency</li>
+				<li>circumstance_phrase->roughly and amateurishly</li>
+				<li>circumstance_phrase->with obviously excessive force</li>
+				<li>circumstance_phrase->with obvious pleasure</li>
+				<li>circumstance_phrase->while smiling with dominance</li>
+				
+				<li>image->[Captor] captured [Prisoner] [circumstance_phrase]</li>
+				<li>image->[Captor] tied [Prisoner]'s hands [circumstance_phrase]</li>
+				<li>image->[Captor] smacked [Prisoner] [circumstance_phrase]</li>
+				<li>image->[Captor] dragged [Prisoner] away in restraints [circumstance_phrase]</li>
+				<li>image->[Captor] roughed up [Prisoner] [circumstance_phrase]</li>
+				<li>image->[Captor] forced [Prisoner] into captivity [circumstance_phrase]</li>
+				
+				<li>desc_sentence->[Captor] looked into [Prisoner_possessive] eyes with a sense of dominance.</li>
+				<li>desc_sentence->[Prisoner] was injured and seemed to be in pain.</li>
+				<li>desc_sentence->[Prisoner] looked resigned to [Prisoner_possessive] fate.</li>
+				<li>desc_sentence->[Prisoner] snarled with the fury of defeat.</li>
+				<li>desc_sentence->[Captor] slapped [Prisoner] to subdue [Prisoner_objective].</li>
+				<li>desc_sentence->[Captor] twisted [Prisoner_possessive] ear.</li>
+				<li>desc_sentence->[Captor] held [Prisoner_objective] in a joint lock.</li>
+				<li>desc_sentence->[Captor] spat into [Prisoner_possessive] face.</li>
+				<li>desc_sentence->[Captor] laughed as tears welled up in [Prisoner_possessive] eyes.</li>
+				<li>desc_sentence->[Captor] kicked [Prisoner_objective] for no obvious reason.</li>
+
+				<li>contextClause(testPermutation==False)->[Prisoner], a member of [HostileFaction], was put into [RoomQuality_indefinite] prison</li>
+				<li>contextClause(testPermutation==True)-></li>
+
+				<li>entry->[image]. [contextClause].</li>
+				<li>entry->[image]. [desc_sentence] [contextClause].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_PrisonerRecruited</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(hasFactionName==True) ->[InteractionLog]. [Prisoner] accepted and joined [Faction].</li>
+				<li>entry(hasFactionName==False)->[InteractionLog]. [Prisoner] accepted and joined [Recruiter_possessive] community.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_PrisonBreak</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(initiator==True) ->[PAWN] started a prison break. [PAWN_pronoun] broke the locks open and tried to escape[WithOthers].</li>
+				<li>entry(initiator==False)->[PAWN][AndOthers] joined [Initiator]'s prison break and tried to escape.</li>
+
+				<li>jailbreaker(initiator==)    ->[Reason] As a result, [PAWN][AndOthers] started a prison break.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+</Defs>

@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RulePackDef>
+		<defName>PH_WalkNaked</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_SinglePawn.xml#WalkedNaked-->
+				<li>nude_action->pranced</li>
+				<li>nude_action->frolicked</li>
+				<li>nude_action->gambolled</li>
+				<li>nude_action->walked</li>
+				<li>nude_action->strutted [PAWN_possessive] stuff</li>
+				<li>nude_action->sashayed</li>
+				<li>nude_action->tiptoed</li>
+				<li>nude_action->promenaded</li>
+				<li>nude_action->surveyed the area</li>
+				<li>nude_action->meandered aimlessly</li>
+				<li>nude_action->lingered awkwardly</li>
+
+				<li>circumstance_phrase->with a sense of purpose</li>
+				<li>circumstance_phrase->with no hint of shame</li>
+				<li>circumstance_phrase->for no apparent reason</li>
+				<li>circumstance_phrase->while confused animals looked on</li>
+				<li>circumstance_phrase->as if nothing was unusual</li>
+				<li>circumstance_phrase->with unsettling confidence</li>
+
+				<li>image->[PAWN] [nude_action] while in a state of nature [circumstance_phrase]</li>
+				<li>image->[PAWN] [nude_action] in the nude [circumstance_phrase]</li>
+				<li>image->[PAWN] [nude_action], naked, [circumstance_phrase]</li>
+				<li>image->[PAWN] [nude_action] without any clothes on [circumstance_phrase]</li>
+				
+				<li>desc_sentence->[PAWN_pronoun] was visibly aroused.</li>
+				<li>desc_sentence->[PAWN_pronoun] was covered in unexplained moisture.</li>
+				<li>desc_sentence->[PAWN_pronoun] was breathing heavily for no obvious reason.</li>
+				<li>desc_sentence->[PAWN_pronoun] was fondling a shrub.</li>
+
+				<li>entry->[image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_ReadBook</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_SinglePawn.xml#ReadBook-->
+				<li>circumstance_phrase->while relaxing in [PAWN_possessive] favorite reading nook</li>
+				<li>circumstance_phrase->with a cup of tea by [PAWN_possessive] side</li>
+				<li>circumstance_phrase->under the soft glow of a reading lamp</li>
+				
+				<li>image->[PAWN] closed [Book] for the last time, a satisfied smile gracing [PAWN_possessive] face [circumstance_phrase]</li>
+				<li>image->[PAWN] turned the pages of [Book], absorbing the knowledge within [circumstance_phrase]</li>
+				<li>image->[PAWN] placed [Book] back on the shelf, a sense of accomplishment radiating from [PAWN_objective] [circumstance_phrase]</li>
+				<li>image->[PAWN] sitted in quiet contemplation, reflecting on the profound truths within [Book] [circumstance_phrase]</li>
+				
+				<li>desc_sentence->[PAWN] was surrounded by [PAWN_possessive] notes on [Book].</li>
+				<li>desc_sentence->[PAWN]'s eyes sparkled with newfound wisdom.</li>
+				<li>desc_sentence->[PAWN] was forever changed by the teachings of [Book].</li>
+				<li>desc_sentence->There was a sense that some secrets are yet to be uncovered.</li>
+
+				<li>entry->[image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_Stripped</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_Job.xml#Stripped-->
+				<li>circumstance_phrase->with a sense of purpose</li>
+				<li>circumstance_phrase->with no hint of shame</li>
+				<li>circumstance_phrase->while others look on</li>
+				<li>circumstance_phrase->for no apparent reason</li>
+				<li>circumstance_phrase->while confused animals look on</li>
+				
+				<li>desc_sentence->[STRIPPED] was visibly aroused.</li>
+				<li>desc_sentence->[STRIPPED] was covered in unexplained moisture.</li>
+				<li>desc_sentence->[STRIPPED] was breathing heavily for no obvious reason.</li>
+				<li>desc_sentence->[STRIPPED] was fondling a shrub.</li>
+				<li>desc_sentence->[STRIPPED] wore only a [AdjectiveAngsty] expression.</li>
+				
+				<li>image->[PAWN] disrobed [STRIPPED] in public [circumstance_phrase]</li>
+				<li>image->[PAWN] removed the clothes of [STRIPPED] [circumstance_phrase]</li>
+				<li>image->[PAWN] held an armful of [Apparel]s while standing next to [STRIPPED], who was completely naked [circumstance_phrase]</li>
+				<li>image->[PAWN] waited patiently as [STRIPPED] removed [STRIPPED_possessive] clothes [circumstance_phrase]</li>
+				
+				<li>entry->[image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_MinedValuable</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_Job.xml#MinedValuable-->
+				<li>tale_noun->[PAWN] struck a rich vein of [Material]!</li>
+				
+				<li>circumstance_phrase->sweating heavily</li>
+				<li>circumstance_phrase->wearing a [AdjectiveFriendly] expression</li>
+				<li>circumstance_phrase->wearing a [AdjectiveFriendly] expression</li>
+				<li>circumstance_phrase->smiling proudly</li>
+				<li>circumstance_phrase->a satisfied expression on [PAWN_possessive] face</li>
+
+				<li>image->[PAWN_pronoun] worked a tunnel wall with [PAWN_possessive] pick, [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] held up a chunk of the ore for the others to see, [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] leaned against the tunnel wall to catch [PAWN_possessive] breath, [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] directed the dig team through the thick seam, [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] ran [PAWN_possessive] fingers along the exposed vein, [circumstance_phrase]</li>
+				
+				<li>desc_sentence->[PH_Quantity] [ally]s assisted.</li>
+				<li>desc_sentence->[PH_Quantity] [Animal]s had wandered into the area.</li>
+				<li>desc_sentence->A [Community] could be seen on the horizon.</li>
+				<li>desc_sentence->[PH_Quantity] further veins were visible in the distance.</li>
+				<li>desc_sentence->A [TerrainFeature] was visible in the distance.</li>
+				<li>desc_sentence->[PAWN] was filthy and sweat-soaked by the end of it.</li>
+				
+				<li>entry->[tale_noun] [image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_VisitedGrave</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_Job.xml#VisitedGrave-->
+				<li>tale_noun->[PAWN] visited the grave of [Corpse]</li>
+				<li>tale_noun->[PAWN] visited [Corpse]'s grave</li>
+				
+				<li>circumstance_phrase->with a [AdjectiveAngsty] expression</li>
+				<li>circumstance_phrase->and consumed in thought</li>
+				<li>circumstance_phrase->while gazing at a faraway [TerrainFeature]</li>
+				<li>circumstance_phrase->and talked quietly to the memorial</li>
+
+				<li>image->[PAWN_pronoun] stood next to it [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] sat next to it [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] leaned against it [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] read the text on it [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] looked at the art on it [circumstance_phrase]</li>
+
+				<li>desc_sentence->A [Color] aurora shined in the background.</li>
+				<li>desc_sentence->In the distance, a [Community] was covered with snow.</li>
+				<li>desc_sentence->A spectral image of [Corpse] looked over the scene with a [AdjectiveFriendly] expression.</li>
+				<li>desc_sentence->A spectral image of [Corpse] stood next to [PAWN], wearing a [AdjectiveFriendly] expression.</li>
+				<li>desc_sentence->A spectral image of [Corpse] looked over the scene with a [AdjectiveAngsty] expression.</li>
+				<li>desc_sentence->A spectral image of [Corpse] stood next to [PAWN], wearing a [AdjectiveAngsty] expression.</li>
+				<li>desc_sentence->[Quantity_adjphrase] [Animal]s rest near the scene.</li>
+
+				<li>entry->[tale_noun]. [image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_Hunted</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_DoublePawn.xml#Hunted-->
+				<li>image->[Prey_indefinite] was hunted by [PAWN] [circumstance_phrase]</li>
+				<li>image->[PAWN] stalked [Prey_indefinite] from afar [circumstance_phrase]</li>
+				<li>image->[PAWN] hunted [Prey_indefinite] [circumstance_phrase]</li>
+				<li>image->[PAWN] aimed at [Prey_indefinite] carefully [circumstance_phrase]</li>
+
+				<li>AnimalVerb->relaxed</li>
+				<li>AnimalVerb->traveled</li>
+				<li>AnimalVerb->ate</li>
+				<li>AnimalVerb->wandered</li>
+				
+				<li>circumstance_phrase->while [Prey_pronoun] [AnimalVerb]</li>
+				<li>circumstance_phrase->as [PAWN_pronoun] waited patiently</li>
+				<li>circumstance_phrase->as [PAWN_pronoun] observed quietly</li>
+				<li>circumstance_phrase->as the distance closed between them</li>
+				<li>circumstance_phrase->in the quiet of the wild</li>
+
+				<li>desc_sentence->[Prey_nameDef] seemed completely oblivious.</li>
+				<li>desc_sentence->[Prey_nameDef] showed no sign of noticing anything unusual.</li>
+				<li>desc_sentence->[PAWN] gripped [Hunter_Possessive] weapon tightly.</li>
+				<li>desc_sentence->[Prey_nameDef] looked around as though [Prey_pronoun] sensed something was wrong.</li>
+				<li>desc_sentence->[PAWN] moved carefully to avoid detection.</li>
+				<li>desc_sentence->[Prey_nameDef] reacted too late to escape.</li>
+
+				<li>entry->[image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+</Defs>

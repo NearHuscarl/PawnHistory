@@ -12,7 +12,7 @@ public static class DefLookup
 {
     public static class RulePack
     {
-        public static RulePackDef PawnEvent_Var => field ??= DefDatabase<RulePackDef>.GetNamed("PawnEvent_Var");
+        public static RulePackDef PH_Var => field ??= DefDatabase<RulePackDef>.GetNamed("PH_Var");
     }
 
     public static class Hediff

@@ -2,7 +2,6 @@
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System;
-using UnityEngine.Profiling;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;

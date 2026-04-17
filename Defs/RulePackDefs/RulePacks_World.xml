@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <RulePackDef>
+        <defName>PH_Raid</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+        <rulePack>
+            <rulesStrings>
+				<li>entry(raidProperty==None)      ->[PAWN][AndOthers] from [FACTION] raided the colony.</li>
+				<li>entry(raidProperty==Breacher)  ->[PAWN][AndOthers] from [FACTION] raided the colony using breaching tactics.</li>
+				<li>entry(raidProperty==Sapper)    ->[PAWN][AndOthers] from [FACTION] raided the colony using sapper tactics.</li>
+				<li>entry(raidProperty==Siege)     ->[PAWN][AndOthers] from [FACTION] besieged the colony.</li>
+				<li>entry(raidProperty==CenterDrop)->[PAWN][AndOthers] from [FACTION] raided the colony by dropping directly into it.</li>
+			</rulesStrings>
+        </rulePack>
+    </RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_RaidFriendly</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(hostileFaction==)    ->[PAWN][AndOthers] from [FACTION] came to aid the colony.</li>
+				<li>entry(hostileFaction==true)->[PAWN][AndOthers] from [FACTION] came to aid the colony against [HostileFaction].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_NewArrival</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(method==Standing)->[PAWN] arrived on foot[WithOthers] to start a new settlement.</li>
+				<li>entry(method==DropPods)->[PAWN] crash-landed in a drop pod[WithOthers] to start a new settlement.</li>
+				<li>entry(method==Gravship)->[PAWN] landed in a gravship[WithOthers] to start a new settlement.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_LeaderChanged</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(reason==Death)->[PAWN] became the new [Faction_leaderTitle] of [Faction] after [OldLeader] died.</li>
+				<li>entry(reason==Lost)->[PAWN] became the new [Faction_leaderTitle] of [Faction] after [OldLeader] went missing.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_PlayerCaravanArrived</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(action==Attack)               ->[PAWN]'s caravan arrived at [WorldObject] to attack [Faction] [WithOthers].</li>
+				<li>entry(action==Enter,isColony==True) ->[PAWN]'s caravan arrived at the colony [WithOthers].</li>
+				<li>entry(action==Enter,isColony==False)->[PAWN]'s caravan arrived at [WorldObject] of [Faction] [WithOthers].</li>
+				<li>entry(action==OfferGifts)           ->[PAWN]'s caravan arrived at [WorldObject] [WithOthers] to offer gifts to [Faction].</li>
+				<li>entry(action==Trade)                ->[PAWN]'s caravan arrived at [WorldObject] [WithOthers] to trade with [Faction].</li>
+				<li>entry(action==VisitEscapeShip)      ->[PAWN]'s caravan arrived at the starship [WithOthers] that can be used to escape the planet.</li>
+				<li>entry(action==VisitPeaceTalks)      ->[PAWN]'s caravan arrived for peace talks [WithOthers] to negotiate with [Leader], [Faction_leaderTitle] of [Faction].</li>
+				<li>entry(action==VisitSite)            ->[PAWN]'s caravan arrived at [WorldObject_definite] [WithOthers].</li>
+				<li>entry(action==VisitSettlement)      ->[PAWN]'s caravan visited [WorldObject] of [Faction] [WithOthers].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_PlayerTransporterArrived</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>Holder(transporter==TransportPod)->transport pod</li>
+				<li>Holder(transporter==Shuttle)     ->shuttle</li>
+				<li>entry(action==Attack)               ->[PAWN] arrived at [WorldObject] in a [Holder] [WithOthers] to attack [Faction].</li>
+				<li>entry(action==Enter,isColony==True) ->[PAWN] arrived at the colony in a [Holder] [WithOthers].</li>
+				<li>entry(action==Enter,isColony==False)->[PAWN] arrived at [WorldObject] of [Faction] in a [Holder] [WithOthers].</li>
+				<li>entry(action==ArriveAsGift)         ->[PAWN] arrived at [WorldObject] in a [Holder] [WithOthers] as a gift to [Faction].</li>
+				<li>entry(action==AddedToCaravan)       ->[PAWN] was added to [WorldObject] from a [Holder] [WithOthers].</li>
+				<li>entry(action==FormCaravan)          ->[PAWN] arrived from a [Holder] [WithOthers] to form a new caravan.</li>
+				<li>entry(action==VisitSite)            ->[PAWN] arrived at [WorldObject_definite] in a [Holder] [WithOthers].</li>
+				<li>entry(action==VisitSpace)           ->[PAWN] arrived at [WorldObject_definite] in a [Holder] [WithOthers].</li>
+				<li>entry(action==VisitSettlement)      ->[PAWN] visited [WorldObject] of [Faction] in a [Holder] [WithOthers].</li>
+				<li>entry(action==TransportShip)        ->[PAWN] arrived at [WorldObject_definite] in a [Holder] [WithOthers].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_TradeCaravanArrived</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] arrived as part of a [TraderKind] caravan from [Faction].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_TradeCaravanLeft</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(reason==Timeout)             ->[PAWN] from [TraderKind] of [Faction] began to leave the colony.</li>
+				<li>entry(reason==DangerousTemperature)->[PAWN] from [TraderKind] of [Faction] began to leave the colony because of dangerous temperature.</li>
+				<li>entry(reason==AnomalousWeather)    ->[PAWN] from [TraderKind] of [Faction] began to leave the colony because of anomalous weather.</li>
+				<li>entry(reason==Trapped)             ->[PAWN] from [TraderKind] of [Faction] attempted to leave because the caravan became trapped inside.</li>
+				<li>entry(reason==TraderLost)          ->[PAWN] from [TraderKind] of [Faction] began to leave the colony after [PAWN_possessive] trader [Trader] was incapacitated.</li>
+				<li>entry(reason==PackAnimalLost)      ->[PAWN] from [TraderKind] of [Faction] began to leave the colony after [PackAnimal_indefinite] was incapacitated.</li>
+				<li>entry(reason==PawnLost)            ->[PAWN] from [TraderKind] of [Faction] began to leave the colony after many of [PAWN_possessive] members were lost.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_VisitorArrived</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN][AndOthers] from [FACTION] arrived to visit the colony.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_TravelGroupArrived</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN][AndOthers] from [FACTION] passed by the colony.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_RescueJoined</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>F(hasFactionName==True) ->[Faction]</li>
+				<li>F(hasFactionName==False)->the community</li>
+
+				<li>entry->[PAWN] was grateful after being rescued. Instead of leaving, [PAWN_pronoun] decided to stay and joined [F].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_WandererJoined</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->A [PAWN_title] named [PAWN] arrived and joined the colony. [PAWN_pronoun] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_RefugeePodCrashed</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(dead==False)->[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [PAWN_pronoun] survived the impact but was badly wounded.</li>
+				<li>entry(dead==True) ->[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_WildManWanderedIn</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->A [PAWN_kind] living among wild animals wandered into the area. [PAWN_pronoun]'s called [PAWN].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_ManInBlackJoin</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>RelClause(hasRelation==True) ->. [PAWN_pronoun] is [Other]'s [Relation]</li>
+				<li>RelClause(hasRelation==False)-></li>
+				<li>entry->Sensing trouble, a mysterious [PAWN_kind] named [PAWN] arrived[RelClause]. Would [PAWN_pronoun] be able to set things right in these parts?</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_GameEndedWanderersJoined</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN][AndOthers] stumbled across the remains of the colony and decided to stay. Perhaps they will carry on its story.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+</Defs>

@@ -40,7 +40,7 @@ public class HistoryRecord : IExposable
             ?? pawn.GetCaravan()?.Tile.tileId
             ?? Find.AnyPlayerHomeMap.Tile.tileId;
         
-        if (this.tileId == Find.AnyPlayerHomeMap.Tile.tileId)
+        if (pawn.IsWorldPawn() && this.tileId == Find.AnyPlayerHomeMap.Tile.tileId)
             Log.Message($"{nameof(HistoryRecord)} for {pawn} is initialized but cannot locate WorldPawn location, falling back to PlayerHomeMap..\n\n{DebugUtility.Format(this)}");
 
         this.location = location;

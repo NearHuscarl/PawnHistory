@@ -6,7 +6,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record RescueJoinedEvent(Pawn Pawn) : GameEventBase;
 
-static class RescueJoinedContext
+internal static class RescueJoinedContext
 {
     public static Faction PawnFaction;
 }

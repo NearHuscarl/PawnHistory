@@ -4,7 +4,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Raid</defName>
 		<label>raid</label>
-		<descriptionMaker>PawnEvent_Raid</descriptionMaker>
+		<descriptionMaker>PH_Raid</descriptionMaker>
 		<icon>Ui/Commands/AttackSettlement</icon>
 		<categories>
 			<li>Arrival</li>
@@ -13,7 +13,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>RaidFriendly</defName>
 		<label>friendlies arrived</label>
-		<descriptionMaker>PawnEvent_RaidFriendly</descriptionMaker>
+		<descriptionMaker>PH_RaidFriendly</descriptionMaker>
 		<icon>Ui/Commands/CallAid</icon>
 		<categories>
 			<li>Arrival</li>
@@ -31,7 +31,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Death</defName>
 		<label>death</label>
-		<descriptionMaker>PawnEvent_Casualty</descriptionMaker>
+		<descriptionMaker>PH_Casualty</descriptionMaker>
 		<icon>Things/Mote/BattleSymbols/Skull</icon>
 		<categories>
 			<li>Health</li>
@@ -42,7 +42,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>RelativeDeath</defName>
 		<label>relative death</label>
-		<descriptionMaker>PawnEvent_Casualty</descriptionMaker>
+		<descriptionMaker>PH_Casualty</descriptionMaker>
 		<icon>EventIcons/RelativeDeath</icon>
 		<categories>
 			<li>Life</li>
@@ -51,7 +51,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BondedAnimalDeath</defName>
 		<label>bonded animal death</label>
-		<descriptionMaker>PawnEvent_Casualty</descriptionMaker>
+		<descriptionMaker>PH_Casualty</descriptionMaker>
 		<icon>EventIcons/RelativeDeath</icon>
 		<categories>
 			<li>Life</li>
@@ -60,7 +60,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Downed</defName>
 		<label>downed</label>
-		<descriptionMaker>PawnEvent_Casualty</descriptionMaker>
+		<descriptionMaker>PH_Casualty</descriptionMaker>
 		<icon>Things/Mote/BattleSymbols/Downed</icon>
 		<categories>
 			<li>Health</li>
@@ -99,7 +99,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>FoodPoisoning</defName>
 		<label>food poisoning</label>
-		<descriptionMaker>PawnEvent_FoodPoisoning</descriptionMaker>
+		<descriptionMaker>PH_FoodPoisoning</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Health</li>
@@ -108,7 +108,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>HealthComplication</defName>
 		<label>health complication</label>
-		<descriptionMaker>PawnEvent_HealthComplication</descriptionMaker>
+		<descriptionMaker>PH_HealthComplication</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Health</li>
@@ -117,7 +117,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>DrugAddicted</defName>
 		<label>drug addicted</label>
-		<descriptionMaker>PawnEvent_DrugAddicted</descriptionMaker>
+		<descriptionMaker>PH_DrugAddicted</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Health</li>
@@ -126,7 +126,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Birthday</defName>
 		<label>birthday</label>
-		<descriptionMaker>PawnEvent_Birthday</descriptionMaker>
+		<descriptionMaker>PH_Birthday</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
@@ -136,7 +136,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>SkillLeveledUp</defName>
 		<label>skill leveled up</label>
-		<descriptionMaker>PawnEvent_SkillLeveledUp</descriptionMaker>
+		<descriptionMaker>PH_SkillLeveledUp</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Work</li>
@@ -145,7 +145,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>SkillLeveledDown</defName>
 		<label>skill leveled down</label>
-		<descriptionMaker>PawnEvent_SkillLeveledDown</descriptionMaker>
+		<descriptionMaker>PH_SkillLeveledDown</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Work</li>
@@ -154,7 +154,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Inspiration</defName>
 		<label>inspiration</label>
-		<descriptionMaker>PawnEvent_Inspiration</descriptionMaker>
+		<descriptionMaker>PH_Inspiration</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Work</li>
@@ -164,7 +164,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BodyPartDestroyed</defName>
 		<label>body part destroyed</label>
-		<descriptionMaker>PawnEvent_BodyPartDestroyed</descriptionMaker>
+		<descriptionMaker>PH_BodyPartDestroyed</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Health</li>
@@ -173,7 +173,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BodyPartRemoved</defName>
 		<label>body part removed</label>
-		<descriptionMaker>PawnEvent_BodyPartRemoved</descriptionMaker>
+		<descriptionMaker>PH_BodyPartRemoved</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Health</li>
@@ -182,7 +182,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BodyPartImplanted</defName>
 		<label>body part implanted</label>
-		<descriptionMaker>PawnEvent_BodyPartImplanted</descriptionMaker>
+		<descriptionMaker>PH_BodyPartImplanted</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Health</li>
@@ -191,7 +191,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BodyPartInstalled</defName>
 		<label>body part installed</label>
-		<descriptionMaker>PawnEvent_BodyPartInstalled</descriptionMaker>
+		<descriptionMaker>PH_BodyPartInstalled</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Health</li>
@@ -200,7 +200,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BodyPartModded</defName>
 		<label>artifical body part installed</label>
-		<descriptionMaker>PawnEvent_BodyPartModded</descriptionMaker>
+		<descriptionMaker>PH_BodyPartModded</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Health</li>
@@ -209,7 +209,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BotchedSurgery</defName>
 		<label>botched surgery</label>
-		<descriptionMaker>PawnEvent_BotchedSurgery</descriptionMaker>
+		<descriptionMaker>PH_BotchedSurgery</descriptionMaker>
 		<icon>EventIcons/BotchedSurgery</icon>
 		<categories>
 			<li>Health</li>
@@ -218,7 +218,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BodyPartScarred</defName>
 		<label>body part scarred</label>
-		<descriptionMaker>PawnEvent_BodyPartScarred</descriptionMaker>
+		<descriptionMaker>PH_BodyPartScarred</descriptionMaker>
 		<icon>EventIcons/Scars</icon>
 		<categories>
 			<li>Health</li>
@@ -228,7 +228,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>NewArrival</defName>
 		<label>new arrival</label>
-		<descriptionMaker>PawnEvent_NewArrival</descriptionMaker>
+		<descriptionMaker>PH_NewArrival</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Joined</li>
@@ -237,7 +237,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>LeaderChanged</defName>
 		<label>leader changed</label>
-		<descriptionMaker>PawnEvent_LeaderChanged</descriptionMaker>
+		<descriptionMaker>PH_LeaderChanged</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>None</li>
@@ -246,7 +246,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>AncientDangerWarning</defName>
 		<label>ancient danger warning</label>
-		<descriptionMaker>PawnEvent_AncientDangerWarning</descriptionMaker>
+		<descriptionMaker>PH_AncientDangerWarning</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
@@ -255,7 +255,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>CasketDrop</defName>
 		<label>casket drop</label>
-		<descriptionMaker>PawnEvent_CasketDrop</descriptionMaker>
+		<descriptionMaker>PH_CasketDrop</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>None</li>
@@ -264,7 +264,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>CasketAwakened</defName>
 		<label>awakened from casket</label>
-		<descriptionMaker>PawnEvent_CasketDrop</descriptionMaker>
+		<descriptionMaker>PH_CasketDrop</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Arrival</li>
@@ -273,7 +273,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PlayerCaravanArrived</defName>
 		<label>player caravan arrived</label>
-		<descriptionMaker>PawnEvent_PlayerCaravanArrived</descriptionMaker>
+		<descriptionMaker>PH_PlayerCaravanArrived</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>World</li>
@@ -282,7 +282,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PlayerTransporterArrived</defName>
 		<label>player transporter arrived</label>
-		<descriptionMaker>PawnEvent_PlayerTransporterArrived</descriptionMaker>
+		<descriptionMaker>PH_PlayerTransporterArrived</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>World</li>
@@ -291,7 +291,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TradeCaravanArrived</defName>
 		<label>trade caravan arrived</label>
-		<descriptionMaker>PawnEvent_TradeCaravanArrived</descriptionMaker>
+		<descriptionMaker>PH_TradeCaravanArrived</descriptionMaker>
 		<icon>Ui/Commands/SellableItems</icon>
 		<categories>
 			<li>Arrival</li>
@@ -300,7 +300,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TradeCaravanLeft</defName>
 		<label>trade caravan left</label>
-		<descriptionMaker>PawnEvent_TradeCaravanLeft</descriptionMaker>
+		<descriptionMaker>PH_TradeCaravanLeft</descriptionMaker>
 		<icon>Ui/Commands/ForceCaravanToDepart</icon>
 		<categories>
 			<li>Departure</li>
@@ -309,7 +309,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>VisitorArrived</defName>
 		<label>visitor arrived</label>
-		<descriptionMaker>PawnEvent_VisitorArrived</descriptionMaker>
+		<descriptionMaker>PH_VisitorArrived</descriptionMaker>
 		<icon>EventIcons/VisitorArrived</icon>
 		<categories>
 			<li>Arrival</li>
@@ -318,7 +318,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TravelGroupArrived</defName>
 		<label>travel group passing by</label>
-		<descriptionMaker>PawnEvent_TravelGroupArrived</descriptionMaker>
+		<descriptionMaker>PH_TravelGroupArrived</descriptionMaker>
 		<icon>EventIcons/TravelGroup</icon>
 		<categories>
 			<li>Arrival</li>
@@ -327,7 +327,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>RescueJoined</defName>
 		<label>rescue joined</label>
-		<descriptionMaker>PawnEvent_RescueJoined</descriptionMaker>
+		<descriptionMaker>PH_RescueJoined</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Joined</li>
@@ -336,7 +336,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>WandererJoined</defName>
 		<label>wanderer joined</label>
-		<descriptionMaker>PawnEvent_WandererJoined</descriptionMaker>
+		<descriptionMaker>PH_WandererJoined</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Joined</li>
@@ -345,7 +345,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>RefugeePodCrashed</defName>
 		<label>refugee pod crashed</label>
-		<descriptionMaker>PawnEvent_RefugeePodCrashed</descriptionMaker>
+		<descriptionMaker>PH_RefugeePodCrashed</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Arrival</li>
@@ -354,7 +354,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>WildManWanderedIn</defName>
 		<label>wild man wandered in</label>
-		<descriptionMaker>PawnEvent_WildManWanderedIn</descriptionMaker>
+		<descriptionMaker>PH_WildManWanderedIn</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Arrival</li>
@@ -363,7 +363,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>ManInBlackJoin</defName>
 		<label>man in black joining</label>
-		<descriptionMaker>PawnEvent_ManInBlackJoin</descriptionMaker>
+		<descriptionMaker>PH_ManInBlackJoin</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Joined</li>
@@ -372,7 +372,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>GameEndedWanderersJoined</defName>
 		<label>game ended wanderers joined</label>
-		<descriptionMaker>PawnEvent_GameEndedWanderersJoined</descriptionMaker>
+		<descriptionMaker>PH_GameEndedWanderersJoined</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Joined</li>
@@ -381,7 +381,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>SoldToSlavery</defName>
 		<label>sold to slavery</label>
-		<descriptionMaker>PawnEvent_PawnSold</descriptionMaker>
+		<descriptionMaker>PH_PawnSold</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Banished</li>
@@ -390,7 +390,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BoughtFromSlavery</defName>
 		<label>bought from slavery</label>
-		<descriptionMaker>PawnEvent_PawnSold</descriptionMaker>
+		<descriptionMaker>PH_PawnSold</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Joined</li>
@@ -400,7 +400,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>JoinedParty</defName>
 		<label>party started</label>
-		<descriptionMaker>PawnEvent_JoinedParty</descriptionMaker>
+		<descriptionMaker>PH_JoinedParty</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
@@ -410,7 +410,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PartyCancelled</defName>
 		<label>party cancelled</label>
-		<descriptionMaker>PawnEvent_PartyCancelled</descriptionMaker>
+		<descriptionMaker>PH_PartyCancelled</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
@@ -421,7 +421,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Disease</defName>
 		<label>disease</label>
-		<descriptionMaker>PawnEvent_Disease</descriptionMaker>
+		<descriptionMaker>PH_Disease</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Health</li>
@@ -430,7 +430,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>MentalBreak</defName>
 		<label>mental break</label>
-		<descriptionMaker>PawnEvent_MentalBreak</descriptionMaker>
+		<descriptionMaker>PH_MentalBreak</descriptionMaker>
 		<icon>Ui/Icons/ColonistBar/MentalStateNonAggro</icon>
 		<categories>
 			<li>Life</li>
@@ -439,7 +439,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>MentalBreakViolent</defName>
 		<label>violent mental break</label>
-		<descriptionMaker>PawnEvent_MentalBreak</descriptionMaker>
+		<descriptionMaker>PH_MentalBreak</descriptionMaker>
 		<icon>Ui/Icons/ColonistBar/MentalStateAggro</icon>
 		<categories>
 			<li>Life</li>
@@ -448,7 +448,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>AnimalRevenge</defName>
 		<label>animal revenge</label>
-		<descriptionMaker>PawnEvent_AnimalRevenge</descriptionMaker>
+		<descriptionMaker>PH_AnimalRevenge</descriptionMaker>
 		<icon>Ui/Icons/ColonistBar/MentalStateAggro</icon>
 		<categories>
 			<li>Work</li>
@@ -466,7 +466,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Rescued</defName>
 		<label>rescued</label>
-		<descriptionMaker>PawnEvent_Rescued</descriptionMaker>
+		<descriptionMaker>PH_Rescued</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Combat</li>
@@ -476,7 +476,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>NewLover</defName>
 		<label>new lover</label>
-		<descriptionMaker>PawnEvent_NewLover</descriptionMaker>
+		<descriptionMaker>PH_NewLover</descriptionMaker>
 		<icon>Things/Mote/SpeechSymbols/Romance</icon>
 		<categories>
 			<li>Relationship</li>
@@ -485,7 +485,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>NewAffair</defName>
 		<label>new affair</label>
-		<descriptionMaker>PawnEvent_NewAffair</descriptionMaker>
+		<descriptionMaker>PH_NewAffair</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Relationship</li>
@@ -494,7 +494,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Breakup</defName>
 		<label>breakup</label>
-		<descriptionMaker>PawnEvent_Breakup</descriptionMaker>
+		<descriptionMaker>PH_Breakup</descriptionMaker>
 		<icon>Things/Mote/SpeechSymbols/Breakup</icon>
 		<categories>
 			<li>Relationship</li>
@@ -503,7 +503,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>MarriageProposal</defName>
 		<label>marriage proposal</label>
-		<descriptionMaker>PawnEvent_MarriageProposal</descriptionMaker>
+		<descriptionMaker>PH_MarriageProposal</descriptionMaker>
 		<icon>Things/Mote/SpeechSymbols/MarriageProposal</icon>
 		<categories>
 			<li>Relationship</li>
@@ -512,7 +512,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonerCaptured</defName>
 		<label>prisoner captured</label>
-		<descriptionMaker>PawnEvent_PrisonerCaptured</descriptionMaker>
+		<descriptionMaker>PH_PrisonerCaptured</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
@@ -521,7 +521,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonerRecruited</defName>
 		<label>prisoner recruited</label>
-		<descriptionMaker>PawnEvent_PrisonerRecruited</descriptionMaker>
+		<descriptionMaker>PH_PrisonerRecruited</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Joined</li>
@@ -530,7 +530,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonBreak</defName>
 		<label>prison break</label>
-		<descriptionMaker>PawnEvent_PrisonBreak</descriptionMaker>
+		<descriptionMaker>PH_PrisonBreak</descriptionMaker>
 		<icon>Things/Mote/SpeechSymbols/SparkJailbreak</icon>
 		<categories>
 			<li>Gathering</li>
@@ -550,7 +550,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>WalkNaked</defName>
 		<label>naked walking</label>
-		<descriptionMaker>PawnEvent_WalkNaked</descriptionMaker>
+		<descriptionMaker>PH_WalkNaked</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
@@ -560,7 +560,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>ReadBook</defName>
 		<label>reading book</label>
-		<descriptionMaker>PawnEvent_ReadBook</descriptionMaker>
+		<descriptionMaker>PH_ReadBook</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
@@ -570,7 +570,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Stripped</defName>
 		<label>stripped</label>
-		<descriptionMaker>PawnEvent_Stripped</descriptionMaker>
+		<descriptionMaker>PH_Stripped</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
@@ -580,7 +580,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>MinedValuable</defName>
 		<label>mined valuable</label>
-		<descriptionMaker>PawnEvent_MinedValuable</descriptionMaker>
+		<descriptionMaker>PH_MinedValuable</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Work</li>
@@ -590,7 +590,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>VisitedGrave</defName>
 		<label>visited grave</label>
-		<descriptionMaker>PawnEvent_VisitedGrave</descriptionMaker>
+		<descriptionMaker>PH_VisitedGrave</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
@@ -600,7 +600,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Hunted</defName>
 		<label>animal hunted</label>
-		<descriptionMaker>PawnEvent_Hunted</descriptionMaker>
+		<descriptionMaker>PH_Hunted</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Work</li>

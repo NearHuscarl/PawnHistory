@@ -79,6 +79,7 @@ namespace PawnHistory.Source.PawnTracker;
 
 // Should I add:
 // - LetterAcceptedProposal_NameChange
+// - LetterLabelDefeatAllEnemiesQuestCompleted -> colony-level history, but should I gave every pawn participated in the quest recognition
 
 // WorldPawn window
 // + Add a column to see the history of dead AND destroyed pawn. Concerned dead & destroyed pawn will open a dedicated history window.

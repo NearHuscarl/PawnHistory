@@ -47,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AGENTS.md" />
-    <Content Include="Defs\RulePacks_Event.xml" />
     <Compile Include="Source\Accessor.cs" />
     <Compile Include="Source\DebugTools\DebugActionLord.cs" />
     <Compile Include="Source\DebugTools\DebugUtility.cs" />
@@ -221,6 +220,12 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Defs\HistoryRecord.xml" />
+    <Content Include="Defs\RulePackDefs\RulePacks_Common.xml" />
+    <Content Include="Defs\RulePackDefs\RulePacks_Misc.xml" />
+    <Content Include="Defs\RulePackDefs\RulePacks_Relationship.xml" />
+    <Content Include="Defs\RulePackDefs\RulePacks_Surgery.xml" />
+    <Content Include="Defs\RulePackDefs\RulePacks_Tale.xml" />
+    <Content Include="Defs\RulePackDefs\RulePacks_World.xml" />
     <Content Include="Defs\WorldPawnButton.xml">
       <SubType>Designer</SubType>
     </Content>

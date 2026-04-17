@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RulePackDef>
+		<defName>PH_Var</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--colorized part-->
+				<li>Others(OtherCount==1)->[OtherCount] other</li>
+				<li>Others(OtherCount!=1)->[OtherCount] others</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_Common</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>PH_Quantity->two</li>
+				<li>PH_Quantity->three</li>
+				<li>PH_Quantity->four</li>
+				<li>PH_Quantity->five</li>
+				<li>PH_Quantity->six</li>
+				<li>PH_Quantity->seven</li>
+				<li>PH_Quantity->eight</li>
+				<li>PH_Quantity->nine</li>
+				<li>PH_Quantity->ten</li>
+				<li>PH_Quantity->several</li>
+				<li>PH_Quantity->a group of</li>
+				<li>PH_Quantity->dozens of</li>
+
+				<li>AndOthers(OtherCount==0)-></li>
+				<li>AndOthers(OtherCount!=0)-> and [Others]</li>
+				
+				<li>WithOthers(OtherCount==0)-></li>
+				<li>WithOthers(OtherCount!=0)-> with [Others]</li>
+
+				<li>AlongWithOthers(OtherCount==0)-></li>
+				<li>AlongWithOthers(OtherCount!=0)-> along with [Others]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+</Defs>

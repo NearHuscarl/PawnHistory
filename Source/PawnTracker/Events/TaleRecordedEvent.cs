@@ -8,7 +8,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 public record TaleRecordedEvent(Tale Tale, Pawn Pawn, object[] Params) : GameEventBase;
 
 [HarmonyPatch(typeof(TaleRecorder), nameof(TaleRecorder.RecordTale))]
-public static class TaleRecorder_RecordTale_Patch
+internal static class TaleRecorder_RecordTale_Patch
 {
     public static void Postfix(Tale __result, TaleDef def, params object[] args)
     {

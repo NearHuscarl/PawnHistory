@@ -6,6 +6,7 @@ using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using RimWorld.Planet;
+using RimWorld.QuestGen;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
@@ -213,6 +214,25 @@ public class PlayerTransporterArrivalRecorder : RecorderBase<PlayerTransporterAr
         scenario.DropPod(pawns).Visit(site).Execute();
 
         Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] arrived at the item stash in a transport pod with 2 others.", HistoryRecordDefOf.PlayerTransporterArrived);
+        return () => scenario.SlowDown();
+    }
+
+    [SkipTest]
+    public Action TestShuttle(TestScenario scenario)
+    {
+        scenario.SpeedUp();
+        
+        var shuttleDef = DefDatabase<ThingDef>.GetNamed("Shuttle");
+        var shuttle = scenario.Thing(shuttleDef).Create();
+        var transporter = shuttle.TryGetComp<CompTransporter>();
+        var shuttleComp = shuttle.TryGetComp<CompShuttle>();
+        var pawns = scenario.Pawn(3)
+            .Colonist()
+            .Do(p => transporter.innerContainer.TryAddOrTransfer(p))
+            .Execute();
+        
+        SendTransportShipAwayUtility.SendTransportShipAway(shuttleComp.shipParent, false, TransportShipDropMode.PawnsOnly);
+
         return () => scenario.SlowDown();
     }
 }

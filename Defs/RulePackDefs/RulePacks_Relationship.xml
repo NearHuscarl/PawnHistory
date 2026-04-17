@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RulePackDef>
+		<defName>PH_NewLover</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[InteractionLog]. [Recipient] was attracted and became [Initiator]'s lover. [AffairClause]</li>
+				<li>entry->[InteractionLog]. [Recipient] responded well and became [Initiator]'s lover.</li>
+				<li>entry->[InteractionLog]. [Recipient] became aroused and agreed to be [Initiator]'s lover.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_NewAffair</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(isMarried==True) ->[PAWN], who married to [Ex], began an affair with [NewLover].</li>
+				<!-- lover, fiancé-->
+				<li>entry(isMarried==False)->[PAWN] and [Ex] were no longer in a relationship after [PAWN] had an affair with [NewLover].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_Breakup</defName>
+		<rulePack>
+			<!--
+			- convert to past tense for my history mod
+			- remove subSymbol for Dumber & Rejected
+			- use PascalCase so DUMPER_nameDef -> Dumper
+			- rename circumstance_group to circumstance_phrase
+			- add more [desc_sentence], [circumstance_phrase] and [image]
+			-->
+			<rulesStrings>
+				<li>image->[Dumper_pronoun] sat [Rejected] down for an unpleasant talk [circumstance_phrase]</li>
+				<li>image->[Dumper_pronoun] stood at a distance from [Rejected] [circumstance_phrase]</li>
+				<li>image->[Dumper_pronoun] pushed [Rejected] out of bed [circumstance_phrase]</li>
+				<li>image->[Dumper_pronoun] rejected a hug from [Rejected] [circumstance_phrase]</li>
+				<li>image->[Dumper_pronoun] turned away from [Rejected] mid-conversation [circumstance_phrase]</li>
+				<li>image->[Dumper_pronoun] walked off while [Rejected] tried to speak [circumstance_phrase]</li>
+				<li>image->[Dumper_pronoun] avoided eye contact with [Rejected] [circumstance_phrase]</li>
+				<li>image->[Dumper_pronoun] left [Rejected] standing alone [circumstance_phrase]</li>
+
+				<li>circumstance_phrase->in a moment of great sadness</li>
+				<li>circumstance_phrase->as others looked away awkwardly</li>
+				<li>circumstance_phrase->as others looked on</li>
+				<li>circumstance_phrase->under tense silence</li>
+				<li>circumstance_phrase->during a heated argument</li>
+				<li>circumstance_phrase->without warning</li>
+				<li>circumstance_phrase->after a long pause</li>
+
+				<li>desc_sentence->[Rejected] sobbed uncontrollably.</li>
+				<li>desc_sentence->[Rejected] sneered and cried at the same time.</li>
+				<li>desc_sentence->[Rejected] stood stony-faced in shock.</li>
+				<li>desc_sentence->[Dumper] remained emotionally distant from [Rejected].</li>
+				<li>desc_sentence->[Rejected] collapsed on the floor in a quivering heap.</li>
+				<li>desc_sentence->[Rejected] gesticulated angrily at [Dumper].</li>
+				<li>desc_sentence->[Rejected] stared blankly, unable to respond.</li>
+				<li>desc_sentence->[Rejected] wiped away tears with shaking hands.</li>
+				<li>desc_sentence->[Rejected] tried to speak but failed to find words.</li>
+				<li>desc_sentence->[Rejected] looked utterly devastated.</li>
+				<li>desc_sentence->[Dumper] avoided any further interaction.</li>
+				<li>desc_sentence->[Dumper] spoke coldly and without hesitation.</li>
+				<li>desc_sentence->[Rejected] broke down after a brief silence.</li>
+				<li>desc_sentence->[Rejected] clenched their fists in frustration.</li>
+
+				<li>tale_noun->[Dumper] broke up with [Rejected].</li>
+				
+				<li>entry(hasReason==False)->[tale_noun] [image]. [desc_sentence]</li>
+				<li>entry(hasReason==True) ->[tale_noun] [image]. [desc_sentence] The final straw was: [Thought].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_MarriageProposal</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(outcome==Accepted)          ->[InteractionLog]. [PAWN] agreed and the two became engaged.</li>
+				<li>entry(outcome==Rejected)          ->[InteractionLog]. [PAWN] rejected the proposal.</li>
+				<li>entry(outcome==RejectedAndBrokeUp)->[InteractionLog]. [PAWN] rejected the proposal. The rejection was too much for the relationship, and the two broke up.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+</Defs>

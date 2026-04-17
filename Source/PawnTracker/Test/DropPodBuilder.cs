@@ -155,12 +155,12 @@ public class DropPodBuilder
     private static List<IntVec3> FindLauncherCells(Map map, int count)
     {
         var launcherDef = DefLookup.Thing.PodLauncher;
-        var start = DropCellFinder.TradeDropSpot(map);
-
-        foreach (var root in GenRadial.RadialCellsAround(start, 20f, true))
+        var cells = GenRadial.RadialCellsAround(map.Center, 30f, true);
+        
+        foreach (var root in cells)
         {
             var result = new List<IntVec3>();
-
+            
             for (var i = 0; i < count; i++)
             {
                 var launcherCell = root + new IntVec3(i * 2, 0, 0);
