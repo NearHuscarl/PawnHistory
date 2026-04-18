@@ -415,6 +415,26 @@
 			<li>Joined</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Kidnap</defName>
+		<label>kidnap</label>
+		<description>{Kidnapper} kidnapped {Victim} for {Faction}.</description>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Banished</li>
+			<li>Combat</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Kidnapped</defName>
+		<label>kidnapped</label>
+		<description>{Victim} was kidnapped by {Kidnapper} from {Faction}.</description>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Banished</li>
+			<li>Combat</li>
+		</categories>
+	</HistoryRecordDef>
 	
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>JoinedParty</defName>

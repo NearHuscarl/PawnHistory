@@ -53,6 +53,8 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef GameEndedWanderersJoined;
     public static HistoryRecordDef SoldToSlavery;
     public static HistoryRecordDef BoughtFromSlavery;
+    public static HistoryRecordDef Kidnap;
+    public static HistoryRecordDef Kidnapped;
     public static HistoryRecordDef JoinedParty;
     public static HistoryRecordDef PartyCancelled;
     public static HistoryRecordDef Disease;
