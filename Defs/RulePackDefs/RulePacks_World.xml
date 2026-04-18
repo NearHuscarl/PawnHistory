@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
-    <RulePackDef>
-        <defName>PH_Raid</defName>
+	<RulePackDef>
+		<defName>PH_Raid</defName>
 		<include>
 			<li>PH_Common</li>
 		</include>
@@ -26,6 +26,18 @@
 				<li>entry(priority=1,locationType==Settlement)->[PAWN][AndOthers] from [HostileFaction] ambushed the [Colony] at [WorldObject] of [Faction].</li>
 				<li>entry(priority=1,locationType==Site)      ->[PAWN][AndOthers] from [HostileFaction] ambushed the [Colony] at [WorldObject_definite].</li>
 				<li>entry(priority=0)                         ->[PAWN][AndOthers] from [HostileFaction] ambushed the [Colony] at [WorldObject].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_CaravanAmbush</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN][AndOthers] from [Faction] ambushed [Caravan].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -68,7 +80,7 @@
 	</RulePackDef>
 
 	<RulePackDef>
-		<defName>PH_PlayerCaravanArrived</defName>
+		<defName>PH_PlayerCaravanArrive</defName>
 		<include>
 			<li>PH_Common</li>
 		</include>

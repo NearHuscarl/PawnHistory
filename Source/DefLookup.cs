@@ -61,6 +61,7 @@ public static class DefLookup
 
     public static class Incident
     {
+        public static IncidentDef Ambush => field ??= DefDatabase<IncidentDef>.GetNamed("Ambush");
         public static IncidentDef Disease_OrganDecay => field ??= DefDatabase<IncidentDef>.GetNamed("Disease_OrganDecay");
         public static IncidentDef Disease_Malaria => field ??= DefDatabase<IncidentDef>.GetNamed("Disease_Malaria");
         public static IncidentDef Disease_SleepingSickness => field ??= DefDatabase<IncidentDef>.GetNamed("Disease_SleepingSickness");
@@ -91,6 +92,7 @@ public static class DefLookup
     public static class QuestScript
     {
         public static QuestScriptDef OpportunitySite_PeaceTalks => field ??= DefDatabase<QuestScriptDef>.GetNamed("OpportunitySite_PeaceTalks");
+        public static QuestScriptDef OpportunitySite_DownedRefugee => field ??= DefDatabase<QuestScriptDef>.GetNamed("OpportunitySite_DownedRefugee");
     }
 
     public static class Tale

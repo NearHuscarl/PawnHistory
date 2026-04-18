@@ -82,6 +82,7 @@
     <Compile Include="Source\PawnTracker\Events\MentalBreakStartedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\NewLoverEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PlayerCaravanArriveEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\CaravanAmbushedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PlayerTransporterArriveEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ReceiveLetterEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\TechprintAppliedEvent.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="Source\PawnTracker\Recorders\BodyPartScarredRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PrisonBreakRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\MentalBreakRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\CaravanAmbushRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\CaravanRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\LightningStrikeRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\FactionArrivalRecorder.cs" />

@@ -13,10 +13,15 @@ public class IncidentBuilder
     private readonly Map map;
 
     public IncidentBuilder(IncidentDef def)
+        : this(def, Find.CurrentMap)
+    {
+    }
+
+    public IncidentBuilder(IncidentDef def, IIncidentTarget target)
     {
         this.def = def;
         map = Find.CurrentMap;
-        parms = StorytellerUtility.DefaultParmsNow(def.category, map);
+        parms = StorytellerUtility.DefaultParmsNow(def.category, target);
         parms.forced = true;
     }
 
@@ -58,8 +63,7 @@ public class IncidentBuilder
 
     private bool IsTradeIncident()
     {
-        return def.Worker is IncidentWorker_TraderCaravanArrival
-            || def.Worker is IncidentWorker_OrbitalTraderArrival;
+        return def.Worker is IncidentWorker_TraderCaravanArrival or IncidentWorker_OrbitalTraderArrival;
     }
 
     private List<Pawn> OrderResult(IEnumerable<Pawn> pawns)

@@ -10,6 +10,7 @@ public class HistoryRecordDefOf
 {
     public static HistoryRecordDef Raid;
     public static HistoryRecordDef SiteAmbush;
+    public static HistoryRecordDef CaravanAmbush;
     public static HistoryRecordDef RaidFriendly;
     public static HistoryRecordDef Kill;
     public static HistoryRecordDef Death;

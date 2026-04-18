@@ -26,6 +26,7 @@ public class TestScenario
     public PawnBuilder Pawn(Pawn pawn) => Pawn([pawn]);
     public GatheringBuilder Incident(GatheringDef def) => new(def);
     public IncidentBuilder Incident(IncidentDef def) => new(def);
+    public IncidentBuilder Incident(IncidentDef def, IIncidentTarget target) => new(def, target);
     public IncidentBuilder RaidFriendly() => Incident(IncidentDefOf.RaidFriendly).NonHostileFaction();
     public MapBuilder Map(IntVec3? pos = null) => new(pos);
     public ThingBuilder Thing(ThingDef thingDef, ThingDef stuffDef = null) => new(thingDef, stuffDef);

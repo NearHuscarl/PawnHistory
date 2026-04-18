@@ -19,6 +19,17 @@
 			<li>Arrival</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>CaravanAmbush</defName>
+		<label>caravan ambush</label>
+		<descriptionMaker>PH_CaravanAmbush</descriptionMaker>
+		<icon>Ui/Commands/AttackSettlement</icon>
+		<categories>
+			<li>Combat</li>
+			<li>World</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>RaidFriendly</defName>
 		<label>friendlies arrived</label>
 		<descriptionMaker>PH_RaidFriendly</descriptionMaker>
@@ -281,7 +292,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PlayerCaravanArrived</defName>
 		<label>player caravan arrived</label>
-		<descriptionMaker>PH_PlayerCaravanArrived</descriptionMaker>
+		<descriptionMaker>PH_PlayerCaravanArrive</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>World</li>

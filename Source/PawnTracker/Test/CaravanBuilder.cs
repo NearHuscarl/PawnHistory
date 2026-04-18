@@ -14,7 +14,6 @@ public class CaravanBuilder
     private PlanetTile tile;
     private readonly List<Action<Caravan>> processors = [];
     private CaravanArrivalAction arrivalAction;
-    private MapParent mapParent;
 
     public CaravanBuilder(List<Pawn> pawns)
     {
@@ -40,7 +39,7 @@ public class CaravanBuilder
     {
         GameEventBus.SubscribeOnce<MapGeneratedEvent>(e =>
         {
-            if (e.MapParent != mapParent)
+            if (e.MapParent.Tile != tile)
                 return;
             action(e);
         });
@@ -67,25 +66,21 @@ public class CaravanBuilder
 
     public CaravanBuilder Attack(Settlement settlement)
     {
-        mapParent = settlement;
         return ArriveAction(new CaravanArrivalAction_AttackSettlement(settlement)).Position(settlement.Tile);
     }
 
-    public CaravanBuilder Enter(MapParent mapParent1)
+    public CaravanBuilder Enter(MapParent mapParent)
     {
-        mapParent = mapParent1;
         return ArriveAction(new CaravanArrivalAction_Enter(mapParent)).Position(mapParent.Tile);
     }
 
     public CaravanBuilder Visit(Settlement settlement)
     {
-        mapParent = settlement;
         return ArriveAction(new CaravanArrivalAction_VisitSettlement(settlement)).Position(settlement.Tile);
     }
 
-    public CaravanBuilder VisitEscapeShit(MapParent mapParent1)
+    public CaravanBuilder VisitEscapeShit(MapParent mapParent)
     {
-        mapParent = mapParent1;
         return ArriveAction(new CaravanArrivalAction_VisitEscapeShip(mapParent.GetComponent<EscapeShipComp>())).Position(mapParent.Tile);
     }
 
@@ -96,7 +91,6 @@ public class CaravanBuilder
 
     public CaravanBuilder VisitSite(Site site)
     {
-        mapParent = site;
         return ArriveAction(new CaravanArrivalAction_VisitSite(site)).Position(site.Tile);
     }
 
@@ -129,10 +123,11 @@ public class CaravanBuilder
         var caravan = CaravanMaker.MakeCaravan(pawns, Faction.OfPlayer, tile, true);
         CaravanInventoryUtility.GiveThing(caravan, ThingMaker.MakeThing(ThingDefOf.MealSurvivalPack));
 
+        caravan.Tile = tile;
+        
         if (arrivalAction != null)
         {
             // "(Dev: instantly)"
-            caravan.Tile = tile;
             caravan.pather.StopDead();
             arrivalAction.Arrived(caravan);
         }

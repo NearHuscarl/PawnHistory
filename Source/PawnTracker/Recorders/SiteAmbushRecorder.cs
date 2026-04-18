@@ -61,6 +61,7 @@ public class SiteAmbushRecorder : RecorderBase<SiteAmbushRecorder.Input>
             .VisitSite(site)
             .OnMapGenerated(e =>
             {
+                // AmbushHidden or AmbushEdge is generated randomly via QuestNode_GetSitePartDefsByTagsAndFaction
                 // there are better things to do in life than mocking this piece of shit of a quest system.
                 var action = scenario.Thing(ThingDefOf.SignalAction_Ambush).Map(e.Map).Create<SignalAction_Ambush>();
                 action.signalTag = ambushSignal;
