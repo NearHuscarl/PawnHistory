@@ -40,24 +40,24 @@ public static class RecorderManager
     public static void ListRecorderTests()
     {
         var dataSource = GetTestMethods();
-        var totalLabels = dataSource.Select(x => x.Label).Distinct().Count();
-        var totalSkip = dataSource.Count(x => x.SkipTest);
-        var testReportEntries = TestReportManager.LastReport.Entries.ToDictionary(x => x.Label, x => x);
+        var totalIds = dataSource.Select(x => x.Id).Distinct().Count();
+        var totalSkip = dataSource.Count(x => x.Attributes.SkipTest);
+        var testReportEntries = TestReportManager.LastReport?.Entries.ToDictionary(x => x.TestId, x => x) ?? [];
 
         DebugTables.MakeTablesDialog(dataSource,
-            new TableDataGetter<TestMethodInfo>($"Label ({totalLabels})", d => d.Label),
-            new TableDataGetter<TestMethodInfo>("Method", d => d.Method.Name),
-            new TableDataGetter<TestMethodInfo>($"Skip ({totalSkip})", d => d.SkipTest.ToStringCheckBlank()),
-            new TableDataGetter<TestMethodInfo>("DebugValues", d => d.DebugValues.JoinToString()),
-            new TableDataGetter<TestMethodInfo>("Tags", d => d.Tags?.JoinToString() ?? ""),
+            new TableDataGetter<TestMethodInfo>($"Id ({totalIds})", d => d.Id),
+            new TableDataGetter<TestMethodInfo>("Requires", d => d.Attributes.ModActiveById.Select(r => r.Key).JoinToString()),
+            new TableDataGetter<TestMethodInfo>($"Skip ({totalSkip})", d => d.Attributes.SkipTest.ToStringCheckBlank()),
+            new TableDataGetter<TestMethodInfo>("DebugValues", d => d.Attributes.DebugValues.JoinToString()),
+            new TableDataGetter<TestMethodInfo>("Tags", d => d.Attributes.Tags?.JoinToString() ?? ""),
             new TableDataGetter<TestMethodInfo>("Passed/Total", d =>
             {
-                var entry = testReportEntries.TryGetValue(d.Label);
+                var entry = testReportEntries.TryGetValue(d.Id);
                 return entry == null ? "?/?" : $"{entry.AssertionsPassed}/{entry.AssertionsPassed + entry.TestFailures.Count}";
             }),
             new TableDataGetter<TestMethodInfo>("Failed Message", d =>
             {
-                var entry = testReportEntries.TryGetValue(d.Label);
+                var entry = testReportEntries.TryGetValue(d.Id);
                 return entry?.TestFailures.FirstOrDefault()?.message;
             })
         );
@@ -67,12 +67,12 @@ public static class RecorderManager
     public static void RunAllTests()
     {
         var methodInfos = GetTestMethods()
-            .Where(t => t.DebugValues == null && !t.SkipTest)
+            .Where(t => t.Attributes.DebugValues == null && !t.Attributes.SkipTest)
             .ToList();
         
         foreach (var t in methodInfos)
         {
-            TestManager.EnqueueTest(() => t.Method.Invoke(t.Recorder, [TestScenario]), t.Label);
+            TestManager.EnqueueTest(t.Id, () => InvokeTest(t));
         }
         TestManager.Run();
     }
@@ -82,7 +82,7 @@ public static class RecorderManager
     {
         var actionNodes = new List<DebugActionNode>();
         var testMethodInfos = GetTestMethods();
-        var allDeclaredTags = testMethodInfos.SelectMany(t => t.Tags)
+        var allDeclaredTags = testMethodInfos.SelectMany(t => t.Attributes.Tags)
             .Where(t => !string.IsNullOrEmpty(t))
             .Distinct()
             .OrderBy(t => t);
@@ -90,13 +90,13 @@ public static class RecorderManager
         foreach (var tag in allDeclaredTags)
         {
             var taggedMethodInfos = testMethodInfos
-                .Where(t => t.DebugValues == null && !t.SkipTest && t.Tags.Contains(tag))
+                .Where(t => t.Attributes.DebugValues == null && !t.Attributes.SkipTest && t.Attributes.Tags.Contains(tag))
                 .ToList();
             actionNodes.Add(new DebugActionNode($"{tag} ({taggedMethodInfos.Count})", DebugActionType.Action, () =>
             {
                 foreach (var t in taggedMethodInfos)
                 {
-                    TestManager.EnqueueTest(() => t.Method.Invoke(t.Recorder, [TestScenario]), t.Label);
+                    TestManager.EnqueueTest(t.Id, () => InvokeTest(t));
                 }
                 TestManager.Run();
             }));
@@ -112,14 +112,14 @@ public static class RecorderManager
         if (lastRunReport == null)
             return;
         
-        var failedTests = new HashSet<string>(lastRunReport.Entries.Where(x => x.TestFailures.Count > 0).Select(x => x.Label));
+        var failedTests = new HashSet<string>(lastRunReport.Entries.Where(x => x.TestFailures.Count > 0).Select(x => x.TestId));
         var methodInfos = GetTestMethods()
-            .Where(t => t.DebugValues == null && !t.SkipTest && failedTests.Contains(t.Label))
+            .Where(t => t.Attributes.DebugValues == null && !t.Attributes.SkipTest && failedTests.Contains(t.Id))
             .ToList();
         
         foreach (var t in methodInfos)
         {
-            TestManager.EnqueueTest(() => t.Method.Invoke(t.Recorder, [TestScenario]), t.Label);
+            TestManager.EnqueueTest(t.Id, () => InvokeTest(t));
         }
         TestManager.Run();
     }
@@ -131,20 +131,20 @@ public static class RecorderManager
 
         foreach (var testMethodInfo in GetTestMethods())
         {
-            var (label, recorder, method, debugValues, skipTest, tags) = testMethodInfo;
+            var (id, label, _, method, attributes) = testMethodInfo;
             var parameters = method.GetParameters();
 
-            if (debugValues == null)
+            if (attributes.DebugValues == null)
             {
                 actionNodes.Add(new DebugActionNode(label, DebugActionType.Action, () =>
                 {
                     try
                     {
-                        TestManager.ExecuteTestMethod(label, () => method.Invoke(recorder, [TestScenario]));
+                        TestManager.ExecuteTestMethod(id, () => InvokeTest(testMethodInfo));
                     }
                     catch (Exception ex)
                     {
-                        Log.Error($"[PawnHistory] Failed to run recorder test {label}\n\n{ex}");
+                        Log.Error($"[PawnHistory] Failed to run recorder test {id}\n\n{ex}");
                     }
                 }));
             }
@@ -154,17 +154,17 @@ public static class RecorderManager
                 {
                     var options = new List<DebugMenuOption>();
 
-                    foreach (var count in debugValues)
+                    foreach (var count in attributes.DebugValues)
                     {
                         options.Add(new DebugMenuOption($"{parameters[1].Name}: {count}", DebugMenuOptionMode.Action, () =>
                         {
                             try
                             {
-                                TestManager.ExecuteTestMethod(label, () => method.Invoke(recorder, [TestScenario, count]));
+                                TestManager.ExecuteTestMethod(id, () => InvokeTest(testMethodInfo, [count]));
                             }
                             catch (Exception ex)
                             {
-                                Log.Error($"[PawnHistory] Failed to run recorder test {label}\n\n{ex}");
+                                Log.Error($"[PawnHistory] Failed to run recorder test {id}\n\n{ex}");
                             }
                         }));
                     }
@@ -184,7 +184,8 @@ public static class RecorderManager
         TestManager.StopTestRun();
     }
 
-    private record TestMethodInfo(string Label, RecorderBase Recorder, MethodInfo Method, int[] DebugValues, bool SkipTest, HashSet<string> Tags);
+    private record TestAttributes(int[] DebugValues, bool SkipTest, HashSet<string> Tags, Dictionary<string, bool> ModActiveById);
+    private record TestMethodInfo(string Id, string Label, RecorderBase Recorder, MethodInfo Method, TestAttributes Attributes);
 
     private static List<TestMethodInfo> GetTestMethods()
     {
@@ -201,10 +202,13 @@ public static class RecorderManager
                 if (!method.Name.StartsWith("Test"))
                     continue;
 
+                var requires = method.GetCustomAttributes<RequiresAttribute>().ToList();
                 var parameters = method.GetParameters();
-                var label = (method.Name == "Test")
+                var id = method.Name == "Test"
                     ? buttonName
                     : $"{buttonName}_{method.Name.ReplaceFirst("Test", "")}";
+                var requiredMods = requires.Select(r => r.ModName).JoinToString();
+                var label = requiredMods.NullOrEmpty() ? id : $"{id} [{requiredMods}]";
                 int[] debugValues = null;
 
                 // CASE 1: Standard Test(TestScenario scenario)
@@ -226,12 +230,31 @@ public static class RecorderManager
 
                 var skipTest = method.GetCustomAttribute<SkipTestAttribute>();
                 var tags = method.GetCustomAttributes<TestTagAttribute>().Select(a => a.Tag).ToHashSet();
-
-                testMethods.Add(new TestMethodInfo(label, recorder, method, debugValues, skipTest != null, tags));
+                var modActiveById = requires.ToDictionary(a => a.ModId, a => a.IsActive);
+                var testAttributes = new TestAttributes(debugValues, skipTest != null, tags, modActiveById);
+                
+                testMethods.Add(new TestMethodInfo(id, label, recorder, method, testAttributes));
             }
         }
 
         return testMethods;
+    }
+
+    private static object InvokeTest(TestMethodInfo info, object[] parameters = null)
+    {
+        var (_, _, recorder, method, attributes) = info;
+
+        foreach (var kv in attributes.ModActiveById)
+        {
+            if (kv.Value) continue;
+            Log.Warning($"[PawnHistory] Skipping '{info.Id}' test because a required mod '{kv.Key}' is not active.");
+            return null;
+        }
+        
+        if (parameters == null)
+            return method.Invoke(recorder, [TestScenario]);
+        
+        return method.Invoke(recorder, [TestScenario, ..parameters]);
     }
 
     [NearDebugOutput]

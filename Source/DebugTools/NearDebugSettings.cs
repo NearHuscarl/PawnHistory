@@ -105,13 +105,13 @@ internal static class InteractionWorker_MarriageProposal_AcceptanceChance_Patch
     }
 }
 
-[HarmonyPatch(typeof(GetOrGenerateMapUtility), nameof(GetOrGenerateMapUtility.GetOrGenerateMap), typeof(PlanetTile), typeof(IntVec3), typeof(WorldObjectDef), typeof(IEnumerable<GenStepWithParams>), typeof(bool))]
-internal static class GetOrGenerateMapUtility_GetOrGenerateMap_Patch
+[HarmonyPatch(typeof(MapGenerator), nameof(MapGenerator.GenerateMap))]
+internal static class MapGenerator_GenerateMap_Patch
 {
-    private static void Prefix(ref IntVec3 size)
+    private static void Prefix(ref IntVec3 mapSize)
     {
         if (NearDebugSettings.ForceDebugMapSize)
-            size = new IntVec3(25, 1, 25);
+            mapSize = new IntVec3(25, 1, 25);
     }
 }
 

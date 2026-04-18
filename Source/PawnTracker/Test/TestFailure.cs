@@ -6,21 +6,21 @@ namespace PawnHistory.Source.PawnTracker.Test;
 
 public class TestFailure : IExposable
 {
-    public string label;
+    public string testId;
     public string message;
     public long ticksAbs = Stopwatch.GetTimestamp();
 
     public TestFailure() { }
     
-    public TestFailure(string label, string message)
+    public TestFailure(string testId, string message)
     {
-        this.label = label;
+        this.testId = testId;
         this.message = message;
     }
 
     public virtual void ExposeData()
     {
-        Scribe_Values.Look(ref label, "Label");
+        Scribe_Values.Look(ref testId, "testId");
         Scribe_Values.Look(ref message, "message");
         Scribe_Values.Look(ref ticksAbs, "ticksAbs");
     }
@@ -33,7 +33,7 @@ public class TestAssertionFailure : TestFailure
     public bool isNegated;
     public Dictionary<string, string> testParams;
 
-    public TestAssertionFailure(string label, string message, string expected, string actual, bool isNegated, Dictionary<string, string> testParams) : base(label, message)
+    public TestAssertionFailure(string testId, string message, string expected, string actual, bool isNegated, Dictionary<string, string> testParams) : base(testId, message)
     {
         this.expected = expected;
         this.actual = actual;
@@ -55,12 +55,12 @@ public class TestAssertionFailure : TestFailure
 
 public class TimeoutFailure : TestFailure
 {
-    public TimeoutFailure(string label, string message) : base(label, message) { }
+    public TimeoutFailure(string testId, string message) : base(testId, message) { }
     public TimeoutFailure() { }
 }
 
 public class TestExecutionFailure : TestFailure
 {
-    public TestExecutionFailure(string label, string message) : base(label, message) { }
+    public TestExecutionFailure(string testId, string message) : base(testId, message) { }
     public TestExecutionFailure() { }
 }

@@ -19,18 +19,18 @@ public class TestReport : IExposable
         if (newReport?.Entries == null)
             return this;
 
-        var dict = Entries.ToDictionary(e => e.Label);
+        var dict = Entries.ToDictionary(e => e.TestId);
 
         foreach (var incoming in newReport.Entries)
         {
-            if (!dict.TryGetValue(incoming.Label, out var existing))
+            if (!dict.TryGetValue(incoming.TestId, out var existing))
             {
-                dict[incoming.Label] = incoming;
+                dict[incoming.TestId] = incoming;
                 continue;
             }
 
             if (incoming.date > existing.date)
-                dict[incoming.Label] = incoming;
+                dict[incoming.TestId] = incoming;
         }
 
         return new TestReport
@@ -47,7 +47,7 @@ public class TestReport : IExposable
 
 public class TestReportEntry : IExposable
 {
-    public string Label;
+    public string TestId;
     public int AssertionsPassed;
     public List<TestFailure> TestFailures;
     public long timestampStarted;
@@ -62,7 +62,7 @@ public class TestReportEntry : IExposable
 
     public void ExposeData()
     {
-        Scribe_Values.Look(ref Label, "Label");
+        Scribe_Values.Look(ref TestId, "TestId");
         Scribe_Values.Look(ref AssertionsPassed, "AssertionsPassed");
         Scribe_Collections.Look(ref TestFailures, "TestFailures");
         Scribe_Values.Look(ref timestampStarted, "timestampStarted");

@@ -13,13 +13,13 @@ public static class TestManager
     private static readonly Queue<Action> Queue = new();
     private static bool isRunningTest;
 
-    public static void EnqueueTest(Func<object> testAction, string label)
+    public static void EnqueueTest(string testId, Func<object> testAction)
     {
         Queue.Enqueue(() =>
         {
             GameUtility.CreateTestGame(() =>
             {
-                ExecuteTestMethod(label, testAction, _ => RunNext());
+                ExecuteTestMethod(testId, testAction, _ => RunNext());
             });
         });
     }
@@ -46,13 +46,13 @@ public static class TestManager
         next();
     }
 
-    public static void ExecuteTestMethod(string label, Func<object> testAction, Action<bool> onCompleted = null)
+    public static void ExecuteTestMethod(string testId, Func<object> testAction, Action<bool> onCompleted = null)
     {
-        SetupBeforeTest(label);
+        SetupBeforeTest(testId);
 
         var ctx = Ctx;
         Action testCleanup = null;
-        Log.Message("[PawnHistory] Starting test: " + label);
+        Log.Message("[PawnHistory] Starting test: " + testId);
 
         try
         {
@@ -62,7 +62,7 @@ public static class TestManager
         }
         catch (Exception ex)
         {
-            var failure = new TestExecutionFailure(label, "Failed during test setup.");
+            var failure = new TestExecutionFailure(testId, "Failed during test setup.");
             ctx.Fail(new TestException(failure, ex));
             CleanupAfterTest();
             onCompleted?.Invoke(false);
@@ -83,7 +83,7 @@ public static class TestManager
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"[PawnHistory] Failed during test cleanup for {label}\n\n{ex}");
+                    Log.Error($"[PawnHistory] Failed during test cleanup for {testId}\n\n{ex}");
                 }
                 finally
                 {
@@ -102,7 +102,7 @@ public static class TestManager
                 }
                 finally
                 {
-                    var failure = new TimeoutFailure(label, "Timeout waiting for test assertions.");
+                    var failure = new TimeoutFailure(testId, "Timeout waiting for test assertions.");
                     ctx.Fail(new TestException(failure));
                     CleanupAfterTest();
                     onCompleted?.Invoke(false);
@@ -113,9 +113,9 @@ public static class TestManager
         ctx.OnCleanup(() => scheduled.Data.Cancelled = true);
     }
 
-    private static void SetupBeforeTest(string label)
+    private static void SetupBeforeTest(string testId)
     {
-        Ctx = new TestContext(label);
+        Ctx = new TestContext(testId);
 
         NearDebugSettings.ForceDebugMapSize = true;
         NearDebugSettings.NeverEverEverPause = true;

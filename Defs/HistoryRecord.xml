@@ -577,6 +577,16 @@
 		<importance>Minor</importance>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>TechprintApplied</defName>
+		<label>techprint applied</label>
+		<description>{PAWN} applied a techprint to {Project}, gaining {Xp} experience in intellectual.</description>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Work</li>
+		</categories>
+		<importance>Minor</importance>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Stripped</defName>
 		<label>stripped</label>
 		<descriptionMaker>PH_Stripped</descriptionMaker>

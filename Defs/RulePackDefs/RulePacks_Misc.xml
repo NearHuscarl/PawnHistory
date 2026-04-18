@@ -388,7 +388,7 @@
 				<li>entry(initiator==True) ->[PAWN] started a prison break. [PAWN_pronoun] broke the locks open and tried to escape[WithOthers].</li>
 				<li>entry(initiator==False)->[PAWN][AndOthers] joined [Initiator]'s prison break and tried to escape.</li>
 
-				<li>jailbreaker(initiator==)    ->[Reason] As a result, [PAWN][AndOthers] started a prison break.</li>
+				<li>jailbreaker(initiator==)->[Reason] As a result, [PAWN][AndOthers] started a prison break.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

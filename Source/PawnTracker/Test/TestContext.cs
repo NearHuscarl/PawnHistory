@@ -6,9 +6,9 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
 
-internal sealed class TestContext(string name)
+internal sealed class TestContext(string testId)
 {
-    public readonly string Name = name;
+    public readonly string TestId = testId;
     public int AssertionsPassed;
     public readonly List<TestFailure> TestFailures = [];
     public int PendingEventually;
@@ -26,7 +26,7 @@ internal sealed class TestContext(string name)
     {
         if (ex is not TestException te)
         {
-            te = new TestException(new TestFailure(Name, "Unknown error happened during a test run"), ex);
+            te = new TestException(new TestFailure(TestId, "Unknown error happened during a test run"), ex);
         }
         
         switch (te.Failure)
@@ -55,13 +55,13 @@ internal sealed class TestContext(string name)
 
     public void ReportPass()
     {
-        Log.Message(Green($"[PawnHistory] [Passed] {Name}: {AssertionsPassed} passed"));
-        Messages.Message("[Passed] " + Name, MessageTypeDefOf.PositiveEvent);
+        Log.Message(Green($"[PawnHistory] [Passed] {TestId}: {AssertionsPassed} passed"));
+        Messages.Message("[Passed] " + TestId, MessageTypeDefOf.PositiveEvent);
     }
 
     public TestReportEntry CreateReportEntry()
     {
-        testReportEntry.Label = Name;
+        testReportEntry.TestId = TestId;
         testReportEntry.AssertionsPassed = AssertionsPassed;
         testReportEntry.TestFailures = TestFailures;
         testReportEntry.timestampEnded = Stopwatch.GetTimestamp();

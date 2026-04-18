@@ -43,7 +43,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         var ctx = TestManager.Ctx;
         var message = negate ? negativeMessage : positiveMessage;
         var failure = new TestAssertionFailure(
-            ctx.Name,
+            ctx.TestId,
             message,
             expected?.ToString() ?? "null",
             actual?.ToString() ?? "null",
@@ -284,7 +284,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
 
             if (Find.TickManager.TicksGame - tickStart > eventuallyTimeoutTicks)
             { 
-                var failure = new TimeoutFailure(ctx.Name, $"Test assertion failed after {eventuallyTimeoutTicks} ticks.");
+                var failure = new TimeoutFailure(ctx.TestId, $"Test assertion failed after {eventuallyTimeoutTicks} ticks.");
                 ctx.Fail(new TestException(failure, lastException));
                 a.Cancelled = true;
             }

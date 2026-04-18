@@ -38,6 +38,7 @@ public class CraftedQualityThingRecorder : RecorderBase<CraftedQualityThingEvent
             .Quality(QualityCategory.Masterwork)
             .Create<Building_Bed>();
         
+        craftedThing.GetComp<CompArt>().InitializeArt(ArtGenerationContext.Colony);
         QualityUtility.SendCraftNotification(craftedThing, pawn);
 
         Expect.That(pawn).ToHaveHistoryRecord("[PAWN] completed work on a masterwork [CRAFTED]. [Image]. [DescSentence]", HistoryRecordDefOf.CraftedQualityThing);
@@ -51,6 +52,7 @@ public class CraftedQualityThingRecorder : RecorderBase<CraftedQualityThingEvent
             .Quality(QualityCategory.Legendary)
             .Create<Apparel>();
         
+        craftedThing.GetComp<CompArt>().InitializeArt(ArtGenerationContext.Colony);
         QualityUtility.SendCraftNotification(craftedThing, pawn);
 
         Expect.That(pawn).ToHaveHistoryRecord("[PAWN] completed work on a legendary [CRAFTED]. [Image]. [DescSentence]", HistoryRecordDefOf.CraftedQualityThing);

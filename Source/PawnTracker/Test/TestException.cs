@@ -11,7 +11,7 @@ internal class TestException(TestFailure failure, Exception exception = null) : 
     {
         var sb = new StringBuilder();
 
-        sb.Append($"[PawnHistory] [Failed] {Failure.label}: ");
+        sb.Append($"[PawnHistory] [Failed] {Failure.testId}: ");
         sb.Append($"{Failure.message}\n{StackTrace}");
 
         if (InnerException != null)
