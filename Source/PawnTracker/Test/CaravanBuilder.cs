@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using PawnHistory.Source.PawnTracker.Events;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
@@ -13,6 +14,7 @@ public class CaravanBuilder
     private PlanetTile tile;
     private readonly List<Action<Caravan>> processors = [];
     private CaravanArrivalAction arrivalAction;
+    private MapParent mapParent;
 
     public CaravanBuilder(List<Pawn> pawns)
     {
@@ -31,6 +33,17 @@ public class CaravanBuilder
     {
         
         processors.Add(action);
+        return this;
+    }
+
+    public CaravanBuilder OnMapGenerated(Action<MapGeneratedEvent> action)
+    {
+        GameEventBus.SubscribeOnce<MapGeneratedEvent>(e =>
+        {
+            if (e.MapParent != mapParent)
+                return;
+            action(e);
+        });
         return this;
     }
 
@@ -54,21 +67,25 @@ public class CaravanBuilder
 
     public CaravanBuilder Attack(Settlement settlement)
     {
+        mapParent = settlement;
         return ArriveAction(new CaravanArrivalAction_AttackSettlement(settlement)).Position(settlement.Tile);
     }
 
-    public CaravanBuilder Enter(MapParent mapParent)
+    public CaravanBuilder Enter(MapParent mapParent1)
     {
+        mapParent = mapParent1;
         return ArriveAction(new CaravanArrivalAction_Enter(mapParent)).Position(mapParent.Tile);
     }
 
     public CaravanBuilder Visit(Settlement settlement)
     {
+        mapParent = settlement;
         return ArriveAction(new CaravanArrivalAction_VisitSettlement(settlement)).Position(settlement.Tile);
     }
 
-    public CaravanBuilder VisitEscapeShit(MapParent mapParent)
+    public CaravanBuilder VisitEscapeShit(MapParent mapParent1)
     {
+        mapParent = mapParent1;
         return ArriveAction(new CaravanArrivalAction_VisitEscapeShip(mapParent.GetComponent<EscapeShipComp>())).Position(mapParent.Tile);
     }
 
@@ -79,6 +96,7 @@ public class CaravanBuilder
 
     public CaravanBuilder VisitSite(Site site)
     {
+        mapParent = site;
         return ArriveAction(new CaravanArrivalAction_VisitSite(site)).Position(site.Tile);
     }
 

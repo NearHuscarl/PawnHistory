@@ -17,6 +17,20 @@
     </RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_SiteAmbush</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(priority=1,locationType==Settlement)->[PAWN][AndOthers] from [HostileFaction] ambushed the [Colony] at [WorldObject] of [Faction].</li>
+				<li>entry(priority=1,locationType==Site)      ->[PAWN][AndOthers] from [HostileFaction] ambushed the [Colony] at [WorldObject_definite].</li>
+				<li>entry(priority=0)                         ->[PAWN][AndOthers] from [HostileFaction] ambushed the [Colony] at [WorldObject].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_RaidFriendly</defName>
 		<include>
 			<li>PH_Common</li>

@@ -11,6 +11,14 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>SiteAmbush</defName>
+		<label>ambush</label>
+		<descriptionMaker>PH_SiteAmbush</descriptionMaker>
+		<icon>Ui/Commands/AttackSettlement</icon>
+		<categories>
+			<li>Arrival</li>
+		</categories>
+	</HistoryRecordDef>
 		<defName>RaidFriendly</defName>
 		<label>friendlies arrived</label>
 		<descriptionMaker>PH_RaidFriendly</descriptionMaker>

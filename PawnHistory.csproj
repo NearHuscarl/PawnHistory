@@ -77,6 +77,7 @@
     <Compile Include="Source\PawnTracker\Events\AnimalRevengeEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\LeaderChangedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\HealthComplicationEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\MapGeneratedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\MarriageProposalEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\MentalBreakStartedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\NewLoverEvent.cs" />
@@ -133,7 +134,7 @@
     <Compile Include="Source\PawnTracker\Recorders\LeaderChangedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\MarriageProposalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\NewLoverRecorder.cs" />
-    <Compile Include="Source\PawnTracker\Recorders\PlayerCaravanArrivalRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\PlayerCaravanArriveRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PlayerTransporterArrivalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RescueJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PrisonerRecruitedRecorder.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Source\PawnTracker\Recorders\CasualtyRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HediffRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RaidRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\SiteAmbushRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RecorderBase.cs" />
     <Compile Include="Source\PawnTracker\Events\LightningStrikedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\LordToilChangeEvent.cs" />

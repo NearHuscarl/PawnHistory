@@ -11,7 +11,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class PlayerCaravanArrivalRecorder : RecorderBase<PlayerCaravanArrivalRecorder.Input>
+public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecorder.Input>
 {
     public record Input(List<Pawn> Pawns, ArrivalAction ArrivalAction, WorldObject WorldObject);
 
