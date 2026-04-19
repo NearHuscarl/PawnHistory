@@ -14,6 +14,7 @@ public class CaravanBuilder
     private PlanetTile tile;
     private readonly List<Action<Caravan>> processors = [];
     private CaravanArrivalAction arrivalAction;
+    private Caravan caravanResult;
 
     public CaravanBuilder(List<Pawn> pawns)
     {
@@ -35,13 +36,18 @@ public class CaravanBuilder
         return this;
     }
 
-    public CaravanBuilder OnMapGenerated(Action<MapGeneratedEvent> action)
+
+    public record MapGeneratedForCaravanEvent(Caravan Caravan, Map Map, MapParent MapParent) : MapGeneratedEvent(Map, MapParent);
+    public CaravanBuilder OnMapGenerated(Action<MapGeneratedForCaravanEvent> action)
     {
+        if (action == null)
+            return this;
+        
         GameEventBus.SubscribeOnce<MapGeneratedEvent>(e =>
         {
             if (e.MapParent.Tile != tile)
                 return;
-            action(e);
+            action(new MapGeneratedForCaravanEvent(caravanResult, e.Map, e.MapParent));
         });
         return this;
     }
@@ -133,7 +139,8 @@ public class CaravanBuilder
         }
         
         processors.ForEach(processor => processor(caravan));
-        
+
+        caravanResult = caravan;
         return caravan;
     }
 }

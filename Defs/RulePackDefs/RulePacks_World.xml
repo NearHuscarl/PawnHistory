@@ -1,6 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
 	<RulePackDef>
+		<defName>PH_PeaceTalksOutcome</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(outcome==Backfire)     ->[PAWN] negotiated peace talks with [Faction], but they backfired.</li>
+				<li>entry(outcome==TalksFlounder)->[PAWN] negotiated peace talks with [Faction], but they floundered.</li>
+				<li>entry(outcome==Success)      ->[PAWN] successfully negotiated peace talks with [Faction].</li>
+				<li>entry(outcome==Triumph)      ->[PAWN] negotiated peace talks with [Faction] to a great triumph.</li>
+				<li>entry(outcome==Disaster)     ->[PAWN] negotiated peace talks with [Faction], but they ended in disaster.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_PeaceTalksRaid</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(outcome==Disaster)->[PAWN][AndOthers] from [Faction] attacked the peace talks delegation.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_Raid</defName>
 		<include>
 			<li>PH_Common</li>

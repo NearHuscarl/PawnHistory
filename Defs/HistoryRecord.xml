@@ -2,6 +2,25 @@
 
 <Defs>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PeaceTalksOutcome</defName>
+		<label>peace talks outcome</label>
+		<descriptionMaker>PH_PeaceTalksOutcome</descriptionMaker>
+		<icon>World/WorldObjects/Expanding/PeaceTalks</icon>
+		<categories>
+			<li>World</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PeaceTalksRaid</defName>
+		<label>peace talks raid</label>
+		<descriptionMaker>PH_PeaceTalksRaid</descriptionMaker>
+		<icon>Ui/Commands/AttackSettlement</icon>
+		<categories>
+			<li>Combat</li>
+			<li>World</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Raid</defName>
 		<label>raid</label>
 		<descriptionMaker>PH_Raid</descriptionMaker>
