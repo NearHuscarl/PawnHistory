@@ -327,6 +327,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>AICoreOffer</defName>
+		<label>AI core offer</label>
+		<descriptionMaker>PH_AICoreOffer</descriptionMaker>
+		<icon>Things/Item/Special/AIPersonaCore</icon>
+		<categories>
+			<li>World</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TradeCaravanArrived</defName>
 		<label>trade caravan arrived</label>
 		<descriptionMaker>PH_TradeCaravanArrived</descriptionMaker>

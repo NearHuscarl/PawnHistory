@@ -66,6 +66,12 @@ public static class Accessor
             AccessTools.FieldRefAccess<RimWorld.JobDriver_PredatorHunt, bool>("notifiedPlayerAttacking");
     }
 
+    public class GameComponent_OnetimeNotification
+    {
+        public static readonly AccessTools.FieldRef<Verse.GameComponent_OnetimeNotification, bool> SendAICoreRequestReminder =
+            AccessTools.FieldRefAccess<Verse.GameComponent_OnetimeNotification, bool>("sendAICoreRequestReminder");
+    }
+
     public static class PlayLogEntry_Interaction
     {
         public static readonly AccessTools.FieldRef<Verse.PlayLogEntry_Interaction, Pawn> Initiator =

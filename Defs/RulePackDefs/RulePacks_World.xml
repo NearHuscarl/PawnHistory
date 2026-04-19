@@ -151,6 +151,18 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_AICoreOffer</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] from [Faction] contacted the colony with an offer of information about a persona core that can be used to build a spaceship.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_TradeCaravanArrived</defName>
 		<rulePack>
 			<rulesStrings>
