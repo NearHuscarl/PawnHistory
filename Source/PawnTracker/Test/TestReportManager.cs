@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using PawnHistory.Source.Helper;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
@@ -31,7 +32,7 @@ public static class TestReportManager
             ? $"{elapsed.Hours:D2}:{elapsed.Minutes:D2}:{elapsed.Seconds:D2}.{elapsed.Milliseconds:D3}"
             : $"{elapsed.Minutes:D2}:{elapsed.Seconds:D2}.{elapsed.Milliseconds:D3}";
 
-        Log.Message($"[PawnHistory] All tests finished in {time}. {TestContext.Green($"Passed: {CurrentReport.AssertionsPassed}")}, {TestContext.Red($"Failed: {CurrentReport.TestFailures}")}");
+        Log.Message($"[PawnHistory] All tests finished in {time}. {Palette.Green($"Passed: {CurrentReport.AssertionsPassed}")}, {Palette.Red($"Failed: {CurrentReport.TestFailures}")}");
     }
     
     public static void SaveReport()

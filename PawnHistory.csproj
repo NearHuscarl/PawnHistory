@@ -61,6 +61,7 @@
     <Compile Include="Source\Helper\LangUtility.cs" />
     <Compile Include="Source\Helper\ListExtensions.cs" />
     <Compile Include="Source\Helper\LookTargetsUtility.cs" />
+    <Compile Include="Source\Helper\Palette.cs" />
     <Compile Include="Source\Helper\PawnUtility.cs" />
     <Compile Include="Source\Helper\EnumerableExtensions.cs" />
     <Compile Include="Source\Helper\WorldGridUtility.cs" />

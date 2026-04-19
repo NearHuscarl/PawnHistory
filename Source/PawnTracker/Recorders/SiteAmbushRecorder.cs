@@ -54,9 +54,9 @@ public class SiteAmbushRecorder : RecorderBase<SiteAmbushRecorder.Input>
         QuestUtility.GenerateQuestAndMakeAvailable(DefLookup.QuestScript.OpportunitySite_DownedRefugee, 500);
         var site = Find.WorldObjects.AllWorldObjects.OfType<Site>().First();
         var pawns = scenario.Pawn(3).Colonist().Execute();
-        var enemies = new List<Pawn>();
         const string ambushSignal = "PH_Ambush";
-        
+        Expect.Assertions(1);
+
         scenario.Caravan(pawns)
             .VisitSite(site)
             .OnMapGenerated(e =>
@@ -67,11 +67,12 @@ public class SiteAmbushRecorder : RecorderBase<SiteAmbushRecorder.Input>
                 action.signalTag = ambushSignal;
                 action.points = 200f;
                 action.Notify_SignalReceived(new Signal(action.signalTag));
-                enemies = e.Map.mapPawns.AllPawnsSpawned.Where(p => p.Faction.HostileTo(Faction.OfPlayer)).ToList();
+                var enemies = e.Map.mapPawns.AllPawnsSpawned.Where(p => p.Faction.HostileTo(Faction.OfPlayer));
+
+                Expect.ThatAll(enemies)
+                    .Eventually()
+                    .ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] ambushed the colonists at the downed refugee.", HistoryRecordDefOf.SiteAmbush);
             })
             .Execute();
-
-        // TODO: async test that only make assertion after map generation.
-        // Expect.ThatAll(enemies).ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] ambushed the colonists at the downed refugee.", HistoryRecordDefOf.Ambush);
     }
 }

@@ -1,5 +1,7 @@
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
+using RimWorld;
+using System.Collections.Generic;
 using System.Linq;
 using PawnHistory.Source.Helper;
 using Verse;
@@ -35,12 +37,20 @@ public class CaravanAmbushRecorder : RecorderBase<CaravanAmbushedEvent>
     {
         var pawns = scenario.Pawn(3).Colonist().Execute();
         var spot = Find.WorldGrid.GetNearbyTile(Find.AnyPlayerHomeMap.Tile);
-        var caravan = scenario.Caravan(pawns).Position(spot).Execute();
+        Expect.Assertions(1);
+
+        var caravan = scenario.Caravan(pawns)
+            .Position(spot)
+            .OnMapGenerated(e =>
+            {
+                var enemies = e.Map.mapPawns.AllPawnsSpawned.Where(p => p.Faction.HostileTo(Faction.OfPlayer));
+
+                Expect.ThatAll(enemies)
+                    .Eventually()
+                    .ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] ambushed [Caravan].", HistoryRecordDefOf.CaravanAmbush);
+            })
+            .Execute();
 
         scenario.Incident(DefLookup.Incident.Ambush, caravan).Point(200).Execute();
-
-        // TODO: async test that only make assertion after map generation.
-        // var enemies = pawns[0].Map.mapPawns.AllPawnsSpawned.Where(p => p.Faction.HostileTo(Faction.OfPlayer)).ToList();
-        // Expect.ThatAll(enemies).ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] ambushed [Caravan].", HistoryRecordDefOf.CaravanAmbush);
     }
 }

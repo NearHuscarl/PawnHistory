@@ -74,7 +74,7 @@ public static class TestManager
         {
             if (ctx.PendingEventually == 0)
             {
-                if (ctx.TestFailures.Count == 0 && ctx.AssertionsPassed > 0)
+                if (ctx.TestFailures.Count == 0 && ctx.AssertionsPassed > 0 && ctx.IsExpectedAssertionCountSatisfied)
                     ctx.ReportPass();
                 a.Cancelled = true;
                 try
@@ -102,7 +102,7 @@ public static class TestManager
                 }
                 finally
                 {
-                    var failure = new TimeoutFailure(testId, "Timeout waiting for test assertions.");
+                    var failure = new TimeoutFailure(testId, ctx.GetTimeoutMessage());
                     ctx.Fail(new TestException(failure));
                     CleanupAfterTest();
                     onCompleted?.Invoke(false);

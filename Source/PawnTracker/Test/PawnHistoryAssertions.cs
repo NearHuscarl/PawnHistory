@@ -254,7 +254,11 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
 
     private void RunAssertion(Action assertion)
     {
-        TestManager.Ctx.PendingEventually++;
+        var ctx = TestManager.Ctx;
+        if (!ctx.TryRegisterAssertion())
+            return;
+
+        ctx.PendingEventually++;
         // don't run immediately, so Test method can return cleanup action even if synchronous test call failed.
         TickDelayManager.Delay(0, () => DoRunAssertion(assertion));
     }
@@ -284,7 +288,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
 
             if (Find.TickManager.TicksGame - tickStart > eventuallyTimeoutTicks)
             { 
-                var failure = new TimeoutFailure(ctx.TestId, $"Test assertion failed after {eventuallyTimeoutTicks} ticks.");
+                var failure = new TimeoutFailure(ctx.TestId, $"Test assertion failed after waiting for {eventuallyTimeoutTicks} ticks.");
                 ctx.Fail(new TestException(failure, lastException));
                 a.Cancelled = true;
             }

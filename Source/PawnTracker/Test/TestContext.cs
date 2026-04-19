@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using PawnHistory.Source.Helper;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
@@ -9,17 +10,63 @@ namespace PawnHistory.Source.PawnTracker.Test;
 internal sealed class TestContext(string testId)
 {
     public readonly string TestId = testId;
-    public int AssertionsPassed;
     public readonly List<TestFailure> TestFailures = [];
+    public int AssertionsPassed { get; private set; }
     public int PendingEventually;
-    public static string Red(object obj) => obj.ToString().ApplyTag(TagType.Red).Resolve();
-    public static string Green(object obj) => obj.ToString().Colorize(ColoredText.FactionColor_Ally);
+    private int expectedAssertions = -1;
+    private int registeredAssertions;
     private readonly TestReportEntry testReportEntry = new();
+
+    public bool HasExpectedAssertions => expectedAssertions >= 0;
+    public bool IsExpectedAssertionCountSatisfied => !HasExpectedAssertions || registeredAssertions == expectedAssertions;
+
+    public void DeclareExpectedAssertions(int count)
+    {
+        if (count < 0)
+            throw new ArgumentOutOfRangeException(nameof(count));
+
+        expectedAssertions = count;
+
+        if (registeredAssertions > count)
+            Fail(new TestException(new TestExecutionFailure(TestId, $"Too many assertions already registered. Expected exactly {count} assertion(s), but {registeredAssertions} were already registered.")));
+    }
+
+    public bool TryRegisterAssertion()
+    {
+        registeredAssertions++;
+
+        if (!HasExpectedAssertions)
+            return true;
+
+        if (registeredAssertions > expectedAssertions)
+        {
+            Fail(new TestException(new TestExecutionFailure(TestId, $"Too many assertions registered. Expected exactly {expectedAssertions} assertion(s).")));
+            return false;
+        }
+        return true;
+    }
+
+    public string GetTimeoutMessage()
+    {
+        var parts = new List<string>();
+
+        if (!IsExpectedAssertionCountSatisfied)
+            parts.Add($"expected {expectedAssertions} assertion(s), but only {registeredAssertions} were registered");
+
+        if (PendingEventually > 0)
+            parts.Add($"{PendingEventually} assertion execution(s) still pending");
+
+        if (parts.Count == 0)
+            parts.Add($"{TestId} failed after waiting for {TestManager.Timeout} ticks.");
+
+        return $"Timeout waiting for test assertions. {parts.JoinToString("; ")}.";
+    }
 
     public void Pass()
     {
         AssertionsPassed++;
-        PendingEventually--;
+        if (PendingEventually > 0)
+            PendingEventually--;
     }
 
     public void Fail(Exception ex)
@@ -33,6 +80,12 @@ internal sealed class TestContext(string testId)
         {
             case TimeoutFailure:
             {
+                if (PendingEventually <= 0)
+                {
+                    TestFailures.Add(te.Failure);
+                    break;
+                }
+
                 while (PendingEventually > 0)
                 {
                     TestFailures.Add(te.Failure);
@@ -55,7 +108,7 @@ internal sealed class TestContext(string testId)
 
     public void ReportPass()
     {
-        Log.Message(Green($"[PawnHistory] [Passed] {TestId}: {AssertionsPassed} passed"));
+        Log.Message(Palette.Green($"[PawnHistory] [Passed] {TestId}: {AssertionsPassed} passed"));
         Messages.Message("[Passed] " + TestId, MessageTypeDefOf.PositiveEvent);
     }
 

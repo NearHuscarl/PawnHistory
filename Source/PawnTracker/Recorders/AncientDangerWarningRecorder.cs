@@ -43,7 +43,7 @@ public class AncientDangerWarningRecorder : RecorderBase<Pawn>
         var map = Find.CurrentMap;
 
         scenario.SpeedUp();
-        scenario.Pawn(3)
+        var pawns = scenario.Pawn(3)
             .Colonist()
             .Do(p => p.Position = CellFinder.RandomEdgeCell(map)) // so pawn does not end up in the ancient temple
             .Execute();
@@ -51,9 +51,9 @@ public class AncientDangerWarningRecorder : RecorderBase<Pawn>
         scenario.Pawn()
             .Colonist()
             .StartJob(JobDefOf.Goto, map.Center)
-            .Execute();
+            .CreateSingle();
 
-        Expect.AnyPawnOnMap().Eventually().ToHaveHistoryRecord("[PAWN] felt a deep sense of foreboding while approaching an ancient structure, sensing great danger within.");
+        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecord("[PAWN] felt a deep sense of foreboding while approaching an ancient structure, sensing great danger within.");
 
         return () => scenario.SlowDown();
     }
