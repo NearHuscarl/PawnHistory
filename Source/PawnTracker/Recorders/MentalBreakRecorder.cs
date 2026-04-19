@@ -200,7 +200,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         var pawns = scenario.Pawn(mentalBreaks.Count)
             .ThatMatches(ShouldRecord)
             .StopMentalState()
-            .WithPosition(TestScenario.TaggedRooms["Common"].CenterCell, 4)
+            .WithPosition(scenario.TaggedRooms["Common"].CenterCell, 4)
             .GiveTrait(TraitDefOf.Pyromaniac) // FireStartingSpree
             .Do((p, i) =>
             {
@@ -326,11 +326,14 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         hediff.Severity = 0.8f;
 
         for (var i = 0; i < 5000; i++)
+        {
             hediff.TickInterval(int.MaxValue);
+            if (pawn.MentalState != null) break;
+        }
 
-        var recordDef = pawn.MentalState.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
+        var recordDef = pawn.MentalState?.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
 
-        Expect.That(pawn).ToHaveHistoryRecord($"[MentalBreak]. This happened because of: Resurrection psychosis (total).", recordDef);
+        Expect.That(pawn).ToHaveHistoryRecord("[MentalBreak]. This happened because of: Resurrection psychosis (total).", recordDef);
     }
 
     public void TestHediff2(TestScenario scenario)
@@ -347,10 +350,13 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         hediff.Severity = .01f;
         pawn.needs.TryGetNeed<Need_Chemical>().CurLevel = 0f;
 
-        for (var i = 0; i < 500; i++)
+        for (var i = 0; i < 5000; i++)
+        {
             hediff.TickInterval(int.MaxValue);
+            if (pawn.MentalState != null) break;
+        }
 
-        var recordDef = pawn.MentalState.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
+        var recordDef = pawn.MentalState?.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
         
         Expect.That(pawn).ToHaveHistoryRecord($"[MentalBreak]. This happened because of: Luciferium need (unmet).", recordDef);
     }

@@ -27,6 +27,9 @@ public static class DefLookup
         public static HediffDef WakeUpTolerance => field ??= DefDatabase<HediffDef>.GetNamed("WakeUpTolerance");
         public static HediffDef AlcoholTolerance => field ??= DefDatabase<HediffDef>.GetNamed("AlcoholTolerance");
         public static HediffDef ArchotechArm => field ??= DefDatabase<HediffDef>.GetNamed("ArchotechArm");
+        public static HediffDef ArchotechEye => field ??= DefDatabase<HediffDef>.GetNamed("ArchotechEye");
+        public static HediffDef BionicEar => field ??= DefDatabase<HediffDef>.GetNamed("BionicEar");
+        public static HediffDef BionicSpine => field ??= DefDatabase<HediffDef>.GetNamed("BionicSpine");
         public static HediffDef SmokeleafHigh => field ??= DefDatabase<HediffDef>.GetNamed("SmokeleafHigh");
         public static HediffDef Bruise => field ??= DefDatabase<HediffDef>.GetNamed("Bruise");
         public static HediffDef Painstopper => field ??= DefDatabase<HediffDef>.GetNamed("Painstopper");

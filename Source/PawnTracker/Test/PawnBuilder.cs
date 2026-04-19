@@ -153,12 +153,13 @@ public class PawnBuilder(int count = 1)
     private List<Pawn> SourcePawns(bool reusePawns)
     {
         var allFilters = filters.Concat([
+            p => !p.Downed,
             p => isKilled == p.Dead,
             p => kind == null || p.kindDef == kind,
             p => faction == null || p.Faction == faction,
             p => guestStatus == null || p.GuestStatus == guestStatus,
             p => p.RaceProps.Humanlike == humanLike,
-            p => !TestScenario.ProcessedPawns.Contains(p),
+            p => !TestManager.Scenario.ProcessedPawns.Contains(p),
             p => p.IsFactionLeader(faction) == factionLeader,
         ]).ToList();
         var sourcedPawns = reusePawns ? Find.CurrentMap.mapPawns.AllPawnsSpawned.Where(p => allFilters.All(f => f(p))).Take(count).ToList() : [];
@@ -215,7 +216,7 @@ public class PawnBuilder(int count = 1)
                 processor(res[i], i, res);
             }
             MakePawnCapable(res[i]);
-            TestScenario.ProcessedPawns.Add(res[i]);
+            TestManager.Scenario.ProcessedPawns.Add(res[i]);
         }
 
         return res;
@@ -284,9 +285,18 @@ public class PawnBuilder(int count = 1)
         return Do(pawn => pawn.mindState.mentalStateHandler.CurState?.RecoverFromState());
     }
 
+    public PawnBuilder Incapacitate()
+    {
+        return Do(p => HealthUtility.DamageUntilDowned(p))
+            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Leg, partIndex: 0)
+            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Arm, partIndex: 0)
+            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Arm, partIndex: 1)
+            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Leg, partIndex: 1);
+    }
+
     public PawnBuilder DiesOnNextHit()
     {
-        return Do(pawn => TestScenario.DeathOnNextHitPawns.Add(pawn));
+        return Do(pawn => TestManager.Scenario.DeathOnNextHitPawns.Add(pawn));
     }
 
     public PawnBuilder Heal()

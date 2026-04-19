@@ -40,7 +40,6 @@ public class KidnappedRecorder : RecorderBase<KidnappedEvent>
     {
         var victim = scenario.Pawn().Colonist().CreateSingle();
         var enemy = scenario.Pawn().Enemy().CreateSingle();
-
         Faction.OfPirates.kidnapped.Kidnap(victim, enemy);
 
         Expect.That(enemy).ToHaveHistoryRecord("[Kidnapper] kidnapped [Victim] for [Faction].", HistoryRecordDefOf.Kidnap);

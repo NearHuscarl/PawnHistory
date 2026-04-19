@@ -10,7 +10,7 @@ public class ManInBlackJoinedRecorder : RecorderBase<WandererJoinedEvent>
     {
         GameEventBus.Subscribe<WandererJoinedEvent>(e =>
         {
-            if (e.IncidentDef?.defName != "StrangerInBlackJoin")
+            if (e.IncidentDef != DefLookup.Incident.StrangerInBlackJoin)
                 return;
 
             CreateRecord(e);

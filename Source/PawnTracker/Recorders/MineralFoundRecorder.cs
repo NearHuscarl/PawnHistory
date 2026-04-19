@@ -47,6 +47,7 @@ public class MineralFoundRecorder : RecorderBase<LongRangeMineralFoundEvent>, IR
         AddRecord(recordDef, pawn, desc, location: new RecordLocation { map = pawn.Map, position = position });
     }
 
+    [TestTag("Flaky")]
     public void TestLongRange(TestScenario scenario)
     {
         var pawn = scenario.Pawn().Colonist().CreateSingle();

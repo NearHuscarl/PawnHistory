@@ -199,6 +199,7 @@
     <Compile Include="Source\PawnTracker\Test\GatheringBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\IncidentBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\MapBuilder.cs" />
+    <Compile Include="Source\PawnTracker\Test\Mocks\AlwaysHaveCancerOnBirthday.cs" />
     <Compile Include="Source\PawnTracker\Test\Mocks\DeathOnNextHit.cs" />
     <Compile Include="Source\PawnTracker\Test\PawnBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\DebugValuesAttribute.cs" />

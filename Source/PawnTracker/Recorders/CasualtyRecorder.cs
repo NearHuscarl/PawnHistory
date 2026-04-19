@@ -172,6 +172,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         base.AddRecord(def, pawn, resolvedDesc, concerns, location, tileId);
     }
 
+    [TestTag("Flaky")]
     public Action TestDeadInCombat(TestScenario scenario)
     {
         var friends = scenario.RaidFriendly()
@@ -253,13 +254,12 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         Expect.That(pawn2).ToHaveHistoryRecord("[PAWN] died.", exactMatch: true);
     }
 
-    [TestTag("Flaky")]
     public void TestDowned(TestScenario scenario)
     {
         var pawn = scenario.Pawn().Enemy().CreateSingle();
         HealthUtility.DamageUntilDowned(pawn);
 
-        var pawn2 = scenario.Pawn().Enemy().CreateSingle();
+        var pawn2 = scenario.Pawn().Enemy().FullHeal().CreateSingle();
         pawn2.MakeDowned();
 
         Expect.That(pawn).ToHaveHistoryRecord("[PAWN] was incapacitated due to [HediffInPart].");

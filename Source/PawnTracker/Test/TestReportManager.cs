@@ -58,7 +58,7 @@ public static class TestReportManager
         if (!File.Exists(FilePath))
         {
             Log.Warning($"[PawnHistory] Cannot load last test report because file not found: {FilePath}");
-            return null;
+            return new TestReport();
         }
 
         try

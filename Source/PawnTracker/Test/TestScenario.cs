@@ -8,18 +8,15 @@ namespace PawnHistory.Source.PawnTracker.Test;
 
 public class TestScenario
 {
+    public static TestScenario Empty => field ??= new TestScenario();
     public bool NeverForceNormalSpeed = DebugViewSettings.neverForceNormalSpeed;
 
-    public static CellRect LastRoomRect { get; internal set; }
-    public static Dictionary<string, CellRect> TaggedRooms { get; internal set; } = [];
-    public static HashSet<Pawn> ProcessedPawns { get; internal set; } = [];
-    internal static readonly HashSet<Pawn> DeathOnNextHitPawns = [];
-
-    public static void ClearAll()
-    {
-        TaggedRooms.Clear();
-        ProcessedPawns.Clear();
-    }
+    public CellRect LastRoomRect { get; internal set; }
+    public Dictionary<string, CellRect> TaggedRooms { get; } = [];
+    public HashSet<Pawn> ProcessedPawns { get; } = [];
+    
+    internal readonly HashSet<Pawn> DeathOnNextHitPawns = [];
+    public bool AlwaysHaveCancerOnBirthday = false;
 
     public PawnBuilder Pawn(int count = 1) => new(count);
     public PawnBuilder Pawn(IEnumerable<Pawn> pawns) => new PawnBuilder().WithPawns(pawns);

@@ -15,7 +15,7 @@ internal class DeathOnNextHit
         if (__instance is not Pawn pawn)
             return;
 
-        if (TestScenario.DeathOnNextHitPawns.Remove(pawn))
+        if (TestManager.Scenario.DeathOnNextHitPawns.Remove(pawn))
             dinfo.SetAmount(99999f);
     }
 }

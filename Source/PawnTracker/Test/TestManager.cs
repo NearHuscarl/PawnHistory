@@ -10,6 +10,7 @@ public static class TestManager
 {
     public static int Timeout = 5000;
     internal static TestContext Ctx;
+    internal static TestScenario Scenario = new();
     private static readonly Queue<Action> Queue = new();
     private static bool isRunningTest;
 
@@ -116,6 +117,7 @@ public static class TestManager
     private static void SetupBeforeTest(string testId)
     {
         Ctx = new TestContext(testId);
+        Scenario = new TestScenario();
 
         NearDebugSettings.ForceDebugMapSize = true;
         NearDebugSettings.NeverEverEverPause = true;
@@ -124,9 +126,9 @@ public static class TestManager
 
     private static void CleanupAfterTest()
     {
+        Scenario = TestScenario.Empty;
         NearDebugSettings.ForceDebugMapSize = false;
         NearDebugSettings.NeverEverEverPause = false;
-        TestScenario.ClearAll(); 
         TestReportManager.AddReportEntry(Ctx.CreateReportEntry());
         Ctx?.Cleanup();
     }

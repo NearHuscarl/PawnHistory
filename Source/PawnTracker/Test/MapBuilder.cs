@@ -135,14 +135,14 @@ public class MapBuilder
     /// </summary>
     public MapBuilder BuildRoom(CellRect rect, string tag = null, ThingDef wallDef = null, ThingDef stuff = null, TerrainDef floorDef = null)
     {
-        TestScenario.LastRoomRect = rect;
+        TestManager.Scenario.LastRoomRect = rect;
 
         actions.Add(_ =>
         {
             MovePawnsOutside(rect);
             BuildRoomPhysical(rect, wallDef, stuff, floorDef, tag);
             if (!tag.NullOrEmpty())
-                TestScenario.TaggedRooms[tag] = rect;
+                TestManager.Scenario.TaggedRooms[tag] = rect;
         });
         return this;
     }
@@ -172,7 +172,7 @@ public class MapBuilder
     {
         actions.Add(center =>
         {
-            var rect = TestScenario.LastRoomRect;
+            var rect = TestManager.Scenario.LastRoomRect;
             for (var i = 0; i < bedCount; i++)
             {
                 var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Create<Building_Bed>();
@@ -186,7 +186,7 @@ public class MapBuilder
     {
         actions.Add(center =>
         {
-            var rect = TestScenario.LastRoomRect;
+            var rect = TestManager.Scenario.LastRoomRect;
             for (var i = 0; i < bedCount; i++)
             {
                 var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Create<Building_Bed>();
@@ -203,7 +203,7 @@ public class MapBuilder
         actions.Add(_ =>
         {
             if (bedCount == 0) bedCount = prisonerCount;
-            var rect = TestScenario.LastRoomRect;
+            var rect = TestManager.Scenario.LastRoomRect;
 
             for (var i = 0; i < bedCount; i++)
             {
@@ -223,7 +223,7 @@ public class MapBuilder
     {
         actions.Add(c =>
         {
-            var interior = TestScenario.LastRoomRect.ContractedBy(1);
+            var interior = TestManager.Scenario.LastRoomRect.ContractedBy(1);
             var limit = thingDef.stackLimit;
             var fullStacks = totalCount / limit;
             var remainder = totalCount % limit;
@@ -258,7 +258,7 @@ public class MapBuilder
     {
         actions.Add(_ =>
         {
-            var interior = TestScenario.LastRoomRect.ContractedBy(1);
+            var interior = TestManager.Scenario.LastRoomRect.ContractedBy(1);
             var casket = new ThingBuilder(thingDef)
                 .MadeOf(stuff)
                 .Map(map)
@@ -284,7 +284,7 @@ public class MapBuilder
 
     public static CellRect Beside(string tag, Rot4 side, int w, int h)
     {
-        if (!TestScenario.TaggedRooms.TryGetValue(tag, out var existing))
+        if (!TestManager.Scenario.TaggedRooms.TryGetValue(tag, out var existing))
             return CellRect.CenteredOn(Find.CameraDriver.MapPosition, w, h);
 
         int minX = 0, minZ = 0;

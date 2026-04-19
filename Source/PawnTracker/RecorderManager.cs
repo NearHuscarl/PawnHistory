@@ -21,7 +21,6 @@ public static class RecorderManager
     }
 
     private static readonly List<RecorderBase> ActiveRecorders = [];
-    private static readonly TestScenario TestScenario = new();
 
     public static void Initialize()
     {
@@ -252,9 +251,9 @@ public static class RecorderManager
         }
         
         if (parameters == null)
-            return method.Invoke(recorder, [TestScenario]);
+            return method.Invoke(recorder, [TestManager.Scenario]);
         
-        return method.Invoke(recorder, [TestScenario, ..parameters]);
+        return method.Invoke(recorder, [TestManager.Scenario, ..parameters]);
     }
 
     [NearDebugOutput]
