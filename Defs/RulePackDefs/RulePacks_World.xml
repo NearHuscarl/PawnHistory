@@ -163,6 +163,18 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_VisitorLeftGift</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] from [Faction] left a gift for the colony: [Gifts].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_TradeCaravanArrived</defName>
 		<rulePack>
 			<rulesStrings>

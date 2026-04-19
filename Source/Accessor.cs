@@ -72,6 +72,12 @@ public static class Accessor
             AccessTools.FieldRefAccess<Verse.GameComponent_OnetimeNotification, bool>("sendAICoreRequestReminder");
     }
 
+    public class VisitorGiftForPlayerUtility
+    {
+        public static readonly Func<List<Pawn>, Faction, Pawn> GetGiftGiver =
+            AccessTools.MethodDelegate<Func<List<Pawn>, Faction, Pawn>>(AccessTools.Method(typeof(RimWorld.VisitorGiftForPlayerUtility), "GetGiftGiver"));
+    }
+
     public static class PlayLogEntry_Interaction
     {
         public static readonly AccessTools.FieldRef<Verse.PlayLogEntry_Interaction, Pawn> Initiator =

@@ -42,6 +42,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef PlayerCaravanArrived;
     public static HistoryRecordDef PlayerTransporterArrived;
     public static HistoryRecordDef AICoreOffer;
+    public static HistoryRecordDef VisitorLeftGift;
     public static HistoryRecordDef PeaceTalksOutcome;
     public static HistoryRecordDef PeaceTalksRaid;
     public static HistoryRecordDef TradeCaravanArrived;

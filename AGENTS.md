@@ -98,6 +98,7 @@ When adding a new event/recorder:
 6. Call `ShouldRecord(...)` before writing history.
 7. Prefer rulepacks via `descriptionMaker` for extendability; resolve the final text with `Resolve()`.
 8. Add recorder-local `Test...` methods when the feature needs coverage.
+9. Update `PawnHistory.csproj` explicitly for every new `.cs` file. This project does not auto-glob source files, so new event/recorder/test code will not compile until it is added manually.
 
 Important behavior:
 

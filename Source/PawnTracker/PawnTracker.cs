@@ -54,12 +54,12 @@ namespace PawnHistory.Source.PawnTracker;
 //  - Odyssey: Psilocap
 //  - Ideology: LeaderSpeech, Trial (Speech), Sacrifice (Ritual), CelebratedDate_Consumable (Ritual)
 // Catching fire: handle with permanent/missing hediffs.
-// Craft a legendary item
+// + Craft a legendary item
 // - Mental breaks
 //  + Base game
 //  - DLC breaks: MentalBreakWorker_WildDecree, MentalBreakWorker_HumanityBreak, MentalBreakWorker_IdeoChange, MentalBreakWorker_FireTerror[NO], EntityLiberator
 // - Relationships (breakup, cheating, new love..)
-// Raid type: seige with a different icon
+// Raid type: siege with a different icon
 // Ideology convert, belief reduced
 // Quest: track giver, link to (visible) quest.
 // Pawn.Notify_PassedToWorld() event?
@@ -76,6 +76,8 @@ namespace PawnHistory.Source.PawnTracker;
 // - Docs
 //  - DescriptionBuilder and rulepack
 //  - TaggedTestAttribute, Run last failed tests...
+
+// - Replace "the colony" with the settlement name if exists (put into common?)
 
 // Should I add:
 // - LetterAcceptedProposal_NameChange

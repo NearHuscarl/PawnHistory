@@ -336,6 +336,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>VisitorLeftGift</defName>
+		<label>visitor left gift</label>
+		<descriptionMaker>PH_VisitorLeftGift</descriptionMaker>
+		<icon>Ui/Commands/OfferGifts</icon>
+		<categories>
+			<li>Departure</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TradeCaravanArrived</defName>
 		<label>trade caravan arrived</label>
 		<descriptionMaker>PH_TradeCaravanArrived</descriptionMaker>
@@ -686,7 +695,7 @@
 		<defName>LongRangeMineralFound</defName>
 		<label>long-range mineral found</label>
 		<description>{PAWN} found a lump of {Material} some distance away using the long-range mineral scanner..</description>
-		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<icon>World/WorldObjects/Expanding/Sites/PreciousLump</icon>
 		<categories>
 			<li>Work</li>
 		</categories>

@@ -77,10 +77,7 @@ public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
         return this;
     }
 
-    /// <summary>
-    /// Creates and spawns the thing.
-    /// </summary>
-    public T Create<T>() where T : Thing
+    private T CreateInternal<T>() where T : Thing
     {
         var thing = ThingMaker.MakeThing(def, stuff);
         
@@ -92,10 +89,28 @@ public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
         foreach (var processor in processors)
             processor(thing);
 
+        return thing as T;
+    }
+    
+    public T CreateAndPutInto<T>(Pawn pawn) where T : Thing
+    {
+        var thing = CreateInternal<T>();
+        pawn.inventory.innerContainer.TryAdd(thing);
+
+        return thing;
+    }
+    public Thing CreateAndPutInto(Pawn pawn) => CreateAndPutInto<Thing>(pawn);
+
+    /// <summary>
+    /// Creates and spawns the thing.
+    /// </summary>
+    public T Create<T>() where T : Thing
+    {
+        var thing = CreateInternal<T>();
         var cell = ResolvePosition();
         GenPlace.TryPlaceThing(thing, cell, map, placeMode);
 
-        return thing as T;
+        return thing;
     }
     public Thing Create() => Create<Thing>();
 }

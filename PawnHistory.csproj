@@ -85,6 +85,7 @@
     <Compile Include="Source\PawnTracker\Events\PlayerCaravanArriveEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\CaravanAmbushedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PeaceTalksOutcomeEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\VisitorLeftGiftEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PlayerTransporterArriveEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ReceiveLetterEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\TechprintAppliedEvent.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Source\PawnTracker\Recorders\MarriageProposalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\NewLoverRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PlayerCaravanArriveRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\VisitorLeftGiftRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PlayerTransporterArrivalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PeaceTalksOutcomeRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RescueJoinedRecorder.cs" />

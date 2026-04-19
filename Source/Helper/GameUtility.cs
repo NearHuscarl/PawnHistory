@@ -43,7 +43,7 @@ public static class GameUtility
     /// Because we're testing on a tiny map, clear up all minable block, chunks & existing structures so nothing weird happens.
     /// </summary>
     /// <exception cref="NotImplementedException"></exception>
-    private static void ClearUpMap()
+    public static void ClearUpMap()
     {
         var chunks = Find.CurrentMap.listerThings.ThingsInGroup(ThingRequestGroup.Chunk);
 
