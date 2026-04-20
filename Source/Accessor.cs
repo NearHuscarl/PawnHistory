@@ -78,6 +78,18 @@ public static class Accessor
             AccessTools.MethodDelegate<Func<List<Pawn>, Faction, Pawn>>(AccessTools.Method(typeof(RimWorld.VisitorGiftForPlayerUtility), "GetGiftGiver"));
     }
 
+    public class ChoiceLetter_AcceptVisitors
+    {
+        public static readonly Func<RimWorld.ChoiceLetter_AcceptVisitors, DiaOption> Option_Accept =
+            AccessTools.MethodDelegate<Func<RimWorld.ChoiceLetter_AcceptVisitors, DiaOption>>(AccessTools.Method(typeof(RimWorld.ChoiceLetter_AcceptVisitors), "get_Option_Accept"));
+    }
+
+    public class QuestPart_PawnJoinOffer
+    {
+        public static readonly Action<RimWorld.QuestPart_PawnJoinOffer> SendLetter =
+            AccessTools.MethodDelegate<Action<RimWorld.QuestPart_PawnJoinOffer>>(AccessTools.Method(typeof(RimWorld.QuestPart_PawnJoinOffer), "SendLetter"));
+    }
+
     public static class PlayLogEntry_Interaction
     {
         public static readonly AccessTools.FieldRef<Verse.PlayLogEntry_Interaction, Pawn> Initiator =

@@ -33,12 +33,13 @@ public class HistoryRecord : IExposable
     /// Empty constructor is required so Scribe can instantiate it
     /// </summary>
     public HistoryRecord() {}
-    public HistoryRecord(HistoryRecordDef def, Pawn pawn, TaggedString desc, IEnumerable<Thing> concerns = null, RecordLocation location = null, int? tileId = null) : this()
+    public HistoryRecord(HistoryRecordDef def, Pawn pawn, TaggedString desc, IEnumerable<Thing> concerns = null, RecordLocation location = null, int? tileId = null, Quest quest = null) : this()
     {
         this.def = def;
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
         this.description = desc.Resolve();
         this.concerns = (concerns ?? []).Where(p => p != null && p != pawn).Distinct().ToList();
+        this.quest = quest;
         this.date = GenTicks.TicksAbs;
         this.tileId = tileId
             ?? location?.map?.Tile.tileId
@@ -64,6 +65,7 @@ public class HistoryRecord : IExposable
     public List<Thing> concerns;
     public int tileId;
     public RecordLocation location;
+    public Quest quest;
     public int CurrentPawnToJumpTo { get; private set; }
 
     private static readonly Dictionary<string, Texture2D> CachedIconTextures = [];
@@ -124,6 +126,7 @@ public class HistoryRecord : IExposable
         Scribe_Collections.Look(ref concerns, "concerns", saveDestroyedThings: true, LookMode.Reference);
         Scribe_Values.Look(ref tileId, "tileId");
         Scribe_Deep.Look(ref location, "location");
+        Scribe_References.Look(ref quest, "quest");
     }
 }
 

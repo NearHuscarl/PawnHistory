@@ -253,7 +253,7 @@
 				<li>entry(priority=1,name==FireStartingSpree)   ->[PAWN] was on a fire starting spree. [PAWN_pronoun] wandered around for a while, randomly starting fires. [Reason]</li>
 				<li>entry(priority=1,name==Catatonic)           ->[PAWN] suffered a total mental breakdown and entered a catatonic state for several days. [Reason]</li>
 				<li>entry(priority=1,name==Jailbreaker)         ->[PAWN] had a mental breakdown and was going to induce [Prisoners] to escape. [Reason]</li>
-				<li>entry(priority=1,name==RunWild)             ->[PAWN] was fed up with civilization. [PAWN_pronoun] decided to leave [FACTION] to live with the animals in the wild. [Reason]</li>
+				<li>entry(priority=1,name==RunWild)             ->[PAWN] was fed up with civilization. [PAWN_pronoun] decided to leave [Faction] to live with the animals in the wild. [Reason]</li>
 				<li>entry(priority=1,name==GiveUpExit)          ->[PAWN] gave up on this community. [PAWN_pronoun] decided to leave and pursue a better life elsewhere. [Reason]</li>
 				<li>entry(priority=1,name==Binging_DrugExtreme) ->[PAWN] binged on [Drug] during an extreme mental break. [Reason]</li>
 				<li>entry(priority=1,name==Binging_DrugMajor)   ->[PAWN] binged on [Drug] during a major mental break. [Reason]</li>

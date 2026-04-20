@@ -11,7 +11,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class PlayerTransporterArrivalRecorder : RecorderBase<PlayerTransporterArrivalRecorder.Input>
+public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArriveRecorder.Input>
 {
     public record Input(List<Pawn> Pawns, ArrivalAction ArrivalAction, WorldObject WorldObject, PlanetTile Tile, Transporter Transporter);
 
@@ -110,7 +110,7 @@ public class PlayerTransporterArrivalRecorder : RecorderBase<PlayerTransporterAr
                 .AddConstant("action", e.ArrivalAction);
 
             if (e.ArrivalAction == ArrivalAction.Enter)
-                builder.AddConstant("isColony", e.WorldObject?.Faction == Faction.OfPlayer);
+                builder.WithPlayerSettlement(e.WorldObject).AddConstant("isColony", e.WorldObject?.Faction == Faction.OfPlayer);
 
             AddRecord(recordDef, pawn, builder.Resolve(), tileId: e.Tile);
         }
@@ -136,6 +136,21 @@ public class PlayerTransporterArrivalRecorder : RecorderBase<PlayerTransporterAr
         scenario.DropPod(pawns).Enter(Find.CurrentMap.Parent).Execute();
 
         Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] arrived at the colony in a transport pod with 2 others.", HistoryRecordDefOf.PlayerTransporterArrived);
+        
+        return () => scenario.SlowDown();
+    }
+
+    public Action TestEnter2(TestScenario scenario)
+    {
+        scenario.SpeedUp();
+        
+        var pawns = scenario.Pawn(3).Colonist().Execute();
+        scenario.DropPod(pawns).Enter(Find.CurrentMap.Parent).Execute();
+        
+        var playerSettlement = Find.WorldObjects.Settlements.First(s => s.Faction == Faction.OfPlayer);
+        NamePlayerSettlementDialogUtility.Named(playerSettlement, "Super Gay Viltrum");
+
+        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] arrived at Super Gay Viltrum in a transport pod with 2 others.", HistoryRecordDefOf.PlayerTransporterArrived);
         
         return () => scenario.SlowDown();
     }
@@ -207,7 +222,7 @@ public class PlayerTransporterArrivalRecorder : RecorderBase<PlayerTransporterAr
     public Action TestVisitSite(TestScenario scenario)
     {
         scenario.SpeedUp();
-        QuestUtility.GenerateQuestAndMakeAvailable(QuestScriptDefOf.OpportunitySite_ItemStash, 500);
+        scenario.Quest(QuestScriptDefOf.OpportunitySite_ItemStash).Execute();
         var site = Find.WorldObjects.AllWorldObjects.OfType<Site>().FirstOrDefault();
         var pawns = scenario.Pawn(3).Colonist().Execute();
 

@@ -36,10 +36,10 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
 
         var recordDef = mentalState?.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
         var hasCustomDescription = HasCustomDescription(defName, recordDef);
-        var concerns = new List<Thing>() { mentalState?.causedByPawn, target };
+        var concerns = new List<Thing> { mentalState?.causedByPawn, target };
         var descBuilder = recordDef.Description(pawn)
-            .WithFaction(pawn.Faction)
             .IncludePawnGrammar()
+            .AddRule("Faction", pawn.Faction)
             .AddRule("Reason", GetReason(reason, recordDef, pawn))
             .AddRule("Target", target, addSubsymbols: true)
             .AddConstant("name", defName);

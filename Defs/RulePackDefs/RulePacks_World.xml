@@ -35,11 +35,11 @@
 		</include>
         <rulePack>
             <rulesStrings>
-				<li>entry(raidProperty==None)      ->[PAWN][AndOthers] from [FACTION] raided the colony.</li>
-				<li>entry(raidProperty==Breacher)  ->[PAWN][AndOthers] from [FACTION] raided the colony using breaching tactics.</li>
-				<li>entry(raidProperty==Sapper)    ->[PAWN][AndOthers] from [FACTION] raided the colony using sapper tactics.</li>
-				<li>entry(raidProperty==Siege)     ->[PAWN][AndOthers] from [FACTION] besieged the colony.</li>
-				<li>entry(raidProperty==CenterDrop)->[PAWN][AndOthers] from [FACTION] raided the colony by dropping directly into it.</li>
+				<li>entry(raidProperty==None)      ->[PAWN][AndOthers] from [Faction] raided the colony.</li>
+				<li>entry(raidProperty==Breacher)  ->[PAWN][AndOthers] from [Faction] raided the colony using breaching tactics.</li>
+				<li>entry(raidProperty==Sapper)    ->[PAWN][AndOthers] from [Faction] raided the colony using sapper tactics.</li>
+				<li>entry(raidProperty==Siege)     ->[PAWN][AndOthers] from [Faction] besieged the colony.</li>
+				<li>entry(raidProperty==CenterDrop)->[PAWN][AndOthers] from [Faction] raided the colony by dropping directly into it.</li>
 			</rulesStrings>
         </rulePack>
     </RulePackDef>
@@ -77,8 +77,8 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(hostileFaction==)    ->[PAWN][AndOthers] from [FACTION] came to aid the colony.</li>
-				<li>entry(hostileFaction==true)->[PAWN][AndOthers] from [FACTION] came to aid the colony against [HostileFaction].</li>
+				<li>entry(enemyHasFaction==False)->[PAWN][AndOthers] from [Faction] came to aid the colony.</li>
+				<li>entry(enemyHasFaction==True) ->[PAWN][AndOthers] from [Faction] came to aid the colony against [HostileFaction].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -131,13 +131,14 @@
 		<defName>PH_PlayerTransporterArrived</defName>
 		<include>
 			<li>PH_Common</li>
+			<li>PH_Faction</li>
 		</include>
 		<rulePack>
 			<rulesStrings>
 				<li>Holder(transporter==TransportPod)->transport pod</li>
 				<li>Holder(transporter==Shuttle)     ->shuttle</li>
 				<li>entry(action==Attack)               ->[PAWN] arrived at [WorldObject] in a [Holder] [WithOthers] to attack [Faction].</li>
-				<li>entry(action==Enter,isColony==True) ->[PAWN] arrived at the colony in a [Holder] [WithOthers].</li>
+				<li>entry(action==Enter,isColony==True) ->[PAWN] arrived at [PlayerSettlement] in a [Holder] [WithOthers].</li>
 				<li>entry(action==Enter,isColony==False)->[PAWN] arrived at [WorldObject] of [Faction] in a [Holder] [WithOthers].</li>
 				<li>entry(action==ArriveAsGift)         ->[PAWN] arrived at [WorldObject] in a [Holder] [WithOthers] as a gift to [Faction].</li>
 				<li>entry(action==AddedToCaravan)       ->[PAWN] was added to [WorldObject] from a [Holder] [WithOthers].</li>
@@ -175,6 +176,19 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_LodgerJoinOffer</defName>
+		<include>
+			<li>PH_Common</li>
+			<li>PH_Faction</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->During [Quest] quest, [PAWN] believed that [PAWN_pronoun] was happy here, and wished to join [PlayerSettlement] permanently. The colony welcomed [PAWN_objective] in.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_TradeCaravanArrived</defName>
 		<rulePack>
 			<rulesStrings>
@@ -205,7 +219,7 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry->[PAWN][AndOthers] from [FACTION] arrived to visit the colony.</li>
+				<li>entry->[PAWN][AndOthers] from [Faction] arrived to visit the colony.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
@@ -217,19 +231,19 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry->[PAWN][AndOthers] from [FACTION] passed by the colony.</li>
+				<li>entry->[PAWN][AndOthers] from [Faction] passed by the colony.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
 
 	<RulePackDef>
 		<defName>PH_RescueJoined</defName>
+		<include>
+			<li>PH_Faction</li>
+		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>F(hasFactionName==True) ->[Faction]</li>
-				<li>F(hasFactionName==False)->the community</li>
-
-				<li>entry->[PAWN] was grateful after being rescued. Instead of leaving, [PAWN_pronoun] decided to stay and joined [F].</li>
+				<li>entry->[PAWN] was grateful after being rescued. Instead of leaving, [PAWN_pronoun] decided to stay and joined [PlayerFaction].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

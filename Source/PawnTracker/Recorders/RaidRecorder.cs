@@ -39,10 +39,10 @@ public class RaidRecorder : RecorderBase<RaidStartedEvent>
             var rules = new List<Rule>();
             var constants = new Dictionary<string, string>();
             var desc = recordDef.Description(pawn)
-                .WithFaction(faction)
-                .WithOthers(pawns)
-                .AddConstantIf(hostileFaction != null, "hostileFaction", "true") // not manhunter/insect
+                .AddRule("Faction", faction)
                 .AddRule("HostileFaction", hostileFaction)
+                .WithOthers(pawns)
+                .AddConstant("enemyHasFaction", hostileFaction != null) // not manhunter/insect
                 .Resolve();
 
             AddRecord(recordDef, pawn, desc);
@@ -76,8 +76,8 @@ public class RaidRecorder : RecorderBase<RaidStartedEvent>
         foreach (var pawn in pawns)
         {
             var desc = recordDef.Description(pawn)
-                .WithFaction(faction)
                 .WithOthers(pawns)
+                .AddRule("Faction", faction)
                 .AddConstant("raidProperty", raidProperty)
                 .Resolve();
             AddRecord(recordDef, pawn, desc);

@@ -85,6 +85,7 @@
     <Compile Include="Source\PawnTracker\Events\PlayerCaravanArriveEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\CaravanAmbushedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PeaceTalksOutcomeEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\LodgerJoinOfferAcceptedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\VisitorLeftGiftEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PlayerTransporterArriveEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ReceiveLetterEvent.cs" />
@@ -141,8 +142,9 @@
     <Compile Include="Source\PawnTracker\Recorders\MarriageProposalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\NewLoverRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PlayerCaravanArriveRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\LodgerJoinOfferRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\VisitorLeftGiftRecorder.cs" />
-    <Compile Include="Source\PawnTracker\Recorders\PlayerTransporterArrivalRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\PlayerTransporterArriveRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PeaceTalksOutcomeRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RescueJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PrisonerRecruitedRecorder.cs" />
@@ -209,6 +211,7 @@
     <Compile Include="Source\PawnTracker\Test\PawnBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\DebugValuesAttribute.cs" />
     <Compile Include="Source\PawnTracker\Test\PawnHistoryAssertions.cs" />
+    <Compile Include="Source\PawnTracker\Test\QuestBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\RequiresAttribute.cs" />
     <Compile Include="Source\PawnTracker\Test\SkipTestAttribute.cs" />
     <Compile Include="Source\PawnTracker\Test\TestException.cs" />

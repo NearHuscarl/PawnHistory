@@ -22,8 +22,7 @@ public class RescueJoinedRecorder : RecorderBase<RescueJoinedEvent>
         var recordDef = HistoryRecordDefOf.RescueJoined;
         var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
-            .AddRule("Faction", Faction.OfPlayer)
-            .AddConstant("hasFactionName", Faction.OfPlayer.HasName)
+            .WithPlayerFaction()
             .Resolve();
 
         AddRecord(recordDef, pawn, desc);
@@ -56,6 +55,6 @@ public class RescueJoinedRecorder : RecorderBase<RescueJoinedEvent>
             scenario.SlowDown();
         });
 
-        Expect.That(victim).Eventually().ToHaveHistoryRecord("[PAWN] was grateful after being rescued. Instead of leaving, [PAWN_pronoun] decided to stay and joined [F].");
+        Expect.That(victim).Eventually().ToHaveHistoryRecord("[PAWN] was grateful after being rescued. Instead of leaving, [PAWN_pronoun] decided to stay and joined the colony.");
     }
 }

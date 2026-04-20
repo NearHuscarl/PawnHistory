@@ -161,7 +161,7 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
 
     public void TestPeaceTalks(TestScenario scenario)
     {
-        QuestUtility.GenerateQuestAndMakeAvailable(DefLookup.QuestScript.OpportunitySite_PeaceTalks, 500);
+        scenario.Quest(DefLookup.QuestScript.OpportunitySite_PeaceTalks).Execute();
         var peaceTalks = Find.WorldObjects.AllWorldObjects.OfType<PeaceTalks>().FirstOrDefault();
         var pawns = scenario.Pawn(3).Colonist().Execute();
 
@@ -171,7 +171,7 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
 
     public void TestVisitSite(TestScenario scenario)
     {
-        QuestUtility.GenerateQuestAndMakeAvailable(QuestScriptDefOf.OpportunitySite_ItemStash, 500);
+        scenario.Quest(QuestScriptDefOf.OpportunitySite_ItemStash).Execute();
         var site = Find.WorldObjects.AllWorldObjects.OfType<Site>().FirstOrDefault();
         var pawns = scenario.Pawn(3).Colonist().Execute();
 

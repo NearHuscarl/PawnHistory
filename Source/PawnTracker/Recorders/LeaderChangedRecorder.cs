@@ -20,7 +20,7 @@ public class LeaderChangedRecorder : RecorderBase<LeaderChangedEvent>
         var recordDef = HistoryRecordDefOf.LeaderChanged;
         var desc = recordDef.Description(e.NewLeader)
             .AddRule("OldLeader", e.OldLeader)
-            .AddRule("Faction", e.NewLeader.Faction, addSubsymbols: true)
+            .AddRule("Faction", e.Faction, addSubsymbols: true)
             .AddConstant("reason", e.Reason)
             .Resolve();
 

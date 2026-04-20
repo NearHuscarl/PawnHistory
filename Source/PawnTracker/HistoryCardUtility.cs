@@ -126,7 +126,13 @@ public class HistoryCardUtility
             }
             if (Mouse.IsOver(row) && Event.current.type == EventType.MouseDown && Event.current.button == 0)
             {
-                CameraJumper.TryJumpAndSelect(record.GetThingToJumpTo());
+                if (record.quest != null && record.concerns.Count == 0)
+                {
+                    Find.MainTabsRoot.SetCurrentTab(MainButtonDefOf.Quests);
+                    ((MainTabWindow_Quests)MainButtonDefOf.Quests.TabWindow).Select(record.quest);
+                }
+                else
+                    CameraJumper.TryJumpAndSelect(record.GetThingToJumpTo());
             }
             else if (Mouse.IsOver(descCell) && Event.current.type == EventType.MouseDown && Event.current.button == 1)
             {

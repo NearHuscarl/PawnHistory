@@ -60,7 +60,7 @@ public class PeaceTalksOutcomeRecorder : RecorderBase<PeaceTalksOutcomeEvent>
 
     private static Pawn SetupPeaceTalkOutcome(TestScenario scenario, PeaceTalksOutcome outcome)
     {
-        QuestUtility.GenerateQuestAndMakeAvailable(DefLookup.QuestScript.OpportunitySite_PeaceTalks, 500);
+        scenario.Quest(DefLookup.QuestScript.OpportunitySite_PeaceTalks).Execute();
         var peaceTalks = Find.WorldObjects.AllWorldObjects.OfType<PeaceTalks>().First();
         var pawn = scenario.Pawn().Colonist().Execute().First();
         var caravan = scenario.Caravan([pawn]).Position(peaceTalks.Tile).Execute();

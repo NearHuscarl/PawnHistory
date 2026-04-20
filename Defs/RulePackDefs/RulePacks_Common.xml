@@ -10,6 +10,18 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+	
+	<RulePackDef>
+		<defName>PH_Faction</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>PlayerFaction(playerFactionHasName==False)->the colony</li>
+				<li>PlayerFaction(playerFactionHasName==True) ->[R_PlayerFaction]</li>
+				<li>PlayerSettlement(playerSettlementHasName==False)->the colony</li>
+				<li>PlayerSettlement(playerSettlementHasName==True) ->[R_PlayerSettlement]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 
 	<RulePackDef>
 		<defName>PH_Common</defName>

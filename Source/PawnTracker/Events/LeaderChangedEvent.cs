@@ -11,7 +11,7 @@ public enum LeaderChangeReason
     Lost,
 }
 
-public record LeaderChangedEvent(Pawn NewLeader, Pawn OldLeader, LeaderChangeReason Reason) : GameEventBase;
+public record LeaderChangedEvent(Faction Faction, Pawn NewLeader, Pawn OldLeader, LeaderChangeReason Reason) : GameEventBase;
 
 internal static class LeaderChangedContext
 {
@@ -41,7 +41,7 @@ internal static class Faction_Notify_LeaderLost_Patch
         if (!LeaderChangedContext.ReceivedLetter)
             return;
 
-        GameEventBus.Publish(new LeaderChangedEvent(__instance.leader, LeaderChangedContext.OldLeader, LeaderChangeReason.Lost));
+        GameEventBus.Publish(new LeaderChangedEvent(__instance, __instance.leader, LeaderChangedContext.OldLeader, LeaderChangeReason.Lost));
     }
 
     private static void Finalizer() => LeaderChangedContext.ReceivedLetter = false;
@@ -60,13 +60,13 @@ internal static class Faction_Notify_LeaderDied_Patch
         if (!LeaderChangedContext.ReceivedLetter)
             return;
 
-        GameEventBus.Publish(new LeaderChangedEvent(__instance.leader, LeaderChangedContext.OldLeader, LeaderChangeReason.Death));
+        GameEventBus.Publish(new LeaderChangedEvent(__instance, __instance.leader, LeaderChangedContext.OldLeader, LeaderChangeReason.Death));
     }
 
     private static void Finalizer() => LeaderChangedContext.ReceivedLetter = false;
 }
 
-[HarmonyPatch(typeof(LetterStack), nameof(LetterStack.ReceiveLetter), [typeof(TaggedString), typeof(TaggedString), typeof(LetterDef), typeof(LookTargets), typeof(Faction), typeof(Quest), typeof(List<ThingDef>), typeof(string), typeof(int), typeof(bool)])]
+[HarmonyPatch(typeof(LetterStack), nameof(LetterStack.ReceiveLetter), typeof(TaggedString), typeof(TaggedString), typeof(LetterDef), typeof(LookTargets), typeof(Faction), typeof(Quest), typeof(List<ThingDef>), typeof(string), typeof(int), typeof(bool))]
 internal static class LetterStack_ReceiveLetter_Patch_3
 {
     private static void Postfix()

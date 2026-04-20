@@ -27,6 +27,7 @@ public class TestScenario
     public IncidentBuilder RaidFriendly() => Incident(IncidentDefOf.RaidFriendly).NonHostileFaction();
     public MapBuilder Map(IntVec3? pos = null) => new(pos);
     public ThingBuilder Thing(ThingDef thingDef, ThingDef stuffDef = null) => new(thingDef, stuffDef);
+    public QuestBuilder Quest(QuestScriptDef quest, float points = 500f) => new(quest, points);
     public CaravanBuilder Caravan(List<Pawn> pawns) => new(pawns);
     public DropPodBuilder DropPod(List<Pawn> pawns) => new(pawns);
     public TradeSessionBuilder Trade(Pawn trader, Pawn negotiator) => new(trader, negotiator);

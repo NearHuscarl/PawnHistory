@@ -51,7 +51,7 @@ public class FactionArrivalRecorder : RecorderBase<FactionArrivalRecorder.Input>
             foreach (var pawn in pawns)
             {
                 var desc = recordDef.Description(pawn)
-                    .WithFaction(faction)
+                    .AddRule("Faction", faction)
                     .WithOthers(pawns)
                     .Resolve();
                 AddRecord(recordDef, pawn, desc);
@@ -64,7 +64,7 @@ public class FactionArrivalRecorder : RecorderBase<FactionArrivalRecorder.Input>
             foreach (var pawn in pawns)
             {
                 var desc = recordDef.Description(pawn)
-                    .WithFaction(faction)
+                    .AddRule("Faction", faction)
                     .WithOthers(pawns)
                     .Resolve();
                 AddRecord(recordDef, pawn, desc);

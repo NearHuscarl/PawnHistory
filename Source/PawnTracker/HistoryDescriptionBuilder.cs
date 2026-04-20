@@ -1,6 +1,7 @@
 ﻿using PawnHistory.Source.Helper;
 using RimWorld;
 using System.Collections.Generic;
+using RimWorld.Planet;
 using Verse;
 using Verse.Grammar;
 
@@ -173,14 +174,6 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
 
 public static class HistoryDescriptionBuilderExtensions
 {
-    public static HistoryDescriptionBuilder WithFaction(this HistoryDescriptionBuilder builder, Faction faction)
-    {
-        if (faction == null)
-            return builder;
-
-        return builder.AddRule("FACTION", faction.NameColored.Resolve());
-    }
-
     private static readonly RulePackDef VarRulePack = DefLookup.RulePack.PH_Var;
     public static string GetOtherText(string ruleName, int otherCount)
     {
@@ -193,14 +186,32 @@ public static class HistoryDescriptionBuilderExtensions
         return GrammarResolver.Resolve(ruleName, request);
     }
 
-    public static HistoryDescriptionBuilder WithOthers(this HistoryDescriptionBuilder builder, List<Pawn> pawns)
+    extension(HistoryDescriptionBuilder builder)
     {
-        var otherCount = pawns.Count - 1;
-        var isThreat = pawns[0].InMentalState == true && pawns[0].MentalStateDef == MentalStateDefOf.Manhunter || (pawns[0]?.Faction.HostileTo(Faction.OfPlayer) ?? false);
-        var otherTag = isThreat ? TagType.Threat : TagType.ColonistCount;
-        var otherText = GetOtherText("Others", otherCount).ApplyTag(otherTag).Resolve();
+        public HistoryDescriptionBuilder WithOthers(List<Pawn> pawns)
+        {
+            var otherCount = pawns.Count - 1;
+            var isThreat = pawns[0].InMentalState == true && pawns[0].MentalStateDef == MentalStateDefOf.Manhunter || (pawns[0]?.Faction.HostileTo(Faction.OfPlayer) ?? false);
+            var otherTag = isThreat ? TagType.Threat : TagType.ColonistCount;
+            var otherText = GetOtherText("Others", otherCount).ApplyTag(otherTag).Resolve();
 
-        return builder.AddRule("Others", otherText)
-            .AddConstant("OtherCount", otherCount);
+            return builder.AddRule("Others", otherText)
+                .AddConstant("OtherCount", otherCount);
+        }
+
+        public HistoryDescriptionBuilder WithPlayerFaction()
+        {
+            return builder.AddRule("R_PlayerFaction", Faction.OfPlayer)
+                .AddConstant("playerFactionHasName", Faction.OfPlayer.HasName);
+        }
+        
+        public HistoryDescriptionBuilder WithPlayerSettlement(WorldObject worldObject)
+        {
+            if (worldObject is not Settlement settlement || settlement.Faction != Faction.OfPlayer)
+                return builder;
+
+            return builder.AddRule("R_PlayerSettlement", settlement.ColoredLabel)
+                .AddConstant("playerSettlementHasName", settlement.namedByPlayer);
+        }
     }
 }

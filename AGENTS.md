@@ -36,8 +36,6 @@ Project facts from `PawnHistory.csproj`:
 
 Build in Rider. This repo is set up around Rider invoking MSBuild for the project rather than a guaranteed portable CLI flow.
 
-Observed Rider build characteristics:
-
 - Rider delegates to MSBuild.
 - Shell builds can use `C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\Bin\MSBuild.exe PawnHistory.csproj /t:Build /p:Configuration=Debug`.
 
@@ -77,8 +75,6 @@ Testing conventions:
 
 ## Code style and implementation patterns
 
-Observed conventions in the codebase:
-
 - Prefer modern C# features already present in the repo: `record`, collection expressions `[]`, concise APIs.
 - Keep recorder logic small and event-focused.
 - `CreateRecord(...)` should take a domain-specific payload. If the upstream hook is generic, map it in `Register()` and keep the `ShouldRecord(...)` filtering in `CreateRecord(...)`.
@@ -98,7 +94,7 @@ When adding a new event/recorder:
 6. Call `ShouldRecord(...)` before writing history.
 7. Prefer rulepacks via `descriptionMaker` for extendability; resolve the final text with `Resolve()`.
 8. Add recorder-local `Test...` methods when the feature needs coverage.
-9. Update `PawnHistory.csproj` explicitly for every new `.cs` file. This project does not auto-glob source files, so new event/recorder/test code will not compile until it is added manually.
+9. Update `PawnHistory.csproj` explicitly for every new `.cs` file.
 
 Important behavior:
 

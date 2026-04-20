@@ -345,6 +345,16 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>LodgerJoinOffer</defName>
+		<label>lodger join offer</label>
+		<descriptionMaker>PH_LodgerJoinOffer</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Joined</li>
+			<li>World</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TradeCaravanArrived</defName>
 		<label>trade caravan arrived</label>
 		<descriptionMaker>PH_TradeCaravanArrived</descriptionMaker>
