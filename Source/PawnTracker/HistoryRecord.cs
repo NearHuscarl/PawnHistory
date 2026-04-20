@@ -49,9 +49,9 @@ public class HistoryRecord : IExposable
             ?? -1;
         
         if (this.tileId == -1)
-            Log.Message($"{nameof(HistoryRecord)} for {pawn} is created but cannot find tileId this early during world generation.\n\n{DebugUtility.Format(this)}");
+            Log.Message($"[PawnHistory] record for {pawn} is created but cannot find tileId this early during world generation.\n\n{DebugUtility.Format(this)}");
         else if (pawn.IsWorldPawn() && this.tileId == Find.AnyPlayerHomeMap?.Tile.tileId)
-            Log.Message($"{nameof(HistoryRecord)} for {pawn} is created but cannot find tileId, falling back to PlayerHomeMap's tile..\n\n{DebugUtility.Format(this)}");
+            Log.Message($"[PawnHistory] record for {pawn} is created but cannot find tileId, falling back to PlayerHomeMap's tile..\n\n{DebugUtility.Format(this)}");
 
         this.location = location;
 

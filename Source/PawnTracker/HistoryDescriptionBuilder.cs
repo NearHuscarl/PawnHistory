@@ -118,7 +118,7 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
     public HistoryDescriptionBuilder AddRule(string keyword, RoyalTitleDef royalTitle, bool addSubsymbols = false, bool replaceIfExist = false)
     {
         if (royalTitle == null) return this;
-        return AddRule(keyword, royalTitle.GetLabelCapFor(pawn).Colorize(Faction.OfEmpire.Color), addSubsymbols, replaceIfExist);
+        return AddRule(keyword, royalTitle.GetLabelCapFor(Pawn).Colorize(Faction.OfEmpire.Color), addSubsymbols, replaceIfExist);
     }
 
     public HistoryDescriptionBuilder AddRules(IEnumerable<Rule> rules)
@@ -130,12 +130,6 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
     public HistoryDescriptionBuilder AddConstant(string key, object value)
     {
         extraConstants[key] = value.ToString();
-        return this;
-    }
-
-    public HistoryDescriptionBuilder AddConstantIf(bool condition, string key, string value)
-    {
-        if (condition) AddConstant(key, value);
         return this;
     }
 

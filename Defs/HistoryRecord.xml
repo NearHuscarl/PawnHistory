@@ -372,6 +372,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>TitleInherited</defName>
+		<label>title inherited</label>
+		<descriptionMaker>PH_TitleInherited</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/Speech</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>LodgerJoinOffer</defName>
 		<label>lodger join offer</label>
 		<descriptionMaker>PH_LodgerJoinOffer</descriptionMaker>

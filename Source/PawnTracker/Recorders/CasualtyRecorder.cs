@@ -20,6 +20,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         {
             var isLeader = e.Subject.IsFactionLeader(); // cache leader before it is reassigned next tick
 
+            // TODO: add context class to intercept DamageWorker.AssociateWithLog, remove the delay(0) hack, and test the order of death > royal title inheritance to if it's fixed. 
             // We intercept BattleLog.Add() but it runs before DamageWorker.AssociateWithLog() which is required to populate bodyPart data so we can get the
             // exact in-game combat log. But since DamageWorker.AssociateWithLog() is not always used we need to pick BattleLog.Add and fallback.
             TickDelayManager.Delay(0, () =>
@@ -156,7 +157,9 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         if (def == HistoryRecordDefOf.Death)
         {
             var lastRecord = pawn.HistoryRecords.LastOrDefault();
-            if (lastRecord?.def == HistoryRecordDefOf.Crushed || lastRecord?.def == HistoryRecordDefOf.FriendlyTrapHit)
+            if (lastRecord == null)
+                return;
+            if (lastRecord.def == HistoryRecordDefOf.Crushed || lastRecord.def == HistoryRecordDefOf.FriendlyTrapHit)
                 location = lastRecord.location;
         }
         if (def == HistoryRecordDefOf.RelativeDeath)

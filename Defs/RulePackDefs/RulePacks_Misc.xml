@@ -43,6 +43,16 @@
 		</rulePack>
 	</RulePackDef>
 
+	<RulePackDef>
+		<defName>PH_TitleInherited</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(outcome==AsReplacement)->[PAWN] was set to inherit the [Title] title from [Deceased] according to the succession laws of [Faction], replacing [PAWN_possessive] [ReplacedTitle] title upon completion of a bestowing ceremony.</li>
+				<li>entry(outcome==WasInherited) ->[PAWN] was set to inherit the [Title] title from [Deceased] according to the succession laws of [Faction] upon completion of a bestowing ceremony.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
     <RulePackDef>
         <defName>PH_BodyPartDestroyed</defName>
         <rulePack>

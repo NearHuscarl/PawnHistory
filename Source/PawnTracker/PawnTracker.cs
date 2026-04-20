@@ -76,6 +76,7 @@ namespace PawnHistory.Source.PawnTracker;
 // - Docs
 //  - DescriptionBuilder and rulepack
 //  - TaggedTestAttribute, Run last failed tests...
+// - Bonded animal berserk mental break due to pawn dead
 
 // - Replace "the colony" with the settlement name if exists (put into common?)
 

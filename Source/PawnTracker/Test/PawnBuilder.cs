@@ -211,11 +211,11 @@ public class PawnBuilder(int count = 1)
 
         for (var i = 0; i < res.Count; i++)
         {
+            MakePawnCapable(res[i]);
             foreach (var processor in processors)
             {
                 processor(res[i], i, res);
             }
-            MakePawnCapable(res[i]);
             TestManager.Scenario.ProcessedPawns.Add(res[i]);
         }
 
@@ -467,136 +467,154 @@ public class PawnBuilder(int count = 1)
     }
 }
 
-static class PawnBuilderExtension
+internal static class PawnBuilderExtension
 {
-    public static PawnBuilder ResetRecords(this PawnBuilder builder)
+    extension(PawnBuilder builder)
     {
-        return builder.Do(p =>
+        public PawnBuilder ResetRecords()
         {
-            var recordDefs = DefDatabase<RecordDef>.AllDefsListForReading.ToList();
-
-            foreach (var recordDef in recordDefs)
+            return builder.Do(p =>
             {
-                if (recordDef.type == RecordType.Time)
-                    continue;
-                p.records.AddTo(recordDef, -p.records.GetValue(recordDef));
-            }
-        });
-    }
+                var recordDefs = DefDatabase<RecordDef>.AllDefsListForReading.ToList();
 
-    public static PawnBuilder ForceBirthday(this PawnBuilder builder)
-    {
-        return builder.Do(p =>
+                foreach (var recordDef in recordDefs)
+                {
+                    if (recordDef.type == RecordType.Time)
+                        continue;
+                    p.records.AddTo(recordDef, -p.records.GetValue(recordDef));
+                }
+            });
+        }
+
+        public PawnBuilder ForceBirthday()
         {
-            p.ageTracker.AgeBiologicalTicks = (p.ageTracker.AgeBiologicalYears + 1) * 3_600_000 + 1;
-            p.ageTracker.DebugForceBirthdayBiological();
-        });
-    }
-
-    public static PawnBuilder EquipWeapon(this PawnBuilder builder, ThingDef weaponDef, Func<Pawn, int, bool> shouldEquip = null)
-    {
-        return builder.Do((pawn, i) =>
-        {
-            if (pawn.Dead || (shouldEquip?.Invoke(pawn, i) ?? false)) return;
-
-            var weapon = ThingMaker.MakeThing(weaponDef);
-
-            pawn.equipment ??= new Pawn_EquipmentTracker(pawn);
-            pawn.equipment.DestroyEquipment(pawn.equipment.Primary);
-            pawn.equipment.AddEquipment((ThingWithComps)weapon);
-        });
-    }
-
-    public static PawnBuilder Capture(this PawnBuilder builder, Pawn captured)
-    {
-        return builder.DoOnce(captor =>
-        {
-            CaptureUtility.TryGetBed(captor, captured, out Thing bed);
-            var job = JobMaker.MakeJob(JobDefOf.Capture, captured, bed);
-            job.count = 1;
-            job.playerForced = true;
-            captor.jobs.StartJob(job, JobCondition.InterruptForced);
-        });
-    }
-
-    public static PawnBuilder StartJob(this PawnBuilder builder, JobDef jobDef, LocalTargetInfo? targetA = null, LocalTargetInfo? targetB = null)
-    {
-        return builder.DoOnce(pawn =>
-        {
-            var job = JobMaker.MakeJob(jobDef, targetA ?? null, targetB ?? null);
-            job.count = 1;
-            job.playerForced = true;
-            pawn.jobs.StartJob(job, JobCondition.InterruptForced);
-        });
-    }
-
-    public static PawnBuilder WeakenParts(this PawnBuilder builder, HashSet<BodyPartDef> weakenParts, bool oneSide = false)
-    {
-        var bruise = DefLookup.Hediff.Bruise;
-        return builder.Do(pawn =>
-        {
-            var hediffSet = pawn.health.hediffSet;
-
-            foreach (var part in pawn.RaceProps.body.AllParts)
+            return builder.Do(p =>
             {
-                if (!weakenParts.Contains(part.def) || (oneSide && part.Label.Contains("right")))
-                    continue;
+                p.ageTracker.AgeBiologicalTicks = (p.ageTracker.AgeBiologicalYears + 1) * 3_600_000 + 1;
+                p.ageTracker.DebugForceBirthdayBiological();
+            });
+        }
 
-                var currentHp = hediffSet.GetPartHealth(part);
-                if (currentHp <= 1)
-                    continue;
-
-                var damage = currentHp - 1;
-                var injury = HediffMaker.MakeHediff(bruise, pawn, part) as Hediff_Injury;
-                injury?.Severity = damage;
-                pawn.health.AddHediff(injury);
-            }
-        });
-    }
-
-    public static PawnBuilder SetRelation(this PawnBuilder builder, Pawn other, PawnRelationDef relationDef)
-    {
-        return builder.Do(pawn => pawn.relations.AddDirectRelation(relationDef, other));
-    }
-
-    public static PawnBuilder SetRandomRelations(this PawnBuilder builder, int relationsPerPawn)
-    {
-        var possibleRelations = DefDatabase<PawnRelationDef>.AllDefsListForReading.Where(def => def is { implied: false } && def.defName != "Bond").ToList();
-
-        return builder.Do((pawn, _, pawns) =>
+        public PawnBuilder EquipWeapon(ThingDef weaponDef, Func<Pawn, int, bool> shouldEquip = null)
         {
-            var pawnsToCreateRelation = pawns
-                .Where(p => p is { relations: not null, RaceProps.Humanlike: true })
-                .ToList();
-
-            if (pawnsToCreateRelation.Count < 2)
-                return;
-
-            for (var i = 0; i < relationsPerPawn; i++)
+            return builder.Do((pawn, i) =>
             {
-                var other = pawnsToCreateRelation.Where(p => p != pawn).RandomElementWithFallback(null);
-                var relation = possibleRelations.RandomElement();
+                if (pawn.Dead || (shouldEquip?.Invoke(pawn, i) ?? false)) return;
 
-                if (pawn.relations.DirectRelationExists(relation, other))
-                    continue;
-                pawn.relations.AddDirectRelation(relation, other);
-            }
-        });
-    }
+                var weapon = ThingMaker.MakeThing(weaponDef);
 
-    public static PawnBuilder ForceAddictionTo(this PawnBuilder builder, Thing drug)
-    {
-        return builder.Do(pawn =>
+                pawn.equipment ??= new Pawn_EquipmentTracker(pawn);
+                pawn.equipment.DestroyEquipment(pawn.equipment.Primary);
+                pawn.equipment.AddEquipment((ThingWithComps)weapon);
+            });
+        }
+
+        public PawnBuilder Capture(Pawn captured)
         {
-            if (!drug.TryGetComp<CompDrug>(out var comp))
-                return;
-
-            for (var i = 0; i < 300; i++)
+            return builder.DoOnce(captor =>
             {
-                comp.PrePostIngested(pawn);
-                if (pawn.health.hediffSet.HasHediff(comp.Props.chemical.addictionHediff))
-                    break;
-            }
-        });
+                CaptureUtility.TryGetBed(captor, captured, out Thing bed);
+                var job = JobMaker.MakeJob(JobDefOf.Capture, captured, bed);
+                job.count = 1;
+                job.playerForced = true;
+                captor.jobs.StartJob(job, JobCondition.InterruptForced);
+            });
+        }
+
+        public PawnBuilder StartJob(JobDef jobDef, LocalTargetInfo? targetA = null, LocalTargetInfo? targetB = null)
+        {
+            return builder.DoOnce(pawn =>
+            {
+                var job = JobMaker.MakeJob(jobDef, targetA ?? null, targetB ?? null);
+                job.count = 1;
+                job.playerForced = true;
+                pawn.jobs.StartJob(job, JobCondition.InterruptForced);
+            });
+        }
+
+        public PawnBuilder WeakenParts(HashSet<BodyPartDef> weakenParts, bool oneSide = false)
+        {
+            var bruise = DefLookup.Hediff.Bruise;
+            return builder.Do(pawn =>
+            {
+                var hediffSet = pawn.health.hediffSet;
+
+                foreach (var part in pawn.RaceProps.body.AllParts)
+                {
+                    if (!weakenParts.Contains(part.def) || (oneSide && part.Label.Contains("right")))
+                        continue;
+
+                    var currentHp = hediffSet.GetPartHealth(part);
+                    if (currentHp <= 1)
+                        continue;
+
+                    var damage = currentHp - 1;
+                    var injury = HediffMaker.MakeHediff(bruise, pawn, part) as Hediff_Injury;
+                    injury?.Severity = damage;
+                    pawn.health.AddHediff(injury);
+                }
+            });
+        }
+
+        public PawnBuilder SetRelation(Pawn other, PawnRelationDef relationDef)
+        {
+            return builder.Do(pawn => pawn.relations.AddDirectRelation(relationDef, other));
+        }
+
+        public PawnBuilder SetRandomRelations(int relationsPerPawn)
+        {
+            var possibleRelations = DefDatabase<PawnRelationDef>.AllDefsListForReading.Where(def => def is { implied: false } && def.defName != "Bond").ToList();
+
+            return builder.Do((pawn, _, pawns) =>
+            {
+                var pawnsToCreateRelation = pawns
+                    .Where(p => p is { relations: not null, RaceProps.Humanlike: true })
+                    .ToList();
+
+                if (pawnsToCreateRelation.Count < 2)
+                    return;
+
+                for (var i = 0; i < relationsPerPawn; i++)
+                {
+                    var other = pawnsToCreateRelation.Where(p => p != pawn).RandomElementWithFallback(null);
+                    var relation = possibleRelations.RandomElement();
+
+                    if (pawn.relations.DirectRelationExists(relation, other))
+                        continue;
+                    pawn.relations.AddDirectRelation(relation, other);
+                }
+            });
+        }
+
+        public PawnBuilder ForceAddictionTo(Thing drug)
+        {
+            return builder.Do(pawn =>
+            {
+                if (!drug.TryGetComp<CompDrug>(out var comp))
+                    return;
+
+                for (var i = 0; i < 300; i++)
+                {
+                    comp.PrePostIngested(pawn);
+                    if (pawn.health.hediffSet.HasHediff(comp.Props.chemical.addictionHediff))
+                        break;
+                }
+            });
+        }
+    }
+}
+
+internal static class PawnBuilderRoyaltyExtension
+{
+    extension(PawnBuilder builder)
+    {
+        public PawnBuilder SetRoyalTitle(RoyalTitleDef royalTitle)
+        {
+            return builder.Do(p =>
+            {
+                if (royalTitle != null)
+                    p.royalty.SetTitle(Faction.OfEmpire, royalTitle, grantRewards: false);
+            });
+        }
     }
 }
