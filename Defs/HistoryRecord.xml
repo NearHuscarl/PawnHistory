@@ -345,6 +345,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>WeaponBonded</defName>
+		<label>weapon bonded</label>
+		<descriptionMaker>PH_WeaponBonded</descriptionMaker>
+		<icon>Things/Item/Equipment/WeaponMelee/Monosword</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>LodgerJoinOffer</defName>
 		<label>lodger join offer</label>
 		<descriptionMaker>PH_LodgerJoinOffer</descriptionMaker>

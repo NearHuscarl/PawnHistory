@@ -8,7 +8,22 @@ namespace PawnHistory.Source.PawnTracker.Test;
 public class RequiresAttribute(string modId) : Attribute
 {
     public string ModId => modId;
-    public string ModName => modId.Split(".").LastOrDefault();
+    public string ModName
+    {
+        get
+        {
+            return modId switch
+            {
+                ModContentPack.RoyaltyModPackageId => "R",
+                ModContentPack.IdeologyModPackageId => "I",
+                ModContentPack.BiotechModPackageId => "B",
+                ModContentPack.AnomalyModPackageId => "A",
+                ModContentPack.OdysseyModPackageId => "O",
+                _ => modId.Split(".").LastOrDefault()
+            };
+        }
+    }
+
     public bool IsActive => ModsConfig.IsActive(modId);
 }
 

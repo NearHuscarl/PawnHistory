@@ -330,9 +330,6 @@ public class MapBuilder
 
     public void Execute()
     {
-        foreach (var action in actions)
-        {
-            action(center);
-        }
+        actions.ForEach(a => a.Invoke());
     }
 }
