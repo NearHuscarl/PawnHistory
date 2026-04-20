@@ -11,7 +11,7 @@ public class MapBuilder
 {
     private readonly Map map;
     private IntVec3 center;
-    private readonly List<Action<IntVec3>> actions = [];
+    private readonly List<Action> actions = [];
 
     public MapBuilder(IntVec3? center = null)
     {
@@ -137,7 +137,7 @@ public class MapBuilder
     {
         TestManager.Scenario.LastRoomRect = rect;
 
-        actions.Add(_ =>
+        actions.Add(() =>
         {
             MovePawnsOutside(rect);
             BuildRoomPhysical(rect, wallDef, stuff, floorDef, tag);
@@ -156,7 +156,7 @@ public class MapBuilder
     {
         AsBarrack(assignedPawns.Count);
         
-        actions.Add(center =>
+        actions.Add(() =>
         {
             foreach (var pawn in assignedPawns)
             {
@@ -168,9 +168,9 @@ public class MapBuilder
         return this;
     }
 
-    public MapBuilder AsBarrack(int bedCount = 3, List<Pawn> assignedPawns = null)
+    public MapBuilder AsBarrack(int bedCount = 3)
     {
-        actions.Add(center =>
+        actions.Add(() =>
         {
             var rect = TestManager.Scenario.LastRoomRect;
             for (var i = 0; i < bedCount; i++)
@@ -184,7 +184,7 @@ public class MapBuilder
 
     public MapBuilder AsHospital(int bedCount, List<Building_Bed> beds = null)
     {
-        actions.Add(center =>
+        actions.Add(() =>
         {
             var rect = TestManager.Scenario.LastRoomRect;
             for (var i = 0; i < bedCount; i++)
@@ -200,7 +200,7 @@ public class MapBuilder
 
     public MapBuilder AsPrison(int prisonerCount, int bedCount = 0, List<Pawn> prisoners = null)
     {
-        actions.Add(_ =>
+        actions.Add(() =>
         {
             if (bedCount == 0) bedCount = prisonerCount;
             var rect = TestManager.Scenario.LastRoomRect;
@@ -221,7 +221,7 @@ public class MapBuilder
 
     public MapBuilder WithThing(ThingDef thingDef, int totalCount = 10)
     {
-        actions.Add(c =>
+        actions.Add(() =>
         {
             var interior = TestManager.Scenario.LastRoomRect.ContractedBy(1);
             var limit = thingDef.stackLimit;
@@ -256,7 +256,7 @@ public class MapBuilder
     /// </summary>
     public MapBuilder WithCasket(ThingDef thingDef, ThingDef stuff = null, bool occupied = true)
     {
-        actions.Add(_ =>
+        actions.Add(() =>
         {
             var interior = TestManager.Scenario.LastRoomRect.ContractedBy(1);
             var casket = new ThingBuilder(thingDef)
@@ -319,7 +319,7 @@ public class MapBuilder
 
     public MapBuilder CollapseRoofAndCrush(Pawn pawn)
     {
-        actions.Add(_ =>
+        actions.Add(() =>
         {
             Find.CurrentMap.roofGrid.SetRoof(pawn.Position, RoofDefOf.RoofRockThick);
             RoofCollapserImmediate.DropRoofInCells([pawn.Position], map, []);

@@ -354,6 +354,24 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>TitleGained</defName>
+		<label>title gained</label>
+		<descriptionMaker>PH_TitleGained</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/Speech</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>TitleLost</defName>
+		<label>title lost</label>
+		<descriptionMaker>PH_TitleLost</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/Speech</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>LodgerJoinOffer</defName>
 		<label>lodger join offer</label>
 		<descriptionMaker>PH_LodgerJoinOffer</descriptionMaker>

@@ -44,6 +44,8 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef AICoreOffer;
     public static HistoryRecordDef VisitorLeftGift;
     public static HistoryRecordDef WeaponBonded;
+    public static HistoryRecordDef TitleGained;
+    public static HistoryRecordDef TitleLost;
     public static HistoryRecordDef LodgerJoinOffer;
     public static HistoryRecordDef PeaceTalksOutcome;
     public static HistoryRecordDef PeaceTalksRaid;

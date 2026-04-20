@@ -1,10 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
 	<RulePackDef>
+		<defName>PH_RitualOutcome</defName>
+		<include>
+			<li>PH_Common</li>
+			<li>PH_Var</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(relatedCount==0)->[PAWN] completed [Ritual] with outcome [Outcome][WithOthers].</li>
+				<li>entry(relatedCount!=0)->[PAWN] completed [Ritual] with outcome [Outcome], involving [Related][WithOthers].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_WeaponBonded</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>entry->[PAWN] formed a persona bond with [Weapon].</li>
+				<li>entry->[PAWN] formed a persona bond with [Wpn].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_TitleGained</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] gained the royal title of [NewTitle] from [Faction].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_TitleLost</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(hasNewTitle==False)->[PAWN] lost the royal title of [OldTitle] from [Faction].</li>
+				<!-- happens after recruiting Stellarch. <replaceOnRecruited> -->
+				<li>entry(hasNewTitle==True) ->[PAWN] was demoted from [OldTitle] to [NewTitle] by [Faction].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

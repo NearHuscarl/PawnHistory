@@ -12,16 +12,14 @@ Primary flow:
 4. Storage and UI live under `Source/PawnTracker/` and `Source/WorldPawn/`.
 
 Key folders:
-
 - `Source/PawnTracker/Events/`: Harmony patches and event record types.
 - `Source/PawnTracker/Recorders/`: recorder implementations.
 - `Source/PawnTracker/Test/`: in-game test framework, builders, assertions, reporting.
 - `Defs/`: XML defs for history records, UI tables, buttons, and rule packs.
 - `Languages/English/Keyed/`: localization keys.
-- `About/About.xml`: mod metadata and dependencies.
 - `Assemblies/`: compiled output consumed by RimWorld.
 
-Startup entry point is `Source/PawnTracker/PawnTracker.cs`. It patches Harmony, injects comps, and initializes recorders by reflection.
+Startup: `Source/PawnTracker/PawnTracker.cs`.
 
 ## Build
 
@@ -45,9 +43,9 @@ Build artifact:
 
 ## Environment
 
-- This project is worked on in Windows. Prefer PowerShell-native commands for file discovery, searching, and inspection instead of `rg`.
-- Do not inspect RimWorld DLLs unless requested.
-  - to inspect assembly on request, use `Mono.Cecil` on `RimWorldWin64_Data/Managed/Assembly-CSharp.dll`; NuGet reference assemblies may fail under normal runtime reflection.
+- Windows project: prefer PowerShell-native commands over `rg`
+- Do not inspect RimWorld DLLs unless needed
+- If inspection is needed, use `Mono.Cecil` on `RimWorldWin64_Data/Managed/Assembly-CSharp.dll`
 
 ## Testing
 
@@ -98,15 +96,7 @@ When adding a new event/recorder:
 
 Important behavior:
 
-- Recorder discovery is reflection-based over all non-abstract `RecorderBase` subclasses.
-- Tests are reflection-based and require the exact supported signatures.
-- `RecorderManager.ShouldRecord(Pawn)` currently records humanlikes and bonded animals only.
+## Safety
 
-## Security and safety considerations
-
-- Harmony patches are global. Keep patches narrow and deterministic.
-- Preserve save compatibility. Any new persisted data under comps or records must be safely exposable and resilient to old saves.
-- Avoid assumptions about pawn lifetime. World pawns, corpses, and destroyed references are common edge cases in this mod.
-- Local machine paths are baked into the project file for Harmony. Do not replace them blindly without confirming the developer environment.
-- The mod runs inside the game process. Logging, debug actions, and test helpers should fail safely and avoid breaking live saves.
-- Network access is not part of the mod's runtime model; keep features offline and deterministic.
+- Harmony patches are global; keep them narrow and deterministic
+- Pawn references may be dead, despawned, or world-only

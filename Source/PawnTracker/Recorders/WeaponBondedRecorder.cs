@@ -19,7 +19,7 @@ public class WeaponBondedRecorder : RecorderBase<WeaponBondedEvent>
 
         var recordDef = HistoryRecordDefOf.WeaponBonded;
         var desc = recordDef.Description(e.Pawn)
-            .AddRule("Weapon", e.Weapon.Label.Colorize(ColoredText.SubtleGrayColor), addSubsymbols: true)
+            .AddRule("Wpn", e.Weapon.Label.Colorize(ColoredText.SubtleGrayColor), addSubsymbols: true)
             .Resolve();
 
         AddRecord(recordDef, e.Pawn, desc, [e.Pawn, e.Weapon]);

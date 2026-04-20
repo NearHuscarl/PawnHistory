@@ -98,6 +98,11 @@ public static class DefLookup
         public static QuestScriptDef OpportunitySite_DownedRefugee => field ??= DefDatabase<QuestScriptDef>.GetNamed("OpportunitySite_DownedRefugee");
         public static QuestScriptDef SanguophageMeetingHost => field ??= DefDatabase<QuestScriptDef>.GetNamed("SanguophageMeetingHost");
     }
+    
+    public static class RoyalTitle
+    {
+        public static RoyalTitleDef Praetor  => field ??= DefDatabase<RoyalTitleDef>.GetNamed("Praetor");
+    }
 
     public static class Tale
     {
@@ -121,6 +126,7 @@ public static class DefLookup
         public static ThingDef PodLauncher => field ??= DefDatabase<ThingDef>.GetNamed("PodLauncher");
         public static ThingDef Weapon_GrenadeFrag => field ??= DefDatabase<ThingDef>.GetNamed("Weapon_GrenadeFrag");
         public static ThingDef LongRangeMineralScanner => field ??= DefDatabase<ThingDef>.GetNamed("LongRangeMineralScanner");
+        public static ThingDef MeleeWeapon_MonoSwordBladelink => field ??= DefDatabase<ThingDef>.GetNamed("MeleeWeapon_MonoSwordBladelink");
     }
 
     public static class Backstory

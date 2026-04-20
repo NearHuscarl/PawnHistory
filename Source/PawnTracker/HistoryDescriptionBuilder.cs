@@ -115,6 +115,12 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
         return AddRule(keyword, part.Label, addSubsymbols, replaceIfExist);
     }
 
+    public HistoryDescriptionBuilder AddRule(string keyword, RoyalTitleDef royalTitle, bool addSubsymbols = false, bool replaceIfExist = false)
+    {
+        if (royalTitle == null) return this;
+        return AddRule(keyword, royalTitle.GetLabelCapFor(pawn).Colorize(Faction.OfEmpire.Color), addSubsymbols, replaceIfExist);
+    }
+
     public HistoryDescriptionBuilder AddRules(IEnumerable<Rule> rules)
     {
         extraRules.AddRange(rules);
