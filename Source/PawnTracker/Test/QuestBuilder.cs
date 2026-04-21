@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using RimWorld;
 using Verse;
 
@@ -8,10 +6,8 @@ namespace PawnHistory.Source.PawnTracker.Test;
 
 public class QuestBuilder
 {
-    private readonly List<Action> processors = [];
-    
     private readonly QuestScriptDef questScriptDef;
-    private float points;
+    private readonly float points;
     
     public QuestBuilder(QuestScriptDef def, float points = 500)
     {
@@ -38,8 +34,6 @@ public class QuestBuilder
         var quest = QuestUtility.GenerateQuestAndMakeAvailable(questScriptDef, points);
 
         AcceptInstantly(quest);
-
-        processors.ForEach(processor => processor());
         
         return quest;
     }

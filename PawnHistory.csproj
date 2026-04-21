@@ -90,6 +90,7 @@
     <Compile Include="Source\PawnTracker\Events\WeaponBondedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\RoyalTitleChangedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\TitleInheritanceEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\RitualOutcomeCompletedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PlayerTransporterArriveEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ReceiveLetterEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\TechprintAppliedEvent.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Source\PawnTracker\Recorders\WeaponBondedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RoyalTitleChangedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\TitleInheritedRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\RitualOutcomeRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PlayerTransporterArriveRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PeaceTalksOutcomeRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RescueJoinedRecorder.cs" />
@@ -214,11 +216,13 @@
     <Compile Include="Source\PawnTracker\Test\MapBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\Mocks\AlwaysHaveCancerOnBirthday.cs" />
     <Compile Include="Source\PawnTracker\Test\Mocks\DeathOnNextHit.cs" />
+    <Compile Include="Source\PawnTracker\Test\Mocks\ForcedRitualOutcome.cs" />
     <Compile Include="Source\PawnTracker\Test\PawnBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\DebugValuesAttribute.cs" />
     <Compile Include="Source\PawnTracker\Test\PawnHistoryAssertions.cs" />
     <Compile Include="Source\PawnTracker\Test\QuestBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\RequiresAttribute.cs" />
+    <Compile Include="Source\PawnTracker\Test\RitualBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\SkipTestAttribute.cs" />
     <Compile Include="Source\PawnTracker\Test\TestException.cs" />
     <Compile Include="Source\PawnTracker\Test\TestContext.cs" />

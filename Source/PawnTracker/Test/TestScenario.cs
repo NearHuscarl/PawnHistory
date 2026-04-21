@@ -17,6 +17,7 @@ public class TestScenario
     
     internal readonly HashSet<Pawn> DeathOnNextHitPawns = [];
     public bool AlwaysHaveCancerOnBirthday = false;
+    public RitualOutcomePossibility ForcedRitualOutcome;
 
     public PawnBuilder Pawn(int count = 1) => new(count);
     public PawnBuilder Pawn(IEnumerable<Pawn> pawns) => new PawnBuilder().WithPawns(pawns);
@@ -31,6 +32,7 @@ public class TestScenario
     public CaravanBuilder Caravan(List<Pawn> pawns) => new(pawns);
     public DropPodBuilder DropPod(List<Pawn> pawns) => new(pawns);
     public TradeSessionBuilder Trade(Pawn trader, Pawn negotiator) => new(trader, negotiator);
+    public RitualBuilder Ritual(Pawn organizer) => new(organizer);
 
     public void OpenHistoryRecordTab(Pawn pawn)
     {

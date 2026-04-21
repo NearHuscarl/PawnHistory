@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using RimWorld.QuestGen;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -88,6 +89,12 @@ public static class Accessor
     {
         public static readonly Action<RimWorld.QuestPart_PawnJoinOffer> SendLetter =
             AccessTools.MethodDelegate<Action<RimWorld.QuestPart_PawnJoinOffer>>(AccessTools.Method(typeof(RimWorld.QuestPart_PawnJoinOffer), "SendLetter"));
+    }
+
+    public class Dialog_BeginRitual
+    {
+        public static readonly Action<RimWorld.Dialog_BeginRitual> Start =
+            AccessTools.MethodDelegate<Action<RimWorld.Dialog_BeginRitual>>(AccessTools.Method(typeof(RimWorld.Dialog_BeginRitual), "Start"));
     }
 
     public static class PlayLogEntry_Interaction

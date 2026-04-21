@@ -21,6 +21,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>RitualOutcome</defName>
+		<label>ritual outcome</label>
+		<descriptionMaker>PH_RitualOutcome</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/Speech</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Raid</defName>
 		<label>raid</label>
 		<descriptionMaker>PH_Raid</descriptionMaker>

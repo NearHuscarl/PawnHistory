@@ -4,12 +4,10 @@
 		<defName>PH_RitualOutcome</defName>
 		<include>
 			<li>PH_Common</li>
-			<li>PH_Var</li>
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(relatedCount==0)->[PAWN] completed [Ritual] with outcome [Outcome][WithOthers].</li>
-				<li>entry(relatedCount!=0)->[PAWN] completed [Ritual] with outcome [Outcome], involving [Related][WithOthers].</li>
+				<li>entry->[PAWN] delivered [Outcome_indefinite] [Ritual] to [Others].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

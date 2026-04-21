@@ -211,9 +211,37 @@ public class MapBuilder
                 bed.SetFaction(Faction.OfPlayer);
                 bed.ForPrisoners = true;
             }
-            var pawns = new PawnBuilder(prisonerCount).AsPrisoner().WithPosition(rect.CenterCell).Execute();
+            var pawns = new PawnBuilder(prisonerCount).AsPrisoner().Position(rect.CenterCell).Execute();
             prisoners?.AddRange(pawns);
         });
+        return this;
+    }
+
+    public MapBuilder AsThroneRoom(Pawn owner)
+    {
+        actions.Add(() =>
+        {
+            var rect = TestManager.Scenario.LastRoomRect.ContractedBy(1);
+            var throne = new ThingBuilder(ThingDefOf.Throne, ThingDefOf.Gold)
+                .At(new IntVec3(rect.CenterCell.x, 0, rect.maxZ - 1))
+                .PlaceMode(ThingPlaceMode.Direct)
+                .Faction(Faction.OfPlayer)
+                .Create<Building_Throne>();
+
+            owner.ownership.ClaimThrone(throne);
+
+            new ThingBuilder(ThingDefOf.Harp).Faction(Faction.OfPlayer).Create();
+            for (var i = 0; i < 2; i++)
+            {
+                var brazier = new ThingBuilder(ThingDefOf.Brazier, ThingDefOf.Steel).Faction(Faction.OfPlayer).Create<Building>();
+                brazier.TryGetComp<CompRefuelable>().Refuel(999f);
+            }
+            for (var i = 0; i < 4; i++)
+            {
+                new ThingBuilder(ThingDefOf.Column, ThingDefOf.Steel).Faction(Faction.OfPlayer).Create();
+            }
+        });
+
         return this;
     }
 
