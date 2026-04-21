@@ -28,7 +28,7 @@ public class PredatorHuntingColonistRecorder : RecorderBase<PredatorHuntingColon
     public void Test(TestScenario scenario)
     {
         var mapCenter = Find.CurrentMap.Center;
-        var prey = scenario.Pawn().Colonist().WithPosition(mapCenter, 0).CreateSingle();
+        var prey = scenario.Pawn().Colonist().Position(mapCenter, 0).CreateSingle();
         
         scenario.Pawn()
             .Animal(DefLookup.PawnKind.Cougar)

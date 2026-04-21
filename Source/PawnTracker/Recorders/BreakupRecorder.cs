@@ -1,5 +1,4 @@
-﻿using System;
-using PawnHistory.Source.PawnTracker.Events;
+﻿using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using Verse;
@@ -38,7 +37,7 @@ public class BreakupRecorder : RecorderBase<BreakupEvent>
         var initiator = scenario.Pawn()
             .Colonist()
             .SetRelation(recipient, PawnRelationDefOf.Lover)
-            .WithPosition(recipient.Position) 
+            .Position(recipient.Position) 
             .Do(p => p.interactions.TryInteractWith(recipient, DefLookup.Interaction.Breakup))
             .CreateSingle();
 
@@ -54,7 +53,7 @@ public class BreakupRecorder : RecorderBase<BreakupEvent>
         var initiator = scenario.Pawn()
             .Colonist()
             .SetRelation(recipient, PawnRelationDefOf.Lover)
-            .WithPosition(recipient.Position) 
+            .Position(recipient.Position) 
             .Do(p => p.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.CheatedOnMe, recipient))
             .Do(p => p.interactions.TryInteractWith(recipient, DefLookup.Interaction.Breakup))
             .CreateSingle();

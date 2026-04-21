@@ -73,7 +73,7 @@ public class LungRotRecorder : RecorderBase<LungRotRecorder.Input>
             .AddHediff(HediffDefOf.LungRotExposure, BodyPartDefOf.Lung, h => hediff = h)
             .CreateSingle();
         var corpse = scenario.Pawn()
-            .WithPosition(pawn.Position, 1)
+            .Position(pawn.Position, 1)
             .Enemy()
             .Corpse(true)
             .CreateSingle()

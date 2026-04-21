@@ -345,42 +345,6 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>WeaponBonded</defName>
-		<label>weapon bonded</label>
-		<descriptionMaker>PH_WeaponBonded</descriptionMaker>
-		<icon>Things/Item/Equipment/WeaponMelee/Monosword</icon>
-		<categories>
-			<li>Life</li>
-		</categories>
-	</HistoryRecordDef>
-	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>TitleGained</defName>
-		<label>title gained</label>
-		<descriptionMaker>PH_TitleGained</descriptionMaker>
-		<icon>Things/Mote/SpeechSymbols/Speech</icon>
-		<categories>
-			<li>Life</li>
-		</categories>
-	</HistoryRecordDef>
-	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>TitleLost</defName>
-		<label>title lost</label>
-		<descriptionMaker>PH_TitleLost</descriptionMaker>
-		<icon>Things/Mote/SpeechSymbols/Speech</icon>
-		<categories>
-			<li>Life</li>
-		</categories>
-	</HistoryRecordDef>
-	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>TitleInherited</defName>
-		<label>title inherited</label>
-		<descriptionMaker>PH_TitleInherited</descriptionMaker>
-		<icon>Things/Mote/SpeechSymbols/Speech</icon>
-		<categories>
-			<li>Life</li>
-		</categories>
-	</HistoryRecordDef>
-	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>LodgerJoinOffer</defName>
 		<label>lodger join offer</label>
 		<descriptionMaker>PH_LodgerJoinOffer</descriptionMaker>
@@ -699,16 +663,6 @@
 		<importance>Minor</importance>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>TechprintApplied</defName>
-		<label>techprint applied</label>
-		<description>{PAWN} applied a techprint to {Project}, gaining {Xp} experience in intellectual.</description>
-		<icon>Things/Pawn/Wounds/WoundMechA</icon>
-		<categories>
-			<li>Work</li>
-		</categories>
-		<importance>Minor</importance>
-	</HistoryRecordDef>
-	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Stripped</defName>
 		<label>stripped</label>
 		<descriptionMaker>PH_Stripped</descriptionMaker>
@@ -785,5 +739,52 @@
 			<li>Work</li>
 		</categories>
 		<importance>Minor</importance>
+	</HistoryRecordDef>
+
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
+		<defName>TechprintApplied</defName>
+		<label>techprint applied</label>
+		<description>{PAWN} applied a techprint to {Project}, gaining {Xp} XP in intellectual.</description>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Work</li>
+		</categories>
+		<importance>Minor</importance>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
+		<defName>WeaponBonded</defName>
+		<label>weapon bonded</label>
+		<descriptionMaker>PH_WeaponBonded</descriptionMaker>
+		<icon>Things/Item/Equipment/WeaponMelee/Monosword</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
+		<defName>TitleGained</defName>
+		<label>title gained</label>
+		<descriptionMaker>PH_TitleGained</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/Speech</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
+		<defName>TitleLost</defName>
+		<label>title lost</label>
+		<descriptionMaker>PH_TitleLost</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/Speech</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
+		<defName>TitleInherited</defName>
+		<label>title inherited</label>
+		<descriptionMaker>PH_TitleInherited</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/Speech</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
 	</HistoryRecordDef>
 </Defs>

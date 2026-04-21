@@ -25,7 +25,7 @@ public class PawnBuilder(int count = 1)
     private bool isKilled = false;
     private bool isRotten = false;
 
-    public PawnBuilder WithPosition(IntVec3 position, int radius = 3)
+    public PawnBuilder Position(IntVec3 position, int radius = 3)
     {
         spawnPosition = position;
         spawnRadius = radius;
@@ -612,8 +612,9 @@ internal static class PawnBuilderRoyaltyExtension
         {
             return builder.Do(p =>
             {
-                if (royalTitle != null)
-                    p.royalty.SetTitle(Faction.OfEmpire, royalTitle, grantRewards: false);
+                if (p.royalty.GetCurrentTitle(Faction.OfEmpire) == royalTitle)
+                    return;
+                p.royalty.SetTitle(Faction.OfEmpire, royalTitle, grantRewards: false);
             });
         }
     }

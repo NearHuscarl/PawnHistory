@@ -14,7 +14,7 @@
 		</rulePack>
 	</RulePackDef>
 
-	<RulePackDef>
+	<RulePackDef MayRequire="Ludeon.RimWorld.Royalty">
 		<defName>PH_WeaponBonded</defName>
 		<rulePack>
 			<rulesStrings>
@@ -23,7 +23,7 @@
 		</rulePack>
 	</RulePackDef>
 
-	<RulePackDef>
+	<RulePackDef MayRequire="Ludeon.RimWorld.Royalty">
 		<defName>PH_TitleGained</defName>
 		<rulePack>
 			<rulesStrings>
@@ -32,7 +32,7 @@
 		</rulePack>
 	</RulePackDef>
 
-	<RulePackDef>
+	<RulePackDef MayRequire="Ludeon.RimWorld.Royalty">
 		<defName>PH_TitleLost</defName>
 		<rulePack>
 			<rulesStrings>
@@ -43,7 +43,7 @@
 		</rulePack>
 	</RulePackDef>
 
-	<RulePackDef>
+	<RulePackDef MayRequire="Ludeon.RimWorld.Royalty">
 		<defName>PH_TitleInherited</defName>
 		<rulePack>
 			<rulesStrings>

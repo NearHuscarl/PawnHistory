@@ -33,10 +33,10 @@ public class CrushedRecorder : RecorderBase<CrushedEvent>
     {
         var pawn = scenario.Pawn()
             .Colonist()
-            .WithPosition(Find.CurrentMap.Center)
+            .Position(Find.CurrentMap.Center)
             .CreateSingle();
         var spouse = scenario.Pawn()
-            .WithPosition(CellFinder.RandomEdgeCell(Find.CurrentMap))
+            .Position(CellFinder.RandomEdgeCell(Find.CurrentMap))
             .SetRelation(pawn, PawnRelationDefOf.Spouse)
             .CreateSingle();
 

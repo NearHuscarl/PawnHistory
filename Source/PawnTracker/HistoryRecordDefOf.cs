@@ -43,10 +43,6 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef PlayerTransporterArrived;
     public static HistoryRecordDef AICoreOffer;
     public static HistoryRecordDef VisitorLeftGift;
-    public static HistoryRecordDef WeaponBonded;
-    public static HistoryRecordDef TitleGained;
-    public static HistoryRecordDef TitleLost;
-    public static HistoryRecordDef TitleInherited;
     public static HistoryRecordDef LodgerJoinOffer;
     public static HistoryRecordDef PeaceTalksOutcome;
     public static HistoryRecordDef PeaceTalksRaid;
@@ -84,7 +80,6 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef LightningStrike;
     public static HistoryRecordDef WalkNaked;
     public static HistoryRecordDef ReadBook;
-    public static HistoryRecordDef TechprintApplied;
     public static HistoryRecordDef Stripped;
     public static HistoryRecordDef CraftedQualityThing;
     public static HistoryRecordDef MinedValuable;
@@ -92,6 +87,17 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef DeepMineralFound;
     public static HistoryRecordDef VisitedGrave;
     public static HistoryRecordDef Hunted;
+    
+    [MayRequireRoyalty]
+    public static HistoryRecordDef TechprintApplied;
+    [MayRequireRoyalty]
+    public static HistoryRecordDef WeaponBonded;
+    [MayRequireRoyalty]
+    public static HistoryRecordDef TitleGained;
+    [MayRequireRoyalty]
+    public static HistoryRecordDef TitleLost;
+    [MayRequireRoyalty]
+    public static HistoryRecordDef TitleInherited;
 
     static HistoryRecordDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(HistoryRecordDefOf));
 }

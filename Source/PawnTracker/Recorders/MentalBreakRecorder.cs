@@ -200,7 +200,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         var pawns = scenario.Pawn(mentalBreaks.Count)
             .ThatMatches(ShouldRecord)
             .StopMentalState()
-            .WithPosition(scenario.TaggedRooms["Common"].CenterCell, 4)
+            .Position(scenario.TaggedRooms["Common"].CenterCell, 4)
             .GiveTrait(TraitDefOf.Pyromaniac) // FireStartingSpree
             .Do((p, i) =>
             {
@@ -268,7 +268,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         var pawn = scenario.Pawn()
             .Colonist()
             .StopMentalState()
-            .WithPosition(scenario.OutsideOf("Prison"))
+            .Position(scenario.OutsideOf("Prison"))
             .Do((p, i) => p.StartMentalBreakWithMadeUpThought(DefLookup.MentalBreak.SadisticRage))
             .CreateSingle();
 
@@ -287,7 +287,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         var pawn = scenario.Pawn()
             .Colonist()
             .StopMentalState()
-            .WithPosition(scenario.OutsideOf("Prison"))
+            .Position(scenario.OutsideOf("Prison"))
             .Do((p, i) => p.StartMentalBreakWithMadeUpThought(jailbreakerBreak))
             .CreateSingle();
 

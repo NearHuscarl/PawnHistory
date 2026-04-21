@@ -40,7 +40,7 @@ public class MarriageProposalRecorder : RecorderBase<MarriageProposalEvent>
             .CreateSingle();
         var initiator = scenario.Pawn()
             .Colonist()
-            .WithPosition(recipient.Position)
+            .Position(recipient.Position)
             .Do(p => p.interactions.TryInteractWith(recipient, InteractionDefOf.MarriageProposal))
             .CreateSingle();
 
@@ -59,7 +59,7 @@ public class MarriageProposalRecorder : RecorderBase<MarriageProposalEvent>
             .CreateSingle();
         var initiator = scenario.Pawn()
             .Colonist()
-            .WithPosition(recipient.Position)
+            .Position(recipient.Position)
             .Do(p => p.interactions.TryInteractWith(recipient, InteractionDefOf.MarriageProposal))
             .CreateSingle();
 

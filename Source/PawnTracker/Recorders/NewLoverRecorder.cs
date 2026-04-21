@@ -62,7 +62,7 @@ public class NewLoverRecorder : RecorderBase<NewLoverEvent>
             .CreateSingle();
         var initiator = scenario.Pawn()
             .Colonist()
-            .WithPosition(recipient.Position) 
+            .Position(recipient.Position) 
             .Do((p, i, pawns) => p.interactions.TryInteractWith(recipient, InteractionDefOf.RomanceAttempt))
             .CreateSingle();
 
@@ -85,7 +85,7 @@ public class NewLoverRecorder : RecorderBase<NewLoverEvent>
         var initiator = scenario.Pawn()
             .Colonist()
             .SetRelation(cuckold2, PawnRelationDefOf.Lover)
-            .WithPosition(recipient.Position)
+            .Position(recipient.Position)
             .Do((p, i, pawns) => p.interactions.TryInteractWith(recipient, InteractionDefOf.RomanceAttempt))
             .CreateSingle();
 
@@ -110,7 +110,7 @@ public class NewLoverRecorder : RecorderBase<NewLoverEvent>
         var initiator = scenario.Pawn()
             .Colonist()
             .SetRelation(cuckold2, PawnRelationDefOf.Spouse)
-            .WithPosition(recipient.Position)
+            .Position(recipient.Position)
             .Do((p, i, pawns) => p.interactions.TryInteractWith(recipient, InteractionDefOf.RomanceAttempt))
             .CreateSingle();
 

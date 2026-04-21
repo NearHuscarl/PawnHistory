@@ -55,9 +55,7 @@ public class RoyalTitleChangedRecorder : RecorderBase<RoyalTitleChangedEvent>
     [RequiresRoyalty]
     public void TestGain(TestScenario scenario)
     {
-        var pawn = scenario.Pawn().Colonist().CreateSingle();
-
-        pawn.royalty.SetTitle(Faction.OfEmpire, RoyalTitleDefOf.Count, grantRewards: false);
+        var pawn = scenario.Pawn().Colonist().SetRoyalTitle(RoyalTitleDefOf.Count).CreateSingle();
 
         Expect.That(pawn).ToHaveHistoryRecord("[PAWN] gained the royal title of Archon from [Faction].", HistoryRecordDefOf.TitleGained);
     }
@@ -65,10 +63,10 @@ public class RoyalTitleChangedRecorder : RecorderBase<RoyalTitleChangedEvent>
     [RequiresRoyalty]
     public void TestLoss(TestScenario scenario)
     {
-        var pawn = scenario.Pawn().Colonist().CreateSingle();
-
-        pawn.royalty.SetTitle(Faction.OfEmpire, DefLookup.RoyalTitle.Praetor, grantRewards: false);
-        pawn.royalty.SetTitle(Faction.OfEmpire, null, grantRewards: false);
+        var pawn = scenario.Pawn().Colonist()
+            .SetRoyalTitle(DefLookup.RoyalTitle.Praetor)
+            .SetRoyalTitle(null)
+            .CreateSingle();
 
         Expect.That(pawn).ToHaveHistoryRecord("[PAWN] lost the royal title of Praetor from [Faction].", HistoryRecordDefOf.TitleLost);
     }
@@ -76,10 +74,10 @@ public class RoyalTitleChangedRecorder : RecorderBase<RoyalTitleChangedEvent>
     [RequiresRoyalty]
     public void TestDemotion(TestScenario scenario)
     {
-        var pawn = scenario.Pawn().Colonist().CreateSingle();
-
-        pawn.royalty.SetTitle(Faction.OfEmpire, DefLookup.RoyalTitle.Praetor, grantRewards: false);
-        pawn.royalty.SetTitle(Faction.OfEmpire, RoyalTitleDefOf.Knight, grantRewards: false);
+        var pawn = scenario.Pawn().Colonist()
+            .SetRoyalTitle(DefLookup.RoyalTitle.Praetor)
+            .SetRoyalTitle(RoyalTitleDefOf.Knight)
+            .CreateSingle();
 
         Expect.That(pawn).ToHaveHistoryRecord("[PAWN] was demoted from Praetor to Knight by [Faction].", HistoryRecordDefOf.TitleLost);
     }
