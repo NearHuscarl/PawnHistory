@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.DebugTools;
+﻿using System;
 using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
@@ -39,9 +39,9 @@ public class BodyPartScarredRecorder : RecorderBase<BodyPartScarredEvent>
     }
 
     [SkipTest]
-    public void TestInjury(TestScenario scenario)
+    public Action TestInjury(TestScenario scenario)
     {
-        NearDebugSettings.ForceInjuryScar = true;
+        TestManager.Scenario.ForceInjuryScar = true;
         var friends = scenario.RaidFriendly()
             .Point(600)
             .Execute();
@@ -56,13 +56,14 @@ public class BodyPartScarredRecorder : RecorderBase<BodyPartScarredEvent>
             .Execute();
 
         scenario.SpeedUp();
-        scenario.RunOnceOn<LordToilChangeEvent>(e => e.NextToil is LordToil_PanicFlee, e => scenario.SlowDown());
+
+        return () => scenario.SlowDown();
     }
 
     [SkipTest]
-    public void TestPostHeal(TestScenario scenario)
+    public Action TestPostHeal(TestScenario scenario)
     {
-        NearDebugSettings.ForcePostHealScar = true;
+        TestManager.Scenario.ForcePostHealScar = true;
         var friends = scenario.RaidFriendly()
             .Point(600)
             .Execute();
@@ -76,12 +77,7 @@ public class BodyPartScarredRecorder : RecorderBase<BodyPartScarredEvent>
             .Execute();
 
         scenario.SpeedUp();
-        scenario.RunOnceOn<LordToilChangeEvent>(e => e.NextToil is LordToil_PanicFlee, e =>
-        {
-            scenario.Pawn(friends.Concat(enemies))
-                .TendInjuries()
-                .Execute();
-            NearDebugSettings.ForcePostHealScar = false;
-        });
+
+        return () => scenario.SlowDown();
     }
 }

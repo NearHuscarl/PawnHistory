@@ -23,29 +23,6 @@ internal class TickManager_Pause_Patch
     }
 }
 
-[HarmonyPatch(typeof(HediffComp_GetsPermanent), nameof(HediffComp_GetsPermanent.PreFinalizeInjury))]
-internal class HediffComp_GetsPermanent_PreFinalizeInjury_Patch
-{
-    private static void Postfix(HediffComp_GetsPermanent __instance)
-    {
-        if (NearDebugSettings.ForceInjuryScar)
-            __instance.IsPermanent = true;
-    }
-}
-
-[HarmonyPatch(typeof(HediffComp_GetsPermanent), nameof(HediffComp_GetsPermanent.CompPostInjuryHeal))]
-internal class HediffComp_GetsPermanent_CompPostInjuryHeal_Patch
-{
-    private static void Prefix(HediffComp_GetsPermanent __instance, float amount)
-    {
-        if (!NearDebugSettings.ForcePostHealScar)
-            return;
-
-        var injury = __instance.parent;
-        __instance.permanentDamageThreshold = injury.Severity + amount;
-    }
-}
-
 [HarmonyPatch(typeof(DebugTabMenu_Settings), nameof(DebugTabMenu_Settings.InitActions))]
 internal static class Patch_DebugTabMenu_Settings_InitActions_Patch
 {
@@ -133,8 +110,6 @@ internal class QuestNode_EndGame_ShipEscape_FindShipTile_TryFindDestinationTile_
 internal class NearDebugSettings
 {
     public static bool NeverEverEverPause = false;
-    public static bool ForceInjuryScar = false;
-    public static bool ForcePostHealScar = false;
     public static bool ForceManhunterChance = false;
     public static bool ForceSpringTrap = false;
     public static bool ForceRomanceSuccess = false;

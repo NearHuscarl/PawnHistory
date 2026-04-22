@@ -64,6 +64,7 @@
     <Compile Include="Source\Helper\Palette.cs" />
     <Compile Include="Source\Helper\PawnUtility.cs" />
     <Compile Include="Source\Helper\EnumerableExtensions.cs" />
+    <Compile Include="Source\Helper\QuestHelper.cs" />
     <Compile Include="Source\Helper\WorldGridUtility.cs" />
     <Compile Include="Source\Helper\WorldObjectUtility.cs" />
     <Compile Include="Source\PawnTracker\CompProperties_History.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Source\DebugTools\DebugOutputsHistoryRecords.cs" />
     <Compile Include="Source\Helper\HediffUtility.cs" />
     <Compile Include="Source\PawnTracker\CompHistoryManager.cs" />
+    <Compile Include="Source\PawnTracker\Events\ChoiceEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\DrugAddictedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\BreakupEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\InspirationStartedEvent.cs" />
@@ -167,8 +169,6 @@
     <Compile Include="Source\PawnTracker\Recorders\PredatorHuntingColonistRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\VisitedGraveRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\AnimalHuntedRecorder.cs" />
-    <Compile Include="Source\PawnTracker\Recorders\WandererJoinedRecorder.cs" />
-    <Compile Include="Source\PawnTracker\Recorders\RefugeePodCrashedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WildManWanderedInRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PawnTradedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\KidnappedRecorder.cs" />
@@ -221,6 +221,7 @@
     <Compile Include="Source\PawnTracker\Test\Mocks\AlwaysHaveCancerOnBirthday.cs" />
     <Compile Include="Source\PawnTracker\Test\Mocks\DeathOnNextHit.cs" />
     <Compile Include="Source\PawnTracker\Test\Mocks\ForcedRitualOutcome.cs" />
+    <Compile Include="Source\PawnTracker\Test\Mocks\ForceScar.cs" />
     <Compile Include="Source\PawnTracker\Test\PawnBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\DebugValuesAttribute.cs" />
     <Compile Include="Source\PawnTracker\Test\PawnHistoryAssertions.cs" />

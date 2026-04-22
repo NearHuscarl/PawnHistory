@@ -51,7 +51,7 @@ internal sealed class TestContext(string testId)
         var parts = new List<string>();
 
         if (!IsExpectedAssertionCountSatisfied)
-            parts.Add($"expected {expectedAssertions} assertion(s), but only {registeredAssertions} were registered");
+            parts.Add($"expected {expectedAssertions} assertion(s), but {registeredAssertions} were registered");
 
         if (PendingEventually > 0)
             parts.Add($"{PendingEventually} assertion execution(s) still pending");

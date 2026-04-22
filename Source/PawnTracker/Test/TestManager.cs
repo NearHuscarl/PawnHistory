@@ -8,7 +8,8 @@ namespace PawnHistory.Source.PawnTracker.Test;
 
 public static class TestManager
 {
-    public static int Timeout = 5000;
+    public static readonly int DefaultTimeout = 5000;
+    public static int Timeout = DefaultTimeout;
     internal static TestContext Ctx;
     internal static TestScenario Scenario = new();
     private static readonly Queue<Action> Queue = new();
@@ -73,9 +74,9 @@ public static class TestManager
         var start = Find.TickManager.TicksGame;
         var scheduled = TickDelayManager.Interval(1, a =>
         {
-            if (ctx.PendingEventually == 0)
+            if (ctx.PendingEventually == 0 && ctx.IsExpectedAssertionCountSatisfied)
             {
-                if (ctx.TestFailures.Count == 0 && ctx.AssertionsPassed > 0 && ctx.IsExpectedAssertionCountSatisfied)
+                if (ctx.TestFailures.Count == 0 && ctx.AssertionsPassed > 0)
                     ctx.ReportPass();
                 a.Cancelled = true;
                 try
@@ -116,6 +117,7 @@ public static class TestManager
 
     private static void SetupBeforeTest(string testId)
     {
+        Timeout = DefaultTimeout;
         Ctx = new TestContext(testId);
         Scenario = new TestScenario();
 

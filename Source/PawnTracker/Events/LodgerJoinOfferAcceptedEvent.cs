@@ -5,7 +5,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public record LodgerJoinOfferAcceptedEvent(Pawn Pawn, Quest Quest) : GameEventBase;
+public record LodgerJoinOfferAcceptedEvent(Pawn Pawn, Quest Quest) : ChoiceEvent(Quest);
 
 internal static class LodgerJoinOfferAcceptedContext
 {

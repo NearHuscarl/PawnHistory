@@ -79,6 +79,8 @@ namespace PawnHistory.Source.PawnTracker;
 // - Bonded animal berserk mental break due to pawn dead
 // - Banish colonist (to death or not)
 // - Add a dimmed color to [PAWN_title]
+// PrisonerInteractionModeDefOf
+// - ": ChoiceLetter"
 
 // - Replace "the colony" with the settlement name if exists (put into common?)
 

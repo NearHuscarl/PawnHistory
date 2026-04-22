@@ -18,6 +18,8 @@ public class TestScenario
     internal readonly HashSet<Pawn> DeathOnNextHitPawns = [];
     public bool AlwaysHaveCancerOnBirthday = false;
     public RitualOutcomePossibility ForcedRitualOutcome;
+    public bool ForceInjuryScar = false;
+    public bool ForcePostHealScar = false;
 
     public PawnBuilder Pawn(int count = 1) => new(count);
     public PawnBuilder Pawn(IEnumerable<Pawn> pawns) => new PawnBuilder().WithPawns(pawns);
@@ -89,31 +91,9 @@ public static class TestScenarioExtensions
             return scenario;
         }
 
-        public TestScenario RunOnceOn<T>(Func<T, bool> runWhen, Action<T> listener) where T : GameEventBase
-        {
-            GameEventBus.Subscribe((Action<T>)Wrapper);
-
-            return scenario;
-
-            void Wrapper(T evt)
-            {
-                if (!runWhen(evt))
-                    return;
-
-                try
-                {
-                    listener(evt);
-                }
-                finally
-                {
-                    GameEventBus.Unsubscribe((Action<T>)Wrapper);
-                }
-            }
-        }
-
         public TestScenario RunUntil(Func<bool> stopCondition, Action action, Action onFinish = null, int interval = 1)
         {
-            TickDelayManager.Interval(interval, data =>
+            TickDelayManager.Interval(interval, TestManager.Timeout, data =>
             {
                 try
                 {
@@ -135,11 +115,11 @@ public static class TestScenarioExtensions
             return scenario;
         }
 
-        public TestScenario WaitUntil(Func<bool> stopWhen, Action thenDo, int interval = 1)
+        public TestScenario WaitUntil(Func<bool> condition, Action thenDo, int interval = 1)
         {
             TickDelayManager.Interval(interval, TestManager.Timeout, data =>
             {
-                if (!stopWhen())
+                if (!condition())
                     return;
 
                 data.Cancelled = true;

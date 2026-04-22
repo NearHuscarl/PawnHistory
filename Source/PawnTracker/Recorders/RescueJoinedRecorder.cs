@@ -30,6 +30,8 @@ public class RescueJoinedRecorder : RecorderBase<RescueJoinedEvent>
 
     public void Test(TestScenario scenario)
     {
+        Expect.Assertions(1);
+        
         scenario.SpeedUp();
         scenario.Incident(IncidentDefOf.ToxicFallout).Execute(); // pawn will join if it's dangerous outside
 
@@ -49,12 +51,11 @@ public class RescueJoinedRecorder : RecorderBase<RescueJoinedEvent>
             .StartJob(JobDefOf.Rescue, victim, RestUtility.FindBedFor(victim, rescuer, checkSocialProperness: false, guestStatus: GuestStatus.Guest))
             .Execute();
 
-        scenario.RunOnceOn<JobEndEvent>(e => e.CurrentJob.def == JobDefOf.Rescue, e =>
+        scenario.WaitUntil(victim.InBed, () =>
         {
             scenario.Pawn(victim).FullHeal().Execute();
+            Expect.That(victim).ToHaveHistoryRecord("[PAWN] was grateful after being rescued. Instead of leaving, [He] decided to stay and joined the colony.", HistoryRecordDefOf.RescueJoined);
             scenario.SlowDown();
         });
-
-        Expect.That(victim).Eventually().ToHaveHistoryRecord("[PAWN] was grateful after being rescued. Instead of leaving, [PAWN_pronoun] decided to stay and joined the colony.");
     }
 }

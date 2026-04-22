@@ -87,14 +87,28 @@ public static class Accessor
 
     public class ChoiceLetter_AcceptVisitors
     {
-        public static readonly Func<RimWorld.ChoiceLetter_AcceptVisitors, DiaOption> Option_Accept =
-            AccessTools.MethodDelegate<Func<RimWorld.ChoiceLetter_AcceptVisitors, DiaOption>>(AccessTools.Method(typeof(RimWorld.ChoiceLetter_AcceptVisitors), "get_Option_Accept"));
+        public static readonly Func<RimWorld.ChoiceLetter_AcceptVisitors, Verse.DiaOption> Option_Accept =
+            AccessTools.MethodDelegate<Func<RimWorld.ChoiceLetter_AcceptVisitors, Verse.DiaOption>>(AccessTools.Method(typeof(RimWorld.ChoiceLetter_AcceptVisitors), "get_Option_Accept"));
     }
 
     public class QuestPart_PawnJoinOffer
     {
         public static readonly Action<RimWorld.QuestPart_PawnJoinOffer> SendLetter =
             AccessTools.MethodDelegate<Action<RimWorld.QuestPart_PawnJoinOffer>>(AccessTools.Method(typeof(RimWorld.QuestPart_PawnJoinOffer), "SendLetter"));
+    }
+    
+    public class QuestPart_DropPods
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.QuestPart_DropPods, List<Thing>> TmpThingsToDrop = AccessTools.FieldRefAccess<RimWorld.QuestPart_DropPods, List<Thing>>("tmpThingsToDrop");
+    }
+
+    public class QuestGen
+    {
+        public static readonly Action<QuestScriptDef, Slate> InitializeQuestGen =
+            AccessTools.MethodDelegate<Action<QuestScriptDef, Slate>>(AccessTools.Method(typeof(RimWorld.QuestGen.QuestGen), "InitializeQuestGen"));
+
+        public static readonly Action ClearQuestGenState =
+            AccessTools.MethodDelegate<Action>(AccessTools.Method(typeof(RimWorld.QuestGen.QuestGen), "ClearQuestGenState"));
     }
 
     public class Dialog_BeginRitual

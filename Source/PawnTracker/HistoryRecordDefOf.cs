@@ -43,6 +43,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef PlayerTransporterArrived;
     public static HistoryRecordDef AICoreOffer;
     public static HistoryRecordDef VisitorLeftGift;
+    public static HistoryRecordDef QuestPawnArrived;
     public static HistoryRecordDef LodgerJoinOffer;
     public static HistoryRecordDef PeaceTalksOutcome;
     public static HistoryRecordDef PeaceTalksRaid;
@@ -52,8 +53,6 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef VisitorArrived;
     public static HistoryRecordDef TravelGroupArrived;
     public static HistoryRecordDef RescueJoined;
-    public static HistoryRecordDef WandererJoined;
-    public static HistoryRecordDef RefugeePodCrashed;
     public static HistoryRecordDef WildManWanderedIn;
     public static HistoryRecordDef ManInBlackJoin;
     public static HistoryRecordDef GameEndedWanderersJoined;

@@ -35,9 +35,6 @@ public class NewArrivalRecorder : RecorderBase<ScenarioStartEvent>
             .Colonist()
             .Execute();
 
-        foreach (var pawn in pawns)
-        {
-            Expect.That(pawn).ToHaveHistoryRecord("[PAWN] crash-landed in a drop pod with 2 others to start a new settlement.");
-        }
+        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN] crash-landed in a drop pod with 2 others to start a new settlement.", HistoryRecordDefOf.NewArrival);
     }
 }

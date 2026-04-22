@@ -12,15 +12,15 @@ public record WandererJoinedEvent(Pawn Pawn, IEnumerable<Pawn> Group, IncidentDe
 
 internal static class WandererJoinContext
 {
-    private static List<Pawn> Snapshot = [];
+    private static List<Pawn> snapshot = [];
 
     public static IEnumerable<Pawn> UpdatePawnSnapshot(Map map)
     {
         var newSnapshot = map.mapPawns.AllPawnsSpawned.ToList();
-        var oldSnapshot = Snapshot;
+        var oldSnapshot = snapshot;
         var difference = newSnapshot.Except(oldSnapshot);
         
-        Snapshot = newSnapshot;
+        snapshot = newSnapshot;
         return difference;
     }
 
@@ -46,39 +46,7 @@ internal static class WandererJoinContext
 
     internal static void Finalizer()
     {
-        Snapshot.Clear();
-    }
-}
-
-// Wait until the player accepts the ChoiceLetter
-[HarmonyPatch(typeof(QuestPart_PawnsArrive), nameof(QuestPart_PawnsArrive.Notify_QuestSignalReceived))]
-internal class QuestPart_PawnsArrive_Notify_QuestSignalReceived_Patch
-{
-    static void Prefix(QuestPart_PawnsArrive __instance, Signal signal)
-    {
-        if (signal.tag != __instance.inSignal) return;
-
-        WandererJoinContext.UpdatePawnSnapshot(__instance.mapParent.Map);
-    }
-    static void Postfix(QuestPart_PawnsArrive __instance, Signal signal)
-    {
-        if (signal.tag != __instance.inSignal) return;
-
-        var newPawns = WandererJoinContext.UpdatePawnSnapshot(__instance.mapParent.Map);
-
-        foreach (var pawn in newPawns)
-        {
-            GameEventBus.Publish(new WandererJoinedEvent(pawn, newPawns, null, __instance.quest.root));
-        }
-    }
-}
-
-[HarmonyPatch(typeof(QuestNode_Root_RefugeePodCrash), nameof(QuestNode_Root_RefugeePodCrash.GeneratePawn))]
-internal class QuestNode_Root_RefugeePodCrash_GeneratePawn_Patch
-{
-    private static void Postfix(Pawn __result)
-    {
-        GameEventBus.Publish(new WandererJoinedEvent(__result, [], null, QuestGen.quest.root));
+        snapshot.Clear();
     }
 }
 

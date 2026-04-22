@@ -168,14 +168,14 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         return () => scenario.SlowDown();
     }
 
-    private static readonly List<MentalBreakDef> InvididuallyTestedMentalBreaks = [
+    private static readonly List<MentalBreakDef> IndividuallyTestedMentalBreaks = [
         DefLookup.MentalBreak.Slaughterer,
         DefLookup.MentalBreak.Jailbreaker,
         DefLookup.MentalBreak.SadisticRage,
         MentalBreakDefOf.CorpseObsession,
     ];
 
-    private static readonly string Reason = "This happened because of poor mood: [Reason].";
+    private const string Reason = "This happened because of poor mood: [Reason].";
 
     public void Test(TestScenario scenario)
     {
@@ -195,7 +195,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .BuildRoom(MapBuilder.Beside("Bedroom", Rot4.West, 5, 5), "Common")
             .Execute();
 
-        var mentalBreaks = DefDatabase<MentalBreakDef>.AllDefs.Except(InvididuallyTestedMentalBreaks).ToList();
+        var mentalBreaks = DefDatabase<MentalBreakDef>.AllDefs.Except(IndividuallyTestedMentalBreaks).ToList();
 
         var pawns = scenario.Pawn(mentalBreaks.Count)
             .ThatMatches(ShouldRecord)

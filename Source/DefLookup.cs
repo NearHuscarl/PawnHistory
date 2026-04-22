@@ -94,9 +94,13 @@ public static class DefLookup
 
     public static class QuestScript
     {
+        public static QuestScriptDef Beggars => field ??= DefDatabase<QuestScriptDef>.GetNamed("Beggars");
+        public static QuestScriptDef Intro_Deserter => field ??= DefDatabase<QuestScriptDef>.GetNamed("Intro_Deserter");
+        public static QuestScriptDef ThreatReward_Raid_Joiner => field ??= DefDatabase<QuestScriptDef>.GetNamed("ThreatReward_Raid_Joiner");
         public static QuestScriptDef OpportunitySite_PeaceTalks => field ??= DefDatabase<QuestScriptDef>.GetNamed("OpportunitySite_PeaceTalks");
         public static QuestScriptDef OpportunitySite_DownedRefugee => field ??= DefDatabase<QuestScriptDef>.GetNamed("OpportunitySite_DownedRefugee");
         public static QuestScriptDef SanguophageMeetingHost => field ??= DefDatabase<QuestScriptDef>.GetNamed("SanguophageMeetingHost");
+        public static QuestScriptDef ShuttleCrash_Rescue => field ??= DefDatabase<QuestScriptDef>.GetNamed("ShuttleCrash_Rescue");
     }
     
     public static class RoyalTitle
@@ -127,6 +131,11 @@ public static class DefLookup
         public static ThingDef Weapon_GrenadeFrag => field ??= DefDatabase<ThingDef>.GetNamed("Weapon_GrenadeFrag");
         public static ThingDef LongRangeMineralScanner => field ??= DefDatabase<ThingDef>.GetNamed("LongRangeMineralScanner");
         public static ThingDef MeleeWeapon_MonoSwordBladelink => field ??= DefDatabase<ThingDef>.GetNamed("MeleeWeapon_MonoSwordBladelink");
+    }
+
+    public static class RitualOutcomeEffect
+    {
+        public static RitualOutcomeEffectDef AttendedSpeech => field ??= DefDatabase<RitualOutcomeEffectDef>.GetNamed("AttendedSpeech");
     }
 
     public static class Backstory

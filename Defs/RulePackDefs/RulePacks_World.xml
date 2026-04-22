@@ -35,11 +35,15 @@
 		</include>
         <rulePack>
             <rulesStrings>
-				<li>entry(raidProperty==None)      ->[PAWN][AndOthers] from [Faction] raided the colony.</li>
-				<li>entry(raidProperty==Breacher)  ->[PAWN][AndOthers] from [Faction] raided the colony using breaching tactics.</li>
-				<li>entry(raidProperty==Sapper)    ->[PAWN][AndOthers] from [Faction] raided the colony using sapper tactics.</li>
-				<li>entry(raidProperty==Siege)     ->[PAWN][AndOthers] from [Faction] besieged the colony.</li>
-				<li>entry(raidProperty==CenterDrop)->[PAWN][AndOthers] from [Faction] raided the colony by dropping directly into it.</li>
+				<li>entry(raidProperty==None)      ->[PAWN][AndOthers] from [Faction] raided the colony.[questClause]</li>
+				<li>entry(raidProperty==Breacher)  ->[PAWN][AndOthers] from [Faction] raided the colony using breaching tactics.[questClause]</li>
+				<li>entry(raidProperty==Sapper)    ->[PAWN][AndOthers] from [Faction] raided the colony using sapper tactics.[questClause]</li>
+				<li>entry(raidProperty==Siege)     ->[PAWN][AndOthers] from [Faction] besieged the colony.[questClause]</li>
+				<li>entry(raidProperty==CenterDrop)->[PAWN][AndOthers] from [Faction] raided the colony by dropping directly into it.[questClause]</li>
+
+				<li>questClause(quest==ThreatReward_Raid_Joiner)-> [PAWN_pronoun] came to take [QuestAsker].</li>
+				<li>questClause(quest==Intro_Deserter)          -> [PAWN_pronoun] came to hunt down [QuestAsker].</li>
+				<li>questClause-> [PAWN_pronoun] came to attack [QuestAsker].</li>
 			</rulesStrings>
         </rulePack>
     </RulePackDef>
@@ -184,15 +188,20 @@
 		<rulePack>
 			<rulesStrings>
 				<li>entry(priority=1,quest==Beggars)                 ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] to beg for aid.</li>
-				<li>entry(priority=1,quest==Hospitality_Refugee)     ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] seeking refuge.</li>
-				<li>entry(priority=1,quest==Intro_Deserter)          ->[PAWN] arrived at [PlayerSettlement] seeking protection after deserting the Empire.</li>
 				<li>entry(priority=1,quest==Intro_Wimp)              ->[PAWN] arrived at [PlayerSettlement] asking the colony for help.</li>
 				<li>entry(priority=1,quest==SanguophageMeetingHost)  ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] for a meeting with the colony.</li>
-				<li>entry(priority=1,quest==ShuttleCrash_Rescue)     ->[PAWN][AlongWithOthers] crash-landed at [PlayerSettlement] in a damaged shuttle.</li>
-				<li>entry(priority=1,quest==ThreatReward_Raid_Joiner)->[PAWN] arrived at [PlayerSettlement] seeking protection from pursuers.</li>
-				<li>entry(priority=1,quest==WandererJoins)           ->A [PAWN_title] named [PAWN] arrived and joined the colony. [PAWN_pronoun] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.</li>
+				
+				<li>entry(priority=1,quest==WandererJoins)           ->A [PAWN_title] named [PAWN] arrived and joined [PlayerSettlement]. [PAWN_pronoun] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.</li>
 				<li>entry(priority=1,quest==RefugeePodCrash)         ->[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [PAWN_pronoun] survived the impact but was badly wounded.</li>
-				<li>entry(priority=0)                                ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement].</li>
+				<li>entry(priority=1,quest==Hospitality_Refugee)     ->[PAWN][AndOthers] arrived at [PlayerSettlement] seeking shelter and a place to regroup, with nowhere else to go.</li>
+				<li>entry(priority=1,quest==ShuttleCrash_Rescue,isEnemy==False)->[PAWN][AlongWithOthers] made an emergency landing at [PlayerSettlement] in a damaged shuttle.</li>
+				<li>entry(priority=1,quest==ShuttleCrash_Rescue,isEnemy==True) ->[PAWN][AndOthers] from [PAWN_factionName] attacked the crashed shuttle site.</li>
+				<li>entry(priority=1,quest==ThreatReward_Raid_Joiner,isEnemy==False)->[PAWN] arrived at [PlayerSettlement] under pursuit, and joined the colony in exchange for safety.</li>
+				<!-- <li>entry(priority=1,quest==ThreatReward_Raid_Joiner,isEnemy==True) -> handled in PH_Raid since it spawns an incident -->
+				<li>entry(priority=1,quest==Intro_Deserter)          ->[PAWN] arrived at [PlayerSettlement] seeking protection after deserting the Empire.</li>
+				
+				<li>entry(priority=0,isEnemy==False)                 ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] for [Quest] quest.</li>
+				<li>entry(priority=0,isEnemy==True)                  ->[PAWN][AndOthers] from [PAWN_factionName] raided [PlayerSettlement] during [Quest] quest.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

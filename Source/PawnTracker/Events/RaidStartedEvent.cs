@@ -5,7 +5,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public record RaidStartedEvent(List<Pawn> Pawns, Faction Faction, RaidStrategyDef RaidStrategy, PawnsArrivalModeDef RaidArrivalMode, bool IsFriendly) : GameEventBase;
+public record RaidStartedEvent(List<Pawn> Pawns, Faction Faction, RaidStrategyDef RaidStrategy, PawnsArrivalModeDef RaidArrivalMode, bool IsFriendly, Quest Quest = null) : GameEventBase;
 
 [HarmonyPatch(typeof(IncidentWorker_Raid), nameof(IncidentWorker_Raid.TryGenerateRaidInfo))]
 internal static class IncidentWorker_Raid_TryGenerateRaidInfo_Patch
@@ -15,6 +15,6 @@ internal static class IncidentWorker_Raid_TryGenerateRaidInfo_Patch
         if (!__result)
             return; // cannot spawn a raid due to internal error
 
-        GameEventBus.Publish(new RaidStartedEvent(pawns, parms.faction, parms.raidStrategy, parms.raidArrivalMode, IsFriendly: __instance is IncidentWorker_RaidFriendly));
+        GameEventBus.Publish(new RaidStartedEvent(pawns, parms.faction, parms.raidStrategy, parms.raidArrivalMode, IsFriendly: __instance is IncidentWorker_RaidFriendly, parms.quest));
     }
 }

@@ -354,6 +354,16 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>QuestPawnArrived</defName>
+		<label>quest pawn arrived</label>
+		<descriptionMaker>PH_QuestPawnArrived</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Arrival</li>
+			<li>World</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>LodgerJoinOffer</defName>
 		<label>lodger join offer</label>
 		<descriptionMaker>PH_LodgerJoinOffer</descriptionMaker>
@@ -406,24 +416,6 @@
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Joined</li>
-		</categories>
-	</HistoryRecordDef>
-	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>WandererJoined</defName>
-		<label>wanderer joined</label>
-		<descriptionMaker>PH_WandererJoined</descriptionMaker>
-		<icon>Things/Pawn/Wounds/WoundMechA</icon>
-		<categories>
-			<li>Joined</li>
-		</categories>
-	</HistoryRecordDef>
-	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>RefugeePodCrashed</defName>
-		<label>refugee pod crashed</label>
-		<descriptionMaker>PH_RefugeePodCrashed</descriptionMaker>
-		<icon>Things/Pawn/Wounds/WoundMechA</icon>
-		<categories>
-			<li>Arrival</li>
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">

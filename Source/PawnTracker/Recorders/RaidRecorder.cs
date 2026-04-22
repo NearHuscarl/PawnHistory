@@ -3,6 +3,7 @@ using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
+using PawnHistory.Source.Helper;
 using Verse;
 using Verse.Grammar;
 
@@ -17,14 +18,14 @@ public class RaidRecorder : RecorderBase<RaidStartedEvent>
 
     public override void CreateRecord(RaidStartedEvent input)
     {
-        var (pawns, faction, raidStrategy, raidArrivalMode, isFriendly) = input;
+        var (pawns, faction, raidStrategy, raidArrivalMode, isFriendly, quest) = input;
         
         pawns = pawns.Where(ShouldRecord).ToList();
         
         if (isFriendly)
             RecordRaidFriendlyStarted(pawns, faction);
         else
-            RecordRaidEnemyStarted(pawns, faction, raidStrategy, raidArrivalMode);
+            RecordRaidEnemyStarted(pawns, faction, raidStrategy, raidArrivalMode, quest);
     }
 
     private void RecordRaidFriendlyStarted(List<Pawn> pawns, Faction faction)
@@ -58,7 +59,7 @@ public class RaidRecorder : RecorderBase<RaidStartedEvent>
         CenterDrop,
     }
 
-    private void RecordRaidEnemyStarted(List<Pawn> pawns, Faction faction, RaidStrategyDef raidStrategy, PawnsArrivalModeDef raidArrivalMode)
+    private void RecordRaidEnemyStarted(List<Pawn> pawns, Faction faction, RaidStrategyDef raidStrategy, PawnsArrivalModeDef raidArrivalMode, Quest quest)
     {
         var raidProperty = RaidProperty.None;
 
@@ -72,15 +73,19 @@ public class RaidRecorder : RecorderBase<RaidStartedEvent>
             raidProperty = RaidProperty.Siege;
 
         var recordDef = HistoryRecordDefOf.Raid;
+        var asker = QuestHelper.GetAsker(quest);
 
         foreach (var pawn in pawns)
         {
             var desc = recordDef.Description(pawn)
+                .IncludePawnGrammar()
                 .WithOthers(pawns)
                 .AddRule("Faction", faction)
+                .AddRule("QuestAsker", asker)
                 .AddConstant("raidProperty", raidProperty)
+                .AddConstant("quest", quest.root.defName)
                 .Resolve();
-            AddRecord(recordDef, pawn, desc);
+            AddRecord(recordDef, pawn, desc, [asker], quest: quest);
         }
     }
 

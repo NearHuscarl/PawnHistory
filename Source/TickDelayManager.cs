@@ -17,7 +17,7 @@ public class ScheduledAction
     public int EndTick = -1;
     public Action<ScheduledActionData> Action;
     public bool Repeat;
-    public ScheduledActionData Data = new();
+    public readonly ScheduledActionData Data = new();
 }
 
 public class TickDelayManager : GameComponent

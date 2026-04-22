@@ -257,6 +257,13 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         var ctx = TestManager.Ctx;
         if (!ctx.TryRegisterAssertion())
             return;
+        
+        if (pawns.Count == 0)
+        {
+            // TODO: test stacktrace
+            ctx.Fail(new TestException(new TestExecutionFailure(ctx.TestId, "No pawns to assert.")));
+            return;
+        }
 
         ctx.PendingEventually++;
         // don't run immediately, so Test method can return cleanup action even if synchronous test call failed.
