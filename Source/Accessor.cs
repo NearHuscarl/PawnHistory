@@ -67,6 +67,12 @@ public static class Accessor
             AccessTools.FieldRefAccess<Verse.AI.JobDriver, Pawn>("pawn");
     }
 
+    public class JobDriver_Execute
+    {
+        public static readonly Func<RimWorld.JobDriver_Execute, Pawn> Victim =
+            AccessTools.MethodDelegate<Func<RimWorld.JobDriver_Execute, Pawn>>(AccessTools.Method(typeof(RimWorld.JobDriver_Execute), "get_Victim"));
+    }
+
     public class JobDriver_PredatorHunt
     {
         public static readonly AccessTools.FieldRef<RimWorld.JobDriver_PredatorHunt, bool> NotifiedPlayerAttacking =

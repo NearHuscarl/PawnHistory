@@ -211,7 +211,7 @@ public class MapBuilder
                 bed.SetFaction(Faction.OfPlayer);
                 bed.ForPrisoners = true;
             }
-            var pawns = new PawnBuilder(prisonerCount).AsPrisoner().Position(rect.CenterCell).Execute();
+            var pawns = new PawnBuilder(prisonerCount).AsPrisoner().Position(rect.CenterCell, 1).Execute();
             prisoners?.AddRange(pawns);
         });
         return this;

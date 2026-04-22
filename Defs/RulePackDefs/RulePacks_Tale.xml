@@ -51,7 +51,7 @@
 				<li>image->[PAWN] closed [Book] for the last time, a satisfied smile gracing [PAWN_possessive] face [circumstance_phrase]</li>
 				<li>image->[PAWN] turned the pages of [Book], absorbing the knowledge within [circumstance_phrase]</li>
 				<li>image->[PAWN] placed [Book] back on the shelf, a sense of accomplishment radiating from [PAWN_objective] [circumstance_phrase]</li>
-				<li>image->[PAWN] sitted in quiet contemplation, reflecting on the profound truths within [Book] [circumstance_phrase]</li>
+				<li>image->[PAWN] sit in quiet contemplation, reflecting on the profound truths within [Book] [circumstance_phrase]</li>
 				
 				<li>desc_sentence->[PAWN] was surrounded by [PAWN_possessive] notes on [Book].</li>
 				<li>desc_sentence->[PAWN]'s eyes sparkled with newfound wisdom.</li>

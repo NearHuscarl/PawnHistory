@@ -76,6 +76,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef Breakup;
     public static HistoryRecordDef MarriageProposal;
     public static HistoryRecordDef PrisonerCaptured;
+    public static HistoryRecordDef PrisonerExecuted;
     public static HistoryRecordDef PrisonerRecruited;
     public static HistoryRecordDef PrisonBreak;
     public static HistoryRecordDef LightningStrike;

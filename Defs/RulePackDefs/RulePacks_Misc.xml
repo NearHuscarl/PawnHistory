@@ -445,6 +445,48 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_PrisonerExecuted</defName>
+		<include>
+			<li>PH_Common</li>
+			<li>PH_Faction</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>tale_noun(guilty==True) ->[Prisoner], a prisoner of [PlayerSettlement], was executed after being found guilty.</li>
+				<li>tale_noun(guilty==False)->[Prisoner], a prisoner of [PlayerSettlement], was executed.</li>
+
+				<li>image->[Executioner] cut [Prisoner_objective] [circumstance_phrase]</li>
+				<li>image->[Executioner] put [Prisoner_objective] to death [circumstance_phrase]</li>
+				<li>image->[Executioner] entered a prison cell to murder [Prisoner_objective] [circumstance_phrase]</li>
+				
+				<li>circumstance_phrase->as [Prisoner_pronoun] writhed on the ground</li>
+				<li>circumstance_phrase->as [Prisoner_pronoun] twisted in pain</li>
+				<li>circumstance_phrase->as [Prisoner_pronoun] cried out in terror</li>
+				<li>circumstance_phrase->with professional efficiency</li>
+				<li>circumstance_phrase->roughly and amateurishly</li>
+				<li>circumstance_phrase->with obviously excessive force</li>
+				<li>circumstance_phrase->with obvious pleasure</li>
+				<li>circumstance_phrase->while smiling with dominance</li>
+				<li>circumstance_phrase->with tears in [Executioner_possessive] eyes</li>
+				<li>circumstance_phrase->with a look of utter indifference</li>
+				<li>circumstance_phrase->while inflicting unnecessary pain</li>
+				<li>circumstance_phrase->while thinking of something else</li>
+				<li>circumstance_phrase->for the greater good</li>
+				
+				<li>desc_sentence->[Executioner] was sweating profusely.</li>
+				<li>desc_sentence->[Executioner] was drooling a little bit.</li>
+				<li>desc_sentence->[Executioner] had blood smeared on [Executioner_possessive] face.</li>
+				<li>desc_sentence->[Prisoner] was shaking and writhing.</li>
+				<li>desc_sentence->[Prisoner] seemed to have given up entirely.</li>
+				<li>desc_sentence->[Prisoner] had closed [Prisoner_possessive] eyes, seeming to pray to a higher power.</li>
+				<li>desc_sentence->[Prisoner] looked defiant.</li>
+
+				<li>entry->[tale_noun] [image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_PredatorHuntingColonist</defName>
 		<rulePack>
 			<rulesStrings>
