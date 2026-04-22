@@ -633,6 +633,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PrisonerReleased</defName>
+		<label>prisoner released</label>
+		<descriptionMaker>PH_PrisonerReleased</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Departure</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonerRecruited</defName>
 		<label>prisoner recruited</label>
 		<descriptionMaker>PH_PrisonerRecruited</descriptionMaker>

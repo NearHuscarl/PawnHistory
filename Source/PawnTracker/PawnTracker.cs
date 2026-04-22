@@ -81,6 +81,8 @@ namespace PawnHistory.Source.PawnTracker;
 // - Add a dimmed color to [PAWN_title]
 // PrisonerInteractionModeDefOf
 // - ": ChoiceLetter"
+// - Quest
+//  - Test all DLCs for: QuestPawnArrivedRecorder, LodgerJoinOfferRecorder
 
 // - Replace "the colony" with the settlement name if exists (put into common?)
 

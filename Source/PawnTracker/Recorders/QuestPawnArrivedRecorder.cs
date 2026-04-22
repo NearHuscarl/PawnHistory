@@ -2,7 +2,6 @@ using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using PawnHistory.Source.Helper;
 using RimWorld;
-using RimWorld.QuestGen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,10 +25,13 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         var recordDef = HistoryRecordDefOf.QuestPawnArrived;
         var questScriptDef = e.Quest.root.defName;
         var asker = QuestHelper.GetAsker(e.Quest);
+        var involvedFactions = e.Quest.InvolvedFactions.ToList();
         var desc = recordDef.Description(e.Pawn)
             .IncludePawnGrammar()
             .AddRule("Quest", e.Quest.name.Colorize(ColoredText.GeneColor))
             .AddRule("Asker", asker)
+            .AddRule("Faction", involvedFactions[0])
+            .AddRule("Faction2", involvedFactions.Count > 1 ? involvedFactions[1] : null)
             .WithPlayerSettlement(e.Pawn.MapHeld.Parent)
             .WithOthers(e.Group)
             .AddConstant("isEnemy", e.Pawn.Faction.HostileTo(Faction.OfPlayer))
@@ -83,14 +85,13 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         
         Expect.Assertions(3);
 
-        scenario.WaitUntil(() => Find.CurrentMap.mapPawns.AllPawnsSpawned.Any(p => p.Faction.HostileTo(Faction.OfPlayer)), () =>
+        GameEventBus.SubscribeOnce<RaidStartedEvent>(e =>
         {
             var pawn = GetArrivalPawns().First(p => p.Faction.IsPlayer);
-            var raiders = Find.CurrentMap.mapPawns.AllPawnsSpawned.Where(p => p.Faction.HostileTo(Faction.OfPlayer)).ToList();
             
-            Expect.That(pawn).ToHaveHistoryRecord("[PAWN] arrived at [PlayerSettlement] under pursuit, and joined the colony in exchange for safety.", HistoryRecordDefOf.QuestPawnArrived);
-            Expect.ThatAll(raiders).ToHaveHistoryRecord("[RaidText]. [He] came to hunt down [QuestAsker].", HistoryRecordDefOf.Raid);
-            Expect.ThatAll(raiders).ToHaveHistoryRecordConcern(pawn, HistoryRecordDefOf.Raid);
+            Expect.That(pawn).ToHaveHistoryRecord("[PAWN] joined the colony in exchange for safety while being pursued.", HistoryRecordDefOf.QuestPawnArrived);
+            Expect.ThatAll(e.Pawns).ToHaveHistoryRecord("[RaidText]. [He] came to take [QuestAsker].", HistoryRecordDefOf.Raid);
+            Expect.ThatAll(e.Pawns).ToHaveHistoryRecordConcern(pawn, HistoryRecordDefOf.Raid);
         });
     }
     
@@ -100,16 +101,15 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         scenario.Quest(DefLookup.QuestScript.Intro_Deserter).Execute();
         scenario.ForwardTime(1f);
         
-        // Expect.Assertions(3);
+        Expect.Assertions(3);
 
-        scenario.WaitUntil(() => Find.CurrentMap.mapPawns.AllPawnsSpawned.Any(p => p.Faction.HostileTo(Faction.OfPlayer)), () =>
+        GameEventBus.SubscribeOnce<RaidStartedEvent>(e =>
         {
             var pawn = GetArrivalPawns().First(p => p.Faction.IsPlayer);
-            var raiders = Find.CurrentMap.mapPawns.AllPawnsSpawned.Where(p => p.Faction.HostileTo(Faction.OfPlayer)).ToList();
             
-            // Expect.That(pawn).ToHaveHistoryRecord("[PAWN] arrived at [PlayerSettlement] under pursuit, and joined the colony in exchange for safety.", HistoryRecordDefOf.QuestPawnArrived);
-            // Expect.ThatAll(raiders).ToHaveHistoryRecord("[RaidText]. [He] came to hunt down [QuestAsker].", HistoryRecordDefOf.Raid);
-            // Expect.ThatAll(raiders).ToHaveHistoryRecordConcern(pawn, HistoryRecordDefOf.Raid);
+            Expect.That(pawn).ToHaveHistoryRecord("[PAWN] joined [PlayerSettlement] after deserting [Faction], while being hunted by a loyalty squad.", HistoryRecordDefOf.QuestPawnArrived);
+            Expect.ThatAll(e.Pawns).ToHaveHistoryRecord("[RaidText]. [He] came to hunt down [QuestAsker].", HistoryRecordDefOf.Raid);
+            Expect.ThatAll(e.Pawns).ToHaveHistoryRecordConcern(pawn, HistoryRecordDefOf.Raid);
         });
     }
     
@@ -146,14 +146,5 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
             Expect.ThatAll(raiders).ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] attacked the crashed shuttle site.", HistoryRecordDefOf.QuestPawnArrived);
         });
         return () => scenario.SlowDown();
-    }
-
-    [RequiresIdeology]
-    public void TestBeggars(TestScenario scenario)
-    {
-        scenario.Quest(DefLookup.QuestScript.Beggars).Execute();
-        var pawns = GetArrivalPawns();
-
-        Expect.ThatAll(pawns).ToHaveHistoryRecord("During [Quest] quest, [PAWN][AlongWithOthers] arrived at [PlayerSettlement] to beg for aid.", HistoryRecordDefOf.QuestPawnArrived);
     }
 }

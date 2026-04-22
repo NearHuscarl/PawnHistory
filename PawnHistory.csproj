@@ -90,8 +90,10 @@
     <Compile Include="Source\PawnTracker\Events\LodgerJoinOfferAcceptedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\VisitorLeftGiftEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\QuestPawnArrivedEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\QuestPawnRewardedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\BanishEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PrisonerExecutedEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\PrisonerReleasedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\WeaponBondedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\RoyalTitleChangedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\TitleInheritanceEvent.cs" />
@@ -152,8 +154,10 @@
     <Compile Include="Source\PawnTracker\Recorders\NewLoverRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PlayerCaravanArriveRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\QuestPawnArrivedRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\QuestPawnRewardedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\BanishRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PrisonerExecutedRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\PrisonerReleasedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\LodgerJoinOfferRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\VisitorLeftGiftRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WeaponBondedRecorder.cs" />

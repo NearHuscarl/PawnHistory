@@ -187,18 +187,19 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(priority=1,quest==Beggars)                 ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] to beg for aid.</li>
-				<li>entry(priority=1,quest==Intro_Wimp)              ->[PAWN] arrived at [PlayerSettlement] asking the colony for help.</li>
-				<li>entry(priority=1,quest==SanguophageMeetingHost)  ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] for a meeting with the colony.</li>
+				<!-- TODO: polish descriptions-->
+				<li>entry(priority=1,isEnemy==False,quest==Beggars)                 ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] to beg for aid.</li>
+				<li>entry(priority=1,isEnemy==False,quest==Intro_Wimp)              ->[PAWN] arrived at [PlayerSettlement] asking the colony for help.</li>
+				<li>entry(priority=1,isEnemy==False,quest==SanguophageMeetingHost)  ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] for a meeting with the colony.</li>
 				
-				<li>entry(priority=1,quest==WandererJoins)           ->A [PAWN_title] named [PAWN] arrived and joined [PlayerSettlement]. [PAWN_pronoun] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.</li>
-				<li>entry(priority=1,quest==RefugeePodCrash)         ->[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [PAWN_pronoun] survived the impact but was badly wounded.</li>
-				<li>entry(priority=1,quest==Hospitality_Refugee)     ->[PAWN][AndOthers] arrived at [PlayerSettlement] seeking shelter and a place to regroup, with nowhere else to go.</li>
-				<li>entry(priority=1,quest==ShuttleCrash_Rescue,isEnemy==False)->[PAWN][AlongWithOthers] made an emergency landing at [PlayerSettlement] in a damaged shuttle.</li>
-				<li>entry(priority=1,quest==ShuttleCrash_Rescue,isEnemy==True) ->[PAWN][AndOthers] from [PAWN_factionName] attacked the crashed shuttle site.</li>
-				<li>entry(priority=1,quest==ThreatReward_Raid_Joiner,isEnemy==False)->[PAWN] arrived at [PlayerSettlement] under pursuit, and joined the colony in exchange for safety.</li>
+				<li>entry(priority=1,isEnemy==False,quest==WandererJoins)           ->A [PAWN_title] named [PAWN] arrived and joined [PlayerSettlement]. [PAWN_pronoun] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.</li>
+				<li>entry(priority=1,isEnemy==False,quest==RefugeePodCrash)         ->[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [PAWN_pronoun] survived the impact but was badly wounded.</li>
+				<li>entry(priority=1,isEnemy==False,quest==Hospitality_Refugee)     ->[PAWN][AndOthers] arrived at [PlayerSettlement] seeking shelter and a place to regroup, with nowhere else to go.</li>
+				<li>entry(priority=1,isEnemy==False,quest==ShuttleCrash_Rescue)     ->[PAWN][AlongWithOthers] made an emergency landing at [PlayerSettlement] in a damaged shuttle.</li>
+				<li>entry(priority=1,isEnemy==True, quest==ShuttleCrash_Rescue)     ->[PAWN][AndOthers] from [PAWN_factionName] attacked the crashed shuttle site.</li>
+				<li>entry(priority=1,isEnemy==False,quest==ThreatReward_Raid_Joiner)->[PAWN] joined [PlayerSettlement] in exchange for safety while being pursued.</li>
 				<!-- <li>entry(priority=1,quest==ThreatReward_Raid_Joiner,isEnemy==True) -> handled in PH_Raid since it spawns an incident -->
-				<li>entry(priority=1,quest==Intro_Deserter)          ->[PAWN] arrived at [PlayerSettlement] seeking protection after deserting the Empire.</li>
+				<li>entry(priority=1,isEnemy==False,quest==Intro_Deserter)          ->[PAWN] joined [PlayerSettlement] after deserting [Faction], while being hunted by a loyalty squad.</li>
 				
 				<li>entry(priority=0,isEnemy==False)                 ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] for [Quest] quest.</li>
 				<li>entry(priority=0,isEnemy==True)                  ->[PAWN][AndOthers] from [PAWN_factionName] raided [PlayerSettlement] during [Quest] quest.</li>

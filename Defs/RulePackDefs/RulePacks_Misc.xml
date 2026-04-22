@@ -443,6 +443,19 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+	
+	<RulePackDef>
+		<defName>PH_PrisonerReleased</defName>
+		<include>
+			<li>PH_Common</li>
+			<li>PH_Faction</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[Prisoner], a prisoner of [PlayerSettlement], was released by [Releaser].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 
 	<RulePackDef>
 		<defName>PH_PrisonerExecuted</defName>
