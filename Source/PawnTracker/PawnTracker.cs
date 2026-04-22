@@ -58,7 +58,7 @@ namespace PawnHistory.Source.PawnTracker;
 // - Mental breaks
 //  + Base game
 //  - DLC breaks: MentalBreakWorker_WildDecree, MentalBreakWorker_HumanityBreak, MentalBreakWorker_IdeoChange, MentalBreakWorker_FireTerror[NO], EntityLiberator
-// - Relationships (breakup, cheating, new love..)
+// - Relationships (breakup, cheating, new love...)
 // Raid type: siege with a different icon
 // Ideology convert, belief reduced
 // Quest: track giver, link to (visible) quest.
@@ -78,6 +78,7 @@ namespace PawnHistory.Source.PawnTracker;
 //  - TaggedTestAttribute, Run last failed tests...
 // - Bonded animal berserk mental break due to pawn dead
 // - Banish colonist (to death or not)
+// - Add a dimmed color to [PAWN_title]
 
 // - Replace "the colony" with the settlement name if exists (put into common?)
 

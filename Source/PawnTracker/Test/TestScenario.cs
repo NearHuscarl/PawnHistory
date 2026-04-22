@@ -64,73 +64,88 @@ public class TestScenario
     }
 }
 
-
 public static class TestScenarioExtensions
 {
-    public static TestScenario ForwardTime(this TestScenario scenario, float day)
+    extension(TestScenario scenario)
     {
-        Find.TickManager.DebugSetTicksGame(Find.TickManager.TicksGame + GenDate.DaysToTicks(day));
-        return scenario;
-    }
-
-    public static TestScenario SpeedUp(this TestScenario scenario)
-    {
-        scenario.NeverForceNormalSpeed = DebugViewSettings.neverForceNormalSpeed;
-        DebugViewSettings.neverForceNormalSpeed = true;
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Ultrafast;
-        return scenario;
-    }
-
-    public static TestScenario SlowDown(this TestScenario scenario)
-    {
-        DebugViewSettings.neverForceNormalSpeed = scenario.NeverForceNormalSpeed;
-        Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
-        return scenario;
-    }
-
-    public static TestScenario RunOnceOn<T>(this TestScenario scenario, Func<T, bool> runWhen, Action<T> listener) where T : GameEventBase
-    {
-        GameEventBus.Subscribe((Action<T>)Wrapper);
-
-        return scenario;
-
-        void Wrapper(T evt)
+        public TestScenario ForwardTime(float day)
         {
-            if (!runWhen(evt))
-                return;
-
-            try
-            {
-                listener(evt);
-            }
-            finally
-            {
-                GameEventBus.Unsubscribe((Action<T>)Wrapper);
-            }
+            Find.TickManager.DebugSetTicksGame(Find.TickManager.TicksGame + GenDate.DaysToTicks(day));
+            return scenario;
         }
-    }
 
-    public static TestScenario RunUntil(this TestScenario scenario, Func<bool> stopCondition, Action action, Action onFinish = null, int interval = 1)
-    {
-        TickDelayManager.Interval(interval, (data) =>
+        public TestScenario SpeedUp()
         {
-            try
+            scenario.NeverForceNormalSpeed = DebugViewSettings.neverForceNormalSpeed;
+            DebugViewSettings.neverForceNormalSpeed = true;
+            Find.TickManager.CurTimeSpeed = TimeSpeed.Ultrafast;
+            return scenario;
+        }
+
+        public TestScenario SlowDown()
+        {
+            DebugViewSettings.neverForceNormalSpeed = scenario.NeverForceNormalSpeed;
+            Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
+            return scenario;
+        }
+
+        public TestScenario RunOnceOn<T>(Func<T, bool> runWhen, Action<T> listener) where T : GameEventBase
+        {
+            GameEventBus.Subscribe((Action<T>)Wrapper);
+
+            return scenario;
+
+            void Wrapper(T evt)
             {
-                action();
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Error while executing action {action}, {ex}");
-            }
-            finally
-            {
-                if (stopCondition())
+                if (!runWhen(evt))
+                    return;
+
+                try
                 {
-                    data.Cancelled = true;
-                    onFinish?.Invoke();
+                    listener(evt);
+                }
+                finally
+                {
+                    GameEventBus.Unsubscribe((Action<T>)Wrapper);
                 }
             }
-        });
-        return scenario;
+        }
+
+        public TestScenario RunUntil(Func<bool> stopCondition, Action action, Action onFinish = null, int interval = 1)
+        {
+            TickDelayManager.Interval(interval, data =>
+            {
+                try
+                {
+                    action();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Error while executing action {action}, {ex}");
+                }
+                finally
+                {
+                    if (stopCondition())
+                    {
+                        data.Cancelled = true;
+                        onFinish?.Invoke();
+                    }
+                }
+            });
+            return scenario;
+        }
+
+        public TestScenario WaitUntil(Func<bool> stopWhen, Action thenDo, int interval = 1)
+        {
+            TickDelayManager.Interval(interval, TestManager.Timeout, data =>
+            {
+                if (!stopWhen())
+                    return;
+
+                data.Cancelled = true;
+                thenDo?.Invoke();
+            });
+            return scenario;
+        }
     }
 }

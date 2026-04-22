@@ -36,7 +36,7 @@ public class CaravanAmbushRecorder : RecorderBase<CaravanAmbushedEvent>
     public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(3).Colonist().Execute();
-        var spot = Find.WorldGrid.GetNearbyTile(Find.AnyPlayerHomeMap.Tile);
+        var spot = Find.WorldGrid.GetNearbyTile();
         Expect.Assertions(1);
 
         var caravan = scenario.Caravan(pawns)

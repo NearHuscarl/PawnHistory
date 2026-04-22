@@ -491,6 +491,15 @@
 			<li>Combat</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Banish</defName>
+		<label>banish</label>
+		<descriptionMaker>PH_Banish</descriptionMaker>
+		<icon>Ui/Buttons/Banish</icon>
+		<categories>
+			<li>Banished</li>
+		</categories>
+	</HistoryRecordDef>
 	
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>JoinedParty</defName>

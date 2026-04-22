@@ -49,6 +49,12 @@ public static class Accessor
             AccessTools.MethodDelegate<Action<RimWorld.CompDeepScanner, Pawn>>(AccessTools.Method(typeof(RimWorld.CompDeepScanner), "DoFind"));
     }
 
+    public class CompGoldenCube
+    {
+        public static readonly Action<RimWorld.CompGoldenCube, Pawn> OnInteracted =
+            AccessTools.MethodDelegate<Action<RimWorld.CompGoldenCube, Pawn>>(AccessTools.Method(typeof(RimWorld.CompGoldenCube), "OnInteracted"));
+    }
+
     public class DeepResourceGrid
     {
         public static readonly AccessTools.FieldRef<Verse.DeepResourceGrid, Map> Map =

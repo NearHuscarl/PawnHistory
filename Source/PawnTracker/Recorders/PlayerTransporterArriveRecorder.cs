@@ -185,7 +185,7 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
     {
         scenario.SpeedUp();
         var existingCaravanPawns = scenario.Pawn().Colonist().Execute();
-        var spot = Find.WorldGrid.GetNearbyTile(Find.AnyPlayerHomeMap.Tile);
+        var spot = Find.WorldGrid.GetNearbyTile();
         var targetCaravan = scenario.Caravan(existingCaravanPawns).Position(spot).Execute();
         var pawns = scenario.Pawn(3).Colonist().Execute();
 
@@ -200,7 +200,7 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
         scenario.SpeedUp();
         var pawns = scenario.Pawn(3).Colonist().Execute();
 
-        var spot = Find.WorldGrid.GetNearbyTile(Find.AnyPlayerHomeMap.Tile);
+        var spot = Find.WorldGrid.GetNearbyTile();
         scenario.DropPod(pawns).FormCaravan(spot).Execute();
 
         Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] arrived from a transport pod with 2 others to form a new caravan", HistoryRecordDefOf.PlayerTransporterArrived);

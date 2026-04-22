@@ -12,10 +12,7 @@ public class IncidentBuilder
     private readonly IncidentParms parms;
     private readonly Map map;
 
-    public IncidentBuilder(IncidentDef def)
-        : this(def, Find.CurrentMap)
-    {
-    }
+    public IncidentBuilder(IncidentDef def) : this(def, Find.CurrentMap) { }
 
     public IncidentBuilder(IncidentDef def, IIncidentTarget target)
     {

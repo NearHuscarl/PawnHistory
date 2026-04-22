@@ -39,7 +39,6 @@ public class HistoryRecord : IExposable
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
         this.description = desc.Resolve();
         this.concerns = (concerns ?? []).Where(p => p != null && p != pawn).Distinct().ToList();
-        this.quest = quest;
         this.date = GenTicks.TicksAbs;
         this.tileId = tileId
             ?? location?.map?.Tile.tileId
@@ -47,6 +46,9 @@ public class HistoryRecord : IExposable
             ?? pawn.GetCaravan()?.Tile.tileId
             ?? Find.AnyPlayerHomeMap?.Tile.tileId
             ?? -1;
+        
+        if (quest is { hidden: false })
+            this.quest = quest;
         
         if (this.tileId == -1)
             Log.Message($"[PawnHistory] record for {pawn} is created but cannot find tileId this early during world generation.\n\n{DebugUtility.Format(this)}");

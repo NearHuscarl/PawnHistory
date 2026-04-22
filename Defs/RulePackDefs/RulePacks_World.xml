@@ -176,6 +176,28 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_QuestPawnArrived</defName>
+		<include>
+			<li>PH_Common</li>
+			<li>PH_Faction</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(priority=1,quest==Beggars)                 ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] to beg for aid.</li>
+				<li>entry(priority=1,quest==Hospitality_Refugee)     ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] seeking refuge.</li>
+				<li>entry(priority=1,quest==Intro_Deserter)          ->[PAWN] arrived at [PlayerSettlement] seeking protection after deserting the Empire.</li>
+				<li>entry(priority=1,quest==Intro_Wimp)              ->[PAWN] arrived at [PlayerSettlement] asking the colony for help.</li>
+				<li>entry(priority=1,quest==SanguophageMeetingHost)  ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] for a meeting with the colony.</li>
+				<li>entry(priority=1,quest==ShuttleCrash_Rescue)     ->[PAWN][AlongWithOthers] crash-landed at [PlayerSettlement] in a damaged shuttle.</li>
+				<li>entry(priority=1,quest==ThreatReward_Raid_Joiner)->[PAWN] arrived at [PlayerSettlement] seeking protection from pursuers.</li>
+				<li>entry(priority=1,quest==WandererJoins)           ->A [PAWN_title] named [PAWN] arrived and joined the colony. [PAWN_pronoun] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.</li>
+				<li>entry(priority=1,quest==RefugeePodCrash)         ->[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [PAWN_pronoun] survived the impact but was badly wounded.</li>
+				<li>entry(priority=0)                                ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_LodgerJoinOffer</defName>
 		<include>
 			<li>PH_Common</li>
@@ -249,20 +271,16 @@
 	</RulePackDef>
 
 	<RulePackDef>
-		<defName>PH_WandererJoined</defName>
+		<defName>PH_Banish</defName>
+		<include>
+			<li>PH_Common</li>
+			<li>PH_Faction</li>
+		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry->A [PAWN_title] named [PAWN] arrived and joined the colony. [PAWN_pronoun] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.</li>
-			</rulesStrings>
-		</rulePack>
-	</RulePackDef>
-
-	<RulePackDef>
-		<defName>PH_RefugeePodCrashed</defName>
-		<rulePack>
-			<rulesStrings>
-				<li>entry(dead==False)->[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [PAWN_pronoun] survived the impact but was badly wounded.</li>
-				<li>entry(dead==True) ->[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod.</li>
+				<li>entry(priority=1,reason==CubeDestroyed)->[PAWN] banished the colony after the golden cube was destroyed.</li>
+				<li>entry(priority=0,leftToDie==False)     ->[PAWN] was banished from [PlayerFaction].</li>
+				<li>entry(priority=0,leftToDie==True)      ->[PAWN] was banished from [PlayerFaction] and left to die.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
