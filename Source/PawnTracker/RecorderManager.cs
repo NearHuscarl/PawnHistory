@@ -25,10 +25,21 @@ public static class RecorderManager
     public static void Initialize()
     {
         ActiveRecorders.Clear();
-
-        foreach (var type in typeof(RecorderBase).AllSubclassesNonAbstract())
+        
+        var compTypes = GenTypes.AllTypes
+            .Where(t => !t.IsAbstract && !t.IsInterface && typeof(IRecordComp).IsAssignableFrom(t))
+            .ToList();
+        
+        foreach (var recorderType in typeof(RecorderBase).AllSubclassesNonAbstract())
         {
-            var recorder = (RecorderBase)Activator.CreateInstance(type);
+            var recorder = (RecorderBase)Activator.CreateInstance(recorderType);
+
+            foreach (var compType in compTypes)
+            {
+                var comp = (IRecordComp)Activator.CreateInstance(compType);
+                if (comp.RecorderType == recorderType)
+                    recorder.AddComp(comp);
+            }
             
             recorder.Register();
             ActiveRecorders.Add(recorder);
@@ -38,7 +49,7 @@ public static class RecorderManager
     [NearDebugOutput]
     public static void ListRecorderTests()
     {
-        var dataSource = GetTestMethods();
+        var dataSource = ScanTestMethods();
         var totalIds = dataSource.Select(x => x.Id).Distinct().Count();
         var totalSkip = dataSource.Count(x => x.Attributes.SkipTest);
         var testReportEntries = TestReportManager.LastReport?.Entries.ToDictionary(x => x.TestId, x => x) ?? [];
@@ -65,7 +76,7 @@ public static class RecorderManager
     [NearDebugAction]
     public static void RunAllTests()
     {
-        var methodInfos = GetTestMethods()
+        var methodInfos = ScanTestMethods()
             .Where(t => t.Attributes.DebugValues == null && !t.Attributes.SkipTest)
             .ToList();
         
@@ -80,7 +91,7 @@ public static class RecorderManager
     public static List<DebugActionNode> RunTaggedTests()
     {
         var actionNodes = new List<DebugActionNode>();
-        var testMethodInfos = GetTestMethods();
+        var testMethodInfos = ScanTestMethods();
         var allDeclaredTags = testMethodInfos.SelectMany(t => t.Attributes.Tags)
             .Where(t => !string.IsNullOrEmpty(t))
             .Distinct()
@@ -112,7 +123,7 @@ public static class RecorderManager
             return;
         
         var failedTests = new HashSet<string>(lastRunReport.Entries.Where(x => x.TestFailures.Count > 0).Select(x => x.TestId));
-        var methodInfos = GetTestMethods()
+        var methodInfos = ScanTestMethods()
             .Where(t => t.Attributes.DebugValues == null && !t.Attributes.SkipTest && failedTests.Contains(t.Id))
             .ToList();
         
@@ -128,7 +139,7 @@ public static class RecorderManager
     {
         var actionNodes = new List<DebugActionNode>();
 
-        foreach (var testMethodInfo in GetTestMethods())
+        foreach (var testMethodInfo in ScanTestMethods())
         {
             var (id, label, _, method, attributes) = testMethodInfo;
             var parameters = method.GetParameters();
@@ -184,55 +195,91 @@ public static class RecorderManager
     }
 
     private record TestAttributes(int[] DebugValues, bool SkipTest, HashSet<string> Tags, Dictionary<string, bool> ModActiveById);
-    private record TestMethodInfo(string Id, string Label, RecorderBase Recorder, MethodInfo Method, TestAttributes Attributes);
+    private record TestMethodInfo(string Id, string Label, object Target, MethodInfo Method, TestAttributes Attributes);
+    
+    private static string GetTestId(string ownerName, string targetName, string methodName)
+    {
+        var suffix = methodName == "Test"
+            ? null
+            : methodName.ReplaceFirst("Test", "");
 
-    private static List<TestMethodInfo> GetTestMethods()
+        var baseId = targetName.NullOrEmpty()
+            ? ownerName
+            : $"{ownerName}.{targetName}";
+
+        return suffix.NullOrEmpty()
+            ? baseId
+            : $"{baseId}_{suffix}";
+    }
+    
+    private static IEnumerable<TestMethodInfo> ScanTestMethodsForTarget(object target, string ownerName, string targetName)
+    {
+        var type = target.GetType();
+        var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+        foreach (var method in methods)
+        {
+            if (!method.Name.StartsWith("Test"))
+                continue;
+
+            var parameters = method.GetParameters();
+            int[] debugValues = null;
+            // CASE 1: Standard Test(TestScenario scenario)
+            if (parameters.Length == 1 && parameters[0].ParameterType == typeof(TestScenario))
+            {
+            }
+            // CASE 2: Parameterized Test(TestScenario scenario, int count)
+            else if (parameters.Length == 2 && parameters[0].ParameterType == typeof(TestScenario) && parameters[1].ParameterType == typeof(int))
+            {
+                var attr = method.GetCustomAttribute<DebugValuesAttribute>() ?? parameters[1].GetCustomAttribute<DebugValuesAttribute>();
+                debugValues = attr?.Values ?? [1, 2, 3, 5, 10];
+            }
+            else
+            {
+                throw new ArgumentException($"Unsupported test method signature for {type.Name}.{method.Name}. Expected either {method.Name}(TestScenario) or {method.Name}(TestScenario, int).");
+            }
+
+            var id = GetTestId(ownerName, targetName, method.Name);
+            var requires = method.GetCustomAttributes<RequiresAttribute>().ToList();
+            var requiredMods = requires.Select(r => r.ModName).JoinToString();
+            var label = requiredMods.NullOrEmpty() ? id : $"{id} [{requiredMods}]";
+
+            var skipTest = method.GetCustomAttribute<SkipTestAttribute>();
+            var tags = method.GetCustomAttributes<TestTagAttribute>().Select(a => a.Tag).ToHashSet();
+            var modActiveById = requires.ToDictionary(a => a.ModId, a => a.IsActive);
+            var testAttributes = new TestAttributes(debugValues, skipTest != null, tags, modActiveById);
+
+            yield return new TestMethodInfo(id, label, target, method, testAttributes);
+        }
+    }
+    
+    private static List<TestMethodInfo> ScanTestMethods()
     {
         var testMethods = new List<TestMethodInfo>();
 
         foreach (var recorder in ActiveRecorders)
         {
-            var type = recorder.GetType();
-            var buttonName = type.Name.Replace("Recorder", "");
-            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var recordType = recorder.GetType();
+            var recorderName = recordType.Name.Replace("Recorder", "");
 
-            foreach (var method in methods)
+            // Recorder methods
+            testMethods.AddRange(ScanTestMethodsForTarget(
+                target: recorder,
+                ownerName: recorderName,
+                targetName: null
+            ));
+
+            // Comp methods
+            foreach (var comp in recorder.Comps)
             {
-                if (!method.Name.StartsWith("Test"))
-                    continue;
+                var parts = comp.GetType().Name.Split("_");
+                var compName = parts.Last();
 
-                var requires = method.GetCustomAttributes<RequiresAttribute>().ToList();
-                var parameters = method.GetParameters();
-                var id = method.Name == "Test"
-                    ? buttonName
-                    : $"{buttonName}_{method.Name.ReplaceFirst("Test", "")}";
-                var requiredMods = requires.Select(r => r.ModName).JoinToString();
-                var label = requiredMods.NullOrEmpty() ? id : $"{id} [{requiredMods}]";
-                int[] debugValues = null;
-
-                // CASE 1: Standard Test(TestScenario scenario)
-                if (parameters.Length == 1 && parameters[0].ParameterType == typeof(TestScenario))
-                {
-                }
-                // CASE 2: Parameterized Test(TestScenario scenario, int count)
-                else if (parameters.Length == 2 && parameters[0].ParameterType == typeof(TestScenario) && parameters[1].ParameterType == typeof(int))
-                {
-                    var attr = method.GetCustomAttribute<DebugValuesAttribute>()
-                       ?? parameters[1].GetCustomAttribute<DebugValuesAttribute>();
-
-                    debugValues = attr?.Values ?? [1, 2, 3, 5, 10];
-                }
-                else
-                {
-                    throw new ArgumentException($"Unsupported test method signature for {type.Name}.{method.Name}. Expected either {method.Name}(TestScenario) or {method.Name}(TestScenario, int).");
-                }
-
-                var skipTest = method.GetCustomAttribute<SkipTestAttribute>();
-                var tags = method.GetCustomAttributes<TestTagAttribute>().Select(a => a.Tag).ToHashSet();
-                var modActiveById = requires.ToDictionary(a => a.ModId, a => a.IsActive);
-                var testAttributes = new TestAttributes(debugValues, skipTest != null, tags, modActiveById);
-                
-                testMethods.Add(new TestMethodInfo(id, label, recorder, method, testAttributes));
+                testMethods.AddRange(ScanTestMethodsForTarget(
+                    target: comp,
+                    ownerName: recorderName,
+                    targetName: compName
+                ));
             }
         }
 
@@ -241,7 +288,7 @@ public static class RecorderManager
 
     private static object InvokeTest(TestMethodInfo info, object[] parameters = null)
     {
-        var (_, _, recorder, method, attributes) = info;
+        var (_, _, target, method, attributes) = info;
 
         foreach (var kv in attributes.ModActiveById)
         {
@@ -251,9 +298,9 @@ public static class RecorderManager
         }
         
         if (parameters == null)
-            return method.Invoke(recorder, [TestManager.Scenario]);
+            return method.Invoke(target, [TestManager.Scenario]);
         
-        return method.Invoke(recorder, [TestManager.Scenario, ..parameters]);
+        return method.Invoke(target, [TestManager.Scenario, ..parameters]);
     }
 
     [NearDebugOutput]

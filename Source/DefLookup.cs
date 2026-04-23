@@ -96,6 +96,7 @@ public static class DefLookup
     {
         public static QuestScriptDef TradeRequest => field ??= DefDatabase<QuestScriptDef>.GetNamed("TradeRequest");
         public static QuestScriptDef Intro_Deserter => field ??= DefDatabase<QuestScriptDef>.GetNamed("Intro_Deserter");
+        public static QuestScriptDef Intro_Wimp => field ??= DefDatabase<QuestScriptDef>.GetNamed("Intro_Wimp");
         public static QuestScriptDef ThreatReward_Raid_Joiner => field ??= DefDatabase<QuestScriptDef>.GetNamed("ThreatReward_Raid_Joiner");
         public static QuestScriptDef OpportunitySite_PeaceTalks => field ??= DefDatabase<QuestScriptDef>.GetNamed("OpportunitySite_PeaceTalks");
         public static QuestScriptDef OpportunitySite_DownedRefugee => field ??= DefDatabase<QuestScriptDef>.GetNamed("OpportunitySite_DownedRefugee");

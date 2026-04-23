@@ -43,7 +43,7 @@ public class CaravanAmbushRecorder : RecorderBase<CaravanAmbushedEvent>
             .Position(spot)
             .OnMapGenerated(e =>
             {
-                var enemies = e.Map.mapPawns.AllPawnsSpawned.Where(p => p.Faction.HostileTo(Faction.OfPlayer));
+                var enemies = e.Map.mapPawns.AllPawnsSpawned.Where(p => p.HostileTo(Faction.OfPlayer));
 
                 Expect.ThatAll(enemies)
                     .Eventually()

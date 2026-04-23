@@ -76,6 +76,12 @@ public static class TestScenarioExtensions
             Find.TickManager.DebugSetTicksGame(Find.TickManager.TicksGame + GenDate.DaysToTicks(day));
             return scenario;
         }
+        
+        public TestScenario ForwardTicks(int ticks)
+        {
+            Find.TickManager.DebugSetTicksGame(Find.TickManager.TicksGame + ticks);
+            return scenario;
+        }
 
         public TestScenario SpeedUp()
         {

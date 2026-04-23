@@ -17,47 +17,64 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
 
     public override void CreateRecord(QuestPawnArrivedEvent e)
     {
-        if (!ShouldRecord(e.Pawn))
-            return;
-
         var recordDef = HistoryRecordDefOf.QuestPawnArrived;
         var questScriptDef = e.Quest.root.defName;
-        var asker = QuestHelper.GetAsker(e.Quest);
-        var isReward = QuestHelper.IsReward(e.Quest, e.Pawn);
         var involvedFactions = e.Quest.InvolvedFactions.ToList();
-        var desc = recordDef.Description(e.Pawn)
-            .IncludePawnGrammar()
-            .AddRule("Quest", e.Quest.name.Colorize(ColoredText.GeneColor))
-            .AddRule("Asker", asker)
-            .AddRule("Faction", involvedFactions.Count > 0 ? involvedFactions[0] : null)
-            .AddRule("Faction2", involvedFactions.Count > 1 ? involvedFactions[1] : null)
-            .WithPlayerSettlement(e.Pawn.MapHeld?.Parent)
-            .WithOthers(e.Group)
-            .AddConstant("isEnemy", e.Pawn.Faction.HostileTo(Faction.OfPlayer))
-            .AddConstant("quest", questScriptDef)
-            .AddConstant("isReward", isReward)
-            .Resolve();
+        var questPawns = QuestHelper.GetQuestPawns(e.Quest);
 
-        AddRecord(recordDef, e.Pawn, desc, e.Group, quest: e.Quest);
+        foreach (var pawn in e.Pawns)
+        {
+            if (!ShouldRecord(pawn))
+                continue;
+
+            var isReward = QuestHelper.IsReward(e.Quest, pawn);
+            var builder = recordDef.Description(pawn)
+                .IncludePawnGrammar()
+                .AddRule("Quest", e.Quest.name.Colorize(ColoredText.GeneColor))
+                .AddRule("Faction", involvedFactions.Count > 0 ? involvedFactions[0] : null)
+                .WithPlayerSettlement(pawn.MapHeld?.Parent)
+                .WithOthers(e.Pawns)
+                .AddConstant("isEnemy", pawn.HostileTo(Faction.OfPlayer))
+                .AddConstant("quest", questScriptDef)
+                .AddConstant("isReward", isReward);
+            var concerns = e.Pawns.Cast<Thing>();
+
+            foreach (var comp in Comps.OfType<QuestPawnArrivedComp>())
+            {
+                if (!comp.Match(e.Quest))
+                    continue;
+
+                builder = comp.BuildGrammarRequest(builder, e.Quest, pawn, questPawns);
+                concerns = concerns.Concat(comp.GetConcerns(questPawns));
+            }
+            
+            AddRecord(recordDef, pawn, builder.Resolve(), concerns, quest: e.Quest);
+        }
     }
     
-    public void TestWandererJoin(TestScenario scenario)
+    public static void AssertArrived(Quest quest, string description, Func<Pawn, bool> filter = null)
+    {
+        var pawns = QuestHelper.GetArrivalPawns(quest);
+        if (filter != null)
+            pawns = pawns.Where(filter).ToList();
+
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(description, HistoryRecordDefOf.QuestPawnArrived);
+        Expect.ThatAll(pawns).ToHaveHistoryRecordQuest(quest, HistoryRecordDefOf.QuestPawnArrived);
+    }
+    
+    public void TestIncident(TestScenario scenario)
     {
         // IncidentWorker_GiveQuest
         scenario.Incident(DefLookup.Incident.WandererJoin).Execute();
         var letter = Find.LetterStack.LettersListForReading.OfType<ChoiceLetter_AcceptJoiner>().Last();
         letter.Choices.First().action(); // accept
         
-        var pawns = QuestHelper.GetArrivalPawns();
-        Expect.That(pawns.Last()).ToHaveHistoryRecord("A [PAWN_title] named [PAWN] arrived and joined the colony. [He] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.", HistoryRecordDefOf.QuestPawnArrived);
-    }
-    
-    public void TestRefugeePodCrash(TestScenario scenario)
-    {
-        // IncidentWorker_GiveQuest
+        var pawns1 = QuestHelper.GetArrivalPawns();
+        Expect.That(pawns1.Last()).ToHaveHistoryRecord("A [PAWN_title] named [PAWN] arrived and joined the colony. [He] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.", HistoryRecordDefOf.QuestPawnArrived);
+        
         scenario.Incident(DefLookup.Incident.RefugeePodCrash).Execute();
-        var pawns = QuestHelper.GetArrivalPawns();
-        Expect.That(pawns.Last()).ToHaveHistoryRecord("[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [He] survived the impact but was badly wounded.", HistoryRecordDefOf.QuestPawnArrived);
+        var pawns2 = QuestHelper.GetArrivalPawns();
+        Expect.That(pawns2.Last()).ToHaveHistoryRecord("[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [He] survived the impact but was badly wounded.", HistoryRecordDefOf.QuestPawnArrived);
     }
     
     public void TestRaidJoiner(TestScenario scenario)
@@ -98,8 +115,8 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     [RequiresRoyalty]
     public void TestHospitalityRefugee(TestScenario scenario)
     {
-        scenario.Quest(QuestScriptDefOf.Hospitality_Refugee).Execute();
-        var pawns = QuestHelper.GetArrivalPawns();
+        var quest = scenario.Quest(QuestScriptDefOf.Hospitality_Refugee).Execute();
+        var pawns = QuestHelper.GetArrivalPawns(quest);
         
         Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN][AndOthers] arrived at [PlayerSettlement] seeking shelter and a place to regroup, with nowhere else to go.", HistoryRecordDefOf.QuestPawnArrived);
     }

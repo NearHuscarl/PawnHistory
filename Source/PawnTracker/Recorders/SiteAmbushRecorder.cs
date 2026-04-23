@@ -67,7 +67,7 @@ public class SiteAmbushRecorder : RecorderBase<SiteAmbushRecorder.Input>
                 action.signalTag = ambushSignal;
                 action.points = 200f;
                 action.Notify_SignalReceived(new Signal(action.signalTag));
-                var enemies = e.Map.mapPawns.AllPawnsSpawned.Where(p => p.Faction.HostileTo(Faction.OfPlayer));
+                var enemies = e.Map.mapPawns.AllPawnsSpawned.Where(p => p.HostileTo(Faction.OfPlayer));
 
                 Expect.ThatAll(enemies)
                     .Eventually()

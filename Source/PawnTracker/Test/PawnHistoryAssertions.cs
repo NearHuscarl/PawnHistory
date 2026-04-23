@@ -244,6 +244,34 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         });
     }
 
+    public void ToHaveHistoryRecordQuest(RimWorld.Quest quest, HistoryRecordDef recordDef, int ticksAgo = 0)
+    {
+        RunAssertion(() =>
+        {
+            var testParams = new Dictionary<string, string>
+            {
+                { "recordDef", recordDef?.ToString() ?? "null" },
+                { "ticksAgo", ticksAgo.ToString() },
+            };
+
+            AssertCollection(
+                quest,
+                pawn =>
+                {
+                    var record = pawn.HistoryRecords.LastOrDefault(r => (recordDef == null || r.def == recordDef) && r.date >= Find.TickManager.TicksGame - ticksAgo);
+                    var actual = record?.quest;
+
+                    return new AssertionData<RimWorld.Quest>(
+                        actual,
+                        $"Expect quest to match for {pawn} {ToString(testParams)}\nExpected:\n{quest}\nActual:\n{actual}",
+                        $"Expect quest NOT to match for {pawn} {ToString(testParams)}\nExpected:\n{quest}\nActual:\n{actual}."
+                    );
+                },
+                testParams
+            );
+        });
+    }
+
     public PawnHistoryAssertions Eventually(int timeoutTicks = 3000, int pollIntervalTicks = 25)
     {
         isEventually = true;

@@ -1,5 +1,7 @@
 using HarmonyLib;
 using RimWorld;
+using RimWorld.Planet;
+using RimWorld.QuestGen;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -13,7 +15,7 @@ public enum QuestPawnArrivedMode
     AddedToCaravan,
 }
 
-public record QuestPawnArrivedEvent(Pawn Pawn, List<Pawn> Group, Quest Quest, QuestPawnArrivedMode ArrivalMode) : GameEventBase;
+public record QuestPawnArrivedEvent(List<Pawn> Pawns, Quest Quest, QuestPawnArrivedMode ArrivalMode) : GameEventBase;
 
 [HarmonyPatch(typeof(QuestPart_PawnsArrive), nameof(QuestPart_PawnsArrive.Notify_QuestSignalReceived))]
 internal static class QuestPart_PawnsArrive_Notify_QuestSignalReceived_Patch
@@ -24,16 +26,12 @@ internal static class QuestPart_PawnsArrive_Notify_QuestSignalReceived_Patch
             return;
         if (__instance.mapParent is not { HasMap: true })
             return;
-
-        var arrivedGroup = __instance.pawns
+        var pawns = __instance.pawns
             .Where(pawn => pawn.MapHeld == __instance.mapParent.Map)
             .ToList();
         
         var arriveMode = __instance.arrivalMode.defName.Contains("Drop") ? QuestPawnArrivedMode.DropPod : QuestPawnArrivedMode.WalkIn;
-        foreach (var pawn in arrivedGroup)
-        {
-            GameEventBus.Publish(new QuestPawnArrivedEvent(pawn, arrivedGroup, __instance.quest, arriveMode));
-        }
+        GameEventBus.Publish(new QuestPawnArrivedEvent(pawns, __instance.quest, arriveMode));
     }
 }
 
@@ -51,12 +49,8 @@ internal static class QuestPart_DropPods_Notify_QuestSignalReceived_Patch
         if (!tmpThings.Any())
             return;
 
-        var arrivedGroup = tmpThings.OfType<Pawn>().ToList();
-
-        foreach (var pawn in arrivedGroup)
-        {
-            GameEventBus.Publish(new QuestPawnArrivedEvent(pawn, arrivedGroup, __instance.quest, QuestPawnArrivedMode.DropPod));
-        }
+        var pawns = tmpThings.OfType<Pawn>().ToList();
+        GameEventBus.Publish(new QuestPawnArrivedEvent(pawns, __instance.quest, QuestPawnArrivedMode.DropPod));
     }
 }
 
@@ -69,10 +63,6 @@ internal static class QuestPart_GiveToCaravan_Notify_QuestSignalReceived_Patch
             return;
         
         var pawns = __instance.Things.OfType<Pawn>().ToList();
-
-        foreach (var pawn in pawns)
-        {
-            GameEventBus.Publish(new QuestPawnArrivedEvent(pawn, pawns, __instance.quest, QuestPawnArrivedMode.AddedToCaravan));
-        }
+        GameEventBus.Publish(new QuestPawnArrivedEvent(pawns, __instance.quest, QuestPawnArrivedMode.AddedToCaravan));
     }
 }

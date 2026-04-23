@@ -152,12 +152,13 @@
     <Compile Include="Source\PawnTracker\Recorders\MarriageProposalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\NewLoverRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PlayerCaravanArriveRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\QuestPawnArrivedComp.cs" />
     <Compile Include="Source\PawnTracker\Recorders\QuestPawnArrivedRecorder.cs" />
-    <Compile Include="Source\PawnTracker\Recorders\QuestPawnRewardedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\BanishRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PrisonerExecutedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PrisonerReleasedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\LodgerJoinOfferRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\QuestPawnArrivedComp_IntroWimp.cs" />
     <Compile Include="Source\PawnTracker\Recorders\VisitorLeftGiftRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WeaponBondedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\RoyalTitleChangedRecorder.cs" />

@@ -1,10 +1,21 @@
-﻿using PawnHistory.Source.Helper;
+﻿using System;
+using PawnHistory.Source.Helper;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
+
+public interface IRecordComp
+{
+    Type RecorderType { get; }
+}
+
+public abstract class RecordComp<TRecorder> : IRecordComp where TRecorder : RecorderBase
+{
+    public Type RecorderType => typeof(TRecorder);
+}
 
 public interface IRecord<in T>
 {
@@ -13,8 +24,6 @@ public interface IRecord<in T>
 
 public abstract class RecorderBase
 {
-    protected virtual float DaysToRecordAgain => -1f;
-
     internal RecorderBase() { } // only allow RecorderBase<T> to create instance
 
     protected bool ShouldRecord(Pawn pawn) => RecorderManager.ShouldRecord(pawn);
@@ -32,7 +41,14 @@ public abstract class RecorderBase
                 yield return records[i];
         }
     }
-
+    
+    public readonly List<IRecordComp> Comps = [];
+    public void AddComp(IRecordComp comp)
+    {
+        Comps.Add(comp);
+    }
+    
+    protected virtual float DaysToRecordAgain => -1f;
     protected bool IsTooSoonToRecordAgain(Pawn pawn, HistoryRecordDef recordDef, float? daysToRecordAgainOverride = null)
     {
         var lastRecord = GeRecordsOfType(pawn, recordDef).FirstOrDefault();

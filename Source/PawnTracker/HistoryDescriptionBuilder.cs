@@ -191,7 +191,7 @@ public static class HistoryDescriptionBuilderExtensions
         public HistoryDescriptionBuilder WithOthers(List<Pawn> pawns)
         {
             var otherCount = pawns.Count - 1;
-            var isThreat = pawns[0].InMentalState == true && pawns[0].MentalStateDef == MentalStateDefOf.Manhunter || (pawns[0]?.Faction.HostileTo(Faction.OfPlayer) ?? false);
+            var isThreat = pawns[0].InMentalState && (pawns[0]?.HostileTo(Faction.OfPlayer) ?? false);
             var otherTag = isThreat ? TagType.Threat : TagType.ColonistCount;
             var otherText = GetOtherText("Others", otherCount).ApplyTag(otherTag).Resolve();
 

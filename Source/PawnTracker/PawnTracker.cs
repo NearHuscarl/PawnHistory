@@ -105,6 +105,7 @@ namespace PawnHistory.Source.PawnTracker;
 //  - Add test runner to scan for test methods.
 
 // Refactor:
+// Remove PH_Vars using color tagged? (*Threat)a manhunting [AnimalKind](/Threat)
 
 // Bug:
 // - Test multiple maps to see if CasualtyRecorder use the correct battle log?
