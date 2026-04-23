@@ -1,15 +1,14 @@
 # Agent Notes
 
-## Project overview
+## Overview
 
 `PawnHistory` is a RimWorld 1.6 mod that records notable pawn events and exposes them through history UI.
 
 Primary flow:
-
-1. Harmony patches detect gameplay activity and publish typed events through `GameEventBus`.
-2. Recorder classes under `Source/PawnTracker/Recorders/` subscribe in `Register()`.
-3. Recorders filter supported pawns with `ShouldRecord(...)`, build resolved text, and append `HistoryRecord` entries.
-4. Storage and UI live under `Source/PawnTracker/` and `Source/WorldPawn/`.
+1. Harmony patch publishes typed event from `Source/PawnTracker/Events/`.
+2. Recorder in `Source/PawnTracker/Recorders/` subscribes in `Register()`.
+3. Recorder filters with `ShouldRecord(...)`, resolves text, and appends `HistoryRecord`.
+4. Storage/UI live under `Source/PawnTracker/` and `Source/WorldPawn/`.
 
 Key folders:
 - `Source/PawnTracker/Events/`: Harmony patches and event record types.
@@ -23,23 +22,13 @@ Startup: `Source/PawnTracker/PawnTracker.cs`.
 
 ## Build
 
-Project facts from `PawnHistory.csproj`:
-
-- classic non-SDK `.csproj`
-- target framework: `.NET Framework 4.7.2`
-- language version: `14.0`
-- output path: `Assemblies\`
-- local Harmony assembly reference
-- NuGet package: `Krafs.Rimworld.Ref` `1.6.4633`
-
-Build in Rider. This repo is set up around Rider invoking MSBuild for the project rather than a guaranteed portable CLI flow.
-
-- Rider delegates to MSBuild.
-- Shell builds can use `C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\Bin\MSBuild.exe PawnHistory.csproj /t:Build /p:Configuration=Debug`.
-
-Build artifact:
-
-- `Assemblies/PawnHistory.dll`
+- Classic non-SDK `.csproj`
+- Target framework: `.NET Framework 4.7.2`
+- LangVersion: `14.0`
+- Output: `Assemblies\PawnHistory.dll`
+- Local Harmony assembly reference
+- Rider uses MSBuild
+- Shell build: `C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\Bin\MSBuild.exe PawnHistory.csproj /t:Build /p:Configuration=Debug`
 
 ## Environment
 
@@ -49,52 +38,47 @@ Build artifact:
 
 ## Testing
 
-This repo does not use an external unit test runner. Tests are public methods named `Test...` inside recorder classes, discovered by reflection in `Source/PawnTracker/RecorderManager.cs`.
+- Always write test, using the internal test API
+- Tests are public `Test...` methods on recorder classes, discovered by reflection in `Source/PawnTracker/RecorderManager.cs`
+- Supported signatures:
+  - `Test(TestScenario scenario)`
+  - `Test(TestScenario scenario, int count)`
+- Keep tests next to the recorder they validate
+- Prefer scenario builders over manual setup
+- Trigger the real game code path that reaches the Harmony patch; do not publish `GameEventBus` directly from tests
+- Use `DebugValuesAttribute` for parameterized tests
+- `ToHaveHistoryRecord(...)` already asserts the matching record when given a def; avoid using `ToHaveHistoryRecordOf(...)
 
-Supported signatures:
+## Implementation rules
 
-- `Test(TestScenario scenario)`
-- `Test(TestScenario scenario, int count)`
+- Prefer modern C# already used in the repo: `record`, collection expressions, concise APIs
+- Code must be readable. Transpiler in harmony is forbidden.
+- Keep recorder logic small and event-focused
+- `CreateRecord(...)` input must be domain-specific; map generic upstream events in `Register()`
+- Call `ShouldRecord(...)` inside `CreateRecord(...)` before writing
+- Prefer rulepacks through `descriptionMaker`; resolve with `Resolve()`
+- Use literal feature naming: `XyzEvent`, `XyzRecorder`, `HistoryRecordDefOf.Xyz`
+- If transient patch state is needed, use a dedicated `XyzContext` in the event file
+- Use RimWorld `DefOf` first; use `Source/DefLookup.cs` only when no suitable `DefOf` exists
+- Put reflected field/method access in `Source/Accessor.cs`; do not use raw `AccessTools` outside it
+- Use the simplest viable Harmony state
+- Reset context in `Finalizer()`
 
-Useful test framework entry points:
+## When adding an event/recorder
 
-- `Source/PawnTracker/Test/TestManager.cs`
-- `Source/PawnTracker/Test/TestScenario.cs`
-- `Source/PawnTracker/Test/Expect.cs`
-- `Source/PawnTracker/Test/PawnHistoryAssertions.cs`
+1. Update XML `HistoryRecordDef` in `Defs/`
+2. Add the `HistoryRecordDefOf` field
+3. Check for an existing event/patch first
+4. Add the Harmony patch and typed event if needed
+5. Implement `RecorderBase<TEvent>`
+6. Add recorder-local tests when coverage is needed
+7. Update `PawnHistory.csproj` explicitly for every new `.cs` file
 
-Testing conventions:
+## Important behavior
 
-- Keep tests next to the recorder they validate.
-- Prefer scenario builders (`Pawn`, `Map`, `Incident`, `Thing`) over manual setup.
-- For integration-style recorder tests, trigger the real RimWorld game code path that reaches the Harmony patch; do not call `GameEventBus.Publish()` directly from tests.
-- If a test needs parameters, use `DebugValuesAttribute` rather than custom menus.
-- Running tests and interpreting failures in RimWorld is a human step; keep agent guidance focused on writing and adjusting test code.
-
-## Code style and implementation patterns
-
-- Prefer modern C# features already present in the repo: `record`, collection expressions `[]`, concise APIs.
-- Keep recorder logic small and event-focused.
-- `CreateRecord(...)` should take a domain-specific payload. If the upstream hook is generic, map it in `Register()` and keep the `ShouldRecord(...)` filtering in `CreateRecord(...)`.
-- Naming is literal and feature-based: `XyzEvent`, `XyzRecorder`, `HistoryRecordDefOf.Xyz`.
-- For Harmony patches that need transient cross-method or prefix/postfix state, create a dedicated `XyzContext` class in the event file. `__state` is forbidden.
-- Reset or restore context in `Finalizer()` when the patch can throw or be re-entrant.
-- Prefer RimWorld `DefOf` classes for named defs; use `Source/DefLookup.cs` only for named defs that do not have a suitable `DefOf` entry.
-- Put reflected field/method accessors in `Source/Accessor.cs`; prefer cached `AccessTools` delegates there over ad hoc Harmony `Traverse` usage.
-
-When adding a new event/recorder:
-
-1. Add or update the XML `HistoryRecordDef` in `Defs/`.
-2. Add the corresponding `DefOf` field in `HistoryRecordDefOf`.
-3. Check `Source/PawnTracker/Events/` for an existing event or patch before adding anything new.
-4. If the event does not exist yet, add the Harmony patch and publish the typed event.
-5. Implement a recorder inheriting `RecorderBase<TEvent>`.
-6. Call `ShouldRecord(...)` before writing history.
-7. Prefer rulepacks via `descriptionMaker` for extendability; resolve the final text with `Resolve()`.
-8. Add recorder-local `Test...` methods when the feature needs coverage.
-9. Update `PawnHistory.csproj` explicitly for every new `.cs` file.
-
-Important behavior:
+- Recorder discovery is reflection-based over non-abstract `RecorderBase` subclasses
+- Tests are reflection-based and require the supported signatures exactly
+- `RecorderManager.ShouldRecord(Pawn)` records humanlikes and bonded animals only
 
 ## Safety
 
