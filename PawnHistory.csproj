@@ -112,6 +112,7 @@
     <Compile Include="Source\PawnTracker\Events\JoinedLordEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\TradedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\KidnappedEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\RansomEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\FoodPoisoningEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PrisonerRecruitedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\ScenarioPostGameStartEvent.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Source\PawnTracker\Recorders\WildManWanderedInRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PawnTradedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\KidnappedRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\RansomRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\NewArrivalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PartyRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HistoryTaleRecorder.cs" />

@@ -1,0 +1,63 @@
+using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Test;
+using RimWorld;
+using System.Linq;
+using Verse;
+
+namespace PawnHistory.Source.PawnTracker.Recorders;
+
+public class RansomRecorder : RecorderBase<RansomEvent>
+{
+    public override void Register()
+    {
+        GameEventBus.Subscribe<RansomEvent>(CreateRecord);
+    }
+
+    public override void CreateRecord(RansomEvent e)
+    {
+        if (e.Result == RansomResult.Postponed)
+            return;
+
+        if (!ShouldRecord(e.Hostage))
+            return;
+        
+        var recordDef = HistoryRecordDefOf.Ransom;
+        var desc = recordDef.Description(e.Hostage, "Hostage")
+            .AddRule("SilverCount", e.SilverCount)
+            .AddRule("EnemyFaction", e.EnemyFaction)
+            .AddConstant("result", e.Result)
+            .Resolve();
+
+        AddRecord(recordDef, e.Hostage, desc);
+    }
+
+    public void TestReject(TestScenario scenario)
+    {
+        var hostage = scenario.Pawn().Colonist().CreateSingle();
+        var enemy = scenario.Pawn().Enemy().CreateSingle(false);
+        
+        Faction.OfPirates.kidnapped.Kidnap(hostage, enemy);
+        scenario.Incident(DefLookup.Incident.RansomDemand).Execute();
+        var letter = Find.LetterStack.LettersListForReading.OfType<ChoiceLetter_RansomDemand>().Last(letter => letter.kidnapped == hostage);
+     
+        scenario.Thing(ThingDefOf.Silver).Stack(letter.fee).Create();
+        letter.Choices.ToList()[1].action(); // reject
+
+        Expect.That(hostage).ToHaveHistoryRecord("[EnemyFaction] demanded [n] silvers for [Hostage]'s release, but the colony refused.", HistoryRecordDefOf.Ransom);
+    }
+
+    public void TestAccept(TestScenario scenario)
+    {
+        var hostage = scenario.Pawn().Colonist().CreateSingle();
+        var enemy = scenario.Pawn().Enemy().CreateSingle(false);
+        
+        Faction.OfPirates.kidnapped.Kidnap(hostage, enemy);
+        scenario.Incident(DefLookup.Incident.RansomDemand).Execute();
+        var letter = Find.LetterStack.LettersListForReading.OfType<ChoiceLetter_RansomDemand>().Last(letter => letter.kidnapped == hostage);
+        
+        scenario.Thing(ThingDefOf.Silver).Stack(letter.fee).Create();
+        letter.Choices.First().action(); // accept
+
+        Expect.That(hostage).ToHaveHistoryRecord("The colony paid [EnemyFaction] [n] silvers to ransom [Hostage].", HistoryRecordDefOf.Ransom);
+    }
+}

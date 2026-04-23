@@ -133,15 +133,15 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         // QuestNode_Root_ShuttleCrash_Rescue.QuestStartDelay
         TickDelayManager.Delay(120, () =>
         {
-            var pawns = QuestHelper.GetArrivalPawns();
+            var pawns = QuestHelper.GetArrivalPawns().Where(p => !p.HostileTo(Faction.OfPlayer));
             Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN] along with [n] others made an emergency landing at [PlayerSettlement] in a damaged shuttle.", HistoryRecordDefOf.QuestPawnArrived);
             
             scenario.ForwardTime(1f);
         });
 
-        scenario.WaitUntil(() => QuestHelper.GetArrivalPawns().Any(p => p.Faction.HostileTo(Faction.OfPlayer)), () =>
+        scenario.WaitUntil(() => QuestHelper.GetArrivalPawns().Any(p => p.HostileTo(Faction.OfPlayer)), () =>
         {
-            var raiders = QuestHelper.GetArrivalPawns().Where(p => p.Faction.HostileTo(Faction.OfPlayer));
+            var raiders = QuestHelper.GetArrivalPawns().Where(p => p.HostileTo(Faction.OfPlayer));
             Expect.ThatAll(raiders).ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] attacked the crashed shuttle site.", HistoryRecordDefOf.QuestPawnArrived);
         });
         return () => scenario.SlowDown();

@@ -331,4 +331,14 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_Ransom</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(result==accepted)->The colony paid [EnemyFaction] [SilverCount] silvers to ransom [Hostage].</li>
+				<li>entry(result==rejected)->[EnemyFaction] demanded [SilverCount] silvers for [Hostage]'s release, but the colony refused.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>

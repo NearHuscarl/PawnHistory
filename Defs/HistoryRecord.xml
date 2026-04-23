@@ -484,6 +484,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Ransom</defName>
+		<label>ransom</label>
+		<descriptionMaker>PH_Ransom</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>World</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Banish</defName>
 		<label>banish</label>
 		<descriptionMaker>PH_Banish</descriptionMaker>

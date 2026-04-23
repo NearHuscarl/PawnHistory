@@ -74,6 +74,7 @@ public static class DefLookup
         public static IncidentDef WandererJoin => field ??= DefDatabase<IncidentDef>.GetNamed("WandererJoin");
         public static IncidentDef WildManWandersIn => field ??= DefDatabase<IncidentDef>.GetNamed("WildManWandersIn");
         public static IncidentDef GiveQuest_EndGame_ShipEscape => field ??= DefDatabase<IncidentDef>.GetNamed("GiveQuest_EndGame_ShipEscape");
+        public static IncidentDef RansomDemand => field ??= DefDatabase<IncidentDef>.GetNamed("RansomDemand");
     }
 
     public static class RaidStrategy

@@ -103,6 +103,11 @@ public static class Accessor
             AccessTools.MethodDelegate<Action<RimWorld.Planet.TradeRequestComp, Caravan>>(AccessTools.Method(typeof(RimWorld.Planet.TradeRequestComp), "Fulfill"));
     }
 
+    public class DiaOption
+    {
+        public static readonly AccessTools.FieldRef<Verse.DiaOption, string> Text = AccessTools.FieldRefAccess<Verse.DiaOption, string>("text");
+    }
+
     public class ChoiceLetter_AcceptVisitors
     {
         public static readonly Func<RimWorld.ChoiceLetter_AcceptVisitors, Verse.DiaOption> Option_Accept =
