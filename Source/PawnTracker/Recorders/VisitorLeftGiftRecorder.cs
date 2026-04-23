@@ -3,6 +3,7 @@ using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using PawnHistory.Source.Helper;
 using Verse;
+using System.Linq;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -34,7 +35,7 @@ public class VisitorLeftGiftRecorder : RecorderBase<VisitorLeftGiftEvent>
         var visitors = scenario.Incident(IncidentDefOf.VisitorGroup).Point(200).Execute();
         var faction = visitors[0].Faction;
         var giver = Accessor.VisitorGiftForPlayerUtility.GetGiftGiver(visitors, faction);
-        var gift = scenario.Thing(ThingDefOf.Silver).Stack(50).CreateAndPutInto(giver);
+        var gift = scenario.Thing(ThingDefOf.Silver).Stack(50).CreateAndPutInto(giver).FirstOrDefault();
         
         GameUtility.ClearUpMap(); // leave some space so the visitor can drop the loot
         VisitorGiftForPlayerUtility.GiveGift(visitors, faction, [gift]);

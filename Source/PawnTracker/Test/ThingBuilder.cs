@@ -1,7 +1,9 @@
 ﻿using PawnHistory.Source.PawnTracker.Events;
 using RimWorld;
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using UnityEngine;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
@@ -63,25 +65,16 @@ public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
         });
     }
 
-    private IntVec3 ResolvePosition()
-    {
-        if (position.HasValue)
-            return position.Value;
-
-        return map.Center;
-    }
-
     public ThingBuilder Do(Action<Thing> action)
     {
         processors.Add(action);
         return this;
     }
 
-    private T CreateInternal<T>() where T : Thing
+    private T CreateSingleStack<T>(int count) where T : Thing
     {
         var thing = ThingMaker.MakeThing(def, stuff);
-        
-        thing.stackCount = stackCount;
+        thing.stackCount = count;
 
         if (faction != null)
             thing.SetFaction(faction);
@@ -92,27 +85,51 @@ public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
         return thing as T;
     }
     
-    public T CreateAndPutInto<T>(Pawn pawn) where T : Thing
+    private List<T> CreateInternal<T>() where T : Thing
     {
-        var thing = CreateInternal<T>();
-        pawn.inventory.innerContainer.TryAdd(thing);
+        var result = new List<T>();
 
-        return thing;
+        var remaining = stackCount;
+        var maxStack = Mathf.Max(1, def.stackLimit);
+
+        while (remaining > 0)
+        {
+            var thisStack = Mathf.Min(remaining, maxStack);
+            result.Add(CreateSingleStack<T>(thisStack));
+            remaining -= thisStack;
+        }
+
+        return result;
     }
-    public Thing CreateAndPutInto(Pawn pawn) => CreateAndPutInto<Thing>(pawn);
+    
+    public List<T> CreateAndPutInto<T>(Pawn pawn) where T : Thing
+    {
+        var things = CreateInternal<T>();
+        
+        foreach (var thing in things)
+            pawn.inventory.innerContainer.TryAdd(thing);
+
+        return things;
+    }
+    public List<Thing> CreateAndPutInto(Pawn pawn) => CreateAndPutInto<Thing>(pawn);
 
     /// <summary>
     /// Creates and spawns the thing.
     /// </summary>
-    public T Create<T>() where T : Thing
+    public List<T> Create<T>() where T : Thing
     {
-        var thing = CreateInternal<T>();
-        var cell = ResolvePosition();
-        GenPlace.TryPlaceThing(thing, cell, map, placeMode);
+        var things = CreateInternal<T>();
+        var cell = position ?? map.Center;
+        
+        foreach (var thing in things)
+            GenPlace.TryPlaceThing(thing, cell, map, placeMode);
 
-        return thing;
+        return things;
     }
-    public Thing Create() => Create<Thing>();
+    public List<Thing> Create() => Create<Thing>();
+    
+    public Thing CreateSingle() => Create<Thing>().FirstOrDefault();
+    public T CreateSingle<T>() where T : Thing => Create<T>().FirstOrDefault();
 }
 
 public static class ThingBuilderExtensions

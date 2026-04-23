@@ -175,7 +175,7 @@ public class MapBuilder
             var rect = TestManager.Scenario.LastRoomRect;
             for (var i = 0; i < bedCount; i++)
             {
-                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Create<Building_Bed>();
+                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).CreateSingle<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
             }
         });
@@ -189,7 +189,7 @@ public class MapBuilder
             var rect = TestManager.Scenario.LastRoomRect;
             for (var i = 0; i < bedCount; i++)
             {
-                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Create<Building_Bed>();
+                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).CreateSingle<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
                 bed.Medical = true;
                 beds?.Add(bed);
@@ -207,7 +207,7 @@ public class MapBuilder
 
             for (var i = 0; i < bedCount; i++)
             {
-                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).Create<Building_Bed>();
+                var bed = new ThingBuilder(ThingDefOf.Bed, ThingDefOf.Steel).Map(map).At(rect.CenterCell).CreateSingle<Building_Bed>();
                 bed.SetFaction(Faction.OfPlayer);
                 bed.ForPrisoners = true;
             }
@@ -226,14 +226,14 @@ public class MapBuilder
                 .At(new IntVec3(rect.CenterCell.x, 0, rect.maxZ - 1))
                 .PlaceMode(ThingPlaceMode.Direct)
                 .Faction(Faction.OfPlayer)
-                .Create<Building_Throne>();
+                .CreateSingle<Building_Throne>();
 
             owner.ownership.ClaimThrone(throne);
 
             new ThingBuilder(ThingDefOf.Harp).Faction(Faction.OfPlayer).Create();
             for (var i = 0; i < 2; i++)
             {
-                var brazier = new ThingBuilder(ThingDefOf.Brazier, ThingDefOf.Steel).Faction(Faction.OfPlayer).Create<Building>();
+                var brazier = new ThingBuilder(ThingDefOf.Brazier, ThingDefOf.Steel).Faction(Faction.OfPlayer).CreateSingle<Building>();
                 brazier.TryGetComp<CompRefuelable>().Refuel(999f);
             }
             for (var i = 0; i < 4; i++)
@@ -292,7 +292,7 @@ public class MapBuilder
                 .Map(map)
                 .At(interior.CenterCell)
                 .Faction(Faction.OfPlayer)
-                .Create<Building_Casket>();
+                .CreateSingle<Building_Casket>();
 
             if (!occupied)
                 return;

@@ -94,7 +94,7 @@ public static class DefLookup
 
     public static class QuestScript
     {
-        public static QuestScriptDef Beggars => field ??= DefDatabase<QuestScriptDef>.GetNamed("Beggars");
+        public static QuestScriptDef TradeRequest => field ??= DefDatabase<QuestScriptDef>.GetNamed("TradeRequest");
         public static QuestScriptDef Intro_Deserter => field ??= DefDatabase<QuestScriptDef>.GetNamed("Intro_Deserter");
         public static QuestScriptDef ThreatReward_Raid_Joiner => field ??= DefDatabase<QuestScriptDef>.GetNamed("ThreatReward_Raid_Joiner");
         public static QuestScriptDef OpportunitySite_PeaceTalks => field ??= DefDatabase<QuestScriptDef>.GetNamed("OpportunitySite_PeaceTalks");

@@ -28,14 +28,14 @@ public class DrugAddictedRecorder : RecorderBase<DrugAddictedEvent>
 
     public void Test(TestScenario scenario)
     {
-        var drug1 = scenario.Thing(ThingDefOf.WakeUp).Create();
+        var drug1 = scenario.Thing(ThingDefOf.WakeUp).CreateSingle();
         var pawn1 = scenario.Pawn()
             .FullHeal()
             .AddHediff(DefLookup.Hediff.WakeUpTolerance, hediffCreated: h => h.Severity = 1f)
             .ForceAddictionTo(drug1)
             .CreateSingle();
         
-        var drug2 = scenario.Thing(ThingDefOf.Beer).Create();
+        var drug2 = scenario.Thing(ThingDefOf.Beer).CreateSingle();
         var pawn2 = scenario.Pawn()
             .FullHeal()
             .AddHediff(DefLookup.Hediff.AlcoholTolerance, hediffCreated: h => h.Severity = 1f)

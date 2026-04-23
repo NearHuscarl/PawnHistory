@@ -208,7 +208,10 @@ public static class HistoryDescriptionBuilderExtensions
         public HistoryDescriptionBuilder WithPlayerSettlement(WorldObject worldObject)
         {
             if (worldObject is not Settlement settlement || settlement.Faction != Faction.OfPlayer)
-                return builder;
+            {
+                return builder.AddRule("R_PlayerSettlement", "NH_TheSettlement".Translate())
+                    .AddConstant("playerSettlementHasName", false);
+            }
 
             return builder.AddRule("R_PlayerSettlement", settlement.ColoredLabel)
                 .AddConstant("playerSettlementHasName", settlement.namedByPlayer);

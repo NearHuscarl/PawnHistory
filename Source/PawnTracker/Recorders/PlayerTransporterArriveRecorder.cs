@@ -238,7 +238,7 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
         scenario.SpeedUp();
         
         var shuttleDef = DefDatabase<ThingDef>.GetNamed("Shuttle");
-        var shuttle = scenario.Thing(shuttleDef).Create();
+        var shuttle = scenario.Thing(shuttleDef).CreateSingle();
         var transporter = shuttle.TryGetComp<CompTransporter>();
         var shuttleComp = shuttle.TryGetComp<CompShuttle>();
         var pawns = scenario.Pawn(3)

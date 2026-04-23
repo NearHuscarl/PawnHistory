@@ -51,7 +51,7 @@ public class MineralFoundRecorder : RecorderBase<LongRangeMineralFoundEvent>, IR
     public void TestLongRange(TestScenario scenario)
     {
         var pawn = scenario.Pawn().Colonist().CreateSingle();
-        var scanner = scenario.Thing(DefLookup.Thing.LongRangeMineralScanner).Create();
+        var scanner = scenario.Thing(DefLookup.Thing.LongRangeMineralScanner).CreateSingle();
         var longRangeScanner = scanner.TryGetComp<CompLongRangeMineralScanner>();
         
         Accessor.CompLongRangeMineralScanner.TargetMineable(longRangeScanner) = ThingDefOf.MineableGold;
@@ -63,7 +63,7 @@ public class MineralFoundRecorder : RecorderBase<LongRangeMineralFoundEvent>, IR
     public void TestDeep(TestScenario scenario)
     {
         var pawn = scenario.Pawn().Colonist().CreateSingle();
-        var scanner = scenario.Thing(ThingDefOf.GroundPenetratingScanner).Create();
+        var scanner = scenario.Thing(ThingDefOf.GroundPenetratingScanner).CreateSingle();
         var deepScanner = scanner.TryGetComp<CompDeepScanner>();
 
         Accessor.CompDeepScanner.DoFind(deepScanner, pawn);

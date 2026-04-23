@@ -200,9 +200,24 @@
 				<li>entry(priority=1,isEnemy==False,quest==ThreatReward_Raid_Joiner)->[PAWN] joined [PlayerSettlement] in exchange for safety while being pursued.</li>
 				<!-- <li>entry(priority=1,quest==ThreatReward_Raid_Joiner,isEnemy==True) -> handled in PH_Raid since it spawns an incident -->
 				<li>entry(priority=1,isEnemy==False,quest==Intro_Deserter)          ->[PAWN] joined [PlayerSettlement] after deserting [Faction], while being hunted by a loyalty squad.</li>
-				
-				<li>entry(priority=0,isEnemy==False)                 ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] for [Quest] quest.</li>
+				<li>entry(priority=1,isReward==True,quest==TradeRequest)            ->[PAWN] joined [PlayerSettlement] as a reward for fulfilling a trade request from [Faction].</li>
+
+				<li>entry(priority=0,isReward==True)                 ->[PAWN] arrived at [PlayerSettlement] as a reward for completing [Quest] quest.</li>
+				<li>entry(priority=0,isEnemy==False)                 ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] as part of [Quest] quest.</li>
 				<li>entry(priority=0,isEnemy==True)                  ->[PAWN][AndOthers] from [PAWN_factionName] raided [PlayerSettlement] during [Quest] quest.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_QuestPawnRewarded</defName>
+		<include>
+			<li>PH_Common</li>
+			<li>PH_Faction</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] was received as a pawn reward for [Quest] and joined [PlayerFaction]'s caravan.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

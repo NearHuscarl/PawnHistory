@@ -23,36 +23,40 @@ public class TradeSessionBuilder
         this.negotiator = negotiator;
     }
 
-    public TradeSessionBuilder GifMode(bool value = true)
-    {
-        this.giftMode = value;
-        return this;
-    }
-
-    public TradeSessionBuilder Buy(Func<Thing, bool> filter, int count = 1)
+    public TradeSessionBuilder Buy(Func<Tradeable, bool> filter = null, int count = -1)
     {
         processors.Add(() =>
         {
-            TradeSession.deal.AllTradeables.Where(t => filter(t.AnyThing)).Take(count).ToList().ForEach(t =>
-            {
-                t.AdjustBy(1);
-                result.Bought.Add(t.AnyThing);
-            });
+            var tradeable = TradeSession.deal.AllTradeables.Where(t => t.CountHeldBy(Transactor.Trader) > 0).FirstOrDefault(t => filter?.Invoke(t) ?? true);
+            if (tradeable == null)
+                return;
+            
+            var adjustment = count == -1 ? tradeable.AnyThing.stackCount : count;
+            tradeable.AdjustBy(adjustment);
+            result.Sold.Add(tradeable.AnyThing);
         });
         return this;
     }
 
-    public TradeSessionBuilder Sell(Func<Thing, bool> filter, int count = 1)
+    public TradeSessionBuilder Sell(Func<Tradeable, bool> filter = null, int count = -1)
     {
         processors.Add(() =>
         {
-            TradeSession.deal.AllTradeables.Where(t => filter(t.AnyThing)).Take(count).ToList().ForEach(t =>
-            {
-                t.AdjustBy(-1);
-                result.Sold.Add(t.AnyThing);
-            });
+            var tradeable = TradeSession.deal.AllTradeables.Where(t => t.CountHeldBy(Transactor.Colony) > 0).FirstOrDefault(t => filter?.Invoke(t) ?? true);
+            if (tradeable == null)
+                return;
+            
+            var adjustment = count == -1 ? tradeable.AnyThing.stackCount : count;
+            tradeable.AdjustBy(-adjustment);
+            result.Sold.Add(tradeable.AnyThing);
         });
         return this;
+    }
+
+    public TradeSessionBuilder Gift(Func<Tradeable, bool> filter = null, int count = -1)
+    {
+        giftMode = true;
+        return Sell(filter, count);
     }
 
     public TradeSessionResult Execute()

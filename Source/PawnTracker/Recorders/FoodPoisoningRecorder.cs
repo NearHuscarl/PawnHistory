@@ -39,7 +39,7 @@ public class FoodPoisoningRecorder : RecorderBase<FoodPoisoningEvent>
             .FullHeal()
             .CreateSingle();
         
-        var ingestible = scenario.Thing(ThingDefOf.MealSimple).Create();
+        var ingestible = scenario.Thing(ThingDefOf.MealSimple).CreateSingle();
         foreach (FoodPoisonCause cause in Enum.GetValues(typeof(FoodPoisonCause)))
         {
             FoodUtility.AddFoodPoisoningHediff(victim, ingestible, cause);
@@ -67,7 +67,7 @@ public class FoodPoisoningRecorder : RecorderBase<FoodPoisoningEvent>
         var cook = pawns[1];
         var ingestible = scenario.Thing(ThingDefOf.MealSimple)
             .PoisonFood(cook)
-            .Create();
+            .CreateSingle();
 
         scenario.Pawn(victim)
             .Do(p => p.needs.food.CurLevel = 0f)

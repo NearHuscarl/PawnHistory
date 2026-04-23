@@ -107,8 +107,20 @@ public class CaravanBuilder
             .Do(caravan =>
             {
                 var negotiator = BestCaravanPawnUtility.FindBestNegotiator(caravan);
-                new TradeSessionBuilder(settlement, negotiator).GifMode().Sell(t => t.Faction == Faction.OfPlayer).Execute();
+                new TradeSessionBuilder(settlement, negotiator).Gift().Execute();
                 Find.WindowStack.TryRemove(typeof(Dialog_Trade));
+            });
+    }
+
+    public CaravanBuilder FulfillTradeRequest(Settlement settlement)
+    {
+        return Position(settlement.Tile)
+            .Do(caravan =>
+            {
+                if (!settlement.TryGetComponent(out TradeRequestComp request))
+                    return;
+
+                Accessor.TradeRequestComp.Fulfill(request, caravan);
             });
     }
 
@@ -119,9 +131,22 @@ public class CaravanBuilder
             .Do(caravan =>
             {
                 var negotiator = BestCaravanPawnUtility.FindBestNegotiator(caravan);
-                new TradeSessionBuilder(settlement, negotiator).Sell(t => t.Faction == Faction.OfPlayer).Execute();
+                new TradeSessionBuilder(settlement, negotiator).Sell().Execute();
                 Find.WindowStack.TryRemove(typeof(Dialog_Trade));
             });
+    }
+
+    public CaravanBuilder Give(List<Thing> things)
+    {
+        return Do(caravan =>
+        {
+            foreach (var thing in things)
+            {
+                if (thing.Spawned)
+                    thing.DeSpawn();
+                CaravanInventoryUtility.GiveThing(caravan, thing);
+            }
+        });
     }
 
     public Caravan Execute()

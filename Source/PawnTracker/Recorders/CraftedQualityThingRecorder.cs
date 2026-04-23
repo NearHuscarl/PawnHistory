@@ -36,7 +36,7 @@ public class CraftedQualityThingRecorder : RecorderBase<CraftedQualityThingEvent
         var pawn = scenario.Pawn().Colonist().CreateSingle();
         var craftedThing = scenario.Thing(ThingDefOf.Bed, ThingDefOf.Gold)
             .Quality(QualityCategory.Masterwork)
-            .Create<Building_Bed>();
+            .CreateSingle<Building_Bed>();
         
         craftedThing.GetComp<CompArt>().InitializeArt(ArtGenerationContext.Colony);
         QualityUtility.SendCraftNotification(craftedThing, pawn);
@@ -50,7 +50,7 @@ public class CraftedQualityThingRecorder : RecorderBase<CraftedQualityThingEvent
         var pawn = scenario.Pawn().Colonist().CreateSingle();
         var craftedThing = scenario.Thing(ThingDefOf.Apparel_Parka, ThingDefOf.Leather_Plain)
             .Quality(QualityCategory.Legendary)
-            .Create<Apparel>();
+            .CreateSingle<Apparel>();
         
         QualityUtility.SendCraftNotification(craftedThing, pawn);
 

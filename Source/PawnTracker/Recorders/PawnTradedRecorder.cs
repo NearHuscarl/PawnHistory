@@ -62,7 +62,7 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
 
         var negotiator = scenario.Pawn().Colonist().CreateSingle();
         var result = scenario.Trade(trader, negotiator)
-            .Sell(t => t is Pawn && t.Faction != trader.Faction)
+            .Sell(t => t.AnyThing is Pawn)
             .Execute();
         
         Expect.That(result.Sold[0] as Pawn).ToHaveHistoryRecord("[Negotiator] sold [PAWN] into slavery to [Faction] for [x] silvers.");
@@ -84,7 +84,7 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
 
         var negotiator = scenario.Pawn().Colonist().CreateSingle();
         var result = scenario.Trade(trader, negotiator)
-            .Buy(t => t is Pawn && t.Faction == trader.Faction)
+            .Buy(t => t.AnyThing is Pawn)
             .Execute();
         
         Expect.That(result.Bought[0] as Pawn).ToHaveHistoryRecord("[Negotiator] bought [PAWN] from [Faction] for [x] silvers.");

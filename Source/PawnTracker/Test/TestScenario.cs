@@ -18,6 +18,7 @@ public class TestScenario
     internal readonly HashSet<Pawn> DeathOnNextHitPawns = [];
     public bool AlwaysHaveCancerOnBirthday = false;
     public RitualOutcomePossibility ForcedRitualOutcome;
+    public Pawn ForceRewardPawnInQuest;
     public bool ForceInjuryScar = false;
     public bool ForcePostHealScar = false;
 
@@ -33,7 +34,7 @@ public class TestScenario
     public QuestBuilder Quest(QuestScriptDef quest, float points = 500f) => new(quest, points);
     public CaravanBuilder Caravan(List<Pawn> pawns) => new(pawns);
     public DropPodBuilder DropPod(List<Pawn> pawns) => new(pawns);
-    public TradeSessionBuilder Trade(Pawn trader, Pawn negotiator) => new(trader, negotiator);
+    public TradeSessionBuilder Trade(ITrader trader, Pawn negotiator) => new(trader, negotiator);
     public RitualBuilder Ritual(Pawn organizer) => new(organizer);
 
     public void OpenHistoryRecordTab(Pawn pawn)

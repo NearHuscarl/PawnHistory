@@ -49,7 +49,7 @@ public class BanishRecorder : RecorderBase<BanishEvent>
 
         scenario.Caravan([pawn]).Execute();
 
-        var cube = scenario.Thing(ThingDefOf.GoldenCube).Create<ThingWithComps>();
+        var cube = scenario.Thing(ThingDefOf.GoldenCube).CreateSingle<ThingWithComps>();
 
         Accessor.CompGoldenCube.OnInteracted(cube.GetComp<CompGoldenCube>(), dickhead);
 

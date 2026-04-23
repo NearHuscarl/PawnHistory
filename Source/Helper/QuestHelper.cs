@@ -1,10 +1,33 @@
-﻿using RimWorld;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Verse;
+using System.Linq;
 
 namespace PawnHistory.Source.Helper;
 
 public static class QuestHelper
 {
+    public static bool IsReward(Quest quest, Pawn pawn)
+    {
+        var partChoice = quest.GetFirstPartOfType<QuestPart_Choice>();
+
+        if (partChoice == null)
+            return false;
+        
+        return partChoice.choices.Any(c => c.rewards.OfType<Reward_Pawn>().Any(r => r.pawn == pawn));
+    }
+
+    public static List<Pawn> GetArrivalPawns(Quest quest = null)
+    {
+        quest ??= Find.QuestManager.QuestsListForReading.Last();
+        
+        var source1 = quest.PartsListForReading.OfType<QuestPart_PawnsArrive>().SelectMany(part => part.pawns);
+        var source2 = quest.PartsListForReading.OfType<QuestPart_DropPods>().SelectMany(part => part.Things).OfType<Pawn>();
+        var source3 = quest.PartsListForReading.OfType<QuestPart_GiveToCaravan>().SelectMany(part => part.Things).OfType<Pawn>();
+        
+        return source1.Concat(source2).Concat(source3).Where(p => p.MapHeld == Find.CurrentMap).ToList();
+    }
+    
     public static Pawn GetAsker(Quest quest)
     {
         foreach (var part in quest.PartsListForReading)

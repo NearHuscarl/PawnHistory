@@ -90,7 +90,6 @@
     <Compile Include="Source\PawnTracker\Events\LodgerJoinOfferAcceptedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\VisitorLeftGiftEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\QuestPawnArrivedEvent.cs" />
-    <Compile Include="Source\PawnTracker\Events\QuestPawnRewardedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\BanishEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PrisonerExecutedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\PrisonerReleasedEvent.cs" />
@@ -226,6 +225,7 @@
     <Compile Include="Source\PawnTracker\Test\MapBuilder.cs" />
     <Compile Include="Source\PawnTracker\Test\Mocks\AlwaysHaveCancerOnBirthday.cs" />
     <Compile Include="Source\PawnTracker\Test\Mocks\DeathOnNextHit.cs" />
+    <Compile Include="Source\PawnTracker\Test\Mocks\ForceRewardPawn.cs" />
     <Compile Include="Source\PawnTracker\Test\Mocks\ForcedRitualOutcome.cs" />
     <Compile Include="Source\PawnTracker\Test\Mocks\ForceScar.cs" />
     <Compile Include="Source\PawnTracker\Test\PawnBuilder.cs" />

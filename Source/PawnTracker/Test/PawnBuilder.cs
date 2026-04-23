@@ -11,12 +11,12 @@ namespace PawnHistory.Source.PawnTracker.Test;
 
 public class PawnBuilder(int count = 1)
 {
+    private readonly List<Predicate<Pawn>> filters = [];
+    private readonly List<Action<Pawn, int, List<Pawn>>> processors = [];
     private PawnKindDef kind = null;
     private List<Pawn> pawns = null;
     private Faction faction;
     private GuestStatus? guestStatus;
-    private readonly List<Predicate<Pawn>> filters = [];
-    private readonly List<Action<Pawn, int, List<Pawn>>> processors = [];
     private int count = count;
     private IntVec3? spawnPosition;
     private int spawnRadius = 4;
@@ -24,6 +24,7 @@ public class PawnBuilder(int count = 1)
     private bool factionLeader = false;
     private bool isKilled = false;
     private bool isRotten = false;
+    private bool isWorldPawn = false;
 
     public PawnBuilder Position(IntVec3 position, int radius = 3)
     {
@@ -90,6 +91,12 @@ public class PawnBuilder(int count = 1)
         return HumanLike().WithFaction(faction1);
     }
 
+    public PawnBuilder WorldPawn(bool value = true)
+    {
+        isWorldPawn = value;
+        return this;
+    }
+
     public PawnBuilder Enemy(bool value = true)
     {
         if (value)
@@ -145,109 +152,6 @@ public class PawnBuilder(int count = 1)
         return this;
     }
 
-    public Pawn CreateSingle(bool reusePawns = true)
-    {
-        return Execute(reusePawns).FirstOrDefault();
-    }
-
-    private List<Pawn> SourcePawns(bool reusePawns)
-    {
-        var allFilters = filters.Concat([
-            p => !p.Downed,
-            p => isKilled == p.Dead,
-            p => kind == null || p.kindDef == kind,
-            p => faction == null || p.Faction == faction,
-            p => guestStatus == null || p.GuestStatus == guestStatus,
-            p => p.RaceProps.Humanlike == humanLike,
-            p => !TestManager.Scenario.ProcessedPawns.Contains(p),
-            p => p.IsFactionLeader(faction) == factionLeader,
-        ]).ToList();
-        var sourcedPawns = reusePawns ? Find.CurrentMap.mapPawns.AllPawnsSpawned.Where(p => allFilters.All(f => f(p))).Take(count).ToList() : [];
-        var existingCount = sourcedPawns.Count;
-        var generateCount = count - existingCount;
-
-        foreach (var pawn in sourcedPawns)
-        {
-            if (spawnPosition.HasValue)
-                pawn.Position = spawnPosition.Value;
-            if (faction != null && faction != pawn.Faction)
-                pawn.SetFaction(faction ?? pawn.Faction);
-        }
-
-        for (var i = 0; i < generateCount; i++)
-        {
-            var generatedKind = kind ?? PawnKindDefOf.Colonist;
-            var pawn = factionLeader
-                ? faction?.leader
-                : PawnGenerator.GeneratePawn(generatedKind, FactionUtility.DefaultFactionFrom(faction?.def ?? generatedKind.defaultFactionDef), new PlanetTile?(Find.CurrentMap.Tile));
-            var spawnPos = CellFinder.RandomClosewalkCellNear(spawnPosition ?? Find.CameraDriver.MapPosition, Find.CurrentMap, spawnRadius);
-
-            GenSpawn.Spawn(pawn, spawnPos, Find.CurrentMap);
-
-            if (guestStatus.HasValue)
-                pawn.guest?.SetGuestStatus(Faction.OfPlayer, guestStatus.Value);
-
-            sourcedPawns.Add(pawn);
-        }
-
-        foreach (var pawn in sourcedPawns)
-        {
-            if (isKilled && !pawn.Dead)
-                HealthUtility.DamageUntilDead(pawn);
-            if (isRotten && pawn.Dead && pawn.Corpse.TryGetComp<CompRottable>(out var rot))
-            {
-                var corpse = pawn.Corpse;
-                rot.RotImmediately();
-                corpse.Map.gasGrid.AddGas(corpse.Position, GasType.RotStink, 1000); // don't know where this shit comes from
-            }
-        }
-
-        return sourcedPawns;
-    }
-
-    public List<Pawn> Execute(bool reusePawns = true)
-    {
-        var res = pawns ?? SourcePawns(reusePawns);
-
-        for (var i = 0; i < res.Count; i++)
-        {
-            MakePawnCapable(res[i]);
-            foreach (var processor in processors)
-            {
-                processor(res[i], i, res);
-            }
-            TestManager.Scenario.ProcessedPawns.Add(res[i]);
-        }
-
-        return res;
-    }
-
-    private static readonly BackstoryDef Childhood = DefLookup.Backstory.MusicalKid86;
-    private static readonly BackstoryDef Adulthood = DefLookup.Backstory.NavyScientist52;
-    private void MakePawnCapable(Pawn pawn)
-    {
-        if (!pawn.RaceProps.Humanlike)
-            return;
-
-        // Ensure systems exist
-        pawn.workSettings?.EnableAndInitialize();
-
-        // 1. Remove work-disabling backstories
-        // Setting these to null removes the primary source of "Incapable of"
-        pawn.story.Childhood = Childhood;
-        pawn.story.Adulthood = Adulthood;
-
-        // 2. Remove work-disabling traits (e.g., Lazy, Brawler, etc.)
-        pawn.story.traits.allTraits.Clear();
-
-        // 3. Optional: Clear DLC restrictions if testing with Royalty/Ideology
-        if (ModsConfig.RoyaltyActive) pawn.royalty?.AllTitlesForReading.Clear();
-        if (ModsConfig.IdeologyActive) pawn.ideo?.SetIdeo(null);
-
-        // 4. IMPORTANT: Refresh the pawn's internal work-tag cache
-        pawn.Notify_DisabledWorkTypesChanged();
-    }
-
     public PawnBuilder AddHediff(HediffDef def, BodyPartDef partDef = null, Action<Hediff> hediffCreated = null, int partIndex = 0)
     {
         return Do(pawn =>
@@ -262,36 +166,9 @@ public class PawnBuilder(int count = 1)
         });
     }
 
-    public PawnBuilder TendInjuries(float quality = 1f)
-    {
-        return Do(pawn =>
-        {
-            if (pawn.Dead) return;
-
-            var injuries = pawn.health.hediffSet.hediffs
-                .OfType<Hediff_Injury>()
-                .Where(h => h.TendableNow())
-                .ToList();
-
-            foreach (var injury in injuries)
-            {
-                injury.Tended(quality, quality);
-            }
-        });
-    }
-
     public PawnBuilder StopMentalState()
     {
         return Do(pawn => pawn.mindState.mentalStateHandler.CurState?.RecoverFromState());
-    }
-
-    public PawnBuilder Incapacitate()
-    {
-        return Do(p => HealthUtility.DamageUntilDowned(p))
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Leg, partIndex: 0)
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Arm, partIndex: 0)
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Arm, partIndex: 1)
-            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Leg, partIndex: 1);
     }
 
     public PawnBuilder DiesOnNextHit()
@@ -464,6 +341,115 @@ public class PawnBuilder(int count = 1)
             pawn.jobs.StopAll();
             pawn.mindState.duty = new PawnDuty(DutyDefOf.AssaultColony);
         });
+    }
+
+    public Pawn CreateSingle(bool reusePawns = true)
+    {
+        return Execute(reusePawns).FirstOrDefault();
+    }
+
+    private List<Pawn> SourcePawns(bool reusePawns)
+    {
+        var allFilters = filters.Concat([
+            p => !p.Downed,
+            p => isKilled == p.Dead,
+            p => kind == null || p.kindDef == kind,
+            p => faction == null || p.Faction == faction,
+            p => guestStatus == null || p.GuestStatus == guestStatus,
+            p => p.RaceProps.Humanlike == humanLike,
+            p => !TestManager.Scenario.ProcessedPawns.Contains(p),
+            p => p.IsFactionLeader(faction) == factionLeader,
+        ]).ToList();
+        var sourcedPawns = reusePawns ? Find.CurrentMap.mapPawns.AllPawnsSpawned.Where(p => allFilters.All(f => f(p))).Take(count).ToList() : [];
+        var existingCount = sourcedPawns.Count;
+        var generateCount = count - existingCount;
+
+        foreach (var pawn in sourcedPawns)
+        {
+            if (spawnPosition.HasValue)
+                pawn.Position = spawnPosition.Value;
+            if (faction != null && faction != pawn.Faction)
+                pawn.SetFaction(faction ?? pawn.Faction);
+        }
+
+        for (var i = 0; i < generateCount; i++)
+        {
+            var generatedKind = kind ?? PawnKindDefOf.Colonist;
+            var pawn = factionLeader
+                ? faction?.leader
+                : PawnGenerator.GeneratePawn(generatedKind, FactionUtility.DefaultFactionFrom(faction?.def ?? generatedKind.defaultFactionDef), new PlanetTile?(Find.CurrentMap.Tile));
+            var spawnPos = CellFinder.RandomClosewalkCellNear(spawnPosition ?? Find.CameraDriver.MapPosition, Find.CurrentMap, spawnRadius);
+
+            GenSpawn.Spawn(pawn, spawnPos, Find.CurrentMap);
+
+            if (guestStatus.HasValue)
+                pawn.guest?.SetGuestStatus(Faction.OfPlayer, guestStatus.Value);
+
+            sourcedPawns.Add(pawn);
+        }
+
+        foreach (var pawn in sourcedPawns)
+        {
+            if (isKilled && !pawn.Dead)
+                HealthUtility.DamageUntilDead(pawn);
+            if (isRotten && pawn.Dead && pawn.Corpse.TryGetComp<CompRottable>(out var rot))
+            {
+                var corpse = pawn.Corpse;
+                rot.RotImmediately();
+                corpse.Map.gasGrid.AddGas(corpse.Position, GasType.RotStink, 1000); // don't know where this shit comes from
+            }
+
+            if (isWorldPawn)
+            {
+                pawn.DeSpawn();
+                Find.WorldPawns.PassToWorld(pawn, PawnDiscardDecideMode.KeepForever);
+            }
+        }
+
+        return sourcedPawns;
+    }
+
+    public List<Pawn> Execute(bool reusePawns = true)
+    {
+        var res = pawns ?? SourcePawns(reusePawns);
+
+        for (var i = 0; i < res.Count; i++)
+        {
+            MakePawnCapable(res[i]);
+            foreach (var processor in processors)
+            {
+                processor(res[i], i, res);
+            }
+            TestManager.Scenario.ProcessedPawns.Add(res[i]);
+        }
+
+        return res;
+    }
+
+    private static readonly BackstoryDef Childhood = DefLookup.Backstory.MusicalKid86;
+    private static readonly BackstoryDef Adulthood = DefLookup.Backstory.NavyScientist52;
+    private void MakePawnCapable(Pawn pawn)
+    {
+        if (!pawn.RaceProps.Humanlike)
+            return;
+
+        // Ensure systems exist
+        pawn.workSettings?.EnableAndInitialize();
+
+        // 1. Remove work-disabling backstories
+        // Setting these to null removes the primary source of "Incapable of"
+        pawn.story.Childhood = Childhood;
+        pawn.story.Adulthood = Adulthood;
+
+        // 2. Remove work-disabling traits (e.g., Lazy, Brawler, etc.)
+        pawn.story.traits.allTraits.Clear();
+
+        // 3. Optional: Clear DLC restrictions if testing with Royalty/Ideology
+        if (ModsConfig.RoyaltyActive) pawn.royalty?.AllTitlesForReading.Clear();
+        if (ModsConfig.IdeologyActive) pawn.ideo?.SetIdeo(null);
+
+        // 4. IMPORTANT: Refresh the pawn's internal work-tag cache
+        pawn.Notify_DisabledWorkTypesChanged();
     }
 }
 

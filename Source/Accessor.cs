@@ -97,6 +97,12 @@ public static class Accessor
             AccessTools.MethodDelegate<Func<List<Pawn>, Faction, Pawn>>(AccessTools.Method(typeof(RimWorld.VisitorGiftForPlayerUtility), "GetGiftGiver"));
     }
 
+    public class TradeRequestComp
+    {
+        public static readonly Action<RimWorld.Planet.TradeRequestComp, Caravan> Fulfill =
+            AccessTools.MethodDelegate<Action<RimWorld.Planet.TradeRequestComp, Caravan>>(AccessTools.Method(typeof(RimWorld.Planet.TradeRequestComp), "Fulfill"));
+    }
+
     public class ChoiceLetter_AcceptVisitors
     {
         public static readonly Func<RimWorld.ChoiceLetter_AcceptVisitors, Verse.DiaOption> Option_Accept =

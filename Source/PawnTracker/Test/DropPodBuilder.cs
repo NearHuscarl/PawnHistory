@@ -69,7 +69,7 @@ public class DropPodBuilder
             .Do(caravan =>
             {
                 var negotiator = BestCaravanPawnUtility.FindBestNegotiator(caravan);
-                new TradeSessionBuilder(settlement, negotiator).Sell(t => t.Faction == Faction.OfPlayer).Execute();
+                new TradeSessionBuilder(settlement, negotiator).Sell().Execute();
                 Find.WindowStack.TryRemove(typeof(Dialog_Trade));
             });
     }
