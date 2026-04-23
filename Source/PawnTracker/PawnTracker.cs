@@ -101,7 +101,6 @@ namespace PawnHistory.Source.PawnTracker;
 //  - Jump to relative record
 // - Test Framework
 //  - Create ITestable interface to decouple from RecorderBase
-//  - Show time elapsed for all test runs
 //  - Add test runner to scan for test methods.
 
 // Refactor:

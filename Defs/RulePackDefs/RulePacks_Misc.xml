@@ -465,8 +465,9 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>tale_noun(guilty==True) ->[Prisoner], a prisoner of [PlayerSettlement], was executed after being found guilty.</li>
-				<li>tale_noun(guilty==False)->[Prisoner], a prisoner of [PlayerSettlement], was executed.</li>
+				<li>tale_noun(route==GuiltyColonist,guilty==True) ->[Prisoner], a guilty colonist of [PlayerSettlement], was executed after being found guilty.</li>
+				<li>tale_noun(route==Prisoner,      guilty==True) ->[Prisoner], a prisoner of [PlayerSettlement], was executed after being found guilty.</li>
+				<li>tale_noun(route==Prisoner,      guilty==False)->[Prisoner], a prisoner of [PlayerSettlement], was executed.</li>
 
 				<li>image->[Executioner] cut [Prisoner_objective] [circumstance_phrase]</li>
 				<li>image->[Executioner] put [Prisoner_objective] to death [circumstance_phrase]</li>

@@ -73,6 +73,12 @@ public static class Accessor
             AccessTools.MethodDelegate<Func<RimWorld.JobDriver_Execute, Pawn>>(AccessTools.Method(typeof(RimWorld.JobDriver_Execute), "get_Victim"));
     }
 
+    public class JobDriver_ExecuteGuiltyColonist
+    {
+        public static readonly Func<RimWorld.JobDriver_ExecuteGuiltyColonist, Pawn> Victim =
+            AccessTools.MethodDelegate<Func<RimWorld.JobDriver_ExecuteGuiltyColonist, Pawn>>(AccessTools.Method(typeof(RimWorld.JobDriver_ExecuteGuiltyColonist), "get_Victim"));
+    }
+
     public class JobDriver_ReleasePrisoner
     {
         public static readonly Func<Verse.AI.JobDriver_ReleasePrisoner, Pawn> Prisoner =

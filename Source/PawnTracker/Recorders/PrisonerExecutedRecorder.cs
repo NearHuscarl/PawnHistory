@@ -24,6 +24,7 @@ public class PrisonerExecutedRecorder : RecorderBase<PrisonerExecutedEvent>
             .WithPlayerSettlement(e.Victim.Map.Parent)
             .AddRule("Executioner", e.Executioner, addSubsymbols: true)
             .AddConstant("guilty", e.Guilty)
+            .AddConstant("route", e.ExecutionRoute)
             .Resolve();
 
         AddRecord(recordDef, e.Victim, desc, [e.Executioner]);
@@ -73,5 +74,38 @@ public class PrisonerExecutedRecorder : RecorderBase<PrisonerExecutedEvent>
 
         Expect.ThatAll([warden, prisoner]).Eventually().ToHaveHistoryRecord("[PAWN], a prisoner of the colony, was executed.", HistoryRecordDefOf.PrisonerExecuted);
         Expect.That(prisoner).Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Death, -1);
+    }
+
+    public void TestGuiltyColonist(TestScenario scenario)
+    {
+        Expect.Assertions(2);
+        scenario.SpeedUp();
+      
+        scenario.Map()
+            .BuildRoom(8, 8, "prison")
+            .AsPrison(0, 3)
+            .Execute();
+
+        var victim = scenario.Pawn().Colonist()
+            .Do(p => HealthUtility.DamageUntilDowned(p))
+            .Do(p => p.guilt.Notify_Guilty())
+            .CreateSingle();
+        
+        var warden = scenario.Pawn()
+            .Colonist()
+            .Do(p => CaptureUtility.OrderArrest(p, victim))
+            .CreateSingle();
+
+        scenario.WaitUntil(() => victim.IsPrisoner, () =>
+        {
+            victim.guest.SetExclusiveInteraction(PrisonerInteractionModeDefOf.Execution);
+            scenario.Pawn(warden)
+                .Colonist()
+                .StartJob(JobDefOf.PrisonerExecution, victim)
+                .CreateSingle();
+        });
+
+        Expect.ThatAll([warden, victim]).Eventually().ToHaveHistoryRecord("[PAWN], a guilty colonist of [PlayerSettlement], was executed after being found guilty.", HistoryRecordDefOf.PrisonerExecuted);
+        Expect.That(victim).Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Death, -1);
     }
 }

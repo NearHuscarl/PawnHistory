@@ -133,6 +133,7 @@ public static class DefLookup
         public static ThingDef Weapon_GrenadeFrag => field ??= DefDatabase<ThingDef>.GetNamed("Weapon_GrenadeFrag");
         public static ThingDef LongRangeMineralScanner => field ??= DefDatabase<ThingDef>.GetNamed("LongRangeMineralScanner");
         public static ThingDef MeleeWeapon_MonoSwordBladelink => field ??= DefDatabase<ThingDef>.GetNamed("MeleeWeapon_MonoSwordBladelink");
+        public static ThingDef VanometricPowerCell => field ??= DefDatabase<ThingDef>.GetNamed("VanometricPowerCell");
     }
 
     public static class RitualOutcomeEffect
