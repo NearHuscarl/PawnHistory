@@ -83,4 +83,41 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_Married</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>image->[Spouse1_pronoun] said marriage vows to [Spouse2] [circumstance_phrase]</li>
+				<li>image->[Spouse1_pronoun] walked down the aisle with [Spouse2] [circumstance_phrase]</li>
+				<li>image->[Spouse1_pronoun] exchanged rings with [Spouse2] [circumstance_phrase]</li>
+				<li>image->[Spouse1_pronoun] stood beside [Spouse2] as the ceremony ended [circumstance_phrase]</li>
+				<li>image->[Spouse1_pronoun] kissed [Spouse2] after the vows [circumstance_phrase]</li>
+				<li>image->[Spouse1_pronoun] celebrated marrying [Spouse2] [circumstance_phrase]</li>
+
+				<li>circumstance_phrase->in a dignified ceremony</li>
+				<li>circumstance_phrase->while both laughed happily</li>
+				<li>circumstance_phrase->while others looked on solemnly</li>
+				<li>circumstance_phrase->surrounded by friends and witnesses</li>
+				<li>circumstance_phrase->in a quiet, heartfelt ceremony</li>
+				<li>circumstance_phrase->as the colony celebrated around them</li>
+				<li>circumstance_phrase->under the eyes of their community</li>
+
+				<li>desc_sentence->[Spouse1] snuggled up against [Spouse2_objective].</li>
+				<li>desc_sentence->[Spouse1] locked eyes with [Spouse2_objective].</li>
+				<li>desc_sentence->[Spouse1] smiled warmly at [Spouse2_objective].</li>
+				<li>desc_sentence->[Spouse1] held [Spouse2_objective]'s hands.</li>
+				<li>desc_sentence->[Spouse1] leaned affectionately toward [Spouse2_objective].</li>
+				<li>desc_sentence->[Spouse1] shared a quiet moment with [Spouse2_objective].</li>
+				<li>desc_sentence->[Spouse1] looked deeply happy beside [Spouse2_objective].</li>
+
+				<li>tale_noun->[Spouse1] and [Spouse2] are married.</li>
+				
+				<li>entry->[tale_noun] [image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>

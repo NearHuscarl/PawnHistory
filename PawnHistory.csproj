@@ -182,6 +182,7 @@
     <Compile Include="Source\PawnTracker\Recorders\RansomRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\NewArrivalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PartyRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\MarriedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\WeddingRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HistoryTaleRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\ManInBlackJoinedRecorder.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="Source\PawnTracker\Recorders\RecorderBase.cs" />
     <Compile Include="Source\PawnTracker\Events\LightningStrikedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\LordToilChangeEvent.cs" />
+    <Compile Include="Source\PawnTracker\Events\MarriedEvent.cs" />
     <Compile Include="Source\PawnTracker\Events\HediffAddEvent.cs" />
     <Compile Include="Source\PawnTracker\HistoryCardUtility.cs" />
     <Compile Include="Source\PawnTracker\HistoryRecord.cs" />

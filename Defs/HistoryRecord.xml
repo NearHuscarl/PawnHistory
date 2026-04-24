@@ -524,6 +524,16 @@
 	</HistoryRecordDef>
 
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Married</defName>
+		<label>married</label>
+		<descriptionMaker>PH_Married</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/MarriageProposal</icon>
+		<categories>
+			<li>Life</li>
+			<li>Gathering</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>WeddingJoined</defName>
 		<label>wedding joined</label>
 		<descriptionMaker>PH_WeddingJoined</descriptionMaker>

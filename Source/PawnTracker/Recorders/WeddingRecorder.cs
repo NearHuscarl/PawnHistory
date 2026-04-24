@@ -95,6 +95,7 @@ public class WeddingRecorder : RecorderBase<WeddingRecorder.WeddingStartedInput>
     public enum CancelledReason
     {
         Unknown,
+        Success,
         PawnKilled,
         DangerousMap,
     }
@@ -103,7 +104,9 @@ public class WeddingRecorder : RecorderBase<WeddingRecorder.WeddingStartedInput>
         var reason = CancelledReason.Unknown;
         deadPawn = signal?.condition == PawnLostCondition.Killed ? signal.Value.Pawn : null;
 
-        if (trigger is Trigger_PawnKilled)
+        if (lord.LordJob is LordJob_Joinable_MarriageCeremony job && job.firstPawn.relations.DirectRelationExists(PawnRelationDefOf.Spouse, job.secondPawn))
+            reason =  CancelledReason.Success;
+        else if (trigger is Trigger_PawnKilled)
             reason = CancelledReason.PawnKilled;
         else if (trigger is Trigger_TickCondition && !GatheringsUtility.AcceptableGameConditionsToContinueGathering(lord.LordJob.Map))
             reason = CancelledReason.DangerousMap;
@@ -115,6 +118,9 @@ public class WeddingRecorder : RecorderBase<WeddingRecorder.WeddingStartedInput>
     {
         var recordDef = HistoryRecordDefOf.WeddingCancelled;
         var couple = new[] { input.FirstPawn, input.SecondPawn };
+        
+        if (input.Reason == CancelledReason.Success)
+            return;
 
         foreach (var pawn in input.WeddingGoers)
         {
@@ -156,21 +162,6 @@ public class WeddingRecorder : RecorderBase<WeddingRecorder.WeddingStartedInput>
         return () => scenario.SlowDown();
     }
 
-    private static (List<Pawn> couple, List<Pawn> spectators) SetupWedding(TestScenario scenario)
-    {
-        scenario.Map()
-            .BuildRoom(9, 9)
-            .WithThing(ThingDefOf.MarriageSpot, 1)
-            .Execute();
-
-        var pawn1 = scenario.Pawn().Colonist().CreateSingle();
-        var pawn2 = scenario.Pawn().Colonist().SetRelation(pawn1, PawnRelationDefOf.Fiance).CreateSingle();
-        var spectators = scenario.Pawn(3).Colonist().FullHeal().Execute();
-
-        scenario.Incident(GatheringDefOf.MarriageCeremony).Execute();
-        return ([pawn1, pawn2], spectators);
-    }
-
     public Action TestDangerousMap(TestScenario scenario)
     {
         scenario.SpeedUp();
@@ -185,5 +176,20 @@ public class WeddingRecorder : RecorderBase<WeddingRecorder.WeddingStartedInput>
         Expect.ThatAny(spectators).Eventually().ToHaveHistoryRecord("[Pawn1] and [Pawn2]'s wedding was called off due to nearby threats.", HistoryRecordDefOf.WeddingCancelled);
 
         return () => scenario.SlowDown();
+    }
+
+    public static (List<Pawn> couple, List<Pawn> spectators) SetupWedding(TestScenario scenario)
+    {
+        scenario.Map()
+            .BuildRoom(9, 9)
+            .WithThing(ThingDefOf.MarriageSpot, 1)
+            .Execute();
+
+        var pawn1 = scenario.Pawn().Colonist().CreateSingle();
+        var pawn2 = scenario.Pawn().Colonist().SetRelation(pawn1, PawnRelationDefOf.Fiance).CreateSingle();
+        var spectators = scenario.Pawn(3).Colonist().FullHeal().Execute();
+
+        scenario.Incident(GatheringDefOf.MarriageCeremony).Execute();
+        return ([pawn1, pawn2], spectators);
     }
 }
