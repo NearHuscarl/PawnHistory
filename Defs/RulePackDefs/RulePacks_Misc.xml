@@ -367,6 +367,18 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_AnimalTamed</defName>
+		<include>
+			<li>PH_Faction</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[InteractionLog]. [WildAnimal] was tamed and joined [PlayerFaction].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_Rescued</defName>
 		<rulePack>
 			<rulesStrings>
@@ -445,10 +457,12 @@
 
 	<RulePackDef>
 		<defName>PH_PrisonerRecruited</defName>
+		<include>
+			<li>PH_Faction</li>
+		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(hasFactionName==True) ->[InteractionLog]. [Prisoner] accepted and joined [Faction].</li>
-				<li>entry(hasFactionName==False)->[InteractionLog]. [Prisoner] accepted and joined [Recruiter_possessive] community.</li>
+				<li>entry->[InteractionLog]. [Prisoner] accepted and joined [PlayerFaction].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

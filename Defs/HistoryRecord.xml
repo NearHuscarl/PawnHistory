@@ -600,6 +600,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>AnimalTamed</defName>
+		<label>animal tamed</label>
+		<descriptionMaker>PH_AnimalTamed</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Joined</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>SocialFight</defName>
 		<label>social fight</label>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>

@@ -72,6 +72,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef MentalBreak;
     public static HistoryRecordDef MentalBreakViolent;
     public static HistoryRecordDef AnimalRevenge;
+    public static HistoryRecordDef AnimalTamed;
     public static HistoryRecordDef PredatorHuntingColonist;
     public static HistoryRecordDef SocialFight;
     public static HistoryRecordDef Rescued;

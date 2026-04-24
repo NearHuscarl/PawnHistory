@@ -21,6 +21,7 @@ public class PrisonerRecruitedRecorder : RecorderBase<PrisonerRecruitedEvent>
         // remove Sentence_RecruitAttemptAccepted
         var recruitAttemptText = e.LogEntryText.Split('.').Select(p => p.Trim()).FirstOrDefault(p => !p.NullOrEmpty());
         var desc = recordDef.Description(e.Prisoner, "Prisoner")
+            .WithPlayerFaction()
             .AddRule("Recruiter", e.Recruiter, addSubsymbols: true)
             .AddRule("Faction", e.Recruiter.Faction)
             .AddRule("InteractionLog", recruitAttemptText)
@@ -36,6 +37,7 @@ public class PrisonerRecruitedRecorder : RecorderBase<PrisonerRecruitedEvent>
     public Action Test(TestScenario scenario)
     {
         DebugSettings.instantRecruit = true;
+        scenario.SpeedUp();
 
         var prisoners = new List<Pawn>();
 
@@ -50,11 +52,10 @@ public class PrisonerRecruitedRecorder : RecorderBase<PrisonerRecruitedEvent>
             .CreateSingle();
 
         recruiter.Faction.Name = null;
-        scenario.SpeedUp();
 
         Expect.That(recruiter)
             .Eventually()
-            .ToHaveHistoryRecord("[InteractionLog]. [Prisoner] accepted and joined [Recruiter_possessive] community.");
+            .ToHaveHistoryRecord("[InteractionLog]. [Prisoner] accepted and joined the colony.");
 
         return () =>
         {
@@ -67,6 +68,7 @@ public class PrisonerRecruitedRecorder : RecorderBase<PrisonerRecruitedEvent>
     public Action TestNamedFaction(TestScenario scenario)
     {
         DebugSettings.instantRecruit = true;
+        scenario.SpeedUp();
 
         var prisoners = new List<Pawn>();
 
@@ -78,14 +80,12 @@ public class PrisonerRecruitedRecorder : RecorderBase<PrisonerRecruitedEvent>
             .Colonist()
             .FullHeal()
             .StartJob(JobDefOf.PrisonerAttemptRecruit, prisoners[0])
+            .Do(p => p.Faction.Name = "Deez Nuts")
             .CreateSingle();
-
-        recruiter.Faction.Name = "Deez Nuts";
-        scenario.SpeedUp();
 
         Expect.That(recruiter)
             .Eventually()
-            .ToHaveHistoryRecord("[InteractionLog]. [Prisoner] accepted and joined [Faction].");
+            .ToHaveHistoryRecord("[InteractionLog]. [Prisoner] accepted and joined Deez Nuts.");
         
         return () =>
         {

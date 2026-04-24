@@ -1,20 +1,13 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public record PrisonerRecruitedEvent(Pawn Prisoner, Pawn Recruiter, string LogEntryText = null) : GameEventBase;
-
-// Call order:
-// Pawn_InteractionsTracker.TryInteractWith() prefix
-// InteractionWorker_RecruitAttempt.Interacted()
-// - InteractionWorker_RecruitAttempt.DoRecruit() --> update Faction
-// Find.PlayLog.Add(entry) --> here
-// Pawn_InteractionsTracker.TryInteractWith() postfix
+public record AnimalTamedEvent(Pawn Tamer, Pawn TamedPawn, string LogEntryText) : GameEventBase;
 
 [HarmonyPatch(typeof(PlayLog), nameof(PlayLog.Add))]
-internal class PlayLog_Add_Patch_3
+internal class PlayLog_Add_Patch_7
 {
     internal static void Postfix(LogEntry entry)
     {
@@ -22,7 +15,7 @@ internal class PlayLog_Add_Patch_3
             return;
         
         var interactionDef = Accessor.PlayLogEntry_Interaction.InteractionDef(interactionEntry);
-        if (interactionDef != InteractionDefOf.RecruitAttempt)
+        if (interactionDef != InteractionDefOf.TameAttempt)
             return;
 
         var initiator = Accessor.PlayLogEntry_Interaction.Initiator(interactionEntry);
@@ -34,6 +27,6 @@ internal class PlayLog_Add_Patch_3
             return;
 
         var logEntryText = interactionEntry.ToGameStringFromPOV(recipient);
-        GameEventBus.Publish(new PrisonerRecruitedEvent(recipient, initiator, logEntryText));
+        GameEventBus.Publish(new AnimalTamedEvent(initiator, recipient, logEntryText));
     }
 }
