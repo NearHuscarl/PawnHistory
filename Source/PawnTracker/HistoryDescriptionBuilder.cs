@@ -129,6 +129,8 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
 
     public HistoryDescriptionBuilder AddConstant(string key, object value)
     {
+        if (value == null)
+            return this;
         extraConstants[key] = value.ToString();
         return this;
     }

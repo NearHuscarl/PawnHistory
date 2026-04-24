@@ -524,6 +524,27 @@
 	</HistoryRecordDef>
 
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>WeddingJoined</defName>
+		<label>wedding joined</label>
+		<descriptionMaker>PH_WeddingJoined</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/MarriageProposal</icon>
+		<categories>
+			<li>Life</li>
+			<li>Gathering</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>WeddingCancelled</defName>
+		<label>wedding cancelled</label>
+		<descriptionMaker>PH_WeddingCancelled</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/MarriageProposal</icon>
+		<categories>
+			<li>Life</li>
+			<li>Gathering</li>
+		</categories>
+	</HistoryRecordDef>
+
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Disease</defName>
 		<label>disease</label>
 		<descriptionMaker>PH_Disease</descriptionMaker>

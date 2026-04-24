@@ -64,6 +64,8 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef Banish;
     public static HistoryRecordDef JoinedParty;
     public static HistoryRecordDef PartyCancelled;
+    public static HistoryRecordDef WeddingJoined;
+    public static HistoryRecordDef WeddingCancelled;
     public static HistoryRecordDef Disease;
     public static HistoryRecordDef LungRot;
     public static HistoryRecordDef MentalBreak;

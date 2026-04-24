@@ -8,7 +8,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
 
-public class HistoryCardUtility
+public static class HistoryCardUtility
 {
     private static float containerPadding;
     /// <summary>

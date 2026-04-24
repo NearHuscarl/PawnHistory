@@ -33,21 +33,21 @@ public class PawnBuilder(int count = 1)
         return this;
     }
 
-    public PawnBuilder WithPawns(IEnumerable<Pawn> pawns)
+    public PawnBuilder WithPawns(IEnumerable<Pawn> pawns1)
     {
-        this.pawns = pawns.ToList();
+        this.pawns = pawns1.ToList();
         return this;
     }
 
-    public PawnBuilder WithKind(PawnKindDef kind)
+    public PawnBuilder WithKind(PawnKindDef kind1)
     {
-        this.kind = kind;
+        this.kind = kind1;
         return this;
     }
 
-    public PawnBuilder WithFaction(Faction faction)
+    public PawnBuilder WithFaction(Faction faction1)
     {
-        this.faction = faction;
+        this.faction = faction1;
         return this;
     }
 
@@ -142,13 +142,13 @@ public class PawnBuilder(int count = 1)
 
     public PawnBuilder Do(Action<Pawn> processor)
     {
-        processors.Add((p, _, __) => processor(p));
+        processors.Add((p, _, _) => processor(p));
         return this;
     }
 
     public PawnBuilder Do(Action<Pawn, int> processor)
     {
-        processors.Add((p, i, __) => processor(p, i));
+        processors.Add((p, i, _) => processor(p, i));
         return this;
     }
 
@@ -499,7 +499,7 @@ internal static class PawnBuilderExtension
         {
             return builder.DoOnce(captor =>
             {
-                CaptureUtility.TryGetBed(captor, captured, out Thing bed);
+                CaptureUtility.TryGetBed(captor, captured, out var bed);
                 var job = JobMaker.MakeJob(JobDefOf.Capture, captured, bed);
                 job.count = 1;
                 job.playerForced = true;

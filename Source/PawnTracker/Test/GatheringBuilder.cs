@@ -1,20 +1,30 @@
-﻿using RimWorld;
+﻿using System.Collections.Generic;
+using RimWorld;
 using System.Linq;
 using Verse;
 using Verse.AI.Group;
 
 namespace PawnHistory.Source.PawnTracker.Test;
 
-public class GatheringBuilderResult(Lord lord, Pawn organizer)
+public class GatheringBuilderResult(Lord lord, List<Pawn> organizers)
 {
     public Lord Lord { get; } = lord;
-    public Pawn Organizer { get; } = organizer;
+    public List<Pawn> Organizers { get; } = organizers;
 }
 
 public class GatheringBuilder(GatheringDef def)
 {
     private readonly GatheringDef def = def;
     private readonly Map map = Find.CurrentMap;
+
+    private static List<Pawn> GetOrganizers(LordJob lordJob)
+    {
+        if (lordJob is LordJob_Joinable_Gathering g)
+            return [g.Organizer];
+        else if (lordJob is LordJob_Joinable_MarriageCeremony mc)
+            return [mc.firstPawn, mc.secondPawn];
+        return [];
+    }
 
     /// <summary>
     /// Executes the incident and returns the list of pawns it spawned.
@@ -37,9 +47,8 @@ public class GatheringBuilder(GatheringDef def)
         }
 
         var newLord = map.lordManager.lords.Except(oldLords).FirstOrDefault();
-        var gatheringJob = newLord.LordJob as LordJob_Joinable_Gathering;
-        var organizer = gatheringJob.Organizer;
+        var organizers = GetOrganizers(newLord.LordJob);
 
-        return new GatheringBuilderResult(newLord, organizer);
+        return new GatheringBuilderResult(newLord, organizers);
     }
 }

@@ -3,7 +3,6 @@ using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Verse;
 using Verse.AI.Group;
 
@@ -11,18 +10,9 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRecord<PartyRecorder.PartyJoinedInput>, IRecord<PartyRecorder.PartyCancelledInput>
 {
-    public enum CancelledReason
-    {
-        Unknown,
-        Timeout,
-        PawnKilled,
-        OrganizerLeft,
-        DangerousMap,
-    }
-
     public record PartyStartedInput(Pawn Organizer);
     public record PartyJoinedInput(Pawn Organizer, List<Pawn> Partygoers, IEnumerable<Pawn> NewJoiners);
-    public record PartyCancelledInput(Pawn Organizer, List<Pawn> Partygoers, CancelledReason reason, Pawn deadPawn);
+    public record PartyCancelledInput(Pawn Organizer, List<Pawn> Partygoers, CancelledReason Reason, Pawn DeadPawn);
 
     public override void Register()
     {
@@ -64,7 +54,37 @@ public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRec
         AddRecord(recordDef, organizer, desc);
     }
 
-    private CancelledReason GetCancelledReason(Lord lord, Trigger trigger, Pawn organizer, TriggerSignal? signal, out Pawn deadPawn)
+    public void CreateRecord(PartyJoinedInput input)
+    {
+        var (organizer, partygoers, newJoiners) = input;
+        var recordDef = HistoryRecordDefOf.JoinedParty;
+
+        foreach (var pawn in newJoiners)
+        {
+            if (!ShouldRecord(pawn)) continue;
+            if (pawn == organizer) continue;
+
+            var desc = recordDef
+                .Description(pawn)
+                .WithOthers(partygoers)
+                .AddRule("Organizer", organizer)
+                .AddConstant("isOrganizer", false)
+                .Resolve();
+
+            AddRecord(recordDef, pawn, desc, [organizer]);
+        }
+    }
+
+    public enum CancelledReason
+    {
+        Unknown,
+        Timeout,
+        PawnKilled,
+        OrganizerLeft,
+        DangerousMap,
+    }
+
+    private static CancelledReason GetCancelledReason(Lord lord, Trigger trigger, Pawn organizer, TriggerSignal? signal, out Pawn deadPawn)
     {
         deadPawn = null;
 
@@ -72,7 +92,7 @@ public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRec
             return CancelledReason.Timeout; // party is finished
 
         var reason = CancelledReason.Unknown;
-        deadPawn = signal?.condition == PawnLostCondition.Killed ? signal?.Pawn : null;
+        deadPawn = signal?.condition == PawnLostCondition.Killed ? signal.Value.Pawn : null;
 
         if (trigger is Trigger_PawnKilled)
             reason = CancelledReason.PawnKilled;
@@ -107,31 +127,11 @@ public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRec
         }
     }
 
-    public void CreateRecord(PartyJoinedInput input)
-    {
-        var (organizer, partygoers, newJoiners) = input;
-        var recordDef = HistoryRecordDefOf.JoinedParty;
-
-        foreach (var pawn in newJoiners)
-        {
-            if (!ShouldRecord(pawn)) continue;
-            if (pawn == organizer) continue;
-
-            var desc = recordDef
-                .Description(pawn)
-                .WithOthers(partygoers)
-                .AddRule("Organizer", organizer)
-                .AddConstant("isOrganizer", false)
-                .Resolve();
-
-            AddRecord(recordDef, pawn, desc, [organizer]);
-        }
-    }
-
     [SkipTest]
     public void TestDangerousMap(TestScenario scenario)
     {
         scenario.SpeedUp();
+        scenario.Map().BuildRoom(5, 5).WithThing(ThingDefOf.PartySpot, 1, Faction.OfPlayer).Execute();
         scenario.Pawn(8).Colonist().Execute();
         scenario.Incident(GatheringDefOf.Party).Execute();
 
@@ -147,8 +147,9 @@ public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRec
     public void TestOrganizerLeft(TestScenario scenario)
     {
         scenario.SpeedUp();
+        scenario.Map().BuildRoom(5, 5).WithThing(ThingDefOf.PartySpot, 1, Faction.OfPlayer).Execute();
         scenario.Pawn(8).Colonist().Execute();
-        var organizer = scenario.Incident(GatheringDefOf.Party).Execute().Organizer;
+        var organizer = scenario.Incident(GatheringDefOf.Party).Execute().Organizers.Single();
 
         TickDelayManager.Delay(400, () =>
         {
@@ -161,12 +162,13 @@ public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRec
     public void TestPawnKilled(TestScenario scenario)
     {
         scenario.SpeedUp();
+        scenario.Map().BuildRoom(5, 5).WithThing(ThingDefOf.PartySpot, 1, Faction.OfPlayer).Execute();
         scenario.Pawn(8).Colonist().Execute();
         var res = scenario.Incident(GatheringDefOf.Party).Execute();
 
         TickDelayManager.Delay(400, () =>
         {
-            res.Lord.ownedPawns.FirstOrDefault(p => p != res.Organizer)?.Kill(null);
+            res.Lord.ownedPawns.FirstOrDefault(p => res.Organizers.Contains(p))?.Kill(null);
             scenario.SlowDown();
         });
     }

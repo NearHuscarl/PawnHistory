@@ -40,7 +40,7 @@ public static class QuestHelper
     
     public static Pawn GetAsker(Quest quest)
     {
-        foreach (var part in quest.PartsListForReading)
+        foreach (var part in quest?.PartsListForReading ?? [])
         {
             switch (part)
             {

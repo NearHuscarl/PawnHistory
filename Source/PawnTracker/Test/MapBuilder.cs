@@ -247,33 +247,12 @@ public class MapBuilder
 
     public MapBuilder WithThing(string defName, int totalCount = 10) => WithThing(DefDatabase<ThingDef>.GetNamed(defName), totalCount);
 
-    public MapBuilder WithThing(ThingDef thingDef, int totalCount = 10)
+    public MapBuilder WithThing(ThingDef thingDef, int totalCount = 10, Faction faction = null)
     {
         actions.Add(() =>
         {
             var interior = TestManager.Scenario.LastRoomRect.ContractedBy(1);
-            var limit = thingDef.stackLimit;
-            var fullStacks = totalCount / limit;
-            var remainder = totalCount % limit;
-
-            for (var i = 0; i < fullStacks; i++)
-            {
-                new ThingBuilder(thingDef)
-                    .Map(map)
-                    .Stack(limit)
-                    .At(interior.RandomCell)
-                    .Create();
-            }
-
-            if (remainder > 0)
-            {
-                new ThingBuilder(thingDef)
-                    .Map(map)
-                    .Stack(remainder)
-                    .At(interior.RandomCell)
-                    .Create();
-            }
-
+            new ThingBuilder(thingDef).Map(map).Stack(totalCount).Faction(faction).At(interior.RandomCell).Create();
             map.resourceCounter.UpdateResourceCounts(); // unoptimized?
         });
         return this;

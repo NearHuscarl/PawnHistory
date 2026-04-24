@@ -44,6 +44,7 @@
 				<li>questClause(priority=1,quest==ThreatReward_Raid_Joiner)-> [PAWN_pronoun] came to take [QuestAsker].</li>
 				<li>questClause(priority=1,quest==Intro_Deserter)          -> [PAWN_pronoun] came to hunt down [QuestAsker].</li>
 				<li>questClause(priority=0)                                -> [PAWN_pronoun] came to attack [QuestAsker].</li>
+				<li>questClause(priority=0,quest==)                        -></li>
 			</rulesStrings>
         </rulePack>
     </RulePackDef>

@@ -182,6 +182,7 @@
     <Compile Include="Source\PawnTracker\Recorders\RansomRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\NewArrivalRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PartyRecorder.cs" />
+    <Compile Include="Source\PawnTracker\Recorders\WeddingRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\HistoryTaleRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\ManInBlackJoinedRecorder.cs" />
     <Compile Include="Source\PawnTracker\Recorders\PrisonerCapturedRecorder.cs" />

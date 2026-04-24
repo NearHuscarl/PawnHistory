@@ -83,7 +83,7 @@ public class RaidRecorder : RecorderBase<RaidStartedEvent>
                 .AddRule("Faction", faction)
                 .AddRule("QuestAsker", asker)
                 .AddConstant("raidProperty", raidProperty)
-                .AddConstant("quest", quest.root.defName)
+                .AddConstant("quest", quest?.root.defName)
                 .Resolve();
             AddRecord(recordDef, pawn, desc, [asker], quest: quest);
         }
