@@ -131,15 +131,6 @@ public static class Accessor
         public static readonly AccessTools.FieldRef<RimWorld.QuestPart_DropPods, List<Thing>> TmpThingsToDrop = AccessTools.FieldRefAccess<RimWorld.QuestPart_DropPods, List<Thing>>("tmpThingsToDrop");
     }
 
-    public class QuestGen
-    {
-        public static readonly Action<QuestScriptDef, Slate> InitializeQuestGen =
-            AccessTools.MethodDelegate<Action<QuestScriptDef, Slate>>(AccessTools.Method(typeof(RimWorld.QuestGen.QuestGen), "InitializeQuestGen"));
-
-        public static readonly Action ClearQuestGenState =
-            AccessTools.MethodDelegate<Action>(AccessTools.Method(typeof(RimWorld.QuestGen.QuestGen), "ClearQuestGenState"));
-    }
-
     public class Dialog_BeginRitual
     {
         public static readonly Action<RimWorld.Dialog_BeginRitual> Start =

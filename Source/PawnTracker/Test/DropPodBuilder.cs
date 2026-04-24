@@ -9,14 +9,14 @@ namespace PawnHistory.Source.PawnTracker.Test;
 
 public class DropPodBuilder
 {
-    private readonly List<Pawn> pawns;
+    private readonly List<Thing> things;
     private readonly List<Action<Caravan>> processors = [];
     private TransportersArrivalAction arrivalAction;
     private PlanetTile tile;
 
-    public DropPodBuilder(List<Pawn> pawns)
+    public DropPodBuilder(List<Thing> things)
     {
-        this.pawns = pawns;
+        this.things = things;
     }
 
     public DropPodBuilder Position(PlanetTile tile1)
@@ -95,11 +95,11 @@ public class DropPodBuilder
     public void Execute(bool launch = true)
     {
         var map = Find.CurrentMap;
-        var cells = FindLauncherCells(map, pawns.Count);
+        var cells = FindLauncherCells(map, things.Count);
         var groupId = Find.UniqueIDsManager.GetNextTransporterGroupID();
         var launchables = new List<CompLaunchable>();
 
-        for (var i = 0; i < pawns.Count; i++)
+        for (var i = 0; i < things.Count; i++)
         {
             var launcher = SpawnLauncher(map, cells[i]);
             var pod = SpawnPod(map, FuelingPortUtility.GetFuelingPortCell(launcher));
@@ -109,7 +109,7 @@ public class DropPodBuilder
 
             transporter.groupID = groupId;
 
-            var pawn = pawns[i];
+            var pawn = things[i];
             if (pawn.Spawned)
                 pawn.DeSpawn();
 
@@ -122,9 +122,13 @@ public class DropPodBuilder
             return;
             
         launchables[0].TryLaunch(tile, arrivalAction);
+
+        if (processors.Count == 0)
+            return;
+        
         TickDelayManager.Interval(1, TestManager.Timeout, data =>
         {
-            var caravan = pawns.Select(p => p.GetCaravan()).FirstOrDefault(c => c != null);
+            var caravan = things.Select(p => p.GetCaravan()).FirstOrDefault(c => c != null);
             if (caravan == null)
                 return;
 

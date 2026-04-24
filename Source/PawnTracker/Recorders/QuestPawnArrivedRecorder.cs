@@ -45,7 +45,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
                     continue;
 
                 builder = comp.BuildGrammarRequest(builder, e.Quest, pawn, questPawns);
-                concerns = concerns.Concat(comp.GetConcerns(questPawns));
+                concerns = concerns.Concat(comp.GetConcerns(e.Quest, questPawns));
             }
             
             AddRecord(recordDef, pawn, builder.Resolve(), concerns, quest: e.Quest);
@@ -75,6 +75,42 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         scenario.Incident(DefLookup.Incident.RefugeePodCrash).Execute();
         var pawns2 = QuestHelper.GetArrivalPawns();
         Expect.That(pawns2.Last()).ToHaveHistoryRecord("[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [He] survived the impact but was badly wounded.", HistoryRecordDefOf.QuestPawnArrived);
+    }
+    
+    [RequiresRoyalty]
+    public void TestHospitalityRefugee(TestScenario scenario)
+    {
+        var quest = scenario.Quest(QuestScriptDefOf.Hospitality_Refugee).Execute();
+        var pawns = QuestHelper.GetArrivalPawns(quest);
+        
+        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN][AndOthers] arrived at [PlayerSettlement] seeking shelter and a place to regroup, with nowhere else to go.", HistoryRecordDefOf.QuestPawnArrived);
+        Expect.ThatAll(pawns).ToHaveHistoryRecordQuest(quest, HistoryRecordDefOf.QuestPawnArrived);
+    }
+
+    [RequiresRoyalty]
+    public Action TestShuttleCrashRescue(TestScenario scenario)
+    {
+        TestManager.Timeout = 100000000;
+        scenario.SpeedUp();
+        Expect.Assertions(2);
+        
+        scenario.Quest(DefLookup.QuestScript.ShuttleCrash_Rescue).Execute();
+
+        // QuestNode_Root_ShuttleCrash_Rescue.QuestStartDelay
+        TickDelayManager.Delay(120, () =>
+        {
+            var pawns = QuestHelper.GetArrivalPawns().Where(p => !p.HostileTo(Faction.OfPlayer));
+            Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN] along with [n] others made an emergency landing at [PlayerSettlement] after their shuttle was damaged.", HistoryRecordDefOf.QuestPawnArrived);
+            
+            scenario.ForwardTime(1f);
+        });
+
+        scenario.WaitUntil(() => QuestHelper.GetArrivalPawns().Any(p => p.HostileTo(Faction.OfPlayer)), () =>
+        {
+            var raiders = QuestHelper.GetArrivalPawns().Where(p => p.HostileTo(Faction.OfPlayer));
+            Expect.ThatAll(raiders).ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] attacked the crashed shuttle site.", HistoryRecordDefOf.QuestPawnArrived);
+        });
+        return () => scenario.SlowDown();
     }
     
     public void TestRaidJoiner(TestScenario scenario)
@@ -112,41 +148,6 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         });
     }
     
-    [RequiresRoyalty]
-    public void TestHospitalityRefugee(TestScenario scenario)
-    {
-        var quest = scenario.Quest(QuestScriptDefOf.Hospitality_Refugee).Execute();
-        var pawns = QuestHelper.GetArrivalPawns(quest);
-        
-        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN][AndOthers] arrived at [PlayerSettlement] seeking shelter and a place to regroup, with nowhere else to go.", HistoryRecordDefOf.QuestPawnArrived);
-    }
-
-    [RequiresRoyalty]
-    public Action TestShuttleCrashRescue(TestScenario scenario)
-    {
-        TestManager.Timeout = 100000000;
-        scenario.SpeedUp();
-        Expect.Assertions(2);
-        
-        scenario.Quest(DefLookup.QuestScript.ShuttleCrash_Rescue).Execute();
-
-        // QuestNode_Root_ShuttleCrash_Rescue.QuestStartDelay
-        TickDelayManager.Delay(120, () =>
-        {
-            var pawns = QuestHelper.GetArrivalPawns().Where(p => !p.HostileTo(Faction.OfPlayer));
-            Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN] along with [n] others made an emergency landing at [PlayerSettlement] in a damaged shuttle.", HistoryRecordDefOf.QuestPawnArrived);
-            
-            scenario.ForwardTime(1f);
-        });
-
-        scenario.WaitUntil(() => QuestHelper.GetArrivalPawns().Any(p => p.HostileTo(Faction.OfPlayer)), () =>
-        {
-            var raiders = QuestHelper.GetArrivalPawns().Where(p => p.HostileTo(Faction.OfPlayer));
-            Expect.ThatAll(raiders).ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] attacked the crashed shuttle site.", HistoryRecordDefOf.QuestPawnArrived);
-        });
-        return () => scenario.SlowDown();
-    }
-
     public void TestTradeRequest(TestScenario scenario)
     {
         var colonist = scenario.Pawn().Colonist().CreateSingle();

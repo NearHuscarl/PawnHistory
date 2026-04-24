@@ -31,7 +31,7 @@ public class TitleInheritedRecorder : RecorderBase<TitleInheritanceEvent>
         AddRecord(recordDef, e.Heir, desc, [e.Deceased]);
     }
 
-    private static Pawn SetupInheritance(TestScenario scenario, RoyalTitleDef deceasedTitle, RoyalTitleDef heirTitle = null)
+    public static Pawn SetupInheritance(TestScenario scenario, RoyalTitleDef deceasedTitle, RoyalTitleDef heirTitle = null)
     {
         var deceased = scenario.Pawn().Colonist().SetRoyalTitle(deceasedTitle).CreateSingle();
         var heir = scenario.Pawn(deceased.royalty.GetHeir(Faction.OfEmpire)).Colonist().SetRoyalTitle(heirTitle).CreateSingle();

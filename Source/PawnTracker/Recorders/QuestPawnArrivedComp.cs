@@ -13,7 +13,7 @@ public abstract class QuestPawnArrivedComp : RecordComp<QuestPawnArrivedRecorder
         return builder;
     }
     
-    public virtual IEnumerable<Thing> GetConcerns(List<Pawn> questPawns)
+    public virtual IEnumerable<Thing> GetConcerns(Quest quest, List<Pawn> questPawns)
     {
         yield break;
     }

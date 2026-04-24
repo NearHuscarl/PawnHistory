@@ -11,11 +11,25 @@ public class QuestBuilder
     private readonly List<Action<Quest>> processors = [];
     private readonly QuestScriptDef questScriptDef;
     private readonly float points;
+    private Pawn pawn;
+    private Quest quest;
     
-    public QuestBuilder(QuestScriptDef def, float points = 500)
+    public QuestBuilder(QuestScriptDef def = null, float points = 500)
     {
         questScriptDef = def;
         this.points = points;
+    }
+    
+    public QuestBuilder WithQuest(Quest quest1)
+    {
+        this.quest = quest1;
+        return this;
+    }
+    
+    public QuestBuilder Pawn(Pawn pawn1)
+    {
+        this.pawn = pawn1;
+        return this;
     }
     
     public QuestBuilder Do(Action<Quest> processor)
@@ -56,14 +70,16 @@ public class QuestBuilder
         quest.dismissed = false;
     }
 
+    private Quest GenerateQuest()
+    {
+        return QuestUtility.GenerateQuestAndMakeAvailable(questScriptDef, points);
+    }
+
     public Quest Execute()
     {
-        var quest = QuestUtility.GenerateQuestAndMakeAvailable(questScriptDef, points);
-
-        AcceptInstantly(quest);
-        
-        processors.ForEach(processor => processor(quest));
-        
-        return quest;
+        var effectiveQuest = quest ?? GenerateQuest();
+        AcceptInstantly(effectiveQuest);
+        processors.ForEach(processor => processor(effectiveQuest));
+        return effectiveQuest;
     }
 }

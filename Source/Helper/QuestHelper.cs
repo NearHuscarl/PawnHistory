@@ -32,10 +32,30 @@ public static class QuestHelper
         var source1 = quest.PartsListForReading.OfType<QuestPart_PawnsArrive>().SelectMany(part => part.pawns);
         var source2 = quest.PartsListForReading.OfType<QuestPart_DropPods>().SelectMany(part => part.Things).OfType<Pawn>();
         var source3 = quest.PartsListForReading.OfType<QuestPart_GiveToCaravan>().SelectMany(part => part.Things).OfType<Pawn>();
-        var source4 = quest.PartsListForReading.OfType<QuestPart_GiveNearPawn>().SelectMany(part => Accessor.QuestPart_GiveNearPawn.Pawns(part));
-        var source5 = quest.PartsListForReading.OfType<QuestPart_SetupTransportShip>().SelectMany(part => part.pawns ?? []);
+        var source4 = quest.PartsListForReading.OfType<QuestPart_SetupTransportShip>()
+            .Where(part => part.transportShip.ShipExistsAndIsSpawned)
+            .SelectMany(part => part.transportShip.TransporterComp.innerContainer.OfType<Pawn>());
         
-        return source1.Concat(source2).Concat(source3).Concat(source4).Concat(source5).Where(p => p.MapHeld == Find.CurrentMap).ToList();
+        return source1.Concat(source2).Concat(source3).Where(p => p.MapHeld != null).Concat(source4).ToList();
+    }
+    
+    public static bool TryGetRelatedQuestFrom(TransportShip ship, out Quest quest)
+    {
+        quest = null;
+
+        foreach (var q in Find.QuestManager.QuestsListForReading)
+        {
+            if (q.State != QuestState.Ongoing)
+                continue;
+
+            if (!q.QuestReserves(ship))
+                continue;
+
+            quest = q;
+            return true;
+        }
+
+        return false;
     }
     
     public static Pawn GetAsker(Quest quest)

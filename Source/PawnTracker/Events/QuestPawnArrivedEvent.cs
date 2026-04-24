@@ -1,9 +1,8 @@
 using HarmonyLib;
 using RimWorld;
-using RimWorld.Planet;
-using RimWorld.QuestGen;
 using System.Collections.Generic;
 using System.Linq;
+using PawnHistory.Source.Helper;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
@@ -13,6 +12,7 @@ public enum QuestPawnArrivedMode
     WalkIn,
     DropPod,
     AddedToCaravan,
+    Shuttle,
 }
 
 public record QuestPawnArrivedEvent(List<Pawn> Pawns, Quest Quest, QuestPawnArrivedMode ArrivalMode) : GameEventBase;
@@ -64,5 +64,23 @@ internal static class QuestPart_GiveToCaravan_Notify_QuestSignalReceived_Patch
         
         var pawns = __instance.Things.OfType<Pawn>().ToList();
         GameEventBus.Publish(new QuestPawnArrivedEvent(pawns, __instance.quest, QuestPawnArrivedMode.AddedToCaravan));
+    }
+}
+
+// Do not patch QuestPart_AddShipJob.Notify_QuestSignalReceived, it only schedules the job and might not work as expected.
+[HarmonyPatch(typeof(ShipJob_Arrive), nameof(ShipJob_Arrive.TryStart))]
+internal static class ShipJob_Arrive_Start_Patch
+{
+    private static void Postfix(ShipJob_Arrive __instance, bool __result)
+    {
+        if (!__result)
+            return;
+
+        var ship = __instance.transportShip;
+        if (!QuestHelper.TryGetRelatedQuestFrom(ship, out var quest))
+            return;
+
+        var pawns = ship.TransporterComp.innerContainer.OfType<Pawn>().ToList();
+        GameEventBus.Publish(new QuestPawnArrivedEvent(pawns, quest, QuestPawnArrivedMode.Shuttle));
     }
 }

@@ -17,7 +17,7 @@ class InfoCard(Pawn pawn, InfoCardType infoType) : Window
     private readonly InfoCardType infoType = infoType;
     private readonly Pawn pawn = pawn;
 
-    public override Vector2 InitialSize => new(650f, 500f);
+    public override Vector2 InitialSize => new(670f, 500f);
 
     public override void DoWindowContents(Rect inRect)
     {

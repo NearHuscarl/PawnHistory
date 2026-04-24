@@ -263,11 +263,12 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
 
                     return new AssertionData<RimWorld.Quest>(
                         actual,
-                        $"Expect quest to match for {pawn} {ToString(testParams)}\nExpected:\n{quest}\nActual:\n{actual}",
-                        $"Expect quest NOT to match for {pawn} {ToString(testParams)}\nExpected:\n{quest}\nActual:\n{actual}."
+                        $"Expect quest to match for {pawn} {ToString(testParams)}\nExpected:\n{quest.name}\nActual:\n{actual?.name}",
+                        $"Expect quest NOT to match for {pawn} {ToString(testParams)}\nExpected:\n{quest.name}\nActual:\n{actual?.name}."
                     );
                 },
-                testParams
+                testParams,
+                (a, b) => a?.id == b?.id
             );
         });
     }
@@ -304,7 +305,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         var tickStart = Find.TickManager.TicksGame;
         Exception lastException = null;
 
-        var action = TickDelayManager.Interval(eventuallyPollIntervalTicks, (a) =>
+        var action = TickDelayManager.Interval(eventuallyPollIntervalTicks, a =>
         {
             if (!isEventually)
             {

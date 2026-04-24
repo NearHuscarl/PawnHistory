@@ -67,7 +67,6 @@ public class LightningStrikeRecorder : RecorderBase<LightningStrikeRecorder.Inpu
     public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(3)
-            .Position(Find.CurrentMap.Center, 8)
             .ThatMatches(ShouldRecord)
             .Do(p => Find.CurrentMap.weatherManager.eventHandler.AddEvent(new WeatherEvent_LightningStrike(Find.CurrentMap, p.Position)))
             .Execute();
