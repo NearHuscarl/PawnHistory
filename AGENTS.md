@@ -72,13 +72,12 @@ Startup: `Source/PawnTracker/PawnTracker.cs`.
 4. Add the Harmony patch and typed event if needed
 5. Implement `RecorderBase<TEvent>`
 6. Add recorder-local tests when coverage is needed
-7. Update `PawnHistory.csproj` explicitly for every new `.cs` file
 
 ## Important behavior
 
 - Recorder discovery is reflection-based over non-abstract `RecorderBase` subclasses
 - Tests are reflection-based and require the supported signatures exactly
-- `RecorderManager.ShouldRecord(Pawn)` records humanlikes and bonded animals only
+- `RecorderManager.ShouldRecord(Pawn)` records human likes and bonded animals only
 
 ## Safety
 
