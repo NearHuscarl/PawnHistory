@@ -8,7 +8,7 @@ namespace PawnHistory.Source.PawnTracker;
 
 public class ITab_Pawn_History : ITab
 {
-    public static readonly float DefaultWidth = 630f;
+    public static readonly float DefaultWidth = 650f;
     public static readonly float DefaultHeight = 510f;
 
     public Pawn PawnToShowInfo
@@ -36,7 +36,7 @@ public class ITab_Pawn_History : ITab
     public override void OnOpen()
     {
         base.OnOpen();
-        HistoryCardUtility.scrollPosition = Vector2.zero;
+        HistoryCardUtility.ScrollPosition = Vector2.zero;
     }
 
     protected override void FillTab()

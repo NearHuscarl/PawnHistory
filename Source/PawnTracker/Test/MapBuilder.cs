@@ -198,7 +198,7 @@ public class MapBuilder
         return WithThing(ThingDefOf.MedicineUltratech, 30);
     }
 
-    public MapBuilder AsPrison(int prisonerCount, int bedCount = 0, List<Pawn> prisoners = null)
+    public MapBuilder AsPrison(int prisonerCount, int bedCount = 1, List<Pawn> prisoners = null)
     {
         actions.Add(() =>
         {

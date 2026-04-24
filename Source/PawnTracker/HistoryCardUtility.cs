@@ -25,10 +25,11 @@ public class HistoryCardUtility
     private static float colWidthDate;
     private static float colWidthIcon;
     private static float colWidthDesc;
+    private static float colWidthQuest;
     private static float cellPx;
 
     private static float scrollWidth;
-    public static Vector2 scrollPosition;
+    public static Vector2 ScrollPosition;
 
     static HistoryCardUtility() => ReloadLayoutConfig();
 
@@ -48,23 +49,24 @@ public class HistoryCardUtility
         colWidthDate = 90f;
         colWidthIcon = 20f;
         colWidthDesc = 470f;
+        colWidthQuest = 20f;
         cellPx = 5f;
 
         scrollWidth = 16f;
-        scrollPosition = Vector2.zero;
+        ScrollPosition = Vector2.zero;
     }
 
-    private static readonly Dictionary<HistoryRecord, float> cachedHeights = [];
+    private static readonly Dictionary<HistoryRecord, float> CachedHeights = [];
     private static float GetRowHeight(HistoryRecord record)
     {
         Text.Font = GameFont.Tiny;
 
-        if (!cachedHeights.TryGetValue(record, out var h))
-        {
-            var textHeight = Text.CalcHeight(LangUtility.StripColorTags(record.description), colWidthDesc);
-            h = Mathf.Max(textHeight, minRowHeight);
-            cachedHeights[record] = h;
-        }
+        if (CachedHeights.TryGetValue(record, out var h))
+            return h;
+        
+        var textHeight = Text.CalcHeight(LangUtility.StripColorTags(record.description), colWidthDesc);
+        h = Mathf.Max(textHeight, minRowHeight);
+        CachedHeights[record] = h;
         return h;
     }
 
@@ -82,10 +84,12 @@ public class HistoryCardUtility
         // --- HEADER SETUP ---
         Text.Font = GameFont.Small; GUI.color = Color.gray; Text.Anchor = TextAnchor.MiddleLeft;
 
-        var headerRect = new Rect(0, filterHeight + gap, inRect.width, headerHeight);
-        Widgets.Label(new Rect(cellPx, headerRect.y, colWidthDate, headerHeight), "NH_PH_HistoryCard_HeaderDate".Translate());
-        //Widgets.Label(new Rect(colWidthDate + colGap, headerRect.y, colWidthIcon, headerHeight), "NH_PH_HistoryCard_HeaderEvent".Translate());
-        Widgets.Label(new Rect(colWidthDate + colWidthIcon + colGap, headerRect.y, colWidthDesc, headerHeight), "NH_PH_HistoryCard_HeaderDescription".Translate());
+        var header = new Rect(0, filterHeight + gap, inRect.width, headerHeight);
+        var dateHeaderCell = new Rect(cellPx, header.y, colWidthDate, headerHeight);
+        Widgets.Label(dateHeaderCell, "NH_PH_HistoryCard_HeaderDate".Translate());
+        var iconHeaderCell = new Rect(dateHeaderCell.xMax, header.y + (header.height - colWidthIcon) / 2, colWidthIcon, colWidthIcon); // used to calculate next cell rect
+        var descHeaderCell = new Rect(iconHeaderCell.xMax + colGap, header.y, colWidthDesc, headerHeight);
+        Widgets.Label(descHeaderCell, "NH_PH_HistoryCard_HeaderDescription".Translate());
 
         // --- SCROLL VIEW ---
         var tableY = filterHeight + gap + headerHeight;
@@ -93,7 +97,7 @@ public class HistoryCardUtility
         var totalHeight = records.Sum(GetRowHeight);
         var viewRect = new Rect(0, 0, inRect.width - scrollWidth, totalHeight);
 
-        Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
+        Widgets.BeginScrollView(outRect, ref ScrollPosition, viewRect);
         var curY = 0f;
         for (var i = 0; i < records.Count; i++)
         {
@@ -108,12 +112,25 @@ public class HistoryCardUtility
             TooltipHandler.TipRegion(dateCell, record.GetTipDate());
 
             GUI.color = Color.white;
-            var iconCell = new Rect(colWidthDate, row.y + ((row.height - colWidthIcon) / 2), colWidthIcon, colWidthIcon);
+            var iconCell = new Rect(dateCell.xMax, row.y + (row.height - colWidthIcon) / 2, colWidthIcon, colWidthIcon);
             GUI.DrawTexture(iconCell, record.Icon, ScaleMode.ScaleToFit);
 
             GUI.color = Color.white; Text.Font = GameFont.Tiny; Text.Anchor = TextAnchor.MiddleLeft;
-            var descCell = new Rect(colWidthDate + colWidthIcon + colGap, row.y, colWidthDesc, row.height);
+            var descCell = new Rect(iconCell.xMax + colGap, row.y, colWidthDesc, row.height);
             Widgets.Label(descCell, record.description);
+
+            var questCell = new Rect(descCell.xMax + colGap, row.y + (row.height - colWidthQuest) / 2, colWidthQuest, colWidthQuest);
+            if (record.quest != null)
+            {
+                if (Widgets.ButtonImage(questCell, TexCommand.OpenLinkedQuestTex))
+                {
+                    Find.MainTabsRoot.SetCurrentTab(MainButtonDefOf.Quests);
+                    ((MainTabWindow_Quests)MainButtonDefOf.Quests.TabWindow).Select(record.quest);
+                }
+
+                if (Mouse.IsOver(questCell))
+                    TooltipHandler.TipRegion(questCell, record.quest.name);
+            }
 
             var ticksAgo = GenTicks.TicksAbs - record.date;
             var dateAgoText = $"Occurred {ticksAgo.ToStringTicksToPeriod()} ago";
@@ -125,15 +142,7 @@ public class HistoryCardUtility
                     TargetHighlighter.Highlight(target);
             }
             if (Mouse.IsOver(row) && Event.current.type == EventType.MouseDown && Event.current.button == 0)
-            {
-                if (record.quest != null && record.concerns.Count == 0)
-                {
-                    Find.MainTabsRoot.SetCurrentTab(MainButtonDefOf.Quests);
-                    ((MainTabWindow_Quests)MainButtonDefOf.Quests.TabWindow).Select(record.quest);
-                }
-                else
-                    CameraJumper.TryJumpAndSelect(record.GetThingToJumpTo());
-            }
+                CameraJumper.TryJumpAndSelect(record.GetThingToJumpTo());
             else if (Mouse.IsOver(descCell) && Event.current.type == EventType.MouseDown && Event.current.button == 1)
             {
                 GUIUtility.systemCopyBuffer = LangUtility.StripColorTags(record.description);
