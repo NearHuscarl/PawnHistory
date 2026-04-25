@@ -3,6 +3,7 @@ using RimWorld;
 using RimWorld.QuestGen;
 using Verse;
 using System.Linq;
+using RimWorld.Planet;
 
 namespace PawnHistory.Source.Helper;
 
@@ -39,13 +40,32 @@ public static class QuestHelper
         return source1.Concat(source2).Concat(source3).Where(p => p.MapHeld != null).Concat(source4).ToList();
     }
     
+    public static bool TryGetRelatedQuestFrom(WorldObject worldObject, out Quest quest)
+    {
+        quest = null;
+
+        foreach (var q in Find.QuestManager.QuestsListForReading)
+        {
+            if (q.hidden)
+                continue;
+
+            if (!q.QuestLookTargets.Contains(worldObject))
+                continue;
+
+            quest = q;
+            return true;
+        }
+
+        return false;
+    }
+    
     public static bool TryGetRelatedQuestFrom(TransportShip ship, out Quest quest)
     {
         quest = null;
 
         foreach (var q in Find.QuestManager.QuestsListForReading)
         {
-            if (q.State != QuestState.Ongoing)
+            if (q.hidden)
                 continue;
 
             if (!q.QuestReserves(ship))

@@ -168,7 +168,7 @@
 				<li>desc_sentence->[PAWN] nodded, satisfied with the result.</li>
 				<li>desc_sentence->[PAWN] took a moment to admire the craftsmanship.</li>
 
-				<li>entry->[PAWN] completed work on a [Quality] [Crafted]. [image]. [desc_sentence]</li>
+				<li>entry->[PAWN] completed [PAWN_possessive] work on [Quality_indefinite] [Crafted]. [image]. [desc_sentence]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

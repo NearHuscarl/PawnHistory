@@ -24,7 +24,7 @@ public class CraftedQualityThingRecorder : RecorderBase<CraftedQualityThingEvent
         
         var desc = recordDef.Description(e.Pawn)
             .IncludePawnGrammar()
-            .AddRule("Quality", e.Quality.GetLabel().ToLower())
+            .AddRule("Quality", e.Quality.GetLabel().ToLower(), addSubsymbols: true)
             .AddRule("Crafted", e.CraftedThing.LabelNoParenthesis.Colorize(ColoredText.SubtleGrayColor), addSubsymbols: true)
             .Resolve();
 
@@ -41,7 +41,7 @@ public class CraftedQualityThingRecorder : RecorderBase<CraftedQualityThingEvent
         craftedThing.GetComp<CompArt>().InitializeArt(ArtGenerationContext.Colony);
         QualityUtility.SendCraftNotification(craftedThing, pawn);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] completed work on a masterwork [CRAFTED]. [Image]. [DescSentence]", HistoryRecordDefOf.CraftedQualityThing);
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] completed [His] work on a masterwork [CRAFTED]. [Image]. [DescSentence]", HistoryRecordDefOf.CraftedQualityThing);
         Expect.That(pawn).ToHaveHistoryRecordConcern(craftedThing, HistoryRecordDefOf.CraftedQualityThing);
     }
 
@@ -54,7 +54,7 @@ public class CraftedQualityThingRecorder : RecorderBase<CraftedQualityThingEvent
         
         QualityUtility.SendCraftNotification(craftedThing, pawn);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] completed work on a legendary [CRAFTED]. [Image]. [DescSentence]", HistoryRecordDefOf.CraftedQualityThing);
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] completed [His] work on a legendary [CRAFTED]. [Image]. [DescSentence]", HistoryRecordDefOf.CraftedQualityThing);
         Expect.That(pawn).ToHaveHistoryRecordConcern(craftedThing, HistoryRecordDefOf.CraftedQualityThing);
     }
 }

@@ -99,7 +99,8 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
     public override void CreateRecord(Input e)
     {
         var recordDef = HistoryRecordDefOf.PlayerTransporterArrived;
-
+        QuestHelper.TryGetRelatedQuestFrom(e.WorldObject, out var quest);
+        
         foreach (var pawn in e.Pawns.Where(ShouldRecord))
         {
             var builder = recordDef.Description(pawn)
@@ -112,7 +113,7 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
             if (e.ArrivalAction == ArrivalAction.Enter)
                 builder.WithPlayerSettlement(e.WorldObject).AddConstant("isColony", e.WorldObject?.Faction == Faction.OfPlayer);
 
-            AddRecord(recordDef, pawn, builder.Resolve(), tileId: e.Tile);
+            AddRecord(recordDef, pawn, builder.Resolve(), tileId: e.Tile, quest: quest);
         }
     }
 

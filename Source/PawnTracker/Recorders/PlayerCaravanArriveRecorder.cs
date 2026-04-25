@@ -85,6 +85,7 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
     public override void CreateRecord(Input e)
     {
         var recordDef = HistoryRecordDefOf.PlayerCaravanArrived;
+        QuestHelper.TryGetRelatedQuestFrom(e.WorldObject, out var quest);
 
         foreach (var pawn in e.Pawns)
         {
@@ -99,7 +100,7 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
             if (e.ArrivalAction == ArrivalAction.Enter)
                 builder.AddConstant("isColony", e.WorldObject.Faction == Faction.OfPlayer);
             
-            AddRecord(recordDef, pawn, builder.Resolve());
+            AddRecord(recordDef, pawn, builder.Resolve(), quest: quest);
         }
     }
 
