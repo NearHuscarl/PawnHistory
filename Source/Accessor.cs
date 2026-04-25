@@ -30,8 +30,14 @@ public static class Accessor
 
     public class BattleLogEntry_RangedImpact
     {
+        public static readonly AccessTools.FieldRef<Verse.BattleLogEntry_RangedImpact, Pawn> RecipientPawn =
+            AccessTools.FieldRefAccess<Verse.BattleLogEntry_RangedImpact, Pawn>("recipientPawn");
+        
         public static readonly AccessTools.FieldRef<Verse.BattleLogEntry_RangedImpact, Pawn> OriginalTargetPawn =
             AccessTools.FieldRefAccess<Verse.BattleLogEntry_RangedImpact, Pawn>("originalTargetPawn");
+        
+        public static readonly AccessTools.FieldRef<Verse.BattleLogEntry_RangedImpact, ThingDef> ProjectileDef =
+            AccessTools.FieldRefAccess<Verse.BattleLogEntry_RangedImpact, ThingDef>("projectileDef");
     }
 
     public class CompLongRangeMineralScanner

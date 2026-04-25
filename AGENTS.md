@@ -52,7 +52,8 @@ Startup: `Source/PawnTracker/PawnTracker.cs`.
 ## Implementation rules
 
 - Prefer modern C# already used in the repo: `record`, collection expressions, concise APIs
-- Code must be readable. Transpiler in harmony is forbidden.
+- Each recorder and event class MUST be in its own file. I can't believe I have to type this out for this moron.
+- Code must be readable. Transpiler in harmony is forbidden. AND NO IL code manipulation.
 - Keep recorder logic small and event-focused
 - `CreateRecord(...)` input must be domain-specific; map generic upstream events in `Register()`
 - Call `ShouldRecord(...)` inside `CreateRecord(...)` before writing

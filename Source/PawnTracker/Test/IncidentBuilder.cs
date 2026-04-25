@@ -58,29 +58,6 @@ public class IncidentBuilder
         return Faction(faction);
     }
 
-    private bool IsTradeIncident()
-    {
-        return def.Worker is IncidentWorker_TraderCaravanArrival or IncidentWorker_OrbitalTraderArrival;
-    }
-
-    private List<Pawn> OrderResult(IEnumerable<Pawn> pawns)
-    {
-        if (IsTradeIncident())
-        {
-            var list = pawns.ToList();
-
-            var trader = list.FirstOrDefault(p => p.trader != null);
-            if (trader == null)
-                return list;
-
-            list.Remove(trader);
-            list.Insert(0, trader);
-            return list;
-        }
-
-        return pawns.ToList();
-    }
-
     /// <summary>
     /// Executes the incident and returns the list of pawns it spawned.
     /// </summary>
@@ -97,8 +74,8 @@ public class IncidentBuilder
 
         var newLord = map.lordManager.lords.Except(oldLords).FirstOrDefault();
         if (newLord != null)
-            return OrderResult(newLord.ownedPawns);
+            return newLord.ownedPawns;
 
-        return OrderResult(map.mapPawns.AllPawnsSpawned.Except(oldPawns));
+        return map.mapPawns.AllPawnsSpawned.Except(oldPawns).ToList();
     }
 }

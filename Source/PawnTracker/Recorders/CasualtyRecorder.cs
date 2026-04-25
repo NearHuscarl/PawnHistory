@@ -178,17 +178,9 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
     [TestTag("Flaky")]
     public Action TestDeadInCombat(TestScenario scenario)
     {
-        var friends = scenario.RaidFriendly()
-            .Point(700)
-            .Execute();
-
-        var enemies = scenario.Incident(IncidentDefOf.RaidEnemy)
-            .Point(500)
-            .Execute();
-
-        var pawns = friends.Concat(enemies).ToList();
-        
-        scenario.Pawn(pawns)
+        var friends = scenario.RaidFriendly().Point(700).Execute();
+        var enemies = scenario.Incident(IncidentDefOf.RaidEnemy).Point(500).Execute();
+        var pawns = scenario.Pawn(friends.Concat(enemies))
             .ThatMatches(ShouldRecord)
             .SetRandomRelations(5)
             .Execute();

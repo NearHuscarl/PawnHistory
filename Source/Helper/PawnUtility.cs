@@ -12,7 +12,6 @@ internal static class PawnUtility
     {
         // GrammarResolverSimple.cs -> "nameDef"
         // TODO: test with shambler, shambler past colonist..
-
         public string NameDef =>
             pawn.Name != null
                 ? Find.ActiveLanguageWorker.WithDefiniteArticlePostProcessed(pawn.Name.ToStringShort, pawn.gender, name: true).ApplyTag(TagType.Name).Resolve()
