@@ -114,6 +114,7 @@ public static class DefLookup
 
     public static class Tale
     {
+        public static TaleDef PlayedGame => field ??= DefDatabase<TaleDef>.GetNamed("PlayedGame");
         public static TaleDef Stripped => field ??= DefDatabase<TaleDef>.GetNamed("Stripped");
         public static TaleDef VisitedGrave => field ??= DefDatabase<TaleDef>.GetNamed("VisitedGrave");
     }
@@ -132,6 +133,11 @@ public static class DefLookup
     public static class Thing
     {
         public static ThingDef PodLauncher => field ??= DefDatabase<ThingDef>.GetNamed("PodLauncher");
+        public static ThingDef HorseshoesPin => field ??= DefDatabase<ThingDef>.GetNamed("HorseshoesPin");
+        public static ThingDef HoopstoneRing => field ??= DefDatabase<ThingDef>.GetNamed("HoopstoneRing");
+        public static ThingDef ChessTable => field ??= DefDatabase<ThingDef>.GetNamed("ChessTable");
+        public static ThingDef GameOfUrBoard => field ??= DefDatabase<ThingDef>.GetNamed("GameOfUrBoard");
+        public static ThingDef PokerTable => field ??= DefDatabase<ThingDef>.GetNamed("PokerTable");
         public static ThingDef Weapon_GrenadeFrag => field ??= DefDatabase<ThingDef>.GetNamed("Weapon_GrenadeFrag");
         public static ThingDef LongRangeMineralScanner => field ??= DefDatabase<ThingDef>.GetNamed("LongRangeMineralScanner");
         public static ThingDef MeleeWeapon_MonoSwordBladelink => field ??= DefDatabase<ThingDef>.GetNamed("MeleeWeapon_MonoSwordBladelink");

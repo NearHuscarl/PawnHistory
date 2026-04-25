@@ -64,6 +64,62 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_PlayedGame</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>tale_noun->[PAWN] relaxed at a [Object_label]</li>
+				<li>tale_noun->[PAWN] played games at a [Object_label]</li>
+				<li>tale_noun->[PAWN] enjoyed [PAWN_objective]self at a [Object_label]</li>
+				<li>tale_noun->[PAWN] took a break at a [Object_label]</li>
+				<li>tale_noun->[PAWN] spent time at a [Object_label]</li>
+
+				<li>image->[PAWN_pronoun] waited in a chair, [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] poised over it, [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] sat next to it, [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] leaned over it, [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] studied it, [circumstance_phrase]</li>
+				<li>image->[PAWN_pronoun] rested beside it, [circumstance_phrase]</li>
+
+				<li>circumstance_phrase->tense with energy</li>
+				<li>circumstance_phrase->with [PAWN_possessive] body loose and relaxed</li>
+				<li>circumstance_phrase->planning [PAWN_possessive] next action</li>
+				<li>circumstance_phrase->gently massaging [PAWN_possessive] wrists</li>
+				<li>circumstance_phrase->with a [AdjectiveAngsty] expression</li>
+				<li>circumstance_phrase->wearing a [AdjectiveAngsty] look</li>
+				<li>circumstance_phrase->showing signs of [NounAngsty]</li>
+				<li>circumstance_phrase->trying to hide [Pawn_possessive] [NounAngsty]</li>
+				<li>circumstance_phrase->with [PAWN_possessive] attention fixed on the game</li>
+				<li>circumstance_phrase->barely noticing the room around [PAWN_objective]</li>
+				<li>circumstance_phrase->with a faint smile</li>
+				<li>circumstance_phrase->breathing slowly</li>
+				<li>circumstance_phrase->waiting for the next move</li>
+				<li>circumstance_phrase->with [PAWN_possessive] hands resting nearby</li>
+				<li>circumstance_phrase->trying not to show frustration</li>
+
+				<li>desc_sentence->[PAWN]'s features were exaggerated.</li>
+				<li>desc_sentence->[PAWN]'s posture suggested total focus.</li>
+				<li>desc_sentence->[PAWN]'s expression carried the weight of the game.</li>
+				<li>desc_sentence->[PAWN] seemed convinced this counted as important training.</li>
+				<li>desc_sentence->[PAWN] blamed the [Object_label] for every bad move.</li>
+				<li>desc_sentence->[PAWN] celebrated a small victory.</li>
+				<li>desc_sentence->[PAWN] made a bold move, then immediately seemed to regret it.</li>
+				<li>desc_sentence->[PAWN] looked like [PAWN_pronoun] had discovered a brilliant strategy.</li>
+				<li>desc_sentence->[PAWN] pretended the loss was part of a larger plan.</li>
+				<li>desc_sentence->[PAWN] spent more time thinking than actually playing.</li>
+				<li>desc_sentence->[PAWN] tried to look casual after making an obvious mistake.</li>
+				<li>desc_sentence->[PAWN] seemed pleased to have something simple to do.</li>
+				<li>desc_sentence->[PAWN] looked satisfied with [PAWN_possessive] progress.</li>
+				<li>desc_sentence->[PAWN] spent the time watching, thinking, and occasionally acting.</li>
+				<li>desc_sentence->[PAWN] treated the game as a small test of patience.</li>
+				<li>desc_sentence->[PAWN] seemed more focused than relaxed for part of it.</li>
+				<li>desc_sentence->[PAWN] had a decent time, even when the game did not go [PAWN_possessive] way.</li>
+
+				<li>entry->[tale_noun]. [image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_Stripped</defName>
 		<rulePack>
 			<rulesStrings>

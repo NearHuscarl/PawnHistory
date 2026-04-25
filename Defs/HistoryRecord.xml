@@ -740,6 +740,16 @@
 		<importance>Minor</importance>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PlayedGame</defName>
+		<label>played game</label>
+		<descriptionMaker>PH_PlayedGame</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+		<importance>Minor</importance>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Stripped</defName>
 		<label>stripped</label>
 		<descriptionMaker>PH_Stripped</descriptionMaker>
