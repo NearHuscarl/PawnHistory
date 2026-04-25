@@ -217,6 +217,21 @@ public class MapBuilder
         return this;
     }
 
+    public MapBuilder AsBank(int silvers = 5000)
+    {
+        actions.Add(() =>
+        {
+            var rect = TestManager.Scenario.LastRoomRect;
+            new ThingBuilder(ThingDefOf.Silver).Stack(silvers).Map(map).At(rect.CenterCell).Create();
+            var beacon = new ThingBuilder(ThingDefOf.OrbitalTradeBeacon).Faction(Faction.OfPlayer).Map(map).At(rect.CenterCell).CreateSingle();
+            new ThingBuilder(ThingDefOf.CommsConsole).Faction(Faction.OfPlayer).Map(map).At(rect.CenterCell).Create();
+            new ThingBuilder(DefLookup.Thing.VanometricPowerCell).Faction(Faction.OfPlayer).Map(map).At(rect.CenterCell).Create();
+
+            beacon.TryGetComp<CompPowerTrader>().PowerOn = true; // turns power on immediately to assert any test this tick
+        });
+        return this;
+    }
+
     public MapBuilder AsThroneRoom(Pawn owner)
     {
         actions.Add(() =>

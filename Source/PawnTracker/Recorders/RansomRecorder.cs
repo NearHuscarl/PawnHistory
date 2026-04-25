@@ -38,10 +38,7 @@ public class RansomRecorder : RecorderBase<RansomEvent>
         
         Faction.OfPirates.kidnapped.Kidnap(hostage, enemy);
         scenario.Incident(DefLookup.Incident.RansomDemand).Execute();
-        var letter = Find.LetterStack.LettersListForReading.OfType<ChoiceLetter_RansomDemand>().Last(letter => letter.kidnapped == hostage);
-     
-        scenario.Thing(ThingDefOf.Silver).Stack(letter.fee).Create();
-        letter.Choices.ToList()[1].action(); // reject
+        scenario.Letter<ChoiceLetter_RansomDemand>().Reject();
 
         Expect.That(hostage).ToHaveHistoryRecord("[EnemyFaction] demanded [n] silvers for [Hostage]'s release, but the colony refused.", HistoryRecordDefOf.Ransom);
     }
@@ -53,10 +50,8 @@ public class RansomRecorder : RecorderBase<RansomEvent>
         
         Faction.OfPirates.kidnapped.Kidnap(hostage, enemy);
         scenario.Incident(DefLookup.Incident.RansomDemand).Execute();
-        var letter = Find.LetterStack.LettersListForReading.OfType<ChoiceLetter_RansomDemand>().Last(letter => letter.kidnapped == hostage);
-        
-        scenario.Thing(ThingDefOf.Silver).Stack(letter.fee).Create();
-        letter.Choices.First().action(); // accept
+        scenario.Map().BuildRoom(8, 8).AsBank().Execute();
+        scenario.Letter<ChoiceLetter_RansomDemand>().Accept();
 
         Expect.That(hostage).ToHaveHistoryRecord("The colony paid [EnemyFaction] [n] silvers to ransom [Hostage].", HistoryRecordDefOf.Ransom);
     }

@@ -46,12 +46,11 @@ public class LodgerJoinOfferRecorder : RecorderBase<LodgerJoinOfferAcceptedEvent
         scenario.Pawn().Colonist().CreateSingle();
 
         var quest = scenario.Quest(questScript).Execute();
-        var joinOffer = quest.PartsListForReading.OfType<QuestPart_PawnJoinOffer>().FirstOrDefault();
+        var joinOffer = quest.GetFirstPartOfType<QuestPart_PawnJoinOffer>();
         Accessor.QuestPart_PawnJoinOffer.SendLetter(joinOffer);
 
-        var letter = Find.LetterStack.LettersListForReading.OfType<ChoiceLetter_AcceptVisitors>().Last(l => l.quest == quest);
+        var letter = scenario.Letter<ChoiceLetter_AcceptVisitors>().Accept();
         var joiner = letter.pawns.Single();
-        Accessor.ChoiceLetter_AcceptVisitors.Option_Accept(letter).action();
 
         Expect.That(joiner).ToHaveHistoryRecord("During [Quest] quest, [PAWN] believed that [He] was happy here, and wished to join the colony permanently. The colony welcomed [Him] in.", HistoryRecordDefOf.LodgerJoinOffer);
     }

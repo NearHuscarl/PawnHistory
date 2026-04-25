@@ -40,17 +40,9 @@ public class QuestBuilder
 
     public QuestBuilder ChooseReward(Func<QuestPart_Choice.Choice, bool> filter)
     {
-        return Do(quest =>
+        return Do(q =>
         {
-            var partChoice = quest.GetFirstPartOfType<QuestPart_Choice>();
-
-            if (partChoice == null)
-            {
-                Log.Warning($"Quest {quest.root.defName} has no choice defined.");
-                return;
-            }
-            
-            var choicePart = quest.PartsListForReading.OfType<QuestPart_Choice>().First(part => part.choices.Any(filter));
+            var choicePart = q.PartsListForReading.OfType<QuestPart_Choice>().First(part => part.choices.Any(filter));
             var rewardChoice = choicePart.choices.First(choice => choice.rewards.OfType<Reward_Pawn>().Any());
             choicePart.Choose(rewardChoice);
         });
@@ -61,7 +53,7 @@ public class QuestBuilder
         if (quest.root.autoAccept)
             return;
         
-        var choice = quest.PartsListForReading.OfType<QuestPart_Choice>().FirstOrDefault();
+        var choice = quest.GetFirstPartOfType<QuestPart_Choice>();
         if (choice != null && choice.choices.Any())
         {
             choice.Choose(choice.choices.RandomElement());

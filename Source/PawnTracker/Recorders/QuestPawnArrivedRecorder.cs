@@ -66,8 +66,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     {
         // IncidentWorker_GiveQuest
         scenario.Incident(DefLookup.Incident.WandererJoin).Execute();
-        var letter = Find.LetterStack.LettersListForReading.OfType<ChoiceLetter_AcceptJoiner>().Last();
-        letter.Choices.First().action(); // accept
+        scenario.Letter<ChoiceLetter_AcceptJoiner>().Accept();
         
         var pawns1 = QuestHelper.GetArrivalPawns();
         Expect.That(pawns1.Last()).ToHaveHistoryRecord("A [PAWN_title] named [PAWN] arrived and joined the colony. [He] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.", HistoryRecordDefOf.QuestPawnArrived);
@@ -102,10 +101,10 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
             var pawns = QuestHelper.GetArrivalPawns().Where(p => !p.HostileTo(Faction.OfPlayer));
             Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN] along with [n] others made an emergency landing at [PlayerSettlement] after their shuttle was damaged.", HistoryRecordDefOf.QuestPawnArrived);
             
-            scenario.ForwardTime(1f);
+            scenario.ForwardTicks(10_000); // QuestNode_Root_ShuttleCrash_Rescue.RaidDelay
         });
-
-        scenario.WaitUntil(() => QuestHelper.GetArrivalPawns().Any(p => p.HostileTo(Faction.OfPlayer)), () =>
+        
+        scenario.WaitUntil(() => GenHostility.AnyHostileActiveThreatToPlayer(Find.CurrentMap), () =>
         {
             var raiders = QuestHelper.GetArrivalPawns().Where(p => p.HostileTo(Faction.OfPlayer));
             Expect.ThatAll(raiders).ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] attacked the crashed shuttle site.", HistoryRecordDefOf.QuestPawnArrived);

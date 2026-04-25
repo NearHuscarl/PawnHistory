@@ -97,10 +97,7 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
         
         scenario.Map()
             .BuildRoom(MapBuilder.Beside("Prison", Rot4.East, 6, 6), tag: "Comm")
-            .WithThing(ThingDefOf.CommsConsole, 1, Faction.OfPlayer)
-            .WithThing(ThingDefOf.OrbitalTradeBeacon, 1, Faction.OfPlayer)
-            .WithThing(DefLookup.Thing.VanometricPowerCell, 1, Faction.OfPlayer)
-            .WithThing(ThingDefOf.Silver, 3000)
+            .AsBank()
             .Execute();
 
         var negotiator = scenario.Pawn().Colonist().CreateSingle();
