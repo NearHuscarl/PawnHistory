@@ -162,8 +162,8 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
 
     public void TestPeaceTalks(TestScenario scenario)
     {
-        scenario.Quest(DefLookup.QuestScript.OpportunitySite_PeaceTalks).Execute();
-        var peaceTalks = Find.WorldObjects.AllWorldObjects.OfType<PeaceTalks>().FirstOrDefault();
+        var quest = scenario.Quest(DefLookup.QuestScript.OpportunitySite_PeaceTalks).Execute();
+        var peaceTalks = QuestHelper.GetWorldObject<PeaceTalks>(quest);
         var pawns = scenario.Pawn(3).Colonist().Execute();
 
         scenario.Caravan(pawns).VisitPeaceTalks(peaceTalks).Execute();
@@ -172,8 +172,8 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
 
     public void TestVisitSite(TestScenario scenario)
     {
-        scenario.Quest(QuestScriptDefOf.OpportunitySite_ItemStash).Execute();
-        var site = Find.WorldObjects.AllWorldObjects.OfType<Site>().FirstOrDefault();
+        var quest = scenario.Quest(QuestScriptDefOf.OpportunitySite_ItemStash).Execute();
+        var site = QuestHelper.GetWorldObject<Site>(quest);
         var pawns = scenario.Pawn(3).Colonist().Execute();
 
         scenario.Caravan(pawns).VisitSite(site).Execute();

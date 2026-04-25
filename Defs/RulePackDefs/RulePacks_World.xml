@@ -205,7 +205,7 @@
 				<li>entry(priority=1,isReward==True,quest==TradeRequest)            ->[PAWN] joined [PlayerSettlement] as a reward for fulfilling a trade request from [Faction].</li>
 
 				<!-- Other questlines -->
-				<li>entry(priority=1,isEnemy==False,quest==Intro_Wimp)              ->[PAWN] arrived at [PlayerSettlement] looking for protection while being followed by (*Threat)a manhunting [AnimalKind](/Threat).</li>
+				<li>entry(priority=1,isEnemy==False,quest==Intro_Wimp)              ->[PAWN] arrived at [PlayerSettlement] looking for protection while being followed by a (*Threat)manhunting [AnimalKind](/Threat).</li>
 
 				<li>entry(priority=0,isReward==True)                 ->[PAWN] arrived at [PlayerSettlement] as a reward for completing [Quest] quest.</li>
 				<li>entry(priority=0,isEnemy==False)                 ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] as part of [Quest] quest.</li>
@@ -283,6 +283,18 @@
 		<rulePack>
 			<rulesStrings>
 				<li>entry->[PAWN] was grateful after being rescued. Instead of leaving, [PAWN_pronoun] decided to stay and joined [PlayerFaction].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_OfferHelp</defName>
+		<include>
+			<li>PH_Faction</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[Refugee] joined [PlayerFaction] after being rescued by [Rescuer].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

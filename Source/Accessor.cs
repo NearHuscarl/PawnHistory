@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using RimWorld.QuestGen;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -118,12 +117,6 @@ public static class Accessor
     public class DiaOption
     {
         public static readonly AccessTools.FieldRef<Verse.DiaOption, string> Text = AccessTools.FieldRefAccess<Verse.DiaOption, string>("text");
-    }
-
-    public class ChoiceLetter_AcceptVisitors
-    {
-        public static readonly Func<RimWorld.ChoiceLetter_AcceptVisitors, Verse.DiaOption> Option_Accept =
-            AccessTools.MethodDelegate<Func<RimWorld.ChoiceLetter_AcceptVisitors, Verse.DiaOption>>(AccessTools.Method(typeof(RimWorld.ChoiceLetter_AcceptVisitors), "get_Option_Accept"));
     }
 
     public class QuestPart_PawnJoinOffer

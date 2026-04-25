@@ -1,5 +1,6 @@
 using HarmonyLib;
 using System.Linq;
+using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
@@ -60,8 +61,8 @@ public class PeaceTalksOutcomeRecorder : RecorderBase<PeaceTalksOutcomeEvent>
 
     private static Pawn SetupPeaceTalkOutcome(TestScenario scenario, PeaceTalksOutcome outcome)
     {
-        scenario.Quest(DefLookup.QuestScript.OpportunitySite_PeaceTalks).Execute();
-        var peaceTalks = Find.WorldObjects.AllWorldObjects.OfType<PeaceTalks>().First();
+        var quest = scenario.Quest(DefLookup.QuestScript.OpportunitySite_PeaceTalks).Execute();
+        var peaceTalks = QuestHelper.GetWorldObject<PeaceTalks>(quest);
         var pawn = scenario.Pawn().Colonist().Execute().First();
         var caravan = scenario.Caravan([pawn]).Position(peaceTalks.Tile).Execute();
 

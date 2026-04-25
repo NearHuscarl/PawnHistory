@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RimWorld;
 using RimWorld.QuestGen;
 using Verse;
@@ -18,12 +19,17 @@ public static class QuestHelper
         
         return partChoice.choices.Any(c => c.rewards.OfType<Reward_Pawn>().Any(r => r.pawn == pawn));
     }
+    
+    public static Pawn GetPawnReward(Quest quest)
+    {
+        return quest.GetFirstPartOfType<QuestPart_Choice>().choices.SelectMany(c => c.rewards.OfType<Reward_Pawn>().Select(r => r.pawn)).FirstOrDefault();
+    }
 
-    public static List<Pawn> GetQuestPawns(Quest quest = null)
+    public static IEnumerable<Pawn> GetQuestPawns(Quest quest = null)
     {
         quest ??= Find.QuestManager.QuestsListForReading.Last();
         
-        return quest.QuestLookTargets.Where(t => t.Pawn != null).Select(p => p.Pawn).ToList();
+        return quest.QuestLookTargets.Where(t => t.Pawn != null).Select(p => p.Pawn);
     }
 
     public static List<Pawn> GetArrivalPawns(Quest quest = null)
@@ -42,6 +48,11 @@ public static class QuestHelper
         return source1.Concat(source2).Where(p => p.MapHeld != null).Concat(source3).Concat(source4).ToList();
     }
     
+    public static T GetWorldObject<T>(Quest quest) where T : WorldObject
+    {
+        return (T)quest.PartsListForReading.OfType<QuestPart_SpawnWorldObject>().FirstOrDefault(p => p.worldObject is T)?.worldObject;
+    }
+    
     public static bool TryGetRelatedQuestFrom(WorldObject worldObject, out Quest quest)
     {
         quest = null;
@@ -54,6 +65,24 @@ public static class QuestHelper
             if (!q.QuestLookTargets.Contains(worldObject))
                 continue;
 
+            quest = q;
+            return true;
+        }
+
+        return false;
+    }
+    
+    public static bool TryGetRelatedQuestFrom(Pawn pawn, out Quest quest)
+    {
+        quest = null;
+
+        foreach (var q in Find.QuestManager.QuestsListForReading)
+        {
+            if (q.hidden)
+                continue;
+            if (!q.QuestReserves(pawn))
+                continue;
+            
             quest = q;
             return true;
         }

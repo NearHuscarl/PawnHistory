@@ -53,6 +53,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef VisitorArrived;
     public static HistoryRecordDef TravelGroupArrived;
     public static HistoryRecordDef RescueJoined;
+    public static HistoryRecordDef OfferHelp;
     public static HistoryRecordDef WildManWanderedIn;
     public static HistoryRecordDef ManInBlackJoin;
     public static HistoryRecordDef GameEndedWanderersJoined;

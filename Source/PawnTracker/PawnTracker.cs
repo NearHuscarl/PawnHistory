@@ -12,6 +12,7 @@ namespace PawnHistory.Source.PawnTracker;
 //   - Left Click to jump to related pawns
 //   - Right Click to copy description to clipboard
 //   - Some icons
+//   - Quest: link to (visible) quest.
 
 // Icon References (AssetRipper)
 // - Assets\Resources\textures\things\mote\thoughtsymbol
@@ -60,12 +61,13 @@ namespace PawnHistory.Source.PawnTracker;
 // - Relationships (breakup, cheating, new love...)
 // Raid type: siege with a different icon
 // Ideology convert, belief reduced
-// Quest: track giver, link to (visible) quest.
 // Pawn.Notify_PassedToWorld() event?
 // TaleRecorder.RecordTale()
 // Letter.xml
 // Core\Languages\English\Keyed\Messages.xml
 // Search for <IncidentDef>
+// QuestScriptDefs/**.xml
+// JobDefOf.cs -> some hidden events there like OfferHelp
 // - HistoryEventDefOf.cs
 //  - ".RecordEvent("
 // - Guest transition: Prisoner/Slave/Guest
@@ -106,6 +108,7 @@ namespace PawnHistory.Source.PawnTracker;
 // Remove PH_Vars using color tagged? (*Threat)a manhunting [AnimalKind](/Threat)
 
 // Bug:
+// - Prisoner captured is not recorded if they're incapacitated and added to the caravan.
 // - Test multiple maps to see if CasualtyRecorder use the correct battle log?
 // - RulesForPawn bug "a elephant" -> "an elephant", but "<color>a elephant</color>" -> "<color>a elephant</color>".
 // - Killed: handle turret & animal

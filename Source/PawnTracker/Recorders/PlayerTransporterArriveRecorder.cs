@@ -223,8 +223,8 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
     public Action TestVisitSite(TestScenario scenario)
     {
         scenario.SpeedUp();
-        scenario.Quest(QuestScriptDefOf.OpportunitySite_ItemStash).Execute();
-        var site = Find.WorldObjects.AllWorldObjects.OfType<Site>().FirstOrDefault();
+        var quest = scenario.Quest(QuestScriptDefOf.OpportunitySite_ItemStash).Execute();
+        var site = QuestHelper.GetWorldObject<Site>(quest);
         var pawns = scenario.Pawn(3).Colonist().Execute();
 
         scenario.DropPod(pawns).Visit(site).Execute();

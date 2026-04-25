@@ -51,8 +51,8 @@ public class SiteAmbushRecorder : RecorderBase<SiteAmbushRecorder.Input>
     [SkipTest]
     public void Test(TestScenario scenario)
     {
-        scenario.Quest(DefLookup.QuestScript.OpportunitySite_DownedRefugee).Execute();
-        var site = Find.WorldObjects.AllWorldObjects.OfType<Site>().First();
+        var quest = scenario.Quest(DefLookup.QuestScript.OpportunitySite_DownedRefugee).Execute();
+        var site = QuestHelper.GetWorldObject<Site>(quest);
         var pawns = scenario.Pawn(3).Colonist().Execute();
         const string ambushSignal = "PH_Ambush";
         Expect.Assertions(1);

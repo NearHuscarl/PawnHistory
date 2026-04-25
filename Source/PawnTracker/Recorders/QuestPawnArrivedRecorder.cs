@@ -20,7 +20,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         var recordDef = HistoryRecordDefOf.QuestPawnArrived;
         var questScriptDef = e.Quest.root.defName;
         var involvedFactions = e.Quest.InvolvedFactions.ToList();
-        var questPawns = QuestHelper.GetQuestPawns(e.Quest);
+        var questPawns = QuestHelper.GetQuestPawns(e.Quest).ToList();
 
         foreach (var pawn in e.Pawns)
         {

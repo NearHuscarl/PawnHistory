@@ -419,6 +419,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>OfferHelp</defName>
+		<label>offer help</label>
+		<descriptionMaker>PH_OfferHelp</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Joined</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>WildManWanderedIn</defName>
 		<label>wild man wandered in</label>
 		<descriptionMaker>PH_WildManWanderedIn</descriptionMaker>
