@@ -92,6 +92,7 @@ public static class DefLookup
     public static class TraderKind
     {
         public static TraderKindDef Caravan_Neolithic_Slaver => field ??= DefDatabase<TraderKindDef>.GetNamed("Caravan_Neolithic_Slaver");
+        public static TraderKindDef Orbital_PirateMerchant => field ??= DefDatabase<TraderKindDef>.GetNamed("Orbital_PirateMerchant");
     }
 
     public static class QuestScript
@@ -134,6 +135,13 @@ public static class DefLookup
         public static ThingDef Weapon_GrenadeFrag => field ??= DefDatabase<ThingDef>.GetNamed("Weapon_GrenadeFrag");
         public static ThingDef LongRangeMineralScanner => field ??= DefDatabase<ThingDef>.GetNamed("LongRangeMineralScanner");
         public static ThingDef MeleeWeapon_MonoSwordBladelink => field ??= DefDatabase<ThingDef>.GetNamed("MeleeWeapon_MonoSwordBladelink");
+        public static ThingDef BionicArm => field ??= DefDatabase<ThingDef>.GetNamed("BionicArm");
+        public static ThingDef BionicHeart => field ??= DefDatabase<ThingDef>.GetNamed("BionicHeart");
+        public static ThingDef SimpleProstheticHeart => field ??= DefDatabase<ThingDef>.GetNamed("SimpleProstheticHeart");
+        public static ThingDef Lung => field ??= DefDatabase<ThingDef>.GetNamed("Lung");
+        public static ThingDef Heart => field ??= DefDatabase<ThingDef>.GetNamed("Heart");
+        public static ThingDef Kidney => field ??= DefDatabase<ThingDef>.GetNamed("Kidney");
+        public static ThingDef Joywire => field ??= DefDatabase<ThingDef>.GetNamed("Joywire");
         public static ThingDef VanometricPowerCell => field ??= DefDatabase<ThingDef>.GetNamed("VanometricPowerCell");
     }
 

@@ -34,12 +34,12 @@ internal static class TradeDeal_TryExecute_Patch
         }
     }
 
-    private static void Postfix(bool __result)
+    private static void Postfix(bool __result, bool actuallyTraded)
     {
         var negotiator = TradeSession.playerNegotiator;
         var trader = TradeSession.trader;
 
-        if (!__result)
+        if (!__result || !actuallyTraded)
         {
             PawnTradedContext.PendingTradables.Remove(negotiator);
             return;

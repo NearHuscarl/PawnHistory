@@ -239,8 +239,8 @@
 		<defName>PH_PawnSold</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(action==PlayerSells)->[Negotiator] sold [PAWN] into slavery to [Faction] for [Price] silvers.</li>
-				<li>entry(action==PlayerBuys) ->[Negotiator] bought [PAWN] from [Faction] for [Price] silvers.</li>
+				<li>entry(action==PlayerSells)->[Negotiator] sold [PAWN] into slavery to [Trader] for [Price] silvers.</li>
+				<li>entry(action==PlayerBuys) ->[Negotiator] bought [PAWN] from [Trader] for [Price] silvers.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

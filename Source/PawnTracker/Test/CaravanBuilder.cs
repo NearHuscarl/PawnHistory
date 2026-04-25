@@ -107,7 +107,7 @@ public class CaravanBuilder
             .Do(caravan =>
             {
                 var negotiator = BestCaravanPawnUtility.FindBestNegotiator(caravan);
-                new TradeSessionBuilder(settlement, negotiator).Gift().Execute();
+                new TradeSessionBuilder(negotiator).WithSettlementTrader(settlement).Gift().Execute();
                 Find.WindowStack.TryRemove(typeof(Dialog_Trade));
             });
     }
@@ -131,7 +131,7 @@ public class CaravanBuilder
             .Do(caravan =>
             {
                 var negotiator = BestCaravanPawnUtility.FindBestNegotiator(caravan);
-                new TradeSessionBuilder(settlement, negotiator).Sell().Execute();
+                new TradeSessionBuilder(negotiator).WithSettlementTrader(settlement).Sell().Execute();
                 Find.WindowStack.TryRemove(typeof(Dialog_Trade));
             });
     }

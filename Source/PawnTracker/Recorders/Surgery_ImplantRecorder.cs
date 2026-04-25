@@ -41,7 +41,7 @@ public class Surgery_ImplantRecorder : SurgeryRecorder<SurgeryInstallImplantEven
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing("Joywire", 1)
+            .WithThing(DefLookup.Thing.Joywire, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -62,7 +62,7 @@ public class Surgery_ImplantRecorder : SurgeryRecorder<SurgeryInstallImplantEven
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing("Joywire", 1)
+            .WithThing(DefLookup.Thing.Joywire, 1)
             .Execute();
 
         var patient = scenario.Pawn()

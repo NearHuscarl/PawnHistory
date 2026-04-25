@@ -6,20 +6,20 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
 
-public record GameEventBase() { }
+public record GameEventBase;
 
 public class GameEventBus
 {
-    private static readonly Dictionary<Type, List<Delegate>> listeners = [];
+    private static readonly Dictionary<Type, List<Delegate>> Listeners = [];
 
     public static void Subscribe<T>(Action<T> listener) where T : GameEventBase
     {
         var type = typeof(T);
 
-        if (!listeners.TryGetValue(type, out var list))
+        if (!Listeners.TryGetValue(type, out var list))
         {
             list = [];
-            listeners[type] = list;
+            Listeners[type] = list;
         }
 
         list.Add(listener);
@@ -45,18 +45,18 @@ public class GameEventBus
     {
         var type = typeof(T);
 
-        if (!listeners.TryGetValue(type, out var list))
+        if (!Listeners.TryGetValue(type, out var list))
             return;
 
         list.Remove(listener);
 
         if (list.Count == 0)
-            listeners.Remove(type);
+            Listeners.Remove(type);
     }
 
     public static void Publish<T>(T evt) where T : GameEventBase
     {
-        if (!listeners.TryGetValue(typeof(T), out var list))
+        if (!Listeners.TryGetValue(typeof(T), out var list))
             return;
 
         foreach (var listener in list.ToArray().Cast<Action<T>>())

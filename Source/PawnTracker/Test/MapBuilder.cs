@@ -245,8 +245,6 @@ public class MapBuilder
         return this;
     }
 
-    public MapBuilder WithThing(string defName, int totalCount = 10) => WithThing(DefDatabase<ThingDef>.GetNamed(defName), totalCount);
-
     public MapBuilder WithThing(ThingDef thingDef, int totalCount = 10, Faction faction = null)
     {
         actions.Add(() =>

@@ -62,7 +62,7 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing("Lung", 1)
+            .WithThing(DefLookup.Thing.Lung, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -84,7 +84,7 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing("Heart", 1)
+            .WithThing(DefLookup.Thing.Heart, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -106,7 +106,7 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing("Heart", 1)
+            .WithThing(DefLookup.Thing.Heart, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -128,7 +128,7 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing("Kidney", 1)
+            .WithThing(DefLookup.Thing.Kidney, 1)
             .Execute();
 
         var patient = scenario.Pawn()

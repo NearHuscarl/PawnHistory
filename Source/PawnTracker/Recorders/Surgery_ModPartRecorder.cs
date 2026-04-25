@@ -64,7 +64,7 @@ public class Surgery_ModPartRecorder : SurgeryRecorder<SurgeryInstallArtificialP
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing("BionicArm", 1)
+            .WithThing(DefLookup.Thing.BionicArm, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -86,7 +86,7 @@ public class Surgery_ModPartRecorder : SurgeryRecorder<SurgeryInstallArtificialP
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing("BionicHeart", 1)
+            .WithThing(DefLookup.Thing.BionicHeart, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -107,7 +107,7 @@ public class Surgery_ModPartRecorder : SurgeryRecorder<SurgeryInstallArtificialP
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing("SimpleProstheticHeart", 1)
+            .WithThing(DefLookup.Thing.SimpleProstheticHeart, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -129,7 +129,7 @@ public class Surgery_ModPartRecorder : SurgeryRecorder<SurgeryInstallArtificialP
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing("BionicHeart", 1)
+            .WithThing(DefLookup.Thing.BionicHeart, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -151,7 +151,7 @@ public class Surgery_ModPartRecorder : SurgeryRecorder<SurgeryInstallArtificialP
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing("BionicHeart", 1)
+            .WithThing(DefLookup.Thing.BionicHeart, 1)
             .Execute();
 
         var patient = scenario.Pawn()
