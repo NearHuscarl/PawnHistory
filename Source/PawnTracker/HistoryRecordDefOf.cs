@@ -88,6 +88,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef PrisonBreak;
     public static HistoryRecordDef LightningStrike;
     public static HistoryRecordDef WalkNaked;
+    public static HistoryRecordDef OnFire;
     public static HistoryRecordDef PlayedGame;
     public static HistoryRecordDef ReadBook;
     public static HistoryRecordDef Stripped;

@@ -13,7 +13,7 @@ public class ReadBookRecorder : HistoryTaleRecorder<ReadBookRecorder.Input>
     {
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
         {
-            if (e.Tale.def != TaleDefOf.ReadBook)
+            if (e.Tale != TaleDefOf.ReadBook)
                 return;
 
             CreateRecord(new Input(e.Pawn, e.Params[0] as Book));

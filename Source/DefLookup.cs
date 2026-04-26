@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using RimWorld;
 using Verse;
 // ReSharper disable UnassignedField.Global
@@ -6,114 +6,149 @@ using Verse;
 namespace PawnHistory.Source;
 
 /// <summary>
-/// Extends any missing RimWorld <c>[DefOf]</c> class but defs are not covered in XML hot reload.
+/// Adds missing RimWorld <c>[DefOf]</c> entries used by the mod.
 /// </summary>
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public static class DefLookup
 {
+    [DefOf]
     public static class RulePack
     {
-        public static RulePackDef PH_Var => field ??= DefDatabase<RulePackDef>.GetNamed("PH_Var");
+        public static RulePackDef PH_Var;
+
+        static RulePack() => DefOfHelper.EnsureInitializedInCtor(typeof(RulePack));
     }
 
+    [DefOf]
     public static class Hediff
     {
-        // ReSharper disable once StringLiteralTypo
         // ReSharper disable once IdentifierTypo
-        public static HediffDef Alzheimers => field ??= DefDatabase<HediffDef>.GetNamed("Alzheimers");
-        public static HediffDef Asthma => field ??= DefDatabase<HediffDef>.GetNamed("Asthma");
-        public static HediffDef BadBack => field ??= DefDatabase<HediffDef>.GetNamed("BadBack");
-        public static HediffDef Frail => field ??= DefDatabase<HediffDef>.GetNamed("Frail");
-        public static HediffDef HeartArteryBlockage => field ??= DefDatabase<HediffDef>.GetNamed("HeartArteryBlockage");
-        public static HediffDef WakeUpTolerance => field ??= DefDatabase<HediffDef>.GetNamed("WakeUpTolerance");
-        public static HediffDef AlcoholTolerance => field ??= DefDatabase<HediffDef>.GetNamed("AlcoholTolerance");
-        public static HediffDef ArchotechArm => field ??= DefDatabase<HediffDef>.GetNamed("ArchotechArm");
-        public static HediffDef ArchotechEye => field ??= DefDatabase<HediffDef>.GetNamed("ArchotechEye");
-        public static HediffDef BionicEar => field ??= DefDatabase<HediffDef>.GetNamed("BionicEar");
-        public static HediffDef BionicSpine => field ??= DefDatabase<HediffDef>.GetNamed("BionicSpine");
-        public static HediffDef SmokeleafHigh => field ??= DefDatabase<HediffDef>.GetNamed("SmokeleafHigh");
-        public static HediffDef Bruise => field ??= DefDatabase<HediffDef>.GetNamed("Bruise");
-        public static HediffDef Painstopper => field ??= DefDatabase<HediffDef>.GetNamed("Painstopper");
-        public static HediffDef GoJuiceHigh => field ??= DefDatabase<HediffDef>.GetNamed("GoJuiceHigh");
-        public static HediffDef HeartAttack => field ??= DefDatabase<HediffDef>.GetNamed("HeartAttack");
-        public static HediffDef LuciferiumAddiction => field ??= DefDatabase<HediffDef>.GetNamed("LuciferiumAddiction");
-        public static HediffDef SimpleProstheticHeart => field ??= DefDatabase<HediffDef>.GetNamed("SimpleProstheticHeart");
-        public static HediffDef BionicHeart => field ??= DefDatabase<HediffDef>.GetNamed("BionicHeart");
+        public static HediffDef Alzheimers;
+        public static HediffDef Asthma;
+        public static HediffDef BadBack;
+        public static HediffDef Frail;
+        public static HediffDef HeartArteryBlockage;
+        public static HediffDef WakeUpTolerance;
+        public static HediffDef AlcoholTolerance;
+        public static HediffDef ArchotechArm;
+        public static HediffDef ArchotechEye;
+        public static HediffDef BionicEar;
+        public static HediffDef BionicSpine;
+        public static HediffDef SmokeleafHigh;
+        public static HediffDef Bruise;
+        public static HediffDef Painstopper;
+        public static HediffDef GoJuiceHigh;
+        public static HediffDef HeartAttack;
+        public static HediffDef LuciferiumAddiction;
+        public static HediffDef SimpleProstheticHeart;
+        public static HediffDef BionicHeart;
+
+        static Hediff() => DefOfHelper.EnsureInitializedInCtor(typeof(Hediff));
     }
 
+    [DefOf]
     public static class BodyPart
     {
-        public static BodyPartDef Brain => field ??= DefDatabase<BodyPartDef>.GetNamed("Brain");
-        public static BodyPartDef Ear => field ??= DefDatabase<BodyPartDef>.GetNamed("Ear");
-        public static BodyPartDef Spine => field ??= DefDatabase<BodyPartDef>.GetNamed("Spine");
-        public static BodyPartDef Nose => field ??= DefDatabase<BodyPartDef>.GetNamed("Nose");
-        public static BodyPartDef Foot => field ??= DefDatabase<BodyPartDef>.GetNamed("Foot");
-        public static BodyPartDef Kidney => field ??= DefDatabase<BodyPartDef>.GetNamed("Kidney");
+        public static BodyPartDef Brain;
+        public static BodyPartDef Ear;
+        public static BodyPartDef Spine;
+        public static BodyPartDef Nose;
+        public static BodyPartDef Foot;
+        public static BodyPartDef Kidney;
+
+        static BodyPart() => DefOfHelper.EnsureInitializedInCtor(typeof(BodyPart));
     }
 
+    [DefOf]
     public static class Interaction
     {
-        public static InteractionDef Breakup => field ??= DefDatabase<InteractionDef>.GetNamed("Breakup");
+        public static InteractionDef Breakup;
+
+        static Interaction() => DefOfHelper.EnsureInitializedInCtor(typeof(Interaction));
     }
 
+    [DefOf]
     public static class MentalBreak
     {
-        public static MentalBreakDef Slaughterer => field ??= DefDatabase<MentalBreakDef>.GetNamed("Slaughterer");
-        public static MentalBreakDef Jailbreaker => field ??= DefDatabase<MentalBreakDef>.GetNamed("Jailbreaker");
-        public static MentalBreakDef SadisticRage => field ??= DefDatabase<MentalBreakDef>.GetNamed("SadisticRage");
+        public static MentalBreakDef Slaughterer;
+        public static MentalBreakDef Jailbreaker;
+        public static MentalBreakDef SadisticRage;
+
+        static MentalBreak() => DefOfHelper.EnsureInitializedInCtor(typeof(MentalBreak));
     }
 
+    [DefOf]
     public static class Incident
     {
-        public static IncidentDef Ambush => field ??= DefDatabase<IncidentDef>.GetNamed("Ambush");
-        public static IncidentDef Disease_OrganDecay => field ??= DefDatabase<IncidentDef>.GetNamed("Disease_OrganDecay");
-        public static IncidentDef Disease_Malaria => field ??= DefDatabase<IncidentDef>.GetNamed("Disease_Malaria");
-        public static IncidentDef Disease_SleepingSickness => field ??= DefDatabase<IncidentDef>.GetNamed("Disease_SleepingSickness");
-        public static IncidentDef Disease_SensoryMechanites => field ??= DefDatabase<IncidentDef>.GetNamed("Disease_SensoryMechanites");
-        public static IncidentDef StrangerInBlackJoin => field ??= DefDatabase<IncidentDef>.GetNamed("StrangerInBlackJoin");
-        public static IncidentDef RefugeePodCrash => field ??= DefDatabase<IncidentDef>.GetNamed("RefugeePodCrash");
-        public static IncidentDef WandererJoin => field ??= DefDatabase<IncidentDef>.GetNamed("WandererJoin");
-        public static IncidentDef WildManWandersIn => field ??= DefDatabase<IncidentDef>.GetNamed("WildManWandersIn");
-        public static IncidentDef GiveQuest_EndGame_ShipEscape => field ??= DefDatabase<IncidentDef>.GetNamed("GiveQuest_EndGame_ShipEscape");
-        public static IncidentDef RansomDemand => field ??= DefDatabase<IncidentDef>.GetNamed("RansomDemand");
+        public static IncidentDef Ambush;
+        public static IncidentDef Disease_OrganDecay;
+        public static IncidentDef Disease_Malaria;
+        public static IncidentDef Disease_SleepingSickness;
+        public static IncidentDef Disease_SensoryMechanites;
+        public static IncidentDef StrangerInBlackJoin;
+        public static IncidentDef RefugeePodCrash;
+        public static IncidentDef WandererJoin;
+        public static IncidentDef WildManWandersIn;
+        public static IncidentDef GiveQuest_EndGame_ShipEscape;
+        public static IncidentDef RansomDemand;
+
+        static Incident() => DefOfHelper.EnsureInitializedInCtor(typeof(Incident));
     }
 
+    [DefOf]
     public static class RaidStrategy
     {
-        public static RaidStrategyDef Siege => field ??= DefDatabase<RaidStrategyDef>.GetNamed("Siege");
+        public static RaidStrategyDef Siege;
+
+        static RaidStrategy() => DefOfHelper.EnsureInitializedInCtor(typeof(RaidStrategy));
     }
 
+    [DefOf]
     public static class PawnKind
     {
-        public static PawnKindDef Husky => field ??= DefDatabase<PawnKindDef>.GetNamed("Husky");
-        public static PawnKindDef Cougar => field ??= DefDatabase<PawnKindDef>.GetNamed("Cougar");
-        public static PawnKindDef Bear_Grizzly => field ??= DefDatabase<PawnKindDef>.GetNamed("Bear_Grizzly");
+        public static PawnKindDef Husky;
+        public static PawnKindDef Cougar;
+        public static PawnKindDef Bear_Grizzly;
+
+        static PawnKind() => DefOfHelper.EnsureInitializedInCtor(typeof(PawnKind));
     }
 
+    [DefOf]
     public static class TraderKind
     {
-        public static TraderKindDef Caravan_Neolithic_Slaver => field ??= DefDatabase<TraderKindDef>.GetNamed("Caravan_Neolithic_Slaver");
-        public static TraderKindDef Orbital_PirateMerchant => field ??= DefDatabase<TraderKindDef>.GetNamed("Orbital_PirateMerchant");
+        public static TraderKindDef Caravan_Neolithic_Slaver;
+        public static TraderKindDef Orbital_PirateMerchant;
+
+        static TraderKind() => DefOfHelper.EnsureInitializedInCtor(typeof(TraderKind));
     }
 
     [DefOf]
     public static class QuestScript
     {
         public static QuestScriptDef TradeRequest;
-        public static QuestScriptDef Intro_Deserter;
-        public static QuestScriptDef Intro_Wimp;
         public static QuestScriptDef ThreatReward_Raid_Joiner;
         public static QuestScriptDef OpportunitySite_BanditCamp;
-        public static QuestScriptDef ThreatReward_Infestation_Joiner;
-        public static QuestScriptDef ThreatReward_Manhunters_Joiner;
-        public static QuestScriptDef ThreatReward_GameCondition_Joiner;
-        public static QuestScriptDef ThreatReward_SiteThreat_Joiner;
-        public static QuestScriptDef ThreatReward_RaidMultiFaction_Joiner;
-        public static QuestScriptDef ThreatReward_MysteryThreat_Joiner;
         public static QuestScriptDef OpportunitySite_PeaceTalks;
         public static QuestScriptDef OpportunitySite_DownedRefugee;
+
+        [MayRequireRoyalty]
+        public static QuestScriptDef Intro_Deserter;
+        [MayRequireRoyalty]
+        public static QuestScriptDef Intro_Wimp;
+        [MayRequireRoyalty]
+        public static QuestScriptDef ThreatReward_Infestation_Joiner;
+        [MayRequireRoyalty]
+        public static QuestScriptDef ThreatReward_Manhunters_Joiner;
+        [MayRequireRoyalty]
+        public static QuestScriptDef ThreatReward_GameCondition_Joiner;
+        [MayRequireRoyalty]
+        public static QuestScriptDef ThreatReward_SiteThreat_Joiner;
+        [MayRequireRoyalty]
+        public static QuestScriptDef ThreatReward_RaidMultiFaction_Joiner;
+        [MayRequireRoyalty]
+        public static QuestScriptDef ThreatReward_MysteryThreat_Joiner;
+        [MayRequireRoyalty]
         public static QuestScriptDef WandererJoinAbasia;
-        
         [MayRequireRoyalty]
         public static QuestScriptDef ShuttleCrash_Rescue;
         [MayRequireRoyalty]
@@ -124,69 +159,95 @@ public static class DefLookup
         public static QuestScriptDef Hospitality_Prisoners;
         [MayRequireRoyalty]
         public static QuestScriptDef EndGame_RoyalAscent;
-        
+
         [MayRequireBiotech]
         public static QuestScriptDef SanguophageMeetingHost;
+
+        static QuestScript() => DefOfHelper.EnsureInitializedInCtor(typeof(QuestScript));
     }
-    
+
+    [DefOf]
     public static class RoyalTitle
     {
-        public static RoyalTitleDef Praetor  => field ??= DefDatabase<RoyalTitleDef>.GetNamed("Praetor");
+        [MayRequireRoyalty]
+        public static RoyalTitleDef Praetor;
+
+        static RoyalTitle() => DefOfHelper.EnsureInitializedInCtor(typeof(RoyalTitle));
     }
 
+    [DefOf]
     public static class Tale
     {
-        public static TaleDef PlayedGame => field ??= DefDatabase<TaleDef>.GetNamed("PlayedGame");
-        public static TaleDef Stripped => field ??= DefDatabase<TaleDef>.GetNamed("Stripped");
-        public static TaleDef VisitedGrave => field ??= DefDatabase<TaleDef>.GetNamed("VisitedGrave");
+        public static TaleDef PlayedGame;
+        public static TaleDef Stripped;
+        public static TaleDef VisitedGrave;
+
+        static Tale() => DefOfHelper.EnsureInitializedInCtor(typeof(Tale));
     }
 
+    [DefOf]
     public static class Recipe
     {
-        public static RecipeDef InstallJoywire => field ??= DefDatabase<RecipeDef>.GetNamed("InstallJoywire");
-        public static RecipeDef InstallNaturalLung => field ??= DefDatabase<RecipeDef>.GetNamed("InstallNaturalLung");
-        public static RecipeDef InstallNaturalHeart => field ??= DefDatabase<RecipeDef>.GetNamed("InstallNaturalHeart");
-        public static RecipeDef InstallNaturalKidney => field ??= DefDatabase<RecipeDef>.GetNamed("InstallNaturalKidney");
-        public static RecipeDef InstallBionicArm => field ??= DefDatabase<RecipeDef>.GetNamed("InstallBionicArm");
-        public static RecipeDef InstallBionicHeart => field ??= DefDatabase<RecipeDef>.GetNamed("InstallBionicHeart");
-        public static RecipeDef InstallSimpleProstheticHeart => field ??= DefDatabase<RecipeDef>.GetNamed("InstallSimpleProstheticHeart");
+        public static RecipeDef InstallJoywire;
+        public static RecipeDef InstallNaturalLung;
+        public static RecipeDef InstallNaturalHeart;
+        public static RecipeDef InstallNaturalKidney;
+        public static RecipeDef InstallBionicArm;
+        public static RecipeDef InstallBionicHeart;
+        public static RecipeDef InstallSimpleProstheticHeart;
+
+        static Recipe() => DefOfHelper.EnsureInitializedInCtor(typeof(Recipe));
     }
 
+    [DefOf]
     public static class Thing
     {
-        public static ThingDef PodLauncher => field ??= DefDatabase<ThingDef>.GetNamed("PodLauncher");
-        public static ThingDef HorseshoesPin => field ??= DefDatabase<ThingDef>.GetNamed("HorseshoesPin");
-        public static ThingDef HoopstoneRing => field ??= DefDatabase<ThingDef>.GetNamed("HoopstoneRing");
-        public static ThingDef ChessTable => field ??= DefDatabase<ThingDef>.GetNamed("ChessTable");
-        public static ThingDef GameOfUrBoard => field ??= DefDatabase<ThingDef>.GetNamed("GameOfUrBoard");
-        public static ThingDef PokerTable => field ??= DefDatabase<ThingDef>.GetNamed("PokerTable");
-        public static ThingDef Weapon_GrenadeFrag => field ??= DefDatabase<ThingDef>.GetNamed("Weapon_GrenadeFrag");
-        public static ThingDef LongRangeMineralScanner => field ??= DefDatabase<ThingDef>.GetNamed("LongRangeMineralScanner");
-        public static ThingDef MeleeWeapon_MonoSwordBladelink => field ??= DefDatabase<ThingDef>.GetNamed("MeleeWeapon_MonoSwordBladelink");
-        public static ThingDef BionicArm => field ??= DefDatabase<ThingDef>.GetNamed("BionicArm");
-        public static ThingDef BionicHeart => field ??= DefDatabase<ThingDef>.GetNamed("BionicHeart");
-        public static ThingDef SimpleProstheticHeart => field ??= DefDatabase<ThingDef>.GetNamed("SimpleProstheticHeart");
-        public static ThingDef Lung => field ??= DefDatabase<ThingDef>.GetNamed("Lung");
-        public static ThingDef Heart => field ??= DefDatabase<ThingDef>.GetNamed("Heart");
-        public static ThingDef Kidney => field ??= DefDatabase<ThingDef>.GetNamed("Kidney");
-        public static ThingDef Joywire => field ??= DefDatabase<ThingDef>.GetNamed("Joywire");
-        public static ThingDef VanometricPowerCell => field ??= DefDatabase<ThingDef>.GetNamed("VanometricPowerCell");
+        public static ThingDef PodLauncher;
+        public static ThingDef HorseshoesPin;
+        public static ThingDef HoopstoneRing;
+        public static ThingDef ChessTable;
+        public static ThingDef GameOfUrBoard;
+        public static ThingDef PokerTable;
+        public static ThingDef Weapon_GrenadeFrag;
+        public static ThingDef LongRangeMineralScanner;
+        public static ThingDef BionicArm;
+        public static ThingDef BionicHeart;
+        public static ThingDef SimpleProstheticHeart;
+        public static ThingDef Lung;
+        public static ThingDef Heart;
+        public static ThingDef Kidney;
+        public static ThingDef Joywire;
+        public static ThingDef VanometricPowerCell;
+        
+        [MayRequireRoyalty]
+        public static ThingDef MeleeWeapon_MonoSwordBladelink;
+
+        static Thing() => DefOfHelper.EnsureInitializedInCtor(typeof(Thing));
     }
 
+    [DefOf]
     public static class RitualOutcomeEffect
     {
-        public static RitualOutcomeEffectDef AttendedSpeech => field ??= DefDatabase<RitualOutcomeEffectDef>.GetNamed("AttendedSpeech");
+        public static RitualOutcomeEffectDef AttendedSpeech;
+
+        static RitualOutcomeEffect() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualOutcomeEffect));
     }
 
+    [DefOf]
     public static class Backstory
     {
-        public static BackstoryDef MusicalKid86 => field ??= DefDatabase<BackstoryDef>.GetNamed("MusicalKid86");
-        public static BackstoryDef NavyScientist52 => field ??= DefDatabase<BackstoryDef>.GetNamed("NavyScientist52");
+        public static BackstoryDef MusicalKid86;
+        public static BackstoryDef NavyScientist52;
+
+        static Backstory() => DefOfHelper.EnsureInitializedInCtor(typeof(Backstory));
     }
 
+    [DefOf]
     public static class Trait
     {
-        public static TraitDef TorturedArtist => field ??= DefDatabase<TraitDef>.GetNamed("TorturedArtist");
-        public static TraitDef Gourmand => field ??= DefDatabase<TraitDef>.GetNamed("Gourmand");
+        public static TraitDef TorturedArtist;
+        public static TraitDef Gourmand;
+
+        static Trait() => DefOfHelper.EnsureInitializedInCtor(typeof(Trait));
     }
 }

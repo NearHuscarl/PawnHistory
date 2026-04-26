@@ -15,7 +15,7 @@ public class VisitedGraveRecorder : HistoryTaleRecorder<VisitedGraveRecorder.Inp
     {
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
         {
-            if (e.Tale.def != DefLookup.Tale.VisitedGrave)
+            if (e.Tale != DefLookup.Tale.VisitedGrave)
                 return;
 
             CreateRecord(new Input(e.Pawn, e.Params[0] as Pawn));

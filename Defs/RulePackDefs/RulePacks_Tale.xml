@@ -40,6 +40,55 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_OnFire</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>tale_noun->[PAWN] caught fire</li>
+
+				<li>image->[PAWN] frantically beat out a fire covering [PAWN_possessive] body [circumstance_phrase]</li>
+				<li>image->[PAWN] was enveloped by flame [circumstance_phrase]</li>
+				<li>image->[PAWN] knelt with hands over head, trying to extinguish flames on [PAWN_possessive] body [circumstance_phrase]</li>
+				<li>image->[PAWN] rolled on the floor while burning [circumstance_phrase]</li>
+				<li>image->[PAWN] staggered while flames clung to [PAWN_possessive] body [circumstance_phrase]</li>
+				<li>image->[PAWN] slapped at burning clothes and skin [circumstance_phrase]</li>
+				<li>image->[PAWN] twisted in panic as fire spread over [PAWN_objective] [circumstance_phrase]</li>
+				<li>image->[PAWN] stumbled through smoke and flame [circumstance_phrase]</li>
+				<li>image->[PAWN] tried to smother the flames on [PAWN_objective]self [circumstance_phrase]</li>
+				<li>image->[PAWN] dropped low while burning [circumstance_phrase]</li>
+
+				<li>circumstance_phrase->while others looked on</li>
+				<li>circumstance_phrase->while nearly naked</li>
+				<li>circumstance_phrase->with focused intent</li>
+				<li>circumstance_phrase->while struggling to stay upright</li>
+				<li>circumstance_phrase->while trying not to collapse</li>
+				<li>circumstance_phrase->with arms flailing</li>
+				<li>circumstance_phrase->while stumbling blindly</li>
+				<li>circumstance_phrase->in a desperate panic</li>
+				<li>circumstance_phrase->while gasping for breath</li>
+				<li>circumstance_phrase->with no clear sense of direction</li>
+				<li>circumstance_phrase->while trying to shield [PAWN_possessive] face</li>
+
+				<li>desc_sentence->[PAWN_possessive] flesh was visibly charring.</li>
+				<li>desc_sentence->[PAWN_possessive] eyes were wide with panic.</li>
+				<li>desc_sentence->[PAWN_pronoun] seemed to be barely conscious; [PAWN_possessive] eyes were lifeless.</li>
+				<li>desc_sentence->[PAWN_possessive] mouth was open as [PAWN_pronoun] screamed for help.</li>
+				<li>desc_sentence->The flames were about to envelop [PAWN_possessive] head.</li>
+				<li>desc_sentence->[PAWN_pronoun] was laughing maniacally.</li>
+				<li>desc_sentence->[PAWN_pronoun] seemed to be losing [PAWN_objective]self.</li>
+				<li>desc_sentence->A plume of smoke rose from [PAWN_objective].</li>
+				<li>desc_sentence->[PAWN_pronoun] was rendered artistically in a corpse-like way.</li>
+				<li>desc_sentence->Flames crawled across [PAWN_possessive] body.</li>
+				<li>desc_sentence->Smoke blurred the outline of [PAWN_possessive] body.</li>
+				<li>desc_sentence->[PAWN_possessive] skin was blackened in places.</li>
+				<li>desc_sentence->[PAWN_possessive] clothes were burning away.</li>
+				<li>desc_sentence->The flames lit [PAWN_possessive] face with a harsh glow.</li>
+				
+				<li>entry->[tale_noun]. [image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_ReadBook</defName>
 		<rulePack>
 			<rulesStrings>

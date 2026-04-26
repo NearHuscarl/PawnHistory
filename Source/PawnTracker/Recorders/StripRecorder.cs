@@ -15,7 +15,7 @@ public class StripRecorder : HistoryTaleRecorder<StripRecorder.Input>
     {
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
         {
-            if (e.Tale.def != DefLookup.Tale.Stripped)
+            if (e.Tale != DefLookup.Tale.Stripped)
                 return;
 
             CreateRecord(new Input(e.Pawn, e.Params[0] as Pawn));

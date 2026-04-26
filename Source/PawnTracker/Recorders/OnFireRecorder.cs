@@ -1,29 +1,31 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class WalkNakedRecorder : HistoryTaleRecorder<WalkNakedRecorder.Input>
+public class OnFireRecorder : HistoryTaleRecorder<OnFireRecorder.Input>
 {
     public record Input(Pawn Pawn);
+
+    protected override float DaysToRecordAgain => 3f;
 
     public override void Register()
     {
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
         {
-            if (e.Tale != TaleDefOf.WalkedNaked)
+            if (e.Tale != TaleDefOf.WasOnFire)
                 return;
 
             CreateRecord(new Input(e.Pawn));
         });
     }
 
-    public override void CreateRecord(Input e)
+    public override void CreateRecord(Input input)
     {
-        var pawn = e.Pawn;
-        var recordDef = HistoryRecordDefOf.WalkNaked;
+        var pawn = input.Pawn;
+        var recordDef = HistoryRecordDefOf.OnFire;
         var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
             .Resolve();
@@ -34,16 +36,12 @@ public class WalkNakedRecorder : HistoryTaleRecorder<WalkNakedRecorder.Input>
         AddRecord(recordDef, pawn, desc);
     }
 
-    [SkipTest]
     public void Test(TestScenario scenario)
     {
-        var pawns = scenario.Pawn(15).Colonist().Do(p => p.Strip()).Execute();
+        var pawns = scenario.Pawn(5).Colonist()
+            .Do(p => TaleRecorder.RecordTale(TaleDefOf.WasOnFire, p))
+            .Execute();
 
-        foreach (var pawn in pawns)
-        {
-            TaleRecorder.RecordTale(TaleDefOf.WalkedNaked, pawn);
-            TaleRecorder.RecordTale(TaleDefOf.WalkedNaked, pawn);
-            TaleRecorder.RecordTale(TaleDefOf.WalkedNaked, pawn);
-        }
+        Expect.ThatAll(pawns).ToHaveHistoryRecordOf(HistoryRecordDefOf.OnFire);
     }
 }

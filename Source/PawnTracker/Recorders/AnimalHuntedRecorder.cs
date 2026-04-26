@@ -14,7 +14,7 @@ public class AnimalHuntedRecorder : HistoryTaleRecorder<AnimalHuntedRecorder.Inp
     {
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
         {
-            if (e.Tale.def != TaleDefOf.Hunted)
+            if (e.Tale != TaleDefOf.Hunted)
                 return;
 
             if (e.Params[0] is not Pawn prey || !prey.RaceProps.Animal)

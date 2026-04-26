@@ -14,7 +14,7 @@ public class MinedValuableRecorder : HistoryTaleRecorder<MinedValuableRecorder.I
     {
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
         {
-            if (e.Tale.def != TaleDefOf.MinedValuable)
+            if (e.Tale != TaleDefOf.MinedValuable)
                 return;
 
             CreateRecord(new Input(e.Pawn, e.Params[0] as ThingDef));

@@ -16,7 +16,7 @@ public class PlayedGameRecorder : HistoryTaleRecorder<PlayedGameRecorder.Input>
     {
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
         {
-            if (e.Tale.def != DefLookup.Tale.PlayedGame)
+            if (e.Tale != DefLookup.Tale.PlayedGame)
                 return;
             if (e.Params[0] is not ThingDef objectDef)
                 return;
