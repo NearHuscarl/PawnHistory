@@ -33,7 +33,7 @@ internal static class PawnUtility
             return bondedHumans.Count > 0;
         }
 
-        public List<HistoryRecord> HistoryRecords => CompHistoryManager.GetComp(pawn).records;
+        public List<HistoryRecord> HistoryRecords => CompHistoryManager.GetComp(pawn)?.records ?? [];
 
         public bool IsFactionLeader(Faction faction = null)
         {

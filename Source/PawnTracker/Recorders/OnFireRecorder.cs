@@ -42,6 +42,6 @@ public class OnFireRecorder : HistoryTaleRecorder<OnFireRecorder.Input>
             .Do(p => TaleRecorder.RecordTale(TaleDefOf.WasOnFire, p))
             .Execute();
 
-        Expect.ThatAll(pawns).ToHaveHistoryRecordOf(HistoryRecordDefOf.OnFire);
+        Expect.ThatAll(pawns).ToHaveHistoryRecord("PAWN] caught fire.", HistoryRecordDefOf.OnFire);
     }
 }

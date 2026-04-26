@@ -58,6 +58,16 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>DefenderGenerated</defName>
+		<label>defender origin</label>
+		<descriptionMaker>PH_DefenderGenerated</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Arrival</li>
+			<li>World</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>RaidFriendly</defName>
 		<label>friendlies arrived</label>
 		<descriptionMaker>PH_RaidFriendly</descriptionMaker>
@@ -685,7 +695,7 @@
 		<defName>PrisonerExecuted</defName>
 		<label>prisoner executed</label>
 		<descriptionMaker>PH_PrisonerExecuted</descriptionMaker>
-		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<icon>Ui/Buttons/Execute</icon>
 		<categories>
 			<li>Banished</li>
 		</categories>
