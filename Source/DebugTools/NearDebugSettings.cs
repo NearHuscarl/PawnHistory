@@ -82,16 +82,6 @@ internal static class InteractionWorker_MarriageProposal_AcceptanceChance_Patch
     }
 }
 
-[HarmonyPatch(typeof(MapGenerator), nameof(MapGenerator.GenerateMap))]
-internal static class MapGenerator_GenerateMap_Patch
-{
-    private static void Prefix(ref IntVec3 mapSize)
-    {
-        if (NearDebugSettings.ForceDebugMapSize)
-            mapSize = new IntVec3(25, 1, 25);
-    }
-}
-
 [HarmonyPatch(typeof(QuestNode_EndGame_ShipEscape_FindShipTile), "TryFindDestinationTile", [typeof(PlanetTile), typeof(PlanetTile)], [ArgumentType.Normal, ArgumentType.Out])]
 internal class QuestNode_EndGame_ShipEscape_FindShipTile_TryFindDestinationTile_Patch
 {
@@ -115,6 +105,6 @@ internal class NearDebugSettings
     public static bool ForceRomanceSuccess = false;
     public static bool ForceMarriageProposalAccepted = false;
     public static bool ForceMarriageProposalRejected = false;
-    public static bool ForceDebugMapSize = false;
     public static bool ShipEscapeSpawnNearby = false;
+    public static bool LogDebug = false;
 }

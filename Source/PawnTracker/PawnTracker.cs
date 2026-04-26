@@ -85,8 +85,6 @@ namespace PawnHistory.Source.PawnTracker;
 // - Quest
 //  - Test all DLCs for: QuestPawnArrivedRecorder, LodgerJoinOfferRecorder
 
-// - Replace "the colony" with the settlement name if exists (put into common?)
-
 // Should I add:
 // - LetterAcceptedProposal_NameChange
 // - LetterLabelDefeatAllEnemiesQuestCompleted -> colony-level history, but should I gave every pawn participated in the quest recognition

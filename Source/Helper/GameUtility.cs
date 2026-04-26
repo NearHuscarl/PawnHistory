@@ -4,9 +4,9 @@ using RimWorld;
 using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using PawnHistory.Source.DebugTools;
+using PawnHistory.Source.PawnTracker.Test;
 using Verse;
-using Verse.Noise;
 
 namespace PawnHistory.Source.Helper;
 
@@ -27,41 +27,34 @@ public static class GameUtility
             Current.Game.storyteller = new Storyteller(StorytellerDefOf.Cassandra, DifficultyDefOf.Easy);
             Current.Game.World = WorldGenerator.GenerateWorld(0.03f, GenText.RandomSeedString(), OverallRainfall.AlmostNone, OverallTemperature.Hot, OverallPopulation.Normal, LandmarkDensity.Sparse);
             Find.GameInitData.startingTile = FindValidFlatTile(); // small map size requires a flat tile to avoid generation issues
-            Find.GameInitData.mapSize = 25;
+            Find.GameInitData.mapSize = TestManager.Scenario.ForcedDebugMapSize;
             Find.Scenario.PostIdeoChosen();
 
             PageUtility.InitGameStart();
             GameEventBus.SubscribeOnce<ScenarioPostGameStartEvent>((e) =>
             {
-                ClearUpMap();
+                ClearUpMap(null);
                 LongEventHandler.ExecuteWhenFinished(runTest);
             });
-        }, "GeneratingMap", true, new Action<Exception>(GameAndMapInitExceptionHandlers.ErrorWhileGeneratingMap));
+        }, "GeneratingMap", true, GameAndMapInitExceptionHandlers.ErrorWhileGeneratingMap);
     }
 
     /// <summary>
     /// Because we're testing on a tiny map, clear up all minable block, chunks & existing structures so nothing weird happens.
     /// </summary>
     /// <exception cref="NotImplementedException"></exception>
-    public static void ClearUpMap()
+    public static void ClearUpMap(Map map = null)
     {
-        var chunks = Find.CurrentMap.listerThings.ThingsInGroup(ThingRequestGroup.Chunk);
+        map ??= Find.CurrentMap;
+
+        var chunks = map.listerThings.ThingsInGroup(ThingRequestGroup.Chunk);
 
         for (var i = chunks.Count - 1; i >= 0; i--)
         {
             chunks[i].Destroy();
         }
 
-        var buildings = Find.CurrentMap.listerBuildings.allBuildingsColonist
-            .Concat(Find.CurrentMap.listerBuildings.allBuildingsNonColonist)
-            .ToList();
-
-        foreach (var b in buildings)
-        {
-            b.Destroy();
-        }
-
-        var allThings = Find.CurrentMap.listerThings.AllThings;
+        var allThings = map.listerThings.AllThings;
 
         for (var i = allThings.Count - 1; i >= 0; i--)
         {
@@ -77,20 +70,20 @@ public static class GameUtility
                 t.Destroy();
         }
     }
-
+    
     private static PlanetTile FindValidFlatTile()
     {
         var world = Find.World;
 
-        for (int i = 0; i < 50000; i++)
+        for (var i = 0; i < 50000; i++)
         {
-            int tile = Rand.Range(0, Find.WorldGrid.TilesCount);
+            var tile = Rand.Range(0, Find.WorldGrid.TilesCount);
             var tileInfo = world.grid[tile];
 
             if (tileInfo.WaterCovered)
                 continue;
 
-            if (tileInfo.Rivers != null && tileInfo.Rivers.Count > 0)
+            if (tileInfo.Rivers is { Count: > 0 })
                 continue;
 
             if (tileInfo.hilliness != Hilliness.Flat)

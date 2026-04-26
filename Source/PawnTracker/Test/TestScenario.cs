@@ -21,6 +21,8 @@ public class TestScenario
     public Pawn ForceRewardPawnInQuest;
     public bool ForceInjuryScar = false;
     public bool ForcePostHealScar = false;
+    public bool EnableDebugMap = false;
+    public readonly int ForcedDebugMapSize = 25;
 
     public PawnBuilder Pawn(int count = 1) => new(count);
     public PawnBuilder Pawn(IEnumerable<Pawn> pawns) => new PawnBuilder().WithPawns(pawns);

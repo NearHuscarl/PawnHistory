@@ -59,6 +59,15 @@ public class GameEventBus
         if (!Listeners.TryGetValue(typeof(T), out var list))
             return;
 
+        // TODO: for record during world/map generation, add to a queue to process in Playing state
+        // so information are available. TODO: Simulate past event
+        if (Current.ProgramState != ProgramState.Playing)
+        {
+            if (NearDebugSettings.LogDebug)
+                Log.Message($"[PawnHistory] {nameof(GameEventBus)} skipped firing {DebugUtility.Format(evt)} during {Current.ProgramState} state");
+            return;
+        }
+
         foreach (var listener in list.ToArray().Cast<Action<T>>())
         {
             try

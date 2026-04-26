@@ -13,7 +13,7 @@ public static class TestManager
     internal static TestContext Ctx;
     internal static TestScenario Scenario = new();
     private static readonly Queue<Action> Queue = new();
-    private static bool isRunningTest;
+    private static bool isRunningTestCollection;
 
     public static void EnqueueTest(string testId, Func<object> testAction)
     {
@@ -28,8 +28,8 @@ public static class TestManager
 
     public static void Run()
     {
-        if (isRunningTest) return;
-        isRunningTest = true; 
+        if (isRunningTestCollection) return;
+        isRunningTestCollection = true; 
         TestReportManager.Reset();
         RunNext();
     }
@@ -38,7 +38,7 @@ public static class TestManager
     {
         if (Queue.Count == 0)
         {
-            isRunningTest = false;
+            isRunningTestCollection = false;
             TestReportManager.PrintReport();
             TestReportManager.SaveReport();
             return;
@@ -119,9 +119,11 @@ public static class TestManager
     {
         Timeout = DefaultTimeout;
         Ctx = new TestContext(testId);
-        Scenario = new TestScenario();
+        Scenario = new TestScenario
+        {
+            EnableDebugMap = true
+        };
 
-        NearDebugSettings.ForceDebugMapSize = true;
         NearDebugSettings.NeverEverEverPause = true;
         Prefs.AutomaticPauseMode = AutomaticPauseMode.Never;
     }
@@ -129,7 +131,6 @@ public static class TestManager
     private static void CleanupAfterTest()
     {
         Scenario = TestScenario.Empty;
-        NearDebugSettings.ForceDebugMapSize = false;
         NearDebugSettings.NeverEverEverPause = false;
         TestReportManager.AddReportEntry(Ctx.CreateReportEntry());
         Ctx?.Cleanup();
@@ -138,6 +139,6 @@ public static class TestManager
     public static void StopTestRun()
     {
         Queue.Clear();
-        isRunningTest = false;
+        isRunningTestCollection = false;
     }
 }

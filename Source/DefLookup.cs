@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using RimWorld;
 using Verse;
+// ReSharper disable UnassignedField.Global
 
 namespace PawnHistory.Source;
 
@@ -95,16 +96,37 @@ public static class DefLookup
         public static TraderKindDef Orbital_PirateMerchant => field ??= DefDatabase<TraderKindDef>.GetNamed("Orbital_PirateMerchant");
     }
 
+    [DefOf]
     public static class QuestScript
     {
-        public static QuestScriptDef TradeRequest => field ??= DefDatabase<QuestScriptDef>.GetNamed("TradeRequest");
-        public static QuestScriptDef Intro_Deserter => field ??= DefDatabase<QuestScriptDef>.GetNamed("Intro_Deserter");
-        public static QuestScriptDef Intro_Wimp => field ??= DefDatabase<QuestScriptDef>.GetNamed("Intro_Wimp");
-        public static QuestScriptDef ThreatReward_Raid_Joiner => field ??= DefDatabase<QuestScriptDef>.GetNamed("ThreatReward_Raid_Joiner");
-        public static QuestScriptDef OpportunitySite_PeaceTalks => field ??= DefDatabase<QuestScriptDef>.GetNamed("OpportunitySite_PeaceTalks");
-        public static QuestScriptDef OpportunitySite_DownedRefugee => field ??= DefDatabase<QuestScriptDef>.GetNamed("OpportunitySite_DownedRefugee");
-        public static QuestScriptDef SanguophageMeetingHost => field ??= DefDatabase<QuestScriptDef>.GetNamed("SanguophageMeetingHost");
-        public static QuestScriptDef ShuttleCrash_Rescue => field ??= DefDatabase<QuestScriptDef>.GetNamed("ShuttleCrash_Rescue");
+        public static QuestScriptDef TradeRequest;
+        public static QuestScriptDef Intro_Deserter;
+        public static QuestScriptDef Intro_Wimp;
+        public static QuestScriptDef ThreatReward_Raid_Joiner;
+        public static QuestScriptDef OpportunitySite_BanditCamp;
+        public static QuestScriptDef ThreatReward_Infestation_Joiner;
+        public static QuestScriptDef ThreatReward_Manhunters_Joiner;
+        public static QuestScriptDef ThreatReward_GameCondition_Joiner;
+        public static QuestScriptDef ThreatReward_SiteThreat_Joiner;
+        public static QuestScriptDef ThreatReward_RaidMultiFaction_Joiner;
+        public static QuestScriptDef ThreatReward_MysteryThreat_Joiner;
+        public static QuestScriptDef OpportunitySite_PeaceTalks;
+        public static QuestScriptDef OpportunitySite_DownedRefugee;
+        public static QuestScriptDef WandererJoinAbasia;
+        
+        [MayRequireRoyalty]
+        public static QuestScriptDef ShuttleCrash_Rescue;
+        [MayRequireRoyalty]
+        public static QuestScriptDef Hospitality_Animals;
+        [MayRequireRoyalty]
+        public static QuestScriptDef Hospitality_Joiners;
+        [MayRequireRoyalty]
+        public static QuestScriptDef Hospitality_Prisoners;
+        [MayRequireRoyalty]
+        public static QuestScriptDef EndGame_RoyalAscent;
+        
+        [MayRequireBiotech]
+        public static QuestScriptDef SanguophageMeetingHost;
     }
     
     public static class RoyalTitle

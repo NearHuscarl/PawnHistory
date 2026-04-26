@@ -4,6 +4,7 @@ using PawnHistory.Source.Helper;
 using RimWorld;
 using System;
 using System.Linq;
+using RimWorld.Planet;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
@@ -62,6 +63,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         Expect.ThatAll(pawns).ToHaveHistoryRecordQuest(quest, HistoryRecordDefOf.QuestPawnArrived);
     }
     
+    // IncidentWorker_GiveQuest, QuestPart_PawnsArrive, quest.DropPods()
     public void TestIncident(TestScenario scenario)
     {
         // IncidentWorker_GiveQuest
@@ -76,6 +78,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         Expect.That(pawns2.Last()).ToHaveHistoryRecord("[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [He] survived the impact but was badly wounded.", HistoryRecordDefOf.QuestPawnArrived);
     }
     
+    // quest.PawnsArrive()
     [RequiresRoyalty]
     public void TestHospitalityRefugee(TestScenario scenario)
     {
@@ -86,6 +89,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         Expect.ThatAll(pawns).ToHaveHistoryRecordQuest(quest, HistoryRecordDefOf.QuestPawnArrived);
     }
 
+    // quest.DropPods(), QuestPart_PawnsArrive (raid)
     [RequiresRoyalty]
     public Action TestShuttleCrashRescue(TestScenario scenario)
     {
@@ -112,6 +116,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         return () => scenario.SlowDown();
     }
     
+    // QuestNode_PawnsArrive, QuestNode_Raid (Raid Incident)
     public void TestRaidJoiner(TestScenario scenario)
     {
         scenario.Quest(DefLookup.QuestScript.ThreatReward_Raid_Joiner).Execute();
@@ -129,6 +134,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         });
     }
     
+    // QuestNode_PawnsArrive, QuestNode_Raid
     [RequiresRoyalty]
     public void TestEmpireDeserter(TestScenario scenario)
     {
@@ -147,6 +153,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         });
     }
     
+    // QuestNode_GiveRewards > Reward_Pawn > QuestPart_GiveToCaravan
     public void TestTradeRequest(TestScenario scenario)
     {
         var colonist = scenario.Pawn().Colonist().CreateSingle();
