@@ -11,7 +11,7 @@ internal static class EnableDebugMap
 {
     private static void Prefix(ref IntVec3 mapSize, MapGeneratorDef mapGenerator)
     {
-        if (!TestManager.Scenario.EnableDebugMap)
+        if (!TestManager.EnableDebugMap)
             return;
         
         var size = TestManager.Scenario.ForcedDebugMapSize;
@@ -24,7 +24,7 @@ internal static class GenStep_MutatorPostTerrain_Generate_Patch
 {
     private static void Postfix(Map map)
     {
-        if (!TestManager.Scenario.EnableDebugMap)
+        if (!TestManager.EnableDebugMap)
             return;
         
         // reset to heavy terrain so building can be placed on a tiny map
@@ -47,7 +47,7 @@ internal static class GenStep_RocksFromGrid_Generate_Patch
     
     private static bool Prefix()
     {
-        if (!TestManager.Scenario.EnableDebugMap)
+        if (!TestManager.EnableDebugMap)
             return true;
 
         return false;

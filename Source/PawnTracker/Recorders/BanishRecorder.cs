@@ -19,6 +19,7 @@ public class BanishRecorder : RecorderBase<BanishEvent>
 
         var recordDef = HistoryRecordDefOf.Banish;
         var desc = recordDef.Description(e.Pawn)
+            .WithPlayerFaction()
             .AddConstant("leftToDie", e.LeftToDie)
             .AddConstant("reason", e.Reason)
             .Resolve();

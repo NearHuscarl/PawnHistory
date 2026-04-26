@@ -66,7 +66,6 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     // IncidentWorker_GiveQuest, QuestPart_PawnsArrive, quest.DropPods()
     public void TestIncident(TestScenario scenario)
     {
-        // IncidentWorker_GiveQuest
         scenario.Incident(DefLookup.Incident.WandererJoin).Execute();
         scenario.Letter<ChoiceLetter_AcceptJoiner>().Accept();
         

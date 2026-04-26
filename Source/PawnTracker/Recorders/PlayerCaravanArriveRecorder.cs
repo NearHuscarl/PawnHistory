@@ -189,6 +189,7 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
         Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN]'s caravan visited [WorldObject] of [Faction] with 2 others.", HistoryRecordDefOf.PlayerCaravanArrived);
     }
 
+    [SkipTest]
     public void TestCamp(TestScenario scenario)
     {
         // TODO: do it

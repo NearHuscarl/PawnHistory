@@ -25,7 +25,8 @@ public static class GameUtility
             Current.Game.Scenario = ScenarioDefOf.Crashlanded.scenario;
             Find.Scenario.PreConfigure();
             Current.Game.storyteller = new Storyteller(StorytellerDefOf.Cassandra, DifficultyDefOf.Easy);
-            Current.Game.World = WorldGenerator.GenerateWorld(0.03f, GenText.RandomSeedString(), OverallRainfall.AlmostNone, OverallTemperature.Hot, OverallPopulation.Normal, LandmarkDensity.Sparse);
+            Current.Game.World = WorldGenerator.GenerateWorld(0.03f, GenText.RandomSeedString(), OverallRainfall.AlmostNone, OverallTemperature.Normal, OverallPopulation.Normal, LandmarkDensity.Sparse);
+            MakeWorldFlatAndBuildable(Current.Game.World);
             Find.GameInitData.startingTile = FindValidFlatTile(); // small map size requires a flat tile to avoid generation issues
             Find.GameInitData.mapSize = TestManager.Scenario.ForcedDebugMapSize;
             Find.Scenario.PostIdeoChosen();
@@ -37,6 +38,34 @@ public static class GameUtility
                 LongEventHandler.ExecuteWhenFinished(runTest);
             });
         }, "GeneratingMap", true, GameAndMapInitExceptionHandlers.ErrorWhileGeneratingMap);
+    }
+    
+    public static void MakeWorldFlatAndBuildable(World world)
+    {
+        world ??= Find.World;
+        var grid = world.grid;
+
+        for (var tileId = 0; tileId < grid.TilesCount; tileId++)
+        {
+            var tile = grid[tileId];
+
+            tile.hilliness = Hilliness.Flat;
+            tile.PrimaryBiome = BiomeDefOf.TemperateForest;
+
+            // Keep the tile safely land, not beach/ocean/mountain-like.
+            tile.elevation = 1000f;
+
+            // Prevent marsh/swamp generation.
+            tile.swampiness = 0f;
+
+            // Avoid desert/sand-heavy generation.
+            tile.rainfall = 0f;
+            tile.temperature = 21f;
+
+            tile.mutatorsNullable = [];
+            // Rivers create water/mud during map generation.
+            // tile.Rivers = [];
+        }
     }
 
     /// <summary>

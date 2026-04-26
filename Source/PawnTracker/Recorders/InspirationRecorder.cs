@@ -35,6 +35,8 @@ public class InspirationRecorder : RecorderBase<InspirationStartedEvent>
     {
         var pawn = scenario.Pawn()
             .Colonist()
+            .FullHeal()
+            .ResetSkillLevel(SkillDefOf.Social, 20)
             .CreateSingle();
 
         pawn.mindState.inspirationHandler.TryStartInspiration(InspirationDefOf.Inspired_Recruitment, "LetterInspirationBeginThanksToHighMoodPart".Translate());
@@ -47,6 +49,8 @@ public class InspirationRecorder : RecorderBase<InspirationStartedEvent>
         var trait = (Trait)null;
         var pawn = scenario.Pawn()
             .Colonist()
+            .FullHeal()
+            .ResetSkillLevel(SkillDefOf.Artistic, 20)
             .GiveTrait(DefLookup.Trait.TorturedArtist, traitCreated: t => trait = t)
             .CreateSingle();
 

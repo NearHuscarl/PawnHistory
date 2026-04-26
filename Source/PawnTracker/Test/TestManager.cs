@@ -14,23 +14,25 @@ public static class TestManager
     internal static TestScenario Scenario = new();
     private static readonly Queue<Action> Queue = new();
     private static bool isRunningTestCollection;
+    public static bool EnableDebugMap = false;
 
-    public static void EnqueueTest(string testId, Func<object> testAction)
+    public static void EnqueueTest(string testId, Func<object> testAction, bool reuseMap = false)
     {
         Queue.Enqueue(() =>
         {
-            GameUtility.CreateTestGame(() =>
+            if (reuseMap)
             {
                 ExecuteTestMethod(testId, testAction, _ => RunNext());
-            });
+                return;
+            }
+                
+            GameUtility.CreateTestGame(() => ExecuteTestMethod(testId, testAction, _ => RunNext()));
         });
     }
 
     public static void Run()
     {
-        if (isRunningTestCollection) return;
-        isRunningTestCollection = true; 
-        TestReportManager.Reset();
+        SetupBeforeAll();
         RunNext();
     }
 
@@ -38,9 +40,7 @@ public static class TestManager
     {
         if (Queue.Count == 0)
         {
-            isRunningTestCollection = false;
-            TestReportManager.PrintReport();
-            TestReportManager.SaveReport();
+            CleanupAfterAll();
             return;
         }
 
@@ -48,7 +48,7 @@ public static class TestManager
         next();
     }
 
-    public static void ExecuteTestMethod(string testId, Func<object> testAction, Action<bool> onCompleted = null)
+    private static void ExecuteTestMethod(string testId, Func<object> testAction, Action<bool> onCompleted = null)
     {
         SetupBeforeTest(testId);
 
@@ -115,14 +115,30 @@ public static class TestManager
         ctx.OnCleanup(() => scheduled.Data.Cancelled = true);
     }
 
+    private static void SetupBeforeAll()
+    {
+        if (isRunningTestCollection)
+            return;
+        isRunningTestCollection = true; 
+        TestReportManager.Reset();
+        
+        EnableDebugMap = true;
+    }
+    
+    private static void CleanupAfterAll()
+    {
+        TestReportManager.PrintReport();
+        TestReportManager.SaveReport();
+        isRunningTestCollection = false;
+        
+        EnableDebugMap = false;
+    }
+
     private static void SetupBeforeTest(string testId)
     {
         Timeout = DefaultTimeout;
         Ctx = new TestContext(testId);
-        Scenario = new TestScenario
-        {
-            EnableDebugMap = true
-        };
+        Scenario = new TestScenario();
 
         NearDebugSettings.NeverEverEverPause = true;
         Prefs.AutomaticPauseMode = AutomaticPauseMode.Never;

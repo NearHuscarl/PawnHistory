@@ -48,7 +48,7 @@ public class AncientDangerWarningRecorder : RecorderBase<Pawn>
             .Do(p => p.Position = CellFinder.RandomEdgeCell(map)) // so pawn does not end up in the ancient temple
             .Execute();
         scenario.Map().GenerateAncientTemple(8, 8).Execute();
-        scenario.Pawn()
+        scenario.Pawn(pawns[0])
             .Colonist()
             .StartJob(JobDefOf.Goto, map.Center)
             .CreateSingle();

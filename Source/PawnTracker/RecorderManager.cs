@@ -150,7 +150,8 @@ public static class RecorderManager
                 {
                     try
                     {
-                        TestManager.ExecuteTestMethod(id, () => InvokeTest(testMethodInfo));
+                        TestManager.EnqueueTest(id, () => InvokeTest(testMethodInfo), true);
+                        TestManager.Run();
                     }
                     catch (Exception ex)
                     {
@@ -170,7 +171,8 @@ public static class RecorderManager
                         {
                             try
                             {
-                                TestManager.ExecuteTestMethod(id, () => InvokeTest(testMethodInfo, [count]));
+                                TestManager.EnqueueTest(id, () => InvokeTest(testMethodInfo, [count]), true);
+                                TestManager.Run();
                             }
                             catch (Exception ex)
                             {
