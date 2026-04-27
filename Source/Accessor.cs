@@ -102,6 +102,11 @@ public static class Accessor
             AccessTools.FieldRefAccess<Verse.GameComponent_OnetimeNotification, bool>("sendAICoreRequestReminder");
     }
 
+    public class KidnappedPawnsTracker
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.KidnappedPawnsTracker, Faction> Faction = AccessTools.FieldRefAccess<RimWorld.KidnappedPawnsTracker, Faction>("faction");
+    }
+
     public class VisitorGiftForPlayerUtility
     {
         public static readonly Func<List<Pawn>, Faction, Pawn> GetGiftGiver =

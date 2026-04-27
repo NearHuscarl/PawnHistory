@@ -4,29 +4,26 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public record KidnappedEvent(Pawn Victim, Pawn Kidnapper) : GameEventBase;
+public record KidnappedEvent(Pawn Victim, Faction KidnapFaction, Pawn Kidnapper) : GameEventBase;
 
-internal static class KidnappedContext
-{
-    public static bool ShouldPublish;
-}
+internal record KidnappedState(bool ShouldPublish);
 
 [HarmonyPatch(typeof(KidnappedPawnsTracker), nameof(KidnappedPawnsTracker.Kidnap))]
 internal static class KidnappedPawnsTracker_Kidnap_Patch
 {
-    private static void Prefix(KidnappedPawnsTracker __instance, Pawn pawn, Pawn kidnapper)
+    private static void Prefix(KidnappedPawnsTracker __instance, out KidnappedState __state, Pawn pawn)
     {
-        var inGameCheckPass = !__instance.KidnappedPawnsListForReading.Contains(pawn) && pawn.Faction != kidnapper.Faction;
-        KidnappedContext.ShouldPublish = pawn != null && kidnapper != null && inGameCheckPass;
+        var kidnapFaction = Accessor.KidnappedPawnsTracker.Faction(__instance);
+        var shouldPublish = !__instance.KidnappedPawnsListForReading.Contains(pawn) && pawn.Faction != kidnapFaction;
+        __state =  new KidnappedState(shouldPublish);
     }
 
-    private static void Postfix(Pawn pawn, Pawn kidnapper)
+    private static void Postfix(KidnappedPawnsTracker __instance, KidnappedState __state, Pawn pawn, Pawn kidnapper)
     {
-        if (!KidnappedContext.ShouldPublish)
+        if (!__state.ShouldPublish)
             return;
 
-        GameEventBus.Publish(new KidnappedEvent(pawn, kidnapper));
+        var kidnapFaction = Accessor.KidnappedPawnsTracker.Faction(__instance);
+        GameEventBus.Publish(new KidnappedEvent(pawn, kidnapFaction, kidnapper));
     }
-
-    private static void Finalizer() => KidnappedContext.ShouldPublish = false;
 }

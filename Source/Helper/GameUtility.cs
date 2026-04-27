@@ -34,7 +34,7 @@ public static class GameUtility
             PageUtility.InitGameStart();
             GameEventBus.SubscribeOnce<ScenarioPostGameStartEvent>((e) =>
             {
-                ClearUpMap(null);
+                ClearUpMap();
                 LongEventHandler.ExecuteWhenFinished(runTest);
             });
         }, "GeneratingMap", true, GameAndMapInitExceptionHandlers.ErrorWhileGeneratingMap);

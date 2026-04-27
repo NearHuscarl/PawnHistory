@@ -329,6 +329,38 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_Kidnap</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[Kidnapper] kidnapped [Victim] for [Faction].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_Kidnapped</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(hasKidnapper==True) ->[Victim] was kidnapped by [Kidnapper] from [Faction].</li>
+				<li>entry(hasKidnapper==False)->[Victim] was kidnapped by [Faction].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_PawnLost</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(mapType==Home)   ->[PAWN] was lost after [WorldObject] was abandoned.</li>
+				<li>entry(mapType==Caravan)->[PAWN] was lost after the caravan was disbanded.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_WildManWanderedIn</defName>
 		<rulePack>
 			<rulesStrings>

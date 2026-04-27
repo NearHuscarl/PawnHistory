@@ -153,7 +153,7 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
         var pawns = scenario.Pawn(3).Colonist().Execute();
         scenario.Incident(DefLookup.Incident.GiveQuest_EndGame_ShipEscape).Execute();
         var escapeShip =  Find.WorldObjects.AllWorldObjects.OfType<EscapeShip>().FirstOrDefault();
-        scenario.Caravan(pawns).VisitEscapeShit(escapeShip).Execute();
+        scenario.Caravan(pawns).VisitEscapeShip(escapeShip).Execute();
         
         Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN]'s caravan arrived at the starship with 2 others that can be used to escape the planet.", HistoryRecordDefOf.PlayerCaravanArrived);
         

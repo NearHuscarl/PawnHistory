@@ -64,6 +64,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef Kidnapped;
     public static HistoryRecordDef Ransom;
     public static HistoryRecordDef Banish;
+    public static HistoryRecordDef PawnLost;
     public static HistoryRecordDef JoinedParty;
     public static HistoryRecordDef PartyCancelled;
     public static HistoryRecordDef Married;

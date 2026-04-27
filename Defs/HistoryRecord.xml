@@ -485,7 +485,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Kidnap</defName>
 		<label>kidnap</label>
-		<description>{Kidnapper} kidnapped {Victim} for {Faction}.</description>
+		<descriptionMaker>PH_Kidnap</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Banished</li>
@@ -495,7 +495,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Kidnapped</defName>
 		<label>kidnapped</label>
-		<description>{Victim} was kidnapped by {Kidnapper} from {Faction}.</description>
+		<descriptionMaker>PH_Kidnapped</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Banished</li>
@@ -518,6 +518,15 @@
 		<icon>Ui/Buttons/Banish</icon>
 		<categories>
 			<li>Banished</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PawnLost</defName>
+		<label>pawn lost</label>
+		<descriptionMaker>PH_PawnLost</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Departure</li>
 		</categories>
 	</HistoryRecordDef>
 	

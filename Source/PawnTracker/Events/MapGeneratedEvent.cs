@@ -11,6 +11,9 @@ internal static class MapGenerator_GenerateMap_Patch
 {
     private static void Postfix(Map __result, MapParent parent)
     {
-        GameEventBus.Publish(new MapGeneratedEvent(__result, parent));
+        LongEventHandler.ExecuteWhenFinished(() =>
+        {
+            GameEventBus.Publish(new MapGeneratedEvent(__result, parent));
+        });
     }
 }

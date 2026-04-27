@@ -37,8 +37,7 @@ public class CaravanBuilder
     }
 
 
-    public record MapGeneratedForCaravanEvent(Caravan Caravan, Map Map, MapParent MapParent) : MapGeneratedEvent(Map, MapParent);
-    public CaravanBuilder OnMapGenerated(Action<MapGeneratedForCaravanEvent> action)
+    public CaravanBuilder OnMapGenerated(Action<MapGeneratedEvent> action)
     {
         if (action == null)
             return this;
@@ -47,7 +46,7 @@ public class CaravanBuilder
         {
             if (e.MapParent.Tile != tile)
                 return;
-            action(new MapGeneratedForCaravanEvent(caravanResult, e.Map, e.MapParent));
+            action(e);
         });
         return this;
     }
@@ -85,7 +84,7 @@ public class CaravanBuilder
         return ArriveAction(new CaravanArrivalAction_VisitSettlement(settlement)).Position(settlement.Tile);
     }
 
-    public CaravanBuilder VisitEscapeShit(MapParent mapParent)
+    public CaravanBuilder VisitEscapeShip(MapParent mapParent)
     {
         return ArriveAction(new CaravanArrivalAction_VisitEscapeShip(mapParent.GetComponent<EscapeShipComp>())).Position(mapParent.Tile);
     }
