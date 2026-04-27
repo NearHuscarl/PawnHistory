@@ -23,7 +23,7 @@ public class LungRotRecorder : RecorderBase<LungRotRecorder.Input>
             if (e.Pawn.health.hediffSet.HasHediff(HediffDefOf.LungRot))
                 return;
             
-            CreateRecord(new  Input(e.Pawn, e.Hediff));
+            CreateRecord(new Input(e.Pawn, e.Hediff));
         });
     }
 
@@ -89,8 +89,12 @@ public class LungRotRecorder : RecorderBase<LungRotRecorder.Input>
                 break;
         }
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] got sick from lung rot due to long-term exposure to rot stink gas, which is given off by rotting corpses.", HistoryRecordDefOf.LungRot);
-        Expect.That(pawn).ToHaveHistoryRecordConcern(corpse, HistoryRecordDefOf.LungRot);
+        Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.LungRot,
+            Description = "[PAWN] got sick from lung rot due to long-term exposure to rot stink gas, which is given off by rotting corpses.",
+            Concerns = [corpse]
+        });
         Expect.That(pawn).ToHaveHistoryRecordCount(1);
     }
 }

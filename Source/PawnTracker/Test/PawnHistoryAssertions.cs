@@ -1,10 +1,25 @@
 ﻿using PawnHistory.Source.Helper;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
+
+public record ExpectedHistoryRecord
+{
+    public HistoryRecordDef Def { get; init; }
+    public int? Date { get; init; }
+    public Pawn Pawn { get; init; }
+    public string Description { get; init; }
+    public List<Thing> Concerns { get; init; }
+    public int? TileId { get; init; }
+    public RecordLocation Location { get; init; }
+    public IntVec3? Position { get; init; }
+    public Map Map { get; init; }
+    public Quest Quest { get; init; }
+}
 
 public enum MatchCondition
 {
@@ -54,6 +69,10 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
     }
 
     private record AssertionData<T>(T Actual, string PositiveMessage, string NegativeMessage);
+    private record HistoryRecordMatch(HistoryRecord Record, List<string> MismatchedFields)
+    {
+        public bool Matches => MismatchedFields.Count == 0;
+    }
     private void AssertCollection<T>(T expected, Func<Pawn, AssertionData<T>> getAssertionData, Dictionary<string, string> testParams = null, Func<T, T, bool> comparator = null)
     {
         if (matchCondition == MatchCondition.All)
@@ -272,6 +291,143 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             );
         });
     }
+
+    public void ToHaveHistoryRecord(ExpectedHistoryRecord expected)
+    {
+        RunAssertion(() =>
+        {
+            AssertCollection(
+                null,
+                pawn =>
+                {
+                    var match = BestHistoryRecordMatch(pawn, expected);
+                    var actual = match.Record;
+                    var expectedSummary = FormatExpectedHistoryRecord(expected);
+                    var actualSummary = FormatActualHistoryRecord(actual);
+                    var mismatchedFields = match.MismatchedFields.JoinToString();
+
+                    return new AssertionData<HistoryRecord>(
+                        actual,
+                        $"Expect HistoryRecord to match for {pawn}.\nMismatched fields: {mismatchedFields}\nExpected:\n{expectedSummary}\nActual:\n{actualSummary}",
+                        $"Expect HistoryRecord NOT to match for {pawn}.\nMatched record:\n{actualSummary}"
+                    );
+                },
+                comparator: (_, actual) => actual != null && GetMismatchedHistoryRecordFields(expected, actual).Count == 0
+            );
+        });
+    }
+
+    private static HistoryRecordMatch BestHistoryRecordMatch(Pawn pawn, ExpectedHistoryRecord expected)
+    {
+        if (pawn.HistoryRecords.Count == 0)
+            return new HistoryRecordMatch(null, GetMismatchedHistoryRecordFields(expected, null));
+
+        return pawn.HistoryRecords
+            .Select(record => new HistoryRecordMatch(record, GetMismatchedHistoryRecordFields(expected, record)))
+            .OrderByDescending(match => match.Matches)
+            .ThenBy(match => match.MismatchedFields.Count)
+            .ThenByDescending(match => match.Record.date)
+            .First();
+    }
+
+    private static List<string> GetMismatchedHistoryRecordFields(ExpectedHistoryRecord expected, HistoryRecord actual)
+    {
+        if (expected == null)
+            return [nameof(ExpectedHistoryRecord)];
+        if (actual == null)
+            return [nameof(HistoryRecord)];
+
+        var mismatchedFields = new List<string>();
+        if (expected.Def != null && actual.def != expected.Def)
+            mismatchedFields.Add(nameof(expected.Def));
+        if (expected.Date.HasValue && actual.date != expected.Date.Value)
+            mismatchedFields.Add(nameof(expected.Date));
+        if (expected.Pawn != null && actual.pawn != expected.Pawn)
+            mismatchedFields.Add(nameof(expected.Pawn));
+        if (expected.Description != null && !LangUtility.IsStructurallyTheSame(expected.Description, actual.description?.StripTags(), false))
+            mismatchedFields.Add(nameof(expected.Description));
+        if (expected.Concerns != null && !ThingListsEqual(expected.Concerns, actual.concerns))
+            mismatchedFields.Add(nameof(expected.Concerns));
+        if (expected.TileId.HasValue && actual.tileId != expected.TileId.Value)
+            mismatchedFields.Add(nameof(expected.TileId));
+        if (expected.Location != null && !LocationsEqual(expected.Location, actual.location))
+            mismatchedFields.Add(nameof(expected.Location));
+        if (expected.Position.HasValue && actual.location?.position != expected.Position.Value)
+            mismatchedFields.Add(nameof(expected.Position));
+        if (expected.Map != null && actual.location?.map != expected.Map)
+            mismatchedFields.Add(nameof(expected.Map));
+        if (expected.Quest != null && actual.quest?.id != expected.Quest.id)
+            mismatchedFields.Add(nameof(expected.Quest));
+
+        return mismatchedFields;
+    }
+
+    private static bool ThingListsEqual(List<Thing> expected, List<Thing> actual)
+    {
+        if (actual == null)
+            return expected.Count == 0;
+
+        return expected.SequenceEqual(actual);
+    }
+
+    private static bool LocationsEqual(RecordLocation expected, RecordLocation actual)
+    {
+        return actual != null
+            && actual.position == expected.position
+            && actual.map == expected.map;
+    }
+
+    private static string FormatExpectedHistoryRecord(ExpectedHistoryRecord expected)
+    {
+        if (expected == null)
+            return "  <null ExpectedHistoryRecord>";
+
+        return new List<string>
+        {
+            $"  Def: {FormatExpectedValue(expected.Def)}",
+            $"  Date: {FormatExpectedValue(expected.Date)}",
+            $"  Pawn: {FormatExpectedValue(expected.Pawn)}",
+            $"  Description: {FormatExpectedValue(expected.Description)}",
+            $"  Concerns: {FormatExpectedThingList(expected.Concerns)}",
+            $"  TileId: {FormatExpectedValue(expected.TileId)}",
+            $"  Location: {FormatExpectedLocation(expected.Location)}",
+            $"  Position: {FormatExpectedValue(expected.Position)}",
+            $"  Map: {FormatExpectedValue(expected.Map)}",
+            $"  Quest: {FormatExpectedQuest(expected.Quest)}",
+        }.JoinToString("\n");
+    }
+
+    private static string FormatActualHistoryRecord(HistoryRecord actual)
+    {
+        if (actual == null)
+            return "  <no history record>";
+
+        return new List<string>
+        {
+            $"  Def: {FormatActualValue(actual.def)}",
+            $"  Date: {FormatActualValue(actual.date)}",
+            $"  Pawn: {FormatActualValue(actual.pawn)}",
+            $"  Description: {FormatActualValue(actual.description?.StripTags())}",
+            $"  Concerns: {FormatActualThingList(actual.concerns)}",
+            $"  TileId: {FormatActualValue(actual.tileId)}",
+            $"  Location: {FormatActualLocation(actual.location)}",
+            $"  Position: {FormatActualValue(actual.location?.position)}",
+            $"  Map: {FormatActualValue(actual.location?.map)}",
+            $"  Quest: {FormatActualQuest(actual.quest)}",
+        }.JoinToString("\n");
+    }
+
+    private static string FormatExpectedValue<T>(T value) => value?.ToString() ?? "<not asserted>";
+    private static string FormatActualValue<T>(T value) => value?.ToString() ?? "null";
+    private static string FormatExpectedThingList(List<Thing> things) => things == null ? "<not asserted>" : FormatThingList(things);
+    private static string FormatActualThingList(List<Thing> things) => things == null ? "null" : FormatThingList(things);
+    private static string FormatThingList(List<Thing> things) => "[" + things.Select(thing => thing?.ToString() ?? "null").JoinToString() + "]";
+    private static string FormatExpectedLocation(RecordLocation location) => location == null ? "<not asserted>" : FormatLocation(location);
+    private static string FormatActualLocation(RecordLocation location) => location == null ? "null" : FormatLocation(location);
+    private static string FormatLocation(RecordLocation location) => $"position={location.position}, map={location.map}";
+    private static string FormatExpectedQuest(Quest quest) => quest == null ? "<not asserted>" : FormatQuest(quest);
+    private static string FormatActualQuest(Quest quest) => quest == null ? "null" : FormatQuest(quest);
+    private static string FormatQuest(Quest quest) => $"{quest.name} ({quest.id})";
 
     public PawnHistoryAssertions Eventually(int timeoutTicks = 3000, int pollIntervalTicks = 25)
     {
