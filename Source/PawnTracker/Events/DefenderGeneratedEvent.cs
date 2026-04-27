@@ -18,6 +18,7 @@ internal static class MapGenerator_GenerateMap_DefenderGenerated_Patch
         if (parent is not WorldObject worldObject)
             return;
         
+        // generated in GenStep_* e.g. GenStep_SettlementPawnsLoot
         var pawns = __result.mapPawns.AllPawnsSpawned
             .Where(pawn => pawn.HostileTo(Faction.OfPlayer))
             .Where(pawn => pawn.HistoryRecords.Count == 0)

@@ -1,86 +1,24 @@
 # Agent Notes
 
-## Overview
+Read in this order before changing code:
+1. [ARCHITECTURE.md](ARCHITECTURE.md)
+2. [docs/testing-tools/README.md](docs/testing-tools/README.md)
+3. [docs/design-docs/core-beliefs.md](docs/design-docs/core-beliefs.md)
+4. [docs/PLANS.md](docs/PLANS.md)
+5. [docs/PRODUCT_SENSE.md](docs/PRODUCT_SENSE.md)
+6. [docs/QUALITY_SCORE.md](docs/QUALITY_SCORE.md)
+7. [docs/exec-plans/active/README.md](docs/exec-plans/active/README.md) and [docs/exec-plans/tech-debt-tracker.md](docs/exec-plans/tech-debt-tracker.md)
 
-`PawnHistory` is a RimWorld 1.6 mod that records notable pawn events and exposes them through history UI.
+## What Lives Where
 
-Primary flow:
-1. Harmony patch publishes typed event from `Source/PawnTracker/Events/`.
-2. Recorder in `Source/PawnTracker/Recorders/` subscribes in `Register()`.
-3. Recorder filters with `ShouldRecord(...)`, resolves text, and appends `HistoryRecord`.
-4. Storage/UI live under `Source/PawnTracker/` and `Source/WorldPawn/`.
+- [ARCHITECTURE.md](ARCHITECTURE.md): stable codebase map, build facts, runtime flow, and discovery behavior.
+- [docs/design-docs/core-beliefs.md](docs/design-docs/core-beliefs.md): coding rules, testing rules, safety constraints, and style expectations.
+- [docs/testing-tools/](docs/testing-tools/): recorder-author API references for the in-game test DSL.
+- [docs/PLANS.md](docs/PLANS.md): how active plans, completed plans, and tech debt tracking are organized.
+- [docs/PRODUCT_SENSE.md](docs/PRODUCT_SENSE.md): what is worth recording and how history entries should read.
+- [docs/QUALITY_SCORE.md](docs/QUALITY_SCORE.md): the rubric for judging recorder work.
+- [docs/exec-plans/](docs/exec-plans/): active backlog, technical debt, and archived execution notes.
 
-Key folders:
-- `Source/PawnTracker/Events/`: Harmony patches and event record types.
-- `Source/PawnTracker/Recorders/`: recorder implementations.
-- `Source/PawnTracker/Test/`: in-game test framework, builders, assertions, reporting.
-- `Defs/`: XML defs for history records, UI tables, buttons, and rule packs.
-- `Languages/English/Keyed/`: localization keys.
-- `Assemblies/`: compiled output consumed by RimWorld.
+## Implementation Plan Records
 
-Startup: `Source/PawnTracker/PawnTracker.cs`.
-
-## Build
-
-- Classic non-SDK `.csproj`
-- Target framework: `.NET Framework 4.7.2`
-- LangVersion: `14.0`
-- Output: `Assemblies\PawnHistory.dll`
-- Local Harmony assembly reference
-- Rider uses MSBuild
-- Shell build: `C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\Bin\MSBuild.exe PawnHistory.csproj /t:Build /p:Configuration=Debug`
-
-## Environment
-
-- Windows project: prefer PowerShell-native commands over `rg`
-- Do not inspect RimWorld DLLs unless needed
-- If inspection is needed, use `Mono.Cecil` on `RimWorldWin64_Data/Managed/Assembly-CSharp.dll`
-
-## Testing
-
-- Always write test, using the internal test API
-- Tests are public `Test...` methods on recorder classes, discovered by reflection in `Source/PawnTracker/RecorderManager.cs`
-- Supported signatures:
-  - `Test(TestScenario scenario)`
-  - `Test(TestScenario scenario, int count)`
-- Keep tests next to the recorder they validate
-- Prefer scenario builders over manual setup
-- Trigger the real game code path that reaches the Harmony patch; do not publish `GameEventBus` directly from tests
-- Use `DebugValuesAttribute` for parameterized tests
-- `ToHaveHistoryRecord(...)` already asserts the matching record when given a def; avoid using `ToHaveHistoryRecordOf(...)
-
-## Implementation rules
-
-- Prefer modern C# already used in the repo: `record`, collection expressions, concise APIs
-- Each recorder and event class MUST be in its own file. I can't believe I have to type this out for this moron.
-- Code must be readable. Transpiler in harmony is forbidden. AND NO IL code manipulation.
-- Keep recorder logic small and event-focused
-- `CreateRecord(...)` input must be domain-specific; map generic upstream events in `Register()`
-- Call `ShouldRecord(...)` inside `CreateRecord(...)` before writing
-- Prefer rulepacks through `descriptionMaker`; resolve with `Resolve()`
-- Use literal feature naming: `XyzEvent`, `XyzRecorder`, `HistoryRecordDefOf.Xyz`
-- If transient patch state is needed, use a dedicated `XyzContext` in the event file
-- Use RimWorld `DefOf` first; use `Source/DefLookup.cs` only when no suitable `DefOf` exists
-- Put reflected field/method access in `Source/Accessor.cs`; do not use raw `AccessTools` outside it
-- Use the simplest viable Harmony state
-- Reset context in `Finalizer()`
-
-## When adding an event/recorder
-
-1. Update XML `HistoryRecordDef` in `Defs/`
-2. Add the `HistoryRecordDefOf` field
-3. Check for an existing event/patch first
-4. Add the Harmony patch and typed event if needed
-5. Implement `RecorderBase<TEvent>`
-6. Add recorder-local tests when coverage is needed
-
-## Important behavior
-
-- Recorder discovery is reflection-based over non-abstract `RecorderBase` subclasses
-- Tests are reflection-based and require the supported signatures exactly
-- `RecorderManager.ShouldRecord(Pawn)` records human likes and bonded animals only
-
-## Safety
-
-- Harmony patches are global; keep them narrow and deterministic
-- Pawn references may be dead, despawned, or world-only
+When a planned implementation is executed, write the plan or a concise execution note into `docs/exec-plans/completed/` so future agents can find the reasoning later. See [docs/PLANS.md](docs/PLANS.md).
