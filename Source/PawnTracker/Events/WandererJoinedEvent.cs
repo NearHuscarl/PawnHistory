@@ -9,45 +9,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record WandererJoinedEvent(Pawn Pawn, IEnumerable<Pawn> Group, IncidentDef IncidentDef = null, QuestScriptDef QuestScript = null) : GameEventBase;
 
-internal static class WandererJoinContext
-{
-    private static List<Pawn> snapshot = [];
-
-    public static IEnumerable<Pawn> UpdatePawnSnapshot(Map map)
-    {
-        var newSnapshot = map.mapPawns.AllPawnsSpawned.ToList();
-        var oldSnapshot = snapshot;
-        var difference = newSnapshot.Except(oldSnapshot);
-        
-        snapshot = newSnapshot;
-        return difference;
-    }
-
-    public static void Prefix(IncidentParms parms)
-    {
-        var map = (Map)parms.target;
-        UpdatePawnSnapshot(map);
-    }
-
-    public static void Postfix(IncidentParms parms, IncidentWorker __instance, bool __result)
-    {
-        if (!__result)
-            return;
-
-        var map = (Map)parms.target;
-        var pawns = UpdatePawnSnapshot(map);
-
-        foreach (var pawn in pawns)
-        {
-            GameEventBus.Publish(new WandererJoinedEvent(pawn, pawns, __instance.def));
-        }
-    }
-
-    internal static void Finalizer()
-    {
-        snapshot.Clear();
-    }
-}
+internal record WandererJoinState(List<Pawn> PawnsBefore);
 
 [HarmonyPatch]
 internal static class IncidentWorker_TryExecuteWorker_Patch
@@ -59,12 +21,25 @@ internal static class IncidentWorker_TryExecuteWorker_Patch
         yield return AccessTools.Method(typeof(IncidentWorker_WildManWandersIn), "TryExecuteWorker");
     }
     
-    private static void Prefix(IncidentParms parms) => WandererJoinContext.Prefix(parms);
-
-    private static void Postfix(IncidentParms parms, IncidentWorker __instance, bool __result)
+    private static void Prefix(IncidentParms parms, out WandererJoinState __state)
     {
-        WandererJoinContext.Postfix(parms, __instance, __result);
+        var map = (Map)parms.target;
+        var pawns = map.mapPawns.AllPawnsSpawned.ToList();
+        __state = new WandererJoinState(pawns);
     }
 
-    private static void Finalizer() => WandererJoinContext.Finalizer();
+    private static void Postfix(IncidentParms parms, IncidentWorker __instance, WandererJoinState __state, bool __result)
+    {
+        if (!__result)
+            return;
+
+        var map = (Map)parms.target;
+        var pawns = map.mapPawns.AllPawnsSpawned.ToList();
+        var newPawns = pawns.Except(__state.PawnsBefore).ToList();
+
+        foreach (var pawn in newPawns)
+        {
+            GameEventBus.Publish(new WandererJoinedEvent(pawn, newPawns, __instance.def));
+        }
+    }
 }

@@ -6,29 +6,26 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record LongRangeMineralFoundEvent(Pawn Pawn, ThingDef Material) : GameEventBase;
 
-internal static class LongRangeMineralFoundContext
-{
-    public static int QuestCountBefore;
-}
+internal record LongRangeMineralFoundState(int QuestCountBefore);
 
 [HarmonyPatch(typeof(CompLongRangeMineralScanner), "DoFind")]
 internal static class CompLongRangeMineralScanner_DoFind_Patch
 {
-    public static void Prefix()
+    public static void Prefix(out LongRangeMineralFoundState __state)
     {
-        LongRangeMineralFoundContext.QuestCountBefore = Find.QuestManager?.QuestsListForReading?.Count ?? 0;
+        __state = new LongRangeMineralFoundState(Find.QuestManager.QuestsListForReading.Count);
     }
 
-    public static void Postfix(CompLongRangeMineralScanner __instance, Pawn worker)
+    public static void Postfix(CompLongRangeMineralScanner __instance, LongRangeMineralFoundState __state, Pawn worker)
     {
         if (worker == null)
             return;
 
-        var questCount = Find.QuestManager?.QuestsListForReading?.Count ?? 0;
-        if (questCount <= LongRangeMineralFoundContext.QuestCountBefore)
+        var questCount = Find.QuestManager.QuestsListForReading.Count;
+        if (questCount <= __state.QuestCountBefore)
             return;
 
-        var material = Accessor.CompLongRangeMineralScanner.TargetMineable(__instance)?.building?.mineableThing;
+        var material = Accessor.CompLongRangeMineralScanner.TargetMineable(__instance).building.mineableThing;
         if (material == null)
             return;
 

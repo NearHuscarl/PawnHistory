@@ -8,29 +8,28 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record DiseaseEvent(Pawn Pawn, IEnumerable<Pawn> Group, IncidentDef IncidentDef, BodyPartRecord BodyPart) : GameEventBase;
 
-internal class DiseaseContext
+internal static class DiseaseContext
 {
-    public List<Hediff> HediffSnapshot;
-
-    public static readonly Dictionary<Pawn, DiseaseContext> Contexts = [];
-
     public static List<Hediff> GetHediffSnapshot(Pawn pawn) => pawn.health.hediffSet.hediffs.ToList();
+}
+
+internal class DiseaseState
+{
+    public readonly Dictionary<Pawn, List<Hediff>> HediffSnapshots = [];
 }
 
 [HarmonyPatch(typeof(IncidentWorker_Disease), nameof(IncidentWorker_Disease.ApplyToPawns))]
 internal static class IncidentWorker_Disease_ApplyToPawns_Patch
 {
-    private static void Prefix(IEnumerable<Pawn> pawns)
+    private static void Prefix(IEnumerable<Pawn> pawns, out DiseaseState __state)
     {
+        __state = new DiseaseState();
         foreach (var pawn in pawns)
         {
-            DiseaseContext.Contexts.Add(pawn, new DiseaseContext
-            {
-                HediffSnapshot = DiseaseContext.GetHediffSnapshot(pawn)
-            });
+            __state.HediffSnapshots.Add(pawn, DiseaseContext.GetHediffSnapshot(pawn));
         }
     }
-    private static void Postfix(IncidentWorker_Disease __instance, IEnumerable<Pawn> pawns)
+    private static void Postfix(IncidentWorker_Disease __instance, DiseaseState __state, IEnumerable<Pawn> pawns)
     {
         var group = pawns.ToList();
         
@@ -39,13 +38,11 @@ internal static class IncidentWorker_Disease_ApplyToPawns_Patch
         
         foreach (var pawn in group)
         {
-            if (!DiseaseContext.Contexts.TryGetValue(pawn, out var context))
+            if (!__state.HediffSnapshots.TryGetValue(pawn, out var snapshot))
                 continue;
 
-            var hediff = DiseaseContext.GetHediffSnapshot(pawn).Except(context.HediffSnapshot).FirstOrDefault();
+            var hediff = DiseaseContext.GetHediffSnapshot(pawn).Except(snapshot).FirstOrDefault();
             GameEventBus.Publish(new DiseaseEvent(pawn, group, __instance.def, hediff?.Part));
         }
     }
-
-    private static void Finalizer() => DiseaseContext.Contexts.Clear();
 }
