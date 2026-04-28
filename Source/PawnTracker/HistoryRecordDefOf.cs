@@ -112,6 +112,9 @@ public class HistoryRecordDefOf
     [MayRequireRoyalty]
     public static HistoryRecordDef TitleInherited;
 
+    [MayRequireBiotech]
+    public static HistoryRecordDef MechlinkInstalled;
+
     [MayRequireOdyssey]
     public static HistoryRecordDef QuestDiscovered;
 

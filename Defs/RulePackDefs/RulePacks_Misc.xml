@@ -20,6 +20,14 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+	<RulePackDef MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>PH_MechlinkInstalled</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] installed a mechlink and became a mechanitor. [PAWN_pronoun] could now create and control mechanoids.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 
 	<RulePackDef MayRequire="Ludeon.RimWorld.Royalty">
 		<defName>PH_TitleGained</defName>

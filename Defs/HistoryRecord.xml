@@ -894,6 +894,19 @@
 			<li>Life</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>MechlinkInstalled</defName>
+		<label>mechlink installed</label>
+		<descriptionMaker>PH_MechlinkInstalled</descriptionMaker>
+		<icon>Things/Pawn/Humanlike/Apparel/Mechlink</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
 		<defName>TitleGained</defName>
 		<label>title gained</label>

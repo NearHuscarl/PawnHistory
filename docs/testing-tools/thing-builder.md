@@ -22,7 +22,7 @@ Creates and optionally spawns things, then applies processors to each created st
 
 ## Creation
 
-- `Create<T>() where T : Thing`: create and place the things.
+- `Create<T>() where T : Thing`: create and place the things/books.
 - `Create()`: create things as `Thing`.
 - `CreateSingle()`: create one thing.
 - `CreateSingle<T>() where T : Thing`: create one thing as a typed result.
