@@ -25,9 +25,13 @@ public class GameEventBus
         list.Add(listener);
     }
 
-    public static void SubscribeOnce<T>(Action<T> listener) where T : GameEventBase
+    public static Action SubscribeOnce<T>(Action<T> listener) where T : GameEventBase
     {
-        void wrapper(T evt)
+        Subscribe((Action<T>)Wrapper);
+
+        return Unsub;
+
+        void Wrapper(T evt)
         {
             try
             {
@@ -35,10 +39,14 @@ public class GameEventBus
             }
             finally
             {
-                Unsubscribe((Action<T>)wrapper);
+                Unsub();
             }
         }
-        Subscribe((Action<T>)wrapper);
+
+        void Unsub()
+        {
+            Unsubscribe((Action<T>)Wrapper);
+        }
     }
 
     public static void Unsubscribe<T>(Action<T> listener) where T : GameEventBase

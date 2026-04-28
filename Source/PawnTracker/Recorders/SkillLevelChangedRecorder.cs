@@ -122,10 +122,10 @@ public class SkillLevelChangedRecorder : RecorderBase<SkillLevelChangedEvent>
             .Learn(SkillDefOf.Shooting, 70_000)
             .Execute();
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] reached level [NewLevel] in shooting after killing 20 creatures.", -4);
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] reached level [NewLevel] in shooting after hunting 30 animals.", -3);
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] reached level [NewLevel] in shooting after killing 45 mechanoids.", -2);
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] reached level [NewLevel] in shooting after killing 80 creatures.", -1);
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] reached level [NewLevel] in shooting after killing 20 creatures.", HistoryRecordDefOf.SkillLeveledUp, index: -4);
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] reached level [NewLevel] in shooting after hunting 30 animals.", HistoryRecordDefOf.SkillLeveledUp, index: -3);
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] reached level [NewLevel] in shooting after killing 45 mechanoids.", HistoryRecordDefOf.SkillLeveledUp, index: -2);
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] reached level [NewLevel] in shooting after killing 80 creatures.", HistoryRecordDefOf.SkillLeveledUp, index: -1);
 
         scenario.OpenHistoryRecordTab(pawn);
     }
@@ -141,7 +141,7 @@ public class SkillLevelChangedRecorder : RecorderBase<SkillLevelChangedEvent>
             .Learn(SkillDefOf.Shooting, -200_000)
             .Execute();
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] dropped to level [NewLevel] in shooting.");
+        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] dropped to level [NewLevel] in shooting.", HistoryRecordDefOf.SkillLeveledDown);
         scenario.OpenHistoryRecordTab(pawn);
     }
 }

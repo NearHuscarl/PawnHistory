@@ -274,7 +274,7 @@ public class MapBuilder
     /// <summary>
     /// Spawns a grave. If occupied is true, generates a pawn, kills it, and buries it.
     /// </summary>
-    public MapBuilder WithCasket(ThingDef thingDef, ThingDef stuff = null, bool occupied = true)
+    public MapBuilder WithCasket(ThingDef thingDef, ThingDef stuff = null, bool occupied = true, Pawn pawn = null)
     {
         actions.Add(() =>
         {
@@ -289,11 +289,13 @@ public class MapBuilder
             if (!occupied)
                 return;
 
-            var victim = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+            var victim = pawn ?? PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
 
             if (casket is Building_CorpseCasket)
             {
                 victim.Kill(null);
+                if (victim.Corpse.Spawned)
+                    victim.Corpse.DeSpawn();
                 casket.TryAcceptThing(victim.Corpse);
             }
             else

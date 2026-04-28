@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PawnHistory.Source.DebugTools;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
@@ -19,6 +20,23 @@ public record ExpectedHistoryRecord
     public IntVec3? Position { get; init; }
     public Map Map { get; init; }
     public Quest Quest { get; init; }
+
+    public ExpectedHistoryRecord With(ExpectedHistoryRecord other)
+    {
+        return new ExpectedHistoryRecord
+        {
+            Def = other.Def ?? Def,
+            Date = other.Date ?? Date,
+            Pawn = other.Pawn ?? Pawn,
+            Description = other.Description ?? Description,
+            Concerns = other.Concerns ?? Concerns,
+            TileId = other.TileId ?? TileId,
+            Location = other.Location ?? Location,
+            Position = other.Position ?? Position,
+            Map = other.Map ?? Map,
+            Quest = other.Quest ?? Quest,
+        };
+    }
 }
 
 public enum MatchCondition
@@ -42,18 +60,12 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         return this;
     }
 
-    private void Assert<T>(T expected, T actual, string positiveMessage, string negativeMessage, Dictionary<string, string> testParams = null, Func<T, T, bool> comparator = null)
+    private void Assert<T>(T expected, T actual, string positiveMessage, string negativeMessage, Func<T, T, bool> comparator = null)
     {
         var result = comparator?.Invoke(expected, actual) ?? EqualityComparer<T>.Default.Equals(expected, actual);
-        var comparatorFn = comparator?.Method.Name ?? $"{typeof(T).Name}.Equals";
-        var finalParams = testParams != null
-            ? new Dictionary<string, string>(testParams)
-            : new Dictionary<string, string>();
 
         if (negate ? !result : result)
             return;
-        
-        finalParams.Add("comparatorFn", comparatorFn);
         
         var ctx = TestManager.Ctx;
         var message = negate ? negativeMessage : positiveMessage;
@@ -62,8 +74,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             message,
             expected?.ToString() ?? "null",
             actual?.ToString() ?? "null",
-            negate,
-            finalParams
+            negate
         );
         throw new TestException(failure);
     }
@@ -73,14 +84,14 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
     {
         public bool Matches => MismatchedFields.Count == 0;
     }
-    private void AssertCollection<T>(T expected, Func<Pawn, AssertionData<T>> getAssertionData, Dictionary<string, string> testParams = null, Func<T, T, bool> comparator = null)
+    private void AssertCollection<T>(T expected, Func<Pawn, AssertionData<T>> getAssertionData, Func<T, T, bool> comparator = null)
     {
         if (matchCondition == MatchCondition.All)
         {
             foreach (var pawn in pawns)
             {
                 var (actual, positiveMessage, negativeMessage) = getAssertionData(pawn);
-                Assert(expected, actual, positiveMessage, negativeMessage, testParams, comparator);
+                Assert(expected, actual, positiveMessage, negativeMessage, comparator);
             }
         }
 
@@ -93,7 +104,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
 
                 try
                 {
-                    Assert(expected, actual, positiveMessage, negativeMessage, testParams, comparator);
+                    Assert(expected, actual, positiveMessage, negativeMessage, comparator);
                     return;
                 }
                 catch (TestException ex)
@@ -111,19 +122,18 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
     {
         RunAssertion(() =>
         {
-            var testParams =  new Dictionary<string, string> 
-            { 
-                { "index", index.ToString() } 
-            };
+            var testParams = DebugUtility.FormatDict(new Dictionary<string, string>
+            {
+                { "index", index.ToString() },
+            });
 
             AssertCollection(
                 def,
                 pawn => new AssertionData<HistoryRecordDef>(
                     !pawn.HistoryRecords.TryAt(index, out var record) ? null : record.def,
-                    $"Expect HistoryRecordDef to exist for {pawn} {ToString(testParams)}.\nExpected:\n{def}\nActual:\n{record?.def}.",
-                    $"Expect HistoryRecordDef NOT to exist for {pawn} {ToString(testParams)}.\nExpected:\n{def}\nActual:\n{record?.def}."
-                    ),
-                testParams
+                    $"Expect HistoryRecordDef to exist for {pawn} {testParams}.\nExpected:\n{def}\nActual:\n{record?.def}.",
+                    $"Expect HistoryRecordDef NOT to exist for {pawn} {testParams}.\nExpected:\n{def}\nActual:\n{record?.def}."
+                    )
                 );
         });
     }
@@ -142,192 +152,68 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             );
         });
     }
-
-    private static string ToString(Dictionary<string, string> testParams)
+    
+    public void ToHaveHistoryRecord(string descriptionTemplate, HistoryRecordDef recordDef, bool exactMatch = false, int index = -1)
     {
-        return "[" + testParams.Select(p => $"{p.Key}={p.Value}").JoinToString() + "]";
+        ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = recordDef,
+            Description = descriptionTemplate
+        });
+    }
+    public void ToHaveHistoryRecord(HistoryRecordDef recordDef, string descriptionTemplate, bool exactMatch = false, int index = -1)
+    {
+        ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = recordDef,
+            Description = descriptionTemplate
+        });
     }
 
-    public void ToHaveHistoryRecord(string descriptionTemplate, int index, bool exactMatch = false)
+    public void ToHaveHistoryRecord(ExpectedHistoryRecord expected, bool exactMatch = false, int? index = null)
     {
         RunAssertion(() =>
         {
-            var testParams =  new Dictionary<string, string> 
-            { 
+            var testParams = DebugUtility.FormatDict(new Dictionary<string, string>
+            {
+                { "exactMatch", exactMatch.ToString() },
                 { "index", index.ToString() },
-                { "exactMatch", exactMatch.ToString() },
-            };
+            });
             
             AssertCollection(
-                descriptionTemplate,
+                true,
                 pawn =>
                 {
-                    pawn.HistoryRecords.TryAt(index, out var record);
-                    var actual = record?.description.StripTags();
-                    
-                    return new AssertionData<string>(
-                        actual,
-                        $"Expect description to match template {ToString(testParams)}\nExpected template:\n{descriptionTemplate}\nActual resolved description:\n{actual}",
-                        $"Expect description NOT to match template {ToString(testParams)}\nExpected template:\n{descriptionTemplate}\nActual resolved description:\n{actual}."
-                        );
-                },
-                testParams, 
-                (a, b) => LangUtility.IsStructurallyTheSame(a, b, exactMatch)
-            );
-        });
-    }
-
-    public void ToHaveHistoryRecord(string descriptionTemplate, HistoryRecordDef recordDef = null, bool exactMatch = false, int ticksAgo = 0)
-    {
-        RunAssertion(() =>
-        {
-            var testParams =  new Dictionary<string, string> 
-            { 
-                { "recordDef", recordDef?.ToString() ?? "null" },
-                { "exactMatch", exactMatch.ToString() },
-                { "ticksAgo", ticksAgo.ToString() },
-            };
-            
-            AssertCollection(
-                descriptionTemplate,
-                pawn =>
-                {
-                    var record = pawn.HistoryRecords.LastOrDefault(r => (recordDef == null || r.def == recordDef) && r.date >= Find.TickManager.TicksGame - ticksAgo);
-                    var actual = record?.description.StripTags();
-                    
-                    return new AssertionData<string>(
-                        actual,
-                        $"Expect description to match template {ToString(testParams)}\nExpected template:\n{descriptionTemplate}\nActual resolved description:\n{actual}",
-                        $"Expect description NOT to match template {ToString(testParams)}\nExpected template:\n{descriptionTemplate}\nActual resolved description:\n{actual}."
-                    );
-                },
-                testParams, 
-                (a, b) => LangUtility.IsStructurallyTheSame(a, b, exactMatch)
-            );
-        });
-    }
-
-    public void ToHaveHistoryRecordPosition(IntVec3 position, HistoryRecordDef recordDef, int ticksAgo = 0)
-    {
-        RunAssertion(() =>
-        {
-            var testParams =  new Dictionary<string, string> 
-            { 
-                { "recordDef", recordDef?.ToString() ?? "null" },
-                { "ticksAgo", ticksAgo.ToString() },
-            };
-            
-            AssertCollection(
-                position,
-                pawn =>
-                {
-                    var record = pawn.HistoryRecords.LastOrDefault(r => (recordDef == null || r.def == recordDef) && r.date >= Find.TickManager.TicksGame - ticksAgo);
-                    var actual = record?.location?.position;
-                    
-                    return new AssertionData<IntVec3?>(
-                        actual,
-                        $"Expect position to match for {pawn} {ToString(testParams)}\nExpected:\n{position}\nActual:\n{actual}",
-                        $"Expect position NOT to match for {pawn} {ToString(testParams)}\nExpected:\n{position}\nActual:\n{actual}."
-                    );
-                },
-                testParams
-            );
-        });
-    }
-
-    public void ToHaveHistoryRecordConcern(Thing concern, HistoryRecordDef recordDef, int ticksAgo = 0)
-    {
-        RunAssertion(() =>
-        {
-            var testParams = new Dictionary<string, string>
-            {
-                { "recordDef", recordDef?.ToString() ?? "null" },
-                { "ticksAgo", ticksAgo.ToString() },
-            };
-
-            AssertCollection(
-                concern,
-                pawn =>
-                {
-                    var record = pawn.HistoryRecords.LastOrDefault(r => (recordDef == null || r.def == recordDef) && r.date >= Find.TickManager.TicksGame - ticksAgo);
-                    var actual = record?.concerns?.FirstOrDefault(c => c == concern);
-
-                    return new AssertionData<Thing>(
-                        actual,
-                        $"Expect concern to match for {pawn} {ToString(testParams)}\nExpected:\n{concern}\nActual:\n{actual}",
-                        $"Expect concern NOT to match for {pawn} {ToString(testParams)}\nExpected:\n{concern}\nActual:\n{actual}."
-                    );
-                },
-                testParams
-            );
-        });
-    }
-
-    public void ToHaveHistoryRecordQuest(RimWorld.Quest quest, HistoryRecordDef recordDef, int ticksAgo = 0)
-    {
-        RunAssertion(() =>
-        {
-            var testParams = new Dictionary<string, string>
-            {
-                { "recordDef", recordDef?.ToString() ?? "null" },
-                { "ticksAgo", ticksAgo.ToString() },
-            };
-
-            AssertCollection(
-                quest,
-                pawn =>
-                {
-                    var record = pawn.HistoryRecords.LastOrDefault(r => (recordDef == null || r.def == recordDef) && r.date >= Find.TickManager.TicksGame - ticksAgo);
-                    var actual = record?.quest;
-
-                    return new AssertionData<RimWorld.Quest>(
-                        actual,
-                        $"Expect quest to match for {pawn} {ToString(testParams)}\nExpected:\n{quest.name}\nActual:\n{actual?.name}",
-                        $"Expect quest NOT to match for {pawn} {ToString(testParams)}\nExpected:\n{quest.name}\nActual:\n{actual?.name}."
-                    );
-                },
-                testParams,
-                (a, b) => a?.id == b?.id
-            );
-        });
-    }
-
-    public void ToHaveHistoryRecord(ExpectedHistoryRecord expected)
-    {
-        RunAssertion(() =>
-        {
-            AssertCollection(
-                null,
-                pawn =>
-                {
-                    var match = BestHistoryRecordMatch(pawn, expected);
+                    var match = BestHistoryRecordMatch(pawn, expected, index);
                     var actual = match.Record;
                     var expectedSummary = FormatExpectedHistoryRecord(expected);
                     var actualSummary = FormatActualHistoryRecord(actual);
                     var mismatchedFields = match.MismatchedFields.JoinToString();
 
-                    return new AssertionData<HistoryRecord>(
-                        actual,
-                        $"Expect HistoryRecord to match for {pawn}.\nMismatched fields: {mismatchedFields}\nExpected:\n{expectedSummary}\nActual:\n{actualSummary}",
-                        $"Expect HistoryRecord NOT to match for {pawn}.\nMatched record:\n{actualSummary}"
+                    return new AssertionData<bool>(
+                        match.Matches,
+                        $"Expect HistoryRecord to match for {pawn} {testParams}.\nMismatched fields: {mismatchedFields}\nExpected:\n{expectedSummary}\nActual:\n{actualSummary}",
+                        $"Expect HistoryRecord NOT to match for {pawn} {testParams}.\nMatched record:\n{actualSummary}"
                     );
-                },
-                comparator: (_, actual) => actual != null && GetMismatchedHistoryRecordFields(expected, actual).Count == 0
+                }
             );
         });
     }
 
-    private static HistoryRecordMatch BestHistoryRecordMatch(Pawn pawn, ExpectedHistoryRecord expected)
+    private static HistoryRecordMatch BestHistoryRecordMatch(Pawn pawn, ExpectedHistoryRecord expected, int? index = null)
     {
         if (pawn.HistoryRecords.Count == 0)
             return new HistoryRecordMatch(null, GetMismatchedHistoryRecordFields(expected, null));
 
+        if (index.HasValue && pawn.HistoryRecords.TryAt(index.Value, out var record))
+            return new HistoryRecordMatch(record, GetMismatchedHistoryRecordFields(expected, record));
+
         return pawn.HistoryRecords
-            .Select(record => new HistoryRecordMatch(record, GetMismatchedHistoryRecordFields(expected, record)))
+            .Select(r => new HistoryRecordMatch(r, GetMismatchedHistoryRecordFields(expected, r)))
             .OrderByDescending(match => match.Matches)
             .ThenBy(match => match.MismatchedFields.Count)
             .ThenByDescending(match => match.Record.date)
-            .First();
+            .FirstOrDefault() ?? new HistoryRecordMatch(pawn.HistoryRecords.LastOrDefault(), GetMismatchedHistoryRecordFields(expected, pawn.HistoryRecords.LastOrDefault()));
     }
 
     private static List<string> GetMismatchedHistoryRecordFields(ExpectedHistoryRecord expected, HistoryRecord actual)
@@ -367,7 +253,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         if (actual == null)
             return expected.Count == 0;
 
-        return expected.SequenceEqual(actual);
+        return expected.SetsEqual(actual);
     }
 
     private static bool LocationsEqual(RecordLocation expected, RecordLocation actual)

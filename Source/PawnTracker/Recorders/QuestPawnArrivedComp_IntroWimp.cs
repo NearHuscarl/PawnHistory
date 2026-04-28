@@ -11,13 +11,13 @@ public class QuestPawnArrivedComp_IntroWimp : QuestPawnArrivedComp
 
     public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, Quest quest, Pawn pawn, List<Pawn> questPawns)
     {
-        var chasingAnimal = questPawns.FirstOrDefault(p => p.IsAnimal);
-        return builder.AddRule("AnimalKind", chasingAnimal.kindDef.label);
+        var animalKind = Accessor.QuestPart_Incident.IncidentParms(quest.GetFirstPartOfType<QuestPart_Incident>()).pawnKind;
+        return builder.AddRule("AnimalKind", animalKind.label);
     }
     
     public override IEnumerable<Thing> GetConcerns(Quest quest, List<Pawn> questPawns)
     {
-        var chasingAnimal = questPawns.FirstOrDefault(p => p.IsAnimal);
+        var chasingAnimal = questPawns.FirstOrDefault(p => p.IsAnimal); // only exists if animal is not mad
         if (chasingAnimal == null)
             yield break;
         

@@ -63,7 +63,7 @@ public class DefenderGeneratedRecorder : RecorderBase<DefenderGeneratedRecorder.
         var site = QuestHelper.GetWorldObject<Site>(quest);
         var pawns = scenario.Pawn(3).Colonist().Execute();
 
-        Expect.Assertions(2);
+        Expect.Assertions(1);
 
         scenario.Caravan(pawns)
             .VisitSite(site)
@@ -71,8 +71,12 @@ public class DefenderGeneratedRecorder : RecorderBase<DefenderGeneratedRecorder.
             {
                 var enemies = e.Map.mapPawns.AllPawnsSpawned.Where(pawn => pawn.HostileTo(Faction.OfPlayer)).ToList();
 
-                Expect.ThatAll(enemies).ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] were stationed at the [WorldObject] as defenders.", HistoryRecordDefOf.DefenderGenerated);
-                Expect.ThatAll(enemies).ToHaveHistoryRecordQuest(quest, HistoryRecordDefOf.DefenderGenerated);
+                Expect.ThatAll(enemies).ToHaveHistoryRecord(new ExpectedHistoryRecord
+                {
+                    Def = HistoryRecordDefOf.DefenderGenerated,
+                    Description = "[PAWN] and [n] others from [Faction] were stationed at the [WorldObject] as defenders.",
+                    Quest = quest,
+                });
             })
             .Execute();
     }
@@ -92,7 +96,11 @@ public class DefenderGeneratedRecorder : RecorderBase<DefenderGeneratedRecorder.
                 var enemies = e.Map.mapPawns.AllPawnsSpawned.Where(pawn => pawn.HostileTo(Faction.OfPlayer)).ToList();
 
                 Expect.ThatAll(enemies).ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] were stationed at [WorldObject] as defenders.", HistoryRecordDefOf.DefenderGenerated);
-                Expect.ThatAll(enemies).Not().ToHaveHistoryRecordQuest(quest, HistoryRecordDefOf.DefenderGenerated);
+                Expect.ThatAll(enemies).Not().ToHaveHistoryRecord(new ExpectedHistoryRecord
+                {
+                    Def = HistoryRecordDefOf.DefenderGenerated,
+                    Quest = quest,
+                });
             })
             .Execute();
     }

@@ -134,6 +134,11 @@ public static class Accessor
     {
         public static readonly AccessTools.FieldRef<RimWorld.QuestPart_DropPods, List<Thing>> TmpThingsToDrop = AccessTools.FieldRefAccess<RimWorld.QuestPart_DropPods, List<Thing>>("tmpThingsToDrop");
     }
+    
+    public class QuestPart_Incident
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.QuestPart_Incident, IncidentParms> IncidentParms = AccessTools.FieldRefAccess<RimWorld.QuestPart_Incident, IncidentParms>("incidentParms");
+    }
 
     public class Dialog_BeginRitual
     {

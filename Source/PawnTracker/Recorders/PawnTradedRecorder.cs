@@ -62,7 +62,12 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
             .Sell(t => t.AnyThing is Pawn)
             .Execute();
         
-        Expect.That(result.Sold[0] as Pawn).ToHaveHistoryRecord("[Negotiator] sold [PAWN] into slavery to [Trader] for [x] silvers.");
+        Expect.That(result.Sold[0] as Pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.SoldToSlavery,
+            Description = "[Negotiator] sold [PAWN] into slavery to [Trader] for [x] silvers.",
+            Concerns = [negotiator],
+        });
     }
 
     public void TestBuy(TestScenario scenario)
@@ -82,7 +87,12 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
             .Buy(t => t.AnyThing is Pawn)
             .Execute();
         
-        Expect.That(result.Bought[0] as Pawn).ToHaveHistoryRecord("[Negotiator] bought [PAWN] from [Trader] for [x] silvers.");
+        Expect.That(result.Bought[0] as Pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.BoughtFromSlavery,
+            Description = "[Negotiator] bought [PAWN] from [Trader] for [x] silvers.",
+            Concerns = [negotiator],
+        });
     }
 
     public void TestBuy2(TestScenario scenario)
@@ -106,6 +116,11 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
             .Buy(t => t.AnyThing is Pawn)
             .Execute();
         
-        Expect.That(result.Bought[0] as Pawn).ToHaveHistoryRecord("[Negotiator] bought [PAWN] from [Trader] for [x] silvers.");
+        Expect.That(result.Bought[0] as Pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.BoughtFromSlavery,
+            Description = "[Negotiator] bought [PAWN] from [Trader] for [x] silvers.",
+            Concerns = [negotiator],
+        });
     }
 }

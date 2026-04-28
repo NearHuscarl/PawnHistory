@@ -47,7 +47,12 @@ public class CaravanAmbushRecorder : RecorderBase<CaravanAmbushedEvent>
 
                 Expect.ThatAll(enemies)
                     .Eventually()
-                    .ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] ambushed [Caravan].", HistoryRecordDefOf.CaravanAmbush);
+                    .ToHaveHistoryRecord(new ExpectedHistoryRecord()
+                    {
+                        Def = HistoryRecordDefOf.CaravanAmbush,
+                        Description = "[PAWN] and [n] others from [Faction] ambushed [Caravan].",
+                        TileId = e.Map.Tile.tileId,
+                    });
             })
             .Execute();
 

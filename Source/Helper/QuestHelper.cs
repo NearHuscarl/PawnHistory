@@ -27,25 +27,23 @@ public static class QuestHelper
 
     public static IEnumerable<Pawn> GetQuestPawns(Quest quest = null)
     {
-        quest ??= Find.QuestManager.QuestsListForReading.Last();
-        
-        return quest.QuestLookTargets.Where(t => t.Pawn != null).Select(p => p.Pawn);
+        return GetArrivalPawns(quest, true);
     }
 
-    public static List<Pawn> GetArrivalPawns(Quest quest = null)
+    public static List<Pawn> GetArrivalPawns(Quest quest = null, bool includingWorldPawns = false)
     {
         quest ??= Find.QuestManager.QuestsListForReading.Last();
         
         var source1 = quest.PartsListForReading.OfType<QuestPart_PawnsArrive>().SelectMany(part => part.pawns);
         var source2 = quest.PartsListForReading.OfType<QuestPart_DropPods>().SelectMany(part => part.Things).OfType<Pawn>();
         var source3 = quest.PartsListForReading.OfType<QuestPart_GiveToCaravan>()
-            .Where(part => part.caravan.Spawned)
+            .Where(part => includingWorldPawns || part.caravan.Spawned)
             .SelectMany(part => part.Things).OfType<Pawn>();
         var source4 = quest.PartsListForReading.OfType<QuestPart_SetupTransportShip>()
-            .Where(part => part.transportShip.ShipExistsAndIsSpawned)
+            .Where(part => includingWorldPawns || part.transportShip.ShipExistsAndIsSpawned)
             .SelectMany(part => part.transportShip.TransporterComp.innerContainer.OfType<Pawn>());
         
-        return source1.Concat(source2).Where(p => p.MapHeld != null).Concat(source3).Concat(source4).ToList();
+        return source1.Concat(source2).Where(p => includingWorldPawns || p.MapHeld != null).Concat(source3).Concat(source4).ToList();
     }
     
     public static T GetWorldObject<T>(Quest quest) where T : WorldObject

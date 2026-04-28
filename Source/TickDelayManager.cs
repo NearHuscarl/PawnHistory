@@ -95,7 +95,7 @@ public class TickDelayManager : GameComponent
         }
     }
 
-    public static void Delay(int ticks, Action action) => Delay(ticks, a => action());
+    public static void Delay(int ticks, Action action) => Delay(ticks, _ => action());
 
     public static void Delay(int ticks, Action<ScheduledActionData> action)
     {

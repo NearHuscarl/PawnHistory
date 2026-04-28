@@ -38,7 +38,7 @@ public class HediffRecorder : RecorderBase<HediffAddedEvent>
             .CreateSingle();
         scenario.OpenHistoryRecordTab(patient);
 
-        Expect.That(patient).ToHaveHistoryRecord("[PAWN] was put under anesthetic.");
+        Expect.That(patient).ToHaveHistoryRecord("[PAWN] was put under anesthetic.", HistoryRecordDefOf.Anesthetized);
     }
 
     public void TestInvert(TestScenario scenario)

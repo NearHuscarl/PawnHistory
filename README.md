@@ -124,10 +124,8 @@ public class TestScenario
     public PawnBuilder Pawn(Pawn pawn) => Pawn([pawn]);
     public GatheringBuilder Incident(GatheringDef def) => new(def);
     public IncidentBuilder Incident(IncidentDef def) => new(def);
-    public IncidentBuilder Incident(string defName) => new(DefDatabase<IncidentDef>.GetNamed(defName));
     public MapBuilder Map(IntVec3? pos = null) => new(pos);
     public ThingBuilder Thing(ThingDef thingDef) => new(thingDef);
-    public ThingBuilder Thing(string defName) => new(DefDatabase<ThingDef>.GetNamed(defName));
    // ...
 ```
 

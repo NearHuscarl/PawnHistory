@@ -57,13 +57,17 @@ public class AnimalTamedRecorder : RecorderBase<AnimalTamedEvent>
 
     public Action Test(TestScenario scenario)
     {
-        Expect.Assertions(2);
+        Expect.Assertions(1);
         var (tamer, target) = SetupTest(scenario, DefLookup.PawnKind.Bear_Grizzly);
         
         GameEventBus.SubscribeOnce<AnimalTamedEvent>(e =>
         {
-            Expect.That(tamer).ToHaveHistoryRecord("[WildAnimal] was tamed and joined [PlayerFaction].", HistoryRecordDefOf.AnimalTamed);
-            Expect.That(tamer).ToHaveHistoryRecordConcern(target, HistoryRecordDefOf.AnimalTamed);
+            Expect.That(tamer).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.AnimalTamed,
+                Description = "[WildAnimal] was tamed and joined [PlayerFaction].",
+                Concerns = [target],
+            });
         });
 
         return () => scenario.SlowDown();
@@ -71,14 +75,23 @@ public class AnimalTamedRecorder : RecorderBase<AnimalTamedEvent>
     
     public Action TestWildMan(TestScenario scenario)
     {
-        Expect.Assertions(3);
+        Expect.Assertions(2);
         var (tamer, target) = SetupTest(scenario, PawnKindDefOf.WildMan);
         
         GameEventBus.SubscribeOnce<AnimalTamedEvent>(e =>
         {
-            Expect.That(target).ToHaveHistoryRecord("[WildAnimal] was tamed and joined [PlayerFaction].", HistoryRecordDefOf.AnimalTamed);
-            Expect.That(tamer).ToHaveHistoryRecord("[WildAnimal] was tamed and joined [PlayerFaction].", HistoryRecordDefOf.AnimalTamed);
-            Expect.That(tamer).ToHaveHistoryRecordConcern(target, HistoryRecordDefOf.AnimalTamed);
+            Expect.That(target).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.AnimalTamed,
+                Description = "[WildAnimal] was tamed and joined [PlayerFaction].",
+                Concerns = [tamer],
+            });
+            Expect.That(tamer).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.AnimalTamed,
+                Description = "[WildAnimal] was tamed and joined [PlayerFaction].",
+                Concerns = [target],
+            });
         });
 
         return () => scenario.SlowDown();

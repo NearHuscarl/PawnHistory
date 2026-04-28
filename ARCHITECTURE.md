@@ -38,6 +38,7 @@ Startup entrypoint: `Source/PawnTracker/PawnTracker.cs`.
 ## Environment
 
 - Windows project: prefer PowerShell-native commands over Unix-oriented tooling.
+- `rg.exe` is unavailable on Windows, use PowerShell-native search such as `Get-ChildItem ... | Select-String ...`.
 - Prefer inspecting the decompiled RimWorld source tree at `%USERPROFILE%\Desktop\rimworld\rimworld-2025`.
 - Base game C# source lives under `%USERPROFILE%\Desktop\rimworld\rimworld-2025\Source\`.
 - DLC defs live under `%USERPROFILE%\Desktop\rimworld\rimworld-2025\[DlcName]\Defs\`.

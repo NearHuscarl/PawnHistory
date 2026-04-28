@@ -28,12 +28,16 @@ public class QuestPawnArrivedComp_Bestowing : QuestPawnArrivedComp
     [RequiresRoyalty]
     public void Test(TestScenario scenario)
     {
-        Expect.Assertions(2);
+        Expect.Assertions(1);
         
         GameEventBus.SubscribeOnce<QuestPawnArrivedEvent>(e =>
         {
-            Expect.ThatAll(e.Pawns).ToHaveHistoryRecord("[PAWN] arrived at [PlayerSettlement] to perform a bestowing ceremony, granting [Recipient] the title of [NewTitle].", HistoryRecordDefOf.QuestPawnArrived);
-            Expect.ThatAll(e.Pawns).ToHaveHistoryRecordQuest(e.Quest, HistoryRecordDefOf.QuestPawnArrived);
+            Expect.ThatAll(e.Pawns).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.QuestPawnArrived,
+                Description = "[PAWN] arrived at [PlayerSettlement] to perform a bestowing ceremony, granting [Recipient] the title of [NewTitle].",
+                Quest = e.Quest,
+            });
         });
         
         TitleInheritedRecorder.SetupInheritance(scenario, RoyalTitleDefOf.Count);

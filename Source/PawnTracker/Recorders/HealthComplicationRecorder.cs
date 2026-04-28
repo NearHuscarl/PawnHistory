@@ -68,8 +68,8 @@ public class HealthComplicationRecorder : RecorderBase<HealthComplicationEvent>
         if (giver2.TryApply(pawn))
             Accessor.HediffGiver.SendLetter(giver2, pawn, cause2);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] developed chemical damage in [His] kidney. It was caused by wake-up tolerance (massive).", -2);
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] developed cirrhosis. It was caused by alcohol tolerance (massive).", -1);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.HealthComplication, "[PAWN] developed chemical damage in [His] kidney. It was caused by wake-up tolerance (massive).", index: -2);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.HealthComplication, "[PAWN] developed cirrhosis. It was caused by alcohol tolerance (massive).", index: -1);
     }
 
     public void TestNoCause(TestScenario scenario)
@@ -85,6 +85,6 @@ public class HealthComplicationRecorder : RecorderBase<HealthComplicationEvent>
         if (giver.TryApply(pawn))
             Accessor.HediffGiver.SendLetter(giver, pawn, null);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] developed a heart attack.", HistoryRecordDefOf.HealthComplication, exactMatch: true);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.HealthComplication, "[PAWN] developed a heart attack.", exactMatch: true);
     }
 }

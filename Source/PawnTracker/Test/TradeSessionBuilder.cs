@@ -62,7 +62,8 @@ public class TradeSessionBuilder
             if (tradeable == null)
                 return;
             
-            var adjustment = count == -1 ? tradeable.AnyThing.stackCount : count;
+            var heldByTrader = tradeable.CountHeldBy(Transactor.Trader);
+            var adjustment = count == -1 ? heldByTrader : Math.Min(count, heldByTrader);
             tradeable.AdjustBy(adjustment);
             result.Bought.Add(tradeable.AnyThing);
         });
@@ -77,7 +78,8 @@ public class TradeSessionBuilder
             if (tradeable == null)
                 return;
             
-            var adjustment = count == -1 ? tradeable.AnyThing.stackCount : count;
+            var heldByColony = tradeable.CountHeldBy(Transactor.Colony);
+            var adjustment = count == -1 ? heldByColony : Math.Min(count, heldByColony);
             tradeable.AdjustBy(-adjustment);
             result.Sold.Add(tradeable.AnyThing);
         });
@@ -87,7 +89,18 @@ public class TradeSessionBuilder
     public TradeSessionBuilder Gift(Func<Tradeable, bool> filter = null, int count = -1)
     {
         giftMode = true;
-        return Sell(filter, count);
+        processors.Add(() =>
+        {
+            var tradeable = TradeSession.deal.AllTradeables.Where(t => t.CountHeldBy(Transactor.Colony) > 0).FirstOrDefault(t => filter?.Invoke(t) ?? true);
+            if (tradeable == null)
+                return;
+            
+            var heldByColony = tradeable.CountHeldBy(Transactor.Colony);
+            var adjustment = count == -1 ? heldByColony : Math.Min(count, heldByColony);
+            tradeable.AdjustBy(adjustment);
+            result.Sold.Add(tradeable.AnyThing);
+        });
+        return this;
     }
 
     public TradeSessionResult Execute()

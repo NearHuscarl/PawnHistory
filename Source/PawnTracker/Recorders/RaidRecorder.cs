@@ -37,8 +37,6 @@ public class RaidRecorder : RecorderBase<RaidStartedEvent>
 
         foreach (var pawn in pawns)
         {
-            var rules = new List<Rule>();
-            var constants = new Dictionary<string, string>();
             var desc = recordDef.Description(pawn)
                 .AddRule("Faction", faction)
                 .AddRule("HostileFaction", hostileFaction)

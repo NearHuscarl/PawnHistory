@@ -53,7 +53,16 @@ public class AncientDangerWarningRecorder : RecorderBase<Pawn>
             .StartJob(JobDefOf.Goto, map.Center)
             .CreateSingle();
 
-        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecord("[PAWN] felt a deep sense of foreboding while approaching an ancient structure, sensing great danger within.");
+        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord()
+        {
+            Def = HistoryRecordDefOf.AncientDangerWarning,
+            Description = "[PAWN] felt a deep sense of foreboding while approaching an ancient structure, sensing great danger within.",
+            Location = new RecordLocation
+            {
+                position = pawns[0].Position,
+                map = pawns[0].Map
+            }
+        });
 
         return () => scenario.SlowDown();
     }

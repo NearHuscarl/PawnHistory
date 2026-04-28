@@ -52,6 +52,11 @@ public class LodgerJoinOfferRecorder : RecorderBase<LodgerJoinOfferAcceptedEvent
         var letter = scenario.Letter<ChoiceLetter_AcceptVisitors>().Accept();
         var joiner = letter.pawns.Single();
 
-        Expect.That(joiner).ToHaveHistoryRecord("During [Quest] quest, [PAWN] believed that [He] was happy here, and wished to join the colony permanently. The colony welcomed [Him] in.", HistoryRecordDefOf.LodgerJoinOffer);
+        Expect.That(joiner).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.LodgerJoinOffer,
+            Description = "During [Quest] quest, [PAWN] believed that [He] was happy here, and wished to join the colony permanently. The colony welcomed [Him] in.",
+            Quest = quest,
+        });
     }
 }

@@ -47,8 +47,12 @@ public class PrisonerReleasedRecorder : RecorderBase<PrisonerReleasedEvent>
 
         scenario.SpeedUp();
 
-        Expect.That(prisoner).Eventually().ToHaveHistoryRecord("[Prisoner], a prisoner of the colony, was released by [Releaser].", HistoryRecordDefOf.PrisonerReleased);
-        Expect.That(prisoner).Eventually().ToHaveHistoryRecordConcern(releaser, HistoryRecordDefOf.PrisonerReleased);
+        Expect.That(prisoner).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PrisonerReleased,
+            Description = "[Prisoner], a prisoner of the colony, was released by [Releaser].",
+            Concerns = [releaser],
+        });
         Expect.That(releaser).Eventually().Not().ToHaveHistoryRecordOf(HistoryRecordDefOf.PrisonerReleased);
     }
 }

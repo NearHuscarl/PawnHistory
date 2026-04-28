@@ -41,7 +41,7 @@ public class InspirationRecorder : RecorderBase<InspirationStartedEvent>
 
         pawn.mindState.inspirationHandler.TryStartInspiration(InspirationDefOf.Inspired_Recruitment, "LetterInspirationBeginThanksToHighMoodPart".Translate());
 
-        Expect.That(pawn).ToHaveHistoryRecord("Thanks to high mood, [PAWN] gained an inspiration: Inspired recruitment.");
+        Expect.That(pawn).ToHaveHistoryRecord("Thanks to high mood, [PAWN] gained an inspiration: Inspired recruitment.", HistoryRecordDefOf.Inspiration);
     }
 
     public void TestTrait(TestScenario scenario)
@@ -56,6 +56,6 @@ public class InspirationRecorder : RecorderBase<InspirationStartedEvent>
 
         trait.Notify_MentalStateEndedOn(pawn);
 
-        Expect.That(pawn).ToHaveHistoryRecord("After a mental break, [PAWN], who has the tortured artist trait, gained an inspiration: Inspired creativity.");
+        Expect.That(pawn).ToHaveHistoryRecord("After a mental break, [PAWN], who has the tortured artist trait, gained an inspiration: Inspired creativity.", HistoryRecordDefOf.Inspiration);
     }
 }

@@ -1,5 +1,7 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+﻿using System.Linq;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
+using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -35,6 +37,14 @@ public class NewArrivalRecorder : RecorderBase<ScenarioStartEvent>
             .Colonist()
             .Execute();
 
-        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN] crash-landed in a drop pod with 2 others to start a new settlement.", HistoryRecordDefOf.NewArrival);
+        foreach (var pawn in pawns)
+        {
+            Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.NewArrival,
+                Description = "[PAWN] crash-landed in a drop pod with 2 others to start a new settlement.",
+                Concerns = pawns.Except(pawn).Cast<Thing>().ToList()
+            });
+        }
     }
 }

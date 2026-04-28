@@ -31,33 +31,39 @@ public class TitleInheritedRecorder : RecorderBase<TitleInheritanceEvent>
         AddRecord(recordDef, e.Heir, desc, [e.Deceased]);
     }
 
-    public static Pawn SetupInheritance(TestScenario scenario, RoyalTitleDef deceasedTitle, RoyalTitleDef heirTitle = null)
+    public static (Pawn, Pawn) SetupInheritance(TestScenario scenario, RoyalTitleDef deceasedTitle, RoyalTitleDef heirTitle = null)
     {
         var deceased = scenario.Pawn().Colonist().SetRoyalTitle(deceasedTitle).CreateSingle();
         var heir = scenario.Pawn(deceased.royalty.GetHeir(Faction.OfEmpire)).Colonist().SetRoyalTitle(heirTitle).CreateSingle();
 
         HealthUtility.DamageUntilDead(deceased);
         
-        return heir;
+        return (heir, deceased);
     }
 
     [RequiresRoyalty]
     public void TestWasInherited(TestScenario scenario)
     {
-        var heir = SetupInheritance(scenario, DefLookup.RoyalTitle.Praetor);
+        var (heir, deceased) = SetupInheritance(scenario, DefLookup.RoyalTitle.Praetor);
 
-        Expect.That(heir).ToHaveHistoryRecord(
-            "[PAWN] was set to inherit the Praetor title from [Deceased] according to the succession laws of [Faction] upon completion of a bestowing ceremony.",
-            HistoryRecordDefOf.TitleInherited);
+        Expect.That(heir).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.TitleInherited,
+            Description = "[PAWN] was set to inherit the Praetor title from [Deceased] according to the succession laws of [Faction] upon completion of a bestowing ceremony.",
+            Concerns = [deceased]
+        });
     }
 
     [RequiresRoyalty]
     public void TestAsReplacement(TestScenario scenario)
     {
-        var heir = SetupInheritance(scenario, RoyalTitleDefOf.Count, DefLookup.RoyalTitle.Praetor);
+        var (heir, deceased) = SetupInheritance(scenario, RoyalTitleDefOf.Count, DefLookup.RoyalTitle.Praetor);
 
-        Expect.That(heir).ToHaveHistoryRecord(
-            "[PAWN] was set to inherit the Archon title from [Deceased] according to the succession laws of [Faction], replacing [His] Praetor title upon completion of a bestowing ceremony.",
-            HistoryRecordDefOf.TitleInherited);
+        Expect.That(heir).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.TitleInherited,
+            Description = "[PAWN] was set to inherit the Archon title from [Deceased] according to the succession laws of [Faction], replacing [His] Praetor title upon completion of a bestowing ceremony.",
+            Concerns = [deceased]
+        });
     }
 }

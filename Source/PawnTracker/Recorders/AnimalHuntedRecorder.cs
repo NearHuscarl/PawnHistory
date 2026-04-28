@@ -50,6 +50,6 @@ public class AnimalHuntedRecorder : HistoryTaleRecorder<AnimalHuntedRecorder.Inp
             TaleRecorder.RecordTale(TaleDefOf.Hunted, pawn, animal);
         }
 
-        Expect.ThatAny(pawns).ToHaveHistoryRecordOf(HistoryRecordDefOf.Hunted);
+        Expect.ThatAll(pawns).ToHaveHistoryRecordOf(HistoryRecordDefOf.Hunted);
     }
 }

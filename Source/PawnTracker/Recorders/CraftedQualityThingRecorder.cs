@@ -41,8 +41,12 @@ public class CraftedQualityThingRecorder : RecorderBase<CraftedQualityThingEvent
         craftedThing.GetComp<CompArt>().InitializeArt(ArtGenerationContext.Colony);
         QualityUtility.SendCraftNotification(craftedThing, pawn);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] completed [His] work on a masterwork [CRAFTED]. [Image]. [DescSentence]", HistoryRecordDefOf.CraftedQualityThing);
-        Expect.That(pawn).ToHaveHistoryRecordConcern(craftedThing, HistoryRecordDefOf.CraftedQualityThing);
+        Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.CraftedQualityThing,
+            Description = "[PAWN] completed [His] work on a masterwork golden bed. [Image]. [DescSentence]",
+            Concerns = [craftedThing],
+        });
     }
 
     public void TestLegendary(TestScenario scenario)
@@ -54,7 +58,11 @@ public class CraftedQualityThingRecorder : RecorderBase<CraftedQualityThingEvent
         
         QualityUtility.SendCraftNotification(craftedThing, pawn);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] completed [His] work on a legendary [CRAFTED]. [Image]. [DescSentence]", HistoryRecordDefOf.CraftedQualityThing);
-        Expect.That(pawn).ToHaveHistoryRecordConcern(craftedThing, HistoryRecordDefOf.CraftedQualityThing);
+        Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.CraftedQualityThing,
+            Description = "[PAWN] completed [His] work on a legendary plainleather parka. [Image]. [DescSentence]",
+            Concerns = [craftedThing],
+        });
     }
 }

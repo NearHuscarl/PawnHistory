@@ -41,8 +41,18 @@ public class BreakupRecorder : RecorderBase<BreakupEvent>
             .Do(p => p.interactions.TryInteractWith(recipient, DefLookup.Interaction.Breakup))
             .CreateSingle();
 
-        Expect.That(initiator).ToHaveHistoryRecord("[Dumper] broke up with [Rejected]. [Tale]", HistoryRecordDefOf.Breakup);
-        Expect.That(recipient).ToHaveHistoryRecord("[Dumper] broke up with [Rejected]. [Tale]", HistoryRecordDefOf.Breakup);
+        Expect.That(initiator).ToHaveHistoryRecord(new ExpectedHistoryRecord()
+        {
+            Def = HistoryRecordDefOf.Breakup,
+            Description = "[Dumper] broke up with [Rejected]. [Tale]",
+            Concerns = [recipient]
+        });
+        Expect.That(recipient).ToHaveHistoryRecord(new ExpectedHistoryRecord()
+        {
+            Def = HistoryRecordDefOf.Breakup,
+            Description = "[Dumper] broke up with [Rejected]. [Tale]",
+            Concerns = [initiator]
+        });
     }
 
     public void TestWithReason(TestScenario scenario)
@@ -57,8 +67,18 @@ public class BreakupRecorder : RecorderBase<BreakupEvent>
             .Do(p => p.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.CheatedOnMe, recipient))
             .Do(p => p.interactions.TryInteractWith(recipient, DefLookup.Interaction.Breakup))
             .CreateSingle();
-
-        Expect.That(initiator).ToHaveHistoryRecord("[Dumper] broke up with [Rejected]. [Tale]. The final straw was: Cheated on me.", HistoryRecordDefOf.Breakup);
-        Expect.That(recipient).ToHaveHistoryRecord("[Dumper] broke up with [Rejected]. [Tale]. The final straw was: Cheated on me.", HistoryRecordDefOf.Breakup);
+        
+        Expect.That(initiator).ToHaveHistoryRecord(new ExpectedHistoryRecord()
+        {
+            Def = HistoryRecordDefOf.Breakup,
+            Description = "[Dumper] broke up with [Rejected]. [Tale]. The final straw was: Cheated on me.",
+            Concerns = [recipient]
+        });
+        Expect.That(recipient).ToHaveHistoryRecord(new ExpectedHistoryRecord()
+        {
+            Def = HistoryRecordDefOf.Breakup,
+            Description = "[Dumper] broke up with [Rejected]. [Tale]. The final straw was: Cheated on me.",
+            Concerns = [initiator]
+        });
     }
 }

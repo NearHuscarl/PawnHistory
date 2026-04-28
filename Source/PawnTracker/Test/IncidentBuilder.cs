@@ -34,6 +34,12 @@ public class IncidentBuilder
         return this;
     }
 
+    public IncidentBuilder RaidNeverFlee()
+    {
+        parms.raidNeverFleeIndividual = true;
+        return this;
+    }
+
     public IncidentBuilder RaidStrategy(RaidStrategyDef raidStrategy)
     {
         parms.raidStrategy = raidStrategy;

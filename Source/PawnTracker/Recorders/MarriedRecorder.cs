@@ -36,10 +36,13 @@ public class MarriedRecorder : RecorderBase<MarriedEvent>
         var (couple, _) = WeddingRecorder.SetupWedding(scenario);
 
         MarriageCeremonyUtility.Married(couple[0], couple[1]);
-        
-        Expect.That(couple[0]).ToHaveHistoryRecord("[Spouse1] and [Spouse2] are married.", HistoryRecordDefOf.Married);
-        Expect.That(couple[1]).ToHaveHistoryRecord("[Spouse1] and [Spouse2] are married.", HistoryRecordDefOf.Married);
-        Expect.That(couple[0]).ToHaveHistoryRecordConcern(couple[1], HistoryRecordDefOf.Married);
-        Expect.That(couple[1]).ToHaveHistoryRecordConcern(couple[0], HistoryRecordDefOf.Married);
+
+        var expected = new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.Married,
+            Description = "[Spouse1] and [Spouse2] are married.",
+        };
+        Expect.That(couple[0]).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [couple[1]] }));
+        Expect.That(couple[1]).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [couple[0]] }));
     }
 }

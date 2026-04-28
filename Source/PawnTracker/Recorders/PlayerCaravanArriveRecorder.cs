@@ -132,7 +132,8 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
     {
         var pawns = scenario.Pawn(3).Colonist().Execute();
         var settlement = Find.WorldObjects.Settlements.First(s => s.Faction.RelationKindWith(Faction.OfPlayer) != FactionRelationKind.Hostile);
-        scenario.Caravan(pawns).OfferGifts(settlement).Execute();
+        var silvers = scenario.Thing(ThingDefOf.Silver).Stack(3000).Create();
+        scenario.Caravan(pawns).Give(silvers).OfferGifts(settlement).Execute();
 
         Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN]'s caravan arrived at [WorldObject] with 2 others to offer gifts to [Faction].", HistoryRecordDefOf.PlayerCaravanArrived);
     }
@@ -167,7 +168,12 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
         var pawns = scenario.Pawn(3).Colonist().Execute();
 
         scenario.Caravan(pawns).VisitPeaceTalks(peaceTalks).Execute();
-        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN]'s caravan arrived for peace talks with 2 others to negotiate with [Leader], [Title] of [Faction].", HistoryRecordDefOf.PlayerCaravanArrived);
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PlayerCaravanArrived,
+            Description = "[PAWN]'s caravan arrived for peace talks with 2 others to negotiate with [Leader], [Title] of [Faction].",
+            Quest = quest,
+        });
     }
 
     public void TestVisitSite(TestScenario scenario)
@@ -177,7 +183,12 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
         var pawns = scenario.Pawn(3).Colonist().Execute();
 
         scenario.Caravan(pawns).VisitSite(site).Execute();
-        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN]'s caravan arrived at the item stash with 2 others.", HistoryRecordDefOf.PlayerCaravanArrived);
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PlayerCaravanArrived,
+            Description = "[PAWN]'s caravan arrived at the item stash with 2 others.",
+            Quest = quest,
+        });
     }
 
     public void TestVisitSettlement(TestScenario scenario)

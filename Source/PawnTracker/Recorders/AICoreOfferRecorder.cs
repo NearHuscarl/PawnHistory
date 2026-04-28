@@ -46,7 +46,7 @@ public class AICoreOfferRecorder : RecorderBase<Pawn>
         Find.TickManager.DebugSetTicksGame(2000);
 
         ReceiveLetterEvent received = null;
-        GameEventBus.SubscribeOnce<ReceiveLetterEvent>(e =>
+        scenario.RunOnceOn<ReceiveLetterEvent>(e =>
         {
             if (e.Label.Resolve() != LetterLabelAICoreOffer)
                 return;
@@ -60,6 +60,6 @@ public class AICoreOfferRecorder : RecorderBase<Pawn>
         if (received == null)
             throw new InvalidOperationException("Failed to trigger the AICore offer letter.");
         
-        Expect.That(received.Faction.leader).ToHaveHistoryRecord("[PAWN] from [Faction] contacted the colony with an offer of information about a persona core that can be used to build a spaceship.", HistoryRecordDefOf.AICoreOffer);
+        Expect.That(received.Faction.leader).ToHaveHistoryRecord(HistoryRecordDefOf.AICoreOffer, "[PAWN] from [Faction] contacted the colony with an offer of information about a persona core that can be used to build a spaceship.");
     }
 }

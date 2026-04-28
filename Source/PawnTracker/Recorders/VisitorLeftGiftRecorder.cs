@@ -40,7 +40,11 @@ public class VisitorLeftGiftRecorder : RecorderBase<VisitorLeftGiftEvent>
         GameUtility.ClearUpMap(); // leave some space so the visitor can drop the loot
         VisitorGiftForPlayerUtility.GiveGift(visitors, faction, [gift]);
 
-        Expect.That(giver).ToHaveHistoryRecord("[PAWN] from [Faction] left a gift for the colony: silver x50.", HistoryRecordDefOf.VisitorLeftGift);
-        Expect.That(giver).ToHaveHistoryRecordConcern(gift, HistoryRecordDefOf.VisitorLeftGift);
+        Expect.That(giver).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.VisitorLeftGift,
+            Description = "[PAWN] from [Faction] left a gift for the colony: silver x50.",
+            Concerns = [gift],
+        });
     }
 }

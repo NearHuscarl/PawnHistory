@@ -12,17 +12,17 @@ public class LightningStrikeRecorder : RecorderBase<LightningStrikeRecorder.Inpu
 
     private const int LightningWindowTicks = 3;
 
-    private static readonly List<(Map map, IntVec3 loc, int tick, float radius)> strikes = [];
+    private static readonly List<(Map map, IntVec3 loc, int tick, float radius)> Strikes = [];
 
     public override void Register()
     {
         GameEventBus.Subscribe<LightningStrikedEvent>(e =>
         {
-            strikes.Add((e.Map, e.StrikeLoc, Find.TickManager.TicksGame, e.Radius));
+            Strikes.Add((e.Map, e.StrikeLoc, Find.TickManager.TicksGame, e.Radius));
         });
         GameEventBus.Subscribe<HediffAddedEvent>(e =>
         {
-            strikes.RemoveAll(s => Find.TickManager.TicksGame - s.tick > 10);
+            Strikes.RemoveAll(s => Find.TickManager.TicksGame - s.tick > 10);
 
             var (pawn, hediff, part, dinfo) = e;
 
@@ -33,9 +33,9 @@ public class LightningStrikeRecorder : RecorderBase<LightningStrikeRecorder.Inpu
             if (dinfo?.Def != DamageDefOf.Flame)
                 return;
 
-            int hurtTick = Find.TickManager.TicksGame;
+            var hurtTick = Find.TickManager.TicksGame;
 
-            foreach (var (map, loc, lightningTick, radius) in strikes)
+            foreach (var (map, loc, lightningTick, radius) in Strikes)
             {
                 if (map != pawn.Map)
                     continue;
@@ -52,9 +52,9 @@ public class LightningStrikeRecorder : RecorderBase<LightningStrikeRecorder.Inpu
         });
     }
 
-    public override void CreateRecord(Input Input)
+    public override void CreateRecord(Input input)
     {
-        var (pawn, hediff, part) = Input;
+        var (pawn, hediff, part) = input;
         var recordDef = HistoryRecordDefOf.LightningStrike;
         var desc = recordDef.Description(pawn)
             .AddRule("POSSESSIVE", pawn.Possessive())
@@ -71,6 +71,6 @@ public class LightningStrikeRecorder : RecorderBase<LightningStrikeRecorder.Inpu
             .Do(p => Find.CurrentMap.weatherManager.eventHandler.AddEvent(new WeatherEvent_LightningStrike(Find.CurrentMap, p.Position)))
             .Execute();
 
-        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecord("[PAWN] was struck by lightning, burning [POSSESSIVE] [PART].");
+        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecord("[PAWN] was struck by lightning, burning [POSSESSIVE] [PART].", HistoryRecordDefOf.LightningStrike);
     }
 }

@@ -39,7 +39,12 @@ public class LeaderChangedRecorder : RecorderBase<LeaderChangedEvent>
             .FactionLeader(Faction.OfPirates)
             .CreateSingle();
 
-        Expect.That(newLeader).ToHaveHistoryRecord("[PAWN] became the new [Faction_leaderTitle] of [Faction] after [OldLeader] went missing.");
+        Expect.That(newLeader).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.LeaderChanged,
+            Description = "[PAWN] became the new [Faction_leaderTitle] of [Faction] after [OldLeader] went missing.",
+            Concerns = [oldLeader],
+        });
     }
 
     public void TestDeath(TestScenario scenario)
@@ -54,6 +59,11 @@ public class LeaderChangedRecorder : RecorderBase<LeaderChangedEvent>
             .FactionLeader(Faction.OfPirates)
             .CreateSingle();
 
-        Expect.That(newLeader).ToHaveHistoryRecord("[PAWN] became the new [Faction_leaderTitle] of [Faction] after [OldLeader] died.");
+        Expect.That(newLeader).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.LeaderChanged,
+            Description = "[PAWN] became the new [Faction_leaderTitle] of [Faction] after [OldLeader] died.",
+            Concerns = [oldLeader],
+        });
     }
 }

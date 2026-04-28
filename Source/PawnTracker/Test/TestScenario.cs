@@ -102,6 +102,13 @@ public static class TestScenarioExtensions
             return scenario;
         }
 
+        public TestScenario RunOnceOn<T>(Action<T> action) where T : GameEventBase
+        {
+            var unsub = GameEventBus.SubscribeOnce(action);
+            TickDelayManager.Delay(TestManager.Timeout, unsub);
+            return scenario;
+        }
+
         public TestScenario RunUntil(Func<bool> stopCondition, Action action, Action onFinish = null, int interval = 1)
         {
             TickDelayManager.Interval(interval, TestManager.Timeout, data =>

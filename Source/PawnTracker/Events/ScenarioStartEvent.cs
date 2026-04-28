@@ -16,7 +16,10 @@ internal class ScenPart_PlayerPawnsArriveMethod_GenerateIntoMap_Patch
         
         if (pawns == null) return;
         
-        var arriveMethod = Accessor.ScenPart_PlayerPawnsArriveMethod.Method(__instance);
-        GameEventBus.Publish(new ScenarioStartEvent(pawns, arriveMethod));
+        LongEventHandler.ExecuteWhenFinished(() =>
+        {
+            var arriveMethod = Accessor.ScenPart_PlayerPawnsArriveMethod.Method(__instance);
+            GameEventBus.Publish(new ScenarioStartEvent(pawns, arriveMethod));
+        });
     }
 }

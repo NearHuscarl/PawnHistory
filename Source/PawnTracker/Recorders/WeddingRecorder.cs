@@ -145,19 +145,37 @@ public class WeddingRecorder : RecorderBase<WeddingRecorder.WeddingStartedInput>
         
         var (couple, spectators) = SetupWedding(scenario);
 
-        Expect.ThatAll(couple).ToHaveHistoryRecord("[PAWN] and [Pawn2] began their wedding ceremony.", HistoryRecordDefOf.WeddingJoined);
-        Expect.ThatAll(spectators).Eventually().ToHaveHistoryRecord("[PAWN] attended [Pawn1] and [Pawn2]'s wedding ceremony", HistoryRecordDefOf.WeddingJoined);
+        var expected = new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.WeddingJoined,
+            Description = "[PAWN] and [Pawn2] began their wedding ceremony.",
+        };
+        Expect.That(couple[0]).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [couple[1]] }));
+        Expect.That(couple[1]).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [couple[0]] }));
+        Expect.ThatAll(spectators).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.WeddingJoined,
+            Description = "[PAWN] attended [Pawn1] and [Pawn2]'s wedding ceremony",
+            Concerns = couple.Cast<Thing>().ToList(),
+        });
     }
 
     public Action TestDead(TestScenario scenario)
     {
         scenario.SpeedUp();
         var (couple, spectators) = SetupWedding(scenario);
+        var victim = spectators.First();
 
-        TickDelayManager.Delay(100, () => spectators.First().Kill(null));
+        TickDelayManager.Delay(100, () => victim.Kill(null));
 
-        Expect.ThatAll(couple).Eventually().ToHaveHistoryRecord("[Pawn1] and [Pawn2]'s wedding was called off after [DeadPawn] died.", HistoryRecordDefOf.WeddingCancelled);
-        Expect.ThatAny(spectators).Eventually().ToHaveHistoryRecord("[Pawn1] and [Pawn2]'s wedding was called off after [DeadPawn] died.", HistoryRecordDefOf.WeddingCancelled);
+        var expected = new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.WeddingCancelled,
+            Description = "[Pawn1] and [Pawn2]'s wedding was called off after [DeadPawn] died.",
+        };
+        Expect.That(couple[0]).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [victim, couple[1]] }));
+        Expect.That(couple[1]).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [victim, couple[0]] }));
+        Expect.ThatAny(spectators).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [victim, ..couple] }));
 
         return () => scenario.SlowDown();
     }
@@ -172,8 +190,15 @@ public class WeddingRecorder : RecorderBase<WeddingRecorder.WeddingStartedInput>
             scenario.Incident(IncidentDefOf.RaidEnemy).Point(500).Execute();
             scenario.RaidFriendly().Point(500).Execute();
         });
-        Expect.ThatAll(couple).Eventually().ToHaveHistoryRecord("[Pawn1] and [Pawn2]'s wedding was called off due to nearby threats.", HistoryRecordDefOf.WeddingCancelled);
-        Expect.ThatAny(spectators).Eventually().ToHaveHistoryRecord("[Pawn1] and [Pawn2]'s wedding was called off due to nearby threats.", HistoryRecordDefOf.WeddingCancelled);
+        
+        var expected = new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.WeddingCancelled,
+            Description = "[Pawn1] and [Pawn2]'s wedding was called off due to nearby threats.",
+        };
+        Expect.That(couple[0]).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [couple[1]] }));
+        Expect.That(couple[1]).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [couple[0]] }));
+        Expect.ThatAny(spectators).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = couple.Cast<Thing>().ToList() }));
 
         return () => scenario.SlowDown();
     }

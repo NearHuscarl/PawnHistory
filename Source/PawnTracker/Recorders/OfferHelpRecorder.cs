@@ -37,7 +37,7 @@ public class OfferHelpRecorder : RecorderBase<OfferHelpEvent>
         var site = QuestHelper.GetWorldObject<Site>(quest);
         var rescuer = scenario.Pawn().Colonist().CreateSingle();
 
-        Expect.Assertions(4);
+        Expect.Assertions(2);
 
         scenario.Caravan([rescuer])
             .VisitSite(site)
@@ -46,10 +46,20 @@ public class OfferHelpRecorder : RecorderBase<OfferHelpEvent>
                 var refugee = QuestHelper.GetPawnReward(quest);
                 refugee.mindState.JoinColonyBecauseRescuedBy(rescuer);
 
-                Expect.That(rescuer).ToHaveHistoryRecord("[Refugee] joined the colony after being rescued by [Rescuer].", HistoryRecordDefOf.OfferHelp);
-                Expect.That(refugee).ToHaveHistoryRecord("[Refugee] joined the colony after being rescued by [Rescuer].", HistoryRecordDefOf.OfferHelp);
-                Expect.That(rescuer).ToHaveHistoryRecordConcern(refugee, HistoryRecordDefOf.OfferHelp);
-                Expect.That(refugee).ToHaveHistoryRecordConcern(rescuer, HistoryRecordDefOf.OfferHelp);
+                Expect.That(rescuer).ToHaveHistoryRecord(new ExpectedHistoryRecord
+                {
+                    Def = HistoryRecordDefOf.OfferHelp,
+                    Description = "[Refugee] joined the colony after being rescued by [Rescuer].",
+                    Concerns = [refugee],
+                    Quest = quest,
+                });
+                Expect.That(refugee).ToHaveHistoryRecord(new ExpectedHistoryRecord
+                {
+                    Def = HistoryRecordDefOf.OfferHelp,
+                    Description = "[Refugee] joined the colony after being rescued by [Rescuer].",
+                    Concerns = [rescuer],
+                    Quest = quest,
+                });
             })
             .Execute();
     }

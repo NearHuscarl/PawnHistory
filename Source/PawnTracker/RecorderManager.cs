@@ -50,9 +50,10 @@ public static class RecorderManager
     public static void ListRecorderTests()
     {
         var dataSource = ScanTestMethods();
+        var testReportEntries = TestReportManager.LastReport?.Entries.ToDictionary(x => x.TestId, x => x) ?? [];
         var totalIds = dataSource.Select(x => x.Id).Distinct().Count();
         var totalSkip = dataSource.Count(x => x.Attributes.SkipTest);
-        var testReportEntries = TestReportManager.LastReport?.Entries.ToDictionary(x => x.TestId, x => x) ?? [];
+        var totalFailed = dataSource.Count(x => testReportEntries.TryGetValue(x.Id)?.TestFailures.Any() ?? false);
 
         DebugTables.MakeTablesDialog(dataSource,
             new TableDataGetter<TestMethodInfo>($"Id ({totalIds})", d => d.Id),
@@ -65,7 +66,7 @@ public static class RecorderManager
                 var entry = testReportEntries.TryGetValue(d.Id);
                 return entry == null ? "?/?" : $"{entry.AssertionsPassed}/{entry.AssertionsPassed + entry.TestFailures.Count}";
             }),
-            new TableDataGetter<TestMethodInfo>("Failed Message", d =>
+            new TableDataGetter<TestMethodInfo>($"Failed Message ({totalFailed})", d =>
             {
                 var entry = testReportEntries.TryGetValue(d.Id);
                 return entry?.TestFailures.FirstOrDefault()?.message;

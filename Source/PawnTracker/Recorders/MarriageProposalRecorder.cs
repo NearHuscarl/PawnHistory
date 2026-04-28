@@ -44,8 +44,13 @@ public class MarriageProposalRecorder : RecorderBase<MarriageProposalEvent>
             .Do(p => p.interactions.TryInteractWith(recipient, InteractionDefOf.MarriageProposal))
             .CreateSingle();
 
-        Expect.That(initiator).ToHaveHistoryRecord("[InteractionLog]. [PAWN] agreed and the two became engaged.", HistoryRecordDefOf.MarriageProposal);
-        Expect.That(recipient).ToHaveHistoryRecord("[InteractionLog]. [PAWN] agreed and the two became engaged.", HistoryRecordDefOf.MarriageProposal);
+        var expected = new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.MarriageProposal,
+            Description = "[InteractionLog]. [PAWN] agreed and the two became engaged.",
+        };
+        Expect.That(initiator).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [recipient] }));
+        Expect.That(recipient).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [initiator] }));
         
         return () => NearDebugSettings.ForceMarriageProposalAccepted = false;
     }
@@ -65,13 +70,23 @@ public class MarriageProposalRecorder : RecorderBase<MarriageProposalEvent>
 
         if (initiator.relations.DirectRelationExists(PawnRelationDefOf.ExLover, recipient))
         {
-            Expect.That(initiator).ToHaveHistoryRecord("[InteractionLog]. [PAWN] rejected the proposal. The rejection was too much for the relationship, and the two broke up.", HistoryRecordDefOf.MarriageProposal);
-            Expect.That(recipient).ToHaveHistoryRecord("[InteractionLog]. [PAWN] rejected the proposal. The rejection was too much for the relationship, and the two broke up.", HistoryRecordDefOf.MarriageProposal);
+            var expected = new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.MarriageProposal,
+                Description = "[InteractionLog]. [PAWN] rejected the proposal. The rejection was too much for the relationship, and the two broke up.",
+            };
+            Expect.That(initiator).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [recipient] }));
+            Expect.That(recipient).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [initiator] }));
         }
         else
         {
-            Expect.That(initiator).ToHaveHistoryRecord("[InteractionLog]. [PAWN] rejected the proposal.", HistoryRecordDefOf.MarriageProposal, exactMatch: true);
-            Expect.That(recipient).ToHaveHistoryRecord("[InteractionLog]. [PAWN] rejected the proposal.", HistoryRecordDefOf.MarriageProposal, exactMatch: true);
+            var expected = new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.MarriageProposal,
+                Description = "[InteractionLog]. [PAWN] rejected the proposal.",
+            };
+            Expect.That(initiator).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [recipient] }), true);
+            Expect.That(recipient).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [initiator] }), true);
         }
         
         return () => NearDebugSettings.ForceMarriageProposalRejected = false;

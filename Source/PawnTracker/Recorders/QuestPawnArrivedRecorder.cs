@@ -59,8 +59,12 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         if (filter != null)
             pawns = pawns.Where(filter).ToList();
 
-        Expect.ThatAll(pawns).ToHaveHistoryRecord(description, HistoryRecordDefOf.QuestPawnArrived);
-        Expect.ThatAll(pawns).ToHaveHistoryRecordQuest(quest, HistoryRecordDefOf.QuestPawnArrived);
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.QuestPawnArrived,
+            Description = description,
+            Quest = quest,
+        });
     }
     
     // IncidentWorker_GiveQuest, QuestPart_PawnsArrive, quest.DropPods()
@@ -70,11 +74,19 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         scenario.Letter<ChoiceLetter_AcceptJoiner>().Accept();
         
         var pawns1 = QuestHelper.GetArrivalPawns();
-        Expect.That(pawns1.Last()).ToHaveHistoryRecord("A [PAWN_title] named [PAWN] arrived and joined the colony. [He] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.", HistoryRecordDefOf.QuestPawnArrived);
+        Expect.That(pawns1.Last()).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.QuestPawnArrived,
+            Description = "A [PAWN_title] named [PAWN] arrived and joined the colony. [He] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.",
+        });
         
         scenario.Incident(DefLookup.Incident.RefugeePodCrash).Execute();
         var pawns2 = QuestHelper.GetArrivalPawns();
-        Expect.That(pawns2.Last()).ToHaveHistoryRecord("[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [He] survived the impact but was badly wounded.", HistoryRecordDefOf.QuestPawnArrived);
+        Expect.That(pawns2.Last()).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.QuestPawnArrived,
+            Description = "[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [He] survived the impact but was badly wounded.",
+        });
     }
     
     // quest.PawnsArrive()
@@ -84,8 +96,12 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         var quest = scenario.Quest(QuestScriptDefOf.Hospitality_Refugee).Execute();
         var pawns = QuestHelper.GetArrivalPawns(quest);
         
-        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN][AndOthers] arrived at [PlayerSettlement] seeking shelter and a place to regroup, with nowhere else to go.", HistoryRecordDefOf.QuestPawnArrived);
-        Expect.ThatAll(pawns).ToHaveHistoryRecordQuest(quest, HistoryRecordDefOf.QuestPawnArrived);
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.QuestPawnArrived,
+            Description = "[PAWN][AndOthers] arrived at [PlayerSettlement] seeking shelter and a place to regroup, with nowhere else to go.",
+            Quest = quest,
+        });
     }
 
     // quest.DropPods(), QuestPart_PawnsArrive (raid)
@@ -96,13 +112,18 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         scenario.SpeedUp();
         Expect.Assertions(2);
         
-        scenario.Quest(DefLookup.QuestScript.ShuttleCrash_Rescue).Execute();
+        var quest = scenario.Quest(DefLookup.QuestScript.ShuttleCrash_Rescue).Execute();
 
         // QuestNode_Root_ShuttleCrash_Rescue.QuestStartDelay
         TickDelayManager.Delay(120, () =>
         {
             var pawns = QuestHelper.GetArrivalPawns().Where(p => !p.HostileTo(Faction.OfPlayer));
-            Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN] along with [n] others made an emergency landing at [PlayerSettlement] after their shuttle was damaged.", HistoryRecordDefOf.QuestPawnArrived);
+            Expect.ThatAll(pawns).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.QuestPawnArrived,
+                Description = "[PAWN] along with [n] others made an emergency landing at [PlayerSettlement] after their shuttle was damaged.",
+                Quest = quest,
+            });
             
             scenario.ForwardTicks(10_000); // QuestNode_Root_ShuttleCrash_Rescue.RaidDelay
         });
@@ -110,7 +131,12 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         scenario.WaitUntil(() => GenHostility.AnyHostileActiveThreatToPlayer(Find.CurrentMap), () =>
         {
             var raiders = QuestHelper.GetArrivalPawns().Where(p => p.HostileTo(Faction.OfPlayer));
-            Expect.ThatAll(raiders).ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] attacked the crashed shuttle site.", HistoryRecordDefOf.QuestPawnArrived);
+            Expect.ThatAll(raiders).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.QuestPawnArrived,
+                Description = "[PAWN] and [n] others from [Faction] attacked the crashed shuttle site.",
+                Quest = quest,
+            });
         });
         return () => scenario.SlowDown();
     }
@@ -118,18 +144,28 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     // QuestNode_PawnsArrive, QuestNode_Raid (Raid Incident)
     public void TestRaidJoiner(TestScenario scenario)
     {
-        scenario.Quest(DefLookup.QuestScript.ThreatReward_Raid_Joiner).Execute();
+        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_Raid_Joiner).Execute();
         scenario.ForwardTime(1f);
         
-        Expect.Assertions(3);
+        Expect.Assertions(2);
 
         GameEventBus.SubscribeOnce<RaidStartedEvent>(e =>
         {
             var pawn = QuestHelper.GetArrivalPawns().First(p => p.Faction.IsPlayer);
             
-            Expect.That(pawn).ToHaveHistoryRecord("[PAWN] joined the colony in exchange for safety while being pursued.", HistoryRecordDefOf.QuestPawnArrived);
-            Expect.ThatAll(e.Pawns).ToHaveHistoryRecord("[RaidText]. [He] came to take [QuestAsker].", HistoryRecordDefOf.Raid);
-            Expect.ThatAll(e.Pawns).ToHaveHistoryRecordConcern(pawn, HistoryRecordDefOf.Raid);
+            Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.QuestPawnArrived,
+                Description = "[PAWN] joined the colony in exchange for safety while being pursued.",
+                Quest = quest,
+            });
+            Expect.ThatAll(e.Pawns).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.Raid,
+                Description = "[RaidText]. [He] came to take [QuestAsker].",
+                Concerns = [pawn],
+                Quest = e.Quest,
+            });
         });
     }
     
@@ -137,18 +173,28 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     [RequiresRoyalty]
     public void TestEmpireDeserter(TestScenario scenario)
     {
-        scenario.Quest(DefLookup.QuestScript.Intro_Deserter).Execute();
+        var quest = scenario.Quest(DefLookup.QuestScript.Intro_Deserter).Execute();
         scenario.ForwardTime(1f);
         
-        Expect.Assertions(3);
+        Expect.Assertions(2);
 
         GameEventBus.SubscribeOnce<RaidStartedEvent>(e =>
         {
             var pawn = QuestHelper.GetArrivalPawns().First(p => p.Faction.IsPlayer);
             
-            Expect.That(pawn).ToHaveHistoryRecord("[PAWN] joined [PlayerSettlement] after deserting [Faction], while being hunted by a loyalty squad.", HistoryRecordDefOf.QuestPawnArrived);
-            Expect.ThatAll(e.Pawns).ToHaveHistoryRecord("[RaidText]. [He] came to hunt down [QuestAsker].", HistoryRecordDefOf.Raid);
-            Expect.ThatAll(e.Pawns).ToHaveHistoryRecordConcern(pawn, HistoryRecordDefOf.Raid);
+            Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.QuestPawnArrived,
+                Description = "[PAWN] joined [PlayerSettlement] after deserting [Faction], while being hunted by a loyalty squad.",
+                Quest = quest,
+            });
+            Expect.ThatAll(e.Pawns).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.Raid,
+                Description = "[RaidText]. [He] came to hunt down [QuestAsker].",
+                Concerns = [pawn],
+                Quest = e.Quest,
+            });
         });
     }
     
@@ -169,6 +215,120 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
 
         scenario.Caravan([colonist]).Give(gifts).FulfillTradeRequest(tradePart.settlement).Execute();
         
-        Expect.That(rewardPawn).ToHaveHistoryRecord("[PAWN] joined the colony as a reward for fulfilling a trade request from [Faction].", HistoryRecordDefOf.QuestPawnArrived);
+        Expect.That(rewardPawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.QuestPawnArrived,
+            Description = "[PAWN] joined the colony as a reward for fulfilling a trade request from [Faction].",
+            Quest = quest,
+        });
+    }
+    
+    public void TestBanditCamp(TestScenario scenario)
+    {
+        var quest = scenario.Quest(DefLookup.QuestScript.OpportunitySite_BanditCamp).Execute();
+        var site = QuestHelper.GetWorldObject<Site>(quest);
+        var pawns = scenario.Pawn(3).Colonist().Execute();
+
+        scenario.Caravan(pawns).VisitSite(site).Execute();
+    }
+    
+    [SkipTest]
+    [RequiresRoyalty]
+    public void TestRoyalty(TestScenario scenario)
+    {
+        var quest = scenario.Quest(DefLookup.QuestScript.WandererJoinAbasia).Execute();
+        AssertArrived(quest, GenericArrivalText);
+    }
+
+    [SkipTest]
+    [RequiresRoyalty]
+    public void TestHospitalityJoiners(TestScenario scenario)
+    {
+        var quest = scenario.Quest(DefLookup.QuestScript.Hospitality_Joiners).Execute();
+        AssertArrived(quest, GenericArrivalText);
+    }
+
+    [SkipTest]
+    [RequiresRoyalty]
+    public void TestHospitalityPrisoners(TestScenario scenario)
+    {
+        var quest = scenario.Quest(DefLookup.QuestScript.Hospitality_Prisoners).Execute();
+        AssertArrived(quest, GenericArrivalText);
+    }
+
+    [SkipTest]
+    [RequiresRoyalty]
+    public void TestThreatRewardInfestationJoiner(TestScenario scenario)
+    {
+        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_Infestation_Joiner).Execute();
+        AssertArrived(quest, GenericArrivalText, pawn => pawn.Faction?.IsPlayer == true);
+    }
+
+    [SkipTest]
+    [RequiresRoyalty]
+    public void TestThreatRewardManhuntersJoiner(TestScenario scenario)
+    {
+        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_Manhunters_Joiner).Execute();
+        AssertArrived(quest, GenericArrivalText, pawn => pawn.Faction?.IsPlayer == true);
+    }
+
+    [SkipTest]
+    [RequiresRoyalty]
+    public void TestThreatRewardGameConditionJoiner(TestScenario scenario)
+    {
+        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_GameCondition_Joiner).Execute();
+        AssertArrived(quest, GenericArrivalText, pawn => pawn.Faction?.IsPlayer == true);
+    }
+
+    [SkipTest]
+    [RequiresRoyalty]
+    public void TestThreatRewardSiteThreatJoiner(TestScenario scenario)
+    {
+        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_SiteThreat_Joiner).Execute();
+        AssertArrived(quest, GenericArrivalText, pawn => pawn.Faction?.IsPlayer == true);
+    }
+
+    [SkipTest]
+    [RequiresRoyalty]
+    public void TestThreatRewardRaidMultiFactionJoiner(TestScenario scenario)
+    {
+        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_RaidMultiFaction_Joiner).Execute();
+        AssertArrived(quest, GenericArrivalText, pawn => pawn.Faction?.IsPlayer == true);
+    }
+
+    [SkipTest]
+    [RequiresRoyalty]
+    public void TestThreatRewardMysteryThreatJoiner(TestScenario scenario)
+    {
+        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_MysteryThreat_Joiner).Execute();
+        AssertArrived(quest, GenericArrivalText, pawn => pawn.Faction?.IsPlayer == true);
+    }
+
+    [SkipTest]
+    [RequiresRoyalty]
+    public Action TestHospitalityPawnReward(TestScenario scenario)
+    {
+        var rewardPawn = scenario.Pawn().WorldPawn().CreateSingle(false);
+        
+        scenario.ForceRewardPawnInQuest = rewardPawn;
+        var quest = scenario.Quest(DefLookup.QuestScript.Hospitality_Joiners).Execute();
+
+        Expect.Assertions(1);
+        scenario.SpeedUp();
+        scenario.RunUntil(
+            () => rewardPawn.HistoryRecords.Any(record => record.def == HistoryRecordDefOf.QuestPawnArrived),
+            () => scenario.ForwardTime(0.25f),
+            () =>
+            {
+                Expect.That(rewardPawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+                {
+                    Def = HistoryRecordDefOf.QuestPawnArrived,
+                    Description = GenericRewardText,
+                    Quest = quest,
+                });
+            },
+            60);
+
+        return () => scenario.SlowDown();
     }
 }

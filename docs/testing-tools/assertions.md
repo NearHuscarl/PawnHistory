@@ -20,19 +20,16 @@ Use `Eventually(...)` when the recorder is reached by delayed jobs, letters, tra
 
 ## History Assertions
 
-- `ToHaveHistoryRecord(string descriptionTemplate, HistoryRecordDef recordDef = null, bool exactMatch = false, int ticksAgo = 0)`
-- `ToHaveHistoryRecord(string descriptionTemplate, int index, bool exactMatch = false)`
+- `ToHaveHistoryRecord(string descriptionTemplate, HistoryRecordDef recordDef = null, bool exactMatch = false, int index = -1)`
+- `ToHaveHistoryRecord(ExpectedHistoryRecord expected)`
 - `ToHaveHistoryRecordOf(HistoryRecordDef def, int index = -1)`
 - `ToHaveHistoryRecordCount(int expected)`
-- `ToHaveHistoryRecordPosition(IntVec3 position, HistoryRecordDef recordDef, int ticksAgo = 0)`
-- `ToHaveHistoryRecordConcern(Thing concern, HistoryRecordDef recordDef, int ticksAgo = 0)`
-- `ToHaveHistoryRecordQuest(Quest quest, HistoryRecordDef recordDef, int ticksAgo = 0)`
 
 Preferred usage:
 
 - Use `ToHaveHistoryRecord(...)` with `recordDef` when you care about both text shape and def identity.
-- Use `ToHaveHistoryRecordQuest(...)` when the recorder must attach the right generated quest.
-- Use `ToHaveHistoryRecordConcern(...)` for attached pawns, things, or other concern objects.
+- Use `index` only when the exact history-record slot matters.
+- Use `ToHaveHistoryRecord(new ExpectedHistoryRecord { ... })` when one record must match several fields such as def, description, concerns, position, map, location, or quest. Null fields are ignored.
 - Use `ToHaveHistoryRecordOf(...)` only when the def alone is the meaningful assertion.
 
 ## Description Matching

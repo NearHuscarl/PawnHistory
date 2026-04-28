@@ -30,11 +30,16 @@ public class PredatorHuntingColonistRecorder : RecorderBase<PredatorHuntingColon
         var mapCenter = Find.CurrentMap.Center;
         var prey = scenario.Pawn().Colonist().Position(mapCenter, 0).CreateSingle();
         
-        scenario.Pawn()
+        var predator = scenario.Pawn()
             .Animal(DefLookup.PawnKind.Cougar)
             .StartJob(JobDefOf.PredatorHunt, prey)
             .CreateSingle();
 
-        Expect.That(prey).Eventually().ToHaveHistoryRecord("[PAWN] was hunted by a cougar for food.", HistoryRecordDefOf.PredatorHuntingColonist);
+        Expect.That(prey).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PredatorHuntingColonist,
+            Description = "[PAWN] was hunted by a cougar for food.",
+            Concerns = [predator]
+        });
     }
 }

@@ -125,7 +125,12 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
 
         scenario.DropPod(pawns).Attack(settlement).Execute();
 
-        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] arrived at [WorldObject] in a transport pod with 2 others to attack [Faction].", HistoryRecordDefOf.PlayerTransporterArrived);
+        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PlayerTransporterArrived,
+            Description = "[PAWN] arrived at [WorldObject] in a transport pod with 2 others to attack [Faction].",
+            TileId = settlement.Tile.tileId,
+        });
         return () => scenario.SlowDown();
     }
 
@@ -135,8 +140,13 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
         
         var pawns = scenario.Pawn(3).Colonist().Execute();
         scenario.DropPod(pawns).Enter(Find.CurrentMap.Parent).Execute();
-
-        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] arrived at the colony in a transport pod with 2 others.", HistoryRecordDefOf.PlayerTransporterArrived);
+        
+        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PlayerTransporterArrived,
+            Description = "[PAWN] arrived at the colony in a transport pod with 2 others.",
+            TileId = Find.CurrentMap.Tile.tileId,
+        });
         
         return () => scenario.SlowDown();
     }
@@ -151,7 +161,12 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
         var playerSettlement = Find.WorldObjects.Settlements.First(s => s.Faction == Faction.OfPlayer);
         NamePlayerSettlementDialogUtility.Named(playerSettlement, "Super Gay Viltrum");
 
-        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] arrived at Super Gay Viltrum in a transport pod with 2 others.", HistoryRecordDefOf.PlayerTransporterArrived);
+        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PlayerTransporterArrived,
+            Description = "[PAWN] arrived at Super Gay Viltrum in a transport pod with 2 others.",
+            TileId = playerSettlement.Tile.tileId,
+        });
         
         return () => scenario.SlowDown();
     }
@@ -164,7 +179,12 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
 
         scenario.DropPod(pawns).ArriveAsGifts(settlement).Execute();
 
-        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] arrived at [WorldObject] in a transport pod with 1 other as a gift to [Faction].", HistoryRecordDefOf.PlayerTransporterArrived);
+        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PlayerTransporterArrived,
+            Description = "[PAWN] arrived at [WorldObject] in a transport pod with 1 other as a gift to [Faction].",
+            TileId = settlement.Tile.tileId,
+        });
         return () => scenario.SlowDown();
     }
 
@@ -176,8 +196,18 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
 
         scenario.DropPod(pawns).Trade(settlement).Execute();
 
-        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] visited [WorldObject] of [Faction] in a transport pod with 2 others.", -2);
-        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN]'s caravan arrived at [WorldObject] with 2 others to trade with [Faction].", -1);
+        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PlayerTransporterArrived,
+            Description = "[PAWN] visited [WorldObject] of [Faction] in a transport pod with 2 others.",
+            TileId = settlement.Tile.tileId,
+        }, index: -2);
+        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PlayerCaravanArrived,
+            Description = "[PAWN]'s caravan arrived at [WorldObject] with 2 others to trade with [Faction].",
+            TileId = settlement.Tile.tileId,
+        }, index: -1);
         
         return () => scenario.SlowDown();
     }
@@ -192,7 +222,12 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
 
         scenario.DropPod(pawns).GiveToCaravan(targetCaravan).Execute();
 
-        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] was added to [WorldObject] from a transport pod with 2 others.", HistoryRecordDefOf.PlayerTransporterArrived);
+        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PlayerTransporterArrived,
+            Description = "[PAWN] was added to [WorldObject] from a transport pod with 2 others.",
+            TileId = spot.tileId,
+        });
         return () => scenario.SlowDown();
     }
 
@@ -204,7 +239,12 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
         var spot = Find.WorldGrid.GetNearbyTile();
         scenario.DropPod(pawns).FormCaravan(spot).Execute();
 
-        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] arrived from a transport pod with 2 others to form a new caravan", HistoryRecordDefOf.PlayerTransporterArrived);
+        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PlayerTransporterArrived,
+            Description = "[PAWN] arrived from a transport pod with 2 others to form a new caravan",
+            TileId = spot.tileId,
+        });
         return () => scenario.SlowDown();
     }
 
@@ -215,8 +255,13 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
         var settlement = Find.WorldObjects.Settlements.First(s => s.Faction.RelationKindWith(Faction.OfPlayer) != FactionRelationKind.Hostile);
 
         scenario.DropPod(pawns).Visit(settlement).Execute();
-
-        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] visited [WorldObject] of [Faction] in a transport pod with 2 others.", HistoryRecordDefOf.PlayerTransporterArrived);
+        
+        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PlayerTransporterArrived,
+            Description = "[PAWN] visited [WorldObject] of [Faction] in a transport pod with 2 others.",
+            TileId = settlement.Tile.tileId,
+        });
         return () => scenario.SlowDown();
     }
 
@@ -229,7 +274,13 @@ public class PlayerTransporterArriveRecorder : RecorderBase<PlayerTransporterArr
 
         scenario.DropPod(pawns).Visit(site).Execute();
 
-        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] arrived at the item stash in a transport pod with 2 others.", HistoryRecordDefOf.PlayerTransporterArrived);
+        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PlayerTransporterArrived,
+            Description = "[PAWN] arrived at the item stash in a transport pod with 2 others.",
+            TileId = site.Tile.tileId,
+            Quest = quest,
+        });
         return () => scenario.SlowDown();
     }
 

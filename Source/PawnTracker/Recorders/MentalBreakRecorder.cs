@@ -136,6 +136,8 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         return string.Empty;
     }
 
+    private const string Reason = "This happened because of poor mood: [Reason].";
+    
     [SkipTest]
     public Action TestNaturalBreak(TestScenario scenario)
     {
@@ -163,7 +165,9 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             pawn.mindState.mentalBreaker.TryDoRandomMoodCausedMentalBreak();
         }, 50);
         
-        Expect.That(pawn).Eventually().ToHaveHistoryRecord(Reason);
+        var recordDef = pawn.MentalState?.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
+        
+        Expect.That(pawn).Eventually().ToHaveHistoryRecord(recordDef, Reason);
 
         return () => scenario.SlowDown();
     }
@@ -174,8 +178,6 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         DefLookup.MentalBreak.SadisticRage,
         MentalBreakDefOf.CorpseObsession,
     ];
-
-    private const string Reason = "This happened because of poor mood: [Reason].";
 
     public void Test(TestScenario scenario)
     {
@@ -212,7 +214,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .Do((p, i) => p.StartMentalBreakWithMadeUpThought(mentalBreaks[i]))
             .Execute();
 
-        var mentalBreakTemplateLookup = new Dictionary<string, string>()
+        var mentalBreakTemplateLookup = new Dictionary<string, string>
         {
             { "Berserk", $"[PAWN] went berserk. [PAWN_pronoun] was going to attack anyone [PAWN_pronoun] sees. {Reason}" },
             { "FireStartingSpree", $"[PAWN] was on a fire starting spree. [PAWN_pronoun] wandered around for a while, randomly starting fires. {Reason}" },
@@ -244,7 +246,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
 
     public void TestAnimalSlaughterer(TestScenario scenario)
     {
-        scenario.Pawn()
+        var animal = scenario.Pawn()
             .Animal()
             .WithFaction(Faction.OfPlayer)
             .CreateSingle();
@@ -255,7 +257,12 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .Do((p, i) => p.StartMentalBreakWithMadeUpThought(DefLookup.MentalBreak.Slaughterer))
             .CreateSingle();
 
-        Expect.That(pawn).Eventually().ToHaveHistoryRecord($"[PAWN] had a mental breakdown and was going to vent [PAWN_possessive] anger by slaughtering [Target]. {Reason}");
+        Expect.That(pawn).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.MentalBreakViolent,
+            Description = $"[PAWN] had a mental breakdown and was going to vent [PAWN_possessive] anger by slaughtering [Target]. {Reason}",
+            Concerns = [animal],
+        });
     }
 
     public void TestSadisticRage(TestScenario scenario)
@@ -269,18 +276,19 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .Colonist()
             .StopMentalState()
             .Position(scenario.OutsideOf("Prison"))
-            .Do((p, i) => p.StartMentalBreakWithMadeUpThought(DefLookup.MentalBreak.SadisticRage))
+            .Do(p => p.StartMentalBreakWithMadeUpThought(DefLookup.MentalBreak.SadisticRage))
             .CreateSingle();
 
-        Expect.That(pawn).ToHaveHistoryRecord($"[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. {Reason}");
+        Expect.That(pawn).ToHaveHistoryRecord($"[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. {Reason}", HistoryRecordDefOf.MentalBreakViolent);
     }
 
     public Action TestPrisonBreak(TestScenario scenario)
     {
         scenario.SpeedUp();
+        var prisoners = new List<Pawn>();
         scenario.Map()
             .BuildRoom(6, 6, tag: "Prison")
-            .AsPrison(prisonerCount: 2) // Jailbreaker
+            .AsPrison(prisonerCount: 2, prisoners: prisoners) // Jailbreaker
             .Execute();
 
         var jailbreakerBreak = DefLookup.MentalBreak.Jailbreaker;
@@ -291,25 +299,36 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .Do((p, i) => p.StartMentalBreakWithMadeUpThought(jailbreakerBreak))
             .CreateSingle();
 
-        Expect.That(pawn).Eventually().ToHaveHistoryRecord($"[PAWN] had a mental breakdown and was going to induce [Prisoners] to escape. {Reason}");
+        Expect.That(pawn).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.MentalBreak,
+            Description = $"[PAWN] had a mental breakdown and was going to induce [Prisoners] to escape. {Reason}",
+            Concerns = prisoners.Cast<Thing>().ToList(),
+        });
 
         return () => scenario.SlowDown();
     }
 
     public void TestCorpseObsession(TestScenario scenario)
     {
+        var deadPawn = scenario.Pawn().Colonist().CreateSingle();
         scenario.Map()
             .BuildRoom(6, 6, "Grave")
-            .WithCasket(ThingDefOf.Sarcophagus, ThingDefOf.Plasteel)
+            .WithCasket(ThingDefOf.Sarcophagus, ThingDefOf.Plasteel, true, deadPawn)
             .Execute();
 
         var pawn = scenario.Pawn()
             .Colonist()
             .StopMentalState()
-            .Do((p, i) => p.StartMentalBreakWithMadeUpThought(MentalBreakDefOf.CorpseObsession))
+            .Do(p => p.StartMentalBreakWithMadeUpThought(MentalBreakDefOf.CorpseObsession))
             .CreateSingle();
 
-        Expect.That(pawn).ToHaveHistoryRecord($"[PAWN] became obsessed with corpses. [PAWN_pronoun] was going to find and present [Target]'s corpse for all to see. {Reason}");
+        Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.MentalBreak,
+            Description = $"[PAWN] became obsessed with corpses. [PAWN_pronoun] was going to find and present [Target]'s corpse for all to see. {Reason}",
+            Concerns = [deadPawn],
+        });
     }
 
     public void TestHediff(TestScenario scenario)
@@ -385,6 +404,6 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             if (trait.CurrentData.MentalStateGiver.CheckGive(pawn, int.MaxValue))
                 break;
         }
-        Expect.That(pawn).ToHaveHistoryRecord($"[PAWN] pigged out on food. This happened because of the trait: Gourmand.");
+        Expect.That(pawn).ToHaveHistoryRecord($"[PAWN] pigged out on food. This happened because of the trait: Gourmand.", HistoryRecordDefOf.MentalBreak);
     }
 }

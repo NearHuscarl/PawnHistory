@@ -31,14 +31,12 @@ public class TestAssertionFailure : TestFailure
     public string expected;
     public string actual;
     public bool isNegated;
-    public Dictionary<string, string> testParams;
 
-    public TestAssertionFailure(string testId, string message, string expected, string actual, bool isNegated, Dictionary<string, string> testParams) : base(testId, message)
+    public TestAssertionFailure(string testId, string message, string expected, string actual, bool isNegated) : base(testId, message)
     {
         this.expected = expected;
         this.actual = actual;
         this.isNegated = isNegated;
-        this.testParams = testParams;
     }
     
     public TestAssertionFailure() { }
@@ -49,7 +47,6 @@ public class TestAssertionFailure : TestFailure
         Scribe_Values.Look(ref expected, "expected");
         Scribe_Values.Look(ref actual, "actual");
         Scribe_Values.Look(ref isNegated, "isNegated");
-        Scribe_Collections.Look(ref testParams, "testParams");
     }
 }
 

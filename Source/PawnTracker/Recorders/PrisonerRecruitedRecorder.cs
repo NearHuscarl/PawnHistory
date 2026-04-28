@@ -53,9 +53,13 @@ public class PrisonerRecruitedRecorder : RecorderBase<PrisonerRecruitedEvent>
 
         recruiter.Faction.Name = null;
 
-        Expect.That(recruiter)
-            .Eventually()
-            .ToHaveHistoryRecord("[InteractionLog]. [Prisoner] accepted and joined the colony.");
+        var expected = new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PrisonerRecruited,
+            Description = "[InteractionLog]. [Prisoner] accepted and joined the colony.",
+        };
+        Expect.That(recruiter).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [prisoners[0]] }));
+        Expect.That(prisoners[0]).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [recruiter] }));
 
         return () =>
         {
@@ -83,9 +87,13 @@ public class PrisonerRecruitedRecorder : RecorderBase<PrisonerRecruitedEvent>
             .Do(p => p.Faction.Name = "Deez Nuts")
             .CreateSingle();
 
-        Expect.That(recruiter)
-            .Eventually()
-            .ToHaveHistoryRecord("[InteractionLog]. [Prisoner] accepted and joined Deez Nuts.");
+        var expected = new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PrisonerRecruited,
+            Description = "[InteractionLog]. [Prisoner] accepted and joined Deez Nuts.",
+        };
+        Expect.That(recruiter).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [prisoners[0]] }));
+        Expect.That(prisoners[0]).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [recruiter] }));
         
         return () =>
         {

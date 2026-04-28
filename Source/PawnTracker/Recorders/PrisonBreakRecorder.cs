@@ -27,7 +27,7 @@ public class PrisonBreakRecorder : RecorderBase<PrisonBreakStartedEvent>
     {
         var recordDef = HistoryRecordDefOf.PrisonBreak;
         var joiners = e.EscapingPrisoners.Where(p => p != e.Initiator).ToList();
-        var concerns = e.EscapingPrisoners.Cast<Thing>();
+        var concerns = e.EscapingPrisoners.Cast<Thing>().ToList();
 
         foreach (var pawn in e.EscapingPrisoners)
         {
@@ -49,7 +49,7 @@ public class PrisonBreakRecorder : RecorderBase<PrisonBreakStartedEvent>
     private void RecordJailbreak(PrisonBreakStartedEvent e)
     {
         var recordDef = HistoryRecordDefOf.PrisonBreak;
-        var concerns = e.EscapingPrisoners.Concat(e.Initiator).Cast<Thing>();
+        var concerns = e.EscapingPrisoners.Concat(e.Initiator).Cast<Thing>().ToList();
 
         foreach (var pawn in e.EscapingPrisoners)
         {
@@ -80,10 +80,20 @@ public class PrisonBreakRecorder : RecorderBase<PrisonBreakStartedEvent>
 
         Expect.That(initiator)
             .Eventually()
-            .ToHaveHistoryRecord("[PAWN] started a prison break. [PAWN_pronoun] broke the locks open and tried to escape[WithOthers].");
+            .ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.PrisonBreak,
+                Description = "[PAWN] started a prison break. [PAWN_pronoun] broke the locks open and tried to escape[WithOthers].",
+                Concerns = prisoners.Except(initiator).Cast<Thing>().ToList(),
+            });
         Expect.That(prisoner)
             .Eventually()
-            .ToHaveHistoryRecord("[PAWN][AndOthers] joined [Initiator]'s prison break and tried to escape.");
+            .ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.PrisonBreak,
+                Description = "[PAWN][AndOthers] joined [Initiator]'s prison break and tried to escape.",
+                Concerns = prisoners.Except(prisoner).Cast<Thing>().ToList(),
+            });
     }
 
     public void TestJailbreaker(TestScenario scenario, int prisonerCount)
@@ -104,6 +114,11 @@ public class PrisonBreakRecorder : RecorderBase<PrisonBreakStartedEvent>
 
         Expect.That(prisoners[0])
             .Eventually()
-            .ToHaveHistoryRecord("[Reason] As a result, [PAWN][AndOthers] started a prison break.");
+            .ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.PrisonBreak,
+                Description = "[Reason] As a result, [PAWN][AndOthers] started a prison break.",
+                Concerns = prisoners.Except(prisoners[0]).Concat([pawn]).Cast<Thing>().ToList(),
+            });
     }
 }

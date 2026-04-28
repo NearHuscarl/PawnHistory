@@ -41,8 +41,18 @@ public class AnimalRevengeRecorder : RecorderBase<AnimalRevengeEvent>
         Accessor.Pawn_MindState.StartManhunterBecauseOfPawnAction(animals[0].mindState, instigator, "AnimalManhunterFromTaming", false);
         Accessor.Pawn_MindState.StartManhunterBecauseOfPawnAction(animals[1].mindState, instigator, "AnimalManhunterFromDamage", true);
 
-        Expect.That(instigator).ToHaveHistoryRecord("The muffalo went manhunter after [PAWN] failed to tame it.", -2);
-        Expect.That(instigator).ToHaveHistoryRecord("The muffalo went manhunter after being harmed by [PAWN].", -1);
+        Expect.That(instigator).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.AnimalRevenge,
+            Description = "The muffalo went manhunter after [PAWN] failed to tame it.",
+            Concerns = [animals[0]],
+        }, index: -2);
+        Expect.That(instigator).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.AnimalRevenge,
+            Description = "The muffalo went manhunter after being harmed by [PAWN].",
+            Concerns = [animals[1]],
+        }, index: -1);
         Find.Storyteller.difficulty.allowBigThreats = oldValue;
     }
 
@@ -57,7 +67,12 @@ public class AnimalRevengeRecorder : RecorderBase<AnimalRevengeEvent>
 
         Accessor.Pawn_MindState.StartManhunterBecauseOfPawnAction(animals[0].mindState, instigator, "AnimalManhunterFromDamage", true);
 
-        Expect.That(instigator).ToHaveHistoryRecord("The muffalo went manhunter after being harmed by [PAWN], [Count] others nearby also became enraged!", -1);
+        Expect.That(instigator).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.AnimalRevenge,
+            Description = "The muffalo went manhunter after being harmed by [PAWN], [Count] others nearby also became enraged!",
+            Concerns = animals.Cast<Thing>().ToList(),
+        });
         Find.Storyteller.difficulty.allowBigThreats = oldValue;
         NearDebugSettings.ForceManhunterChance = false;
     }

@@ -45,8 +45,18 @@ public class KidnappedRecorder : RecorderBase<KidnappedEvent>
         var enemy = scenario.Pawn().Enemy().CreateSingle();
         Faction.OfPirates.kidnapped.Kidnap(victim, enemy);
 
-        Expect.That(enemy).ToHaveHistoryRecord("[Kidnapper] kidnapped [Victim] for [Faction].", HistoryRecordDefOf.Kidnap);
-        Expect.That(victim).ToHaveHistoryRecord("[Victim] was kidnapped by [Kidnapper] from [Faction].", HistoryRecordDefOf.Kidnapped);
+        Expect.That(enemy).ToHaveHistoryRecord(new ExpectedHistoryRecord()
+        {
+            Def = HistoryRecordDefOf.Kidnap,
+            Description = "[Kidnapper] kidnapped [Victim] for [Faction].",
+            Concerns = [victim]
+        });
+        Expect.That(victim).ToHaveHistoryRecord(new ExpectedHistoryRecord()
+        {
+            Def = HistoryRecordDefOf.Kidnapped,
+            Description = "[Victim] was kidnapped by [Kidnapper] from [Faction].",
+            Concerns = [enemy]
+        });
     }
 
     // TODO: fix and test tileid because map deinit remove that information
@@ -62,7 +72,12 @@ public class KidnappedRecorder : RecorderBase<KidnappedEvent>
             .OnMapGenerated(e =>
             {
                 Current.Game.DeinitAndRemoveMap(e.Map, true);
-                Expect.That(pawn).ToHaveHistoryRecord("[Victim] was kidnapped by [Faction].", HistoryRecordDefOf.Kidnapped);
+                Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord()
+                {
+                    Def = HistoryRecordDefOf.Kidnapped,
+                    Description = "[Victim] was kidnapped by [Faction].",
+                    Concerns = []
+                });
             })
             .Execute();
     }

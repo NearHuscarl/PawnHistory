@@ -45,11 +45,11 @@ public class FoodPoisoningRecorder : RecorderBase<FoodPoisoningEvent>
             FoodUtility.AddFoodPoisoningHediff(victim, ingestible, cause);
         }
 
-        Expect.That(victim).ToHaveHistoryRecord("[PAWN] got food poisoning from a simple meal.", -5, exactMatch: true);
-        Expect.That(victim).ToHaveHistoryRecord("[PAWN] got food poisoning from a simple meal because of incompetent cook.", -4);
-        Expect.That(victim).ToHaveHistoryRecord("[PAWN] got food poisoning from a simple meal because of dirty cooking area.", -3);
-        Expect.That(victim).ToHaveHistoryRecord("[PAWN] got food poisoning from a simple meal because of rotten food.", -2);
-        Expect.That(victim).ToHaveHistoryRecord("[PAWN] got food poisoning from a simple meal because of dangerous food type.", -1);
+        Expect.That(victim).ToHaveHistoryRecord(HistoryRecordDefOf.FoodPoisoning, "[PAWN] got food poisoning from a simple meal.", exactMatch: true, index: -5);
+        Expect.That(victim).ToHaveHistoryRecord(HistoryRecordDefOf.FoodPoisoning, "[PAWN] got food poisoning from a simple meal because of incompetent cook.", index: -4);
+        Expect.That(victim).ToHaveHistoryRecord(HistoryRecordDefOf.FoodPoisoning, "[PAWN] got food poisoning from a simple meal because of dirty cooking area.", index: -3);
+        Expect.That(victim).ToHaveHistoryRecord(HistoryRecordDefOf.FoodPoisoning, "[PAWN] got food poisoning from a simple meal because of rotten food.", index: -2);
+        Expect.That(victim).ToHaveHistoryRecord(HistoryRecordDefOf.FoodPoisoning, "[PAWN] got food poisoning from a simple meal because of dangerous food type.", index: -1);
 
         scenario.OpenHistoryRecordTab(victim);
     }
@@ -75,7 +75,12 @@ public class FoodPoisoningRecorder : RecorderBase<FoodPoisoningEvent>
             .Execute();
 
         scenario.SpeedUp();
-        Expect.That(victim).Eventually().ToHaveHistoryRecord("[PAWN] got food poisoning from a simple meal because of incompetent cook [Cook].");
+        Expect.That(victim).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.FoodPoisoning,
+            Description = "[PAWN] got food poisoning from a simple meal because of incompetent cook [Cook].",
+            Concerns = [cook],
+        });
 
         GameEventBus.SubscribeOnce<FoodPoisoningEvent>(e =>
         {

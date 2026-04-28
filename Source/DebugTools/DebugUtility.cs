@@ -1,15 +1,15 @@
 ﻿using PawnHistory.Source.Helper;
-using RimWorld;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using Verse;
 
 namespace PawnHistory.Source.DebugTools;
 
 public static class DebugUtility
 {
+    public static string FormatDict(Dictionary<string, string> dict) => "[" + dict.Select(p => $"{p.Key}={p.Value}").JoinToString() + "]";
+    
     public static string Format(object obj)
     {
         if (obj == null) return "null";

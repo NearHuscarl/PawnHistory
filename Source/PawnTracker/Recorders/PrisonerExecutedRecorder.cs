@@ -50,7 +50,13 @@ public class PrisonerExecutedRecorder : RecorderBase<PrisonerExecutedEvent>
         prisoner.guilt.Notify_Guilty();
         scenario.SpeedUp();
 
-        Expect.ThatAll([warden, prisoner]).Eventually().ToHaveHistoryRecord("[PAWN], a prisoner of the colony, was executed after being found guilty.", HistoryRecordDefOf.PrisonerExecuted);
+        var expected = new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PrisonerExecuted,
+            Description = "[PAWN], a prisoner of the colony, was executed after being found guilty.",
+        };
+        Expect.That(warden).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [prisoner] }));
+        Expect.That(prisoner).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [warden] }), index: -2);
         Expect.That(prisoner).Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Death, -1);
     }
 
@@ -72,13 +78,18 @@ public class PrisonerExecutedRecorder : RecorderBase<PrisonerExecutedEvent>
 
         scenario.SpeedUp();
 
-        Expect.ThatAll([warden, prisoner]).Eventually().ToHaveHistoryRecord("[PAWN], a prisoner of the colony, was executed.", HistoryRecordDefOf.PrisonerExecuted);
+        var expected = new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PrisonerExecuted,
+            Description = "[PAWN], a prisoner of the colony, was executed.",
+        };
+        Expect.That(warden).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [prisoner] }));
+        Expect.That(prisoner).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [warden] }), index: -2);
         Expect.That(prisoner).Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Death, -1);
     }
 
     public void TestGuiltyColonist(TestScenario scenario)
     {
-        Expect.Assertions(2);
         scenario.SpeedUp();
       
         scenario.Map()
@@ -97,7 +108,13 @@ public class PrisonerExecutedRecorder : RecorderBase<PrisonerExecutedEvent>
             .StartJob(JobDefOf.PrisonerExecution, victim)
             .CreateSingle();
 
-        Expect.ThatAll([warden, victim]).Eventually().ToHaveHistoryRecord("[PAWN], a colonist of [PlayerSettlement], was executed after being found guilty.", HistoryRecordDefOf.PrisonerExecuted);
+        var expected = new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.PrisonerExecuted,
+            Description = "[PAWN], a colonist of [PlayerSettlement], was executed after being found guilty.",
+        };
+        Expect.That(warden).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [victim] }));
+        Expect.That(victim).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [warden] }), index: -2);
         Expect.That(victim).Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Death, -1);
     }
 }

@@ -112,7 +112,12 @@ public class PeaceTalksOutcomeRecorder : RecorderBase<PeaceTalksOutcomeEvent>
                 return;
 
             var enemies = e.Lord.ownedPawns;
-            Expect.ThatAll(enemies).ToHaveHistoryRecord("[PAWN] from [Faction] attacked the peace talks delegation.", HistoryRecordDefOf.PeaceTalksRaid);
+            Expect.ThatAll(enemies).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.PeaceTalksRaid,
+                Description = "[PAWN] from [Faction] attacked the peace talks delegation.",
+                Concerns = [negotiator]
+            });
         });
 
         Expect.That(negotiator).ToHaveHistoryRecord("[PAWN] negotiated peace talks with [Faction], but they ended in disaster.", HistoryRecordDefOf.PeaceTalksOutcome);

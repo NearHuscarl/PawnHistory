@@ -25,7 +25,7 @@ public class CrushedRecorder : RecorderBase<CrushedEvent>
 
             var desc = recordDef.Description(pawn)
                 .Format();
-            AddRecord(recordDef, pawn, desc, location: new RecordLocation() { map = map, position = position });
+            AddRecord(recordDef, pawn, desc, location: new RecordLocation { map = map, position = position });
         }
     }
 
@@ -43,9 +43,19 @@ public class CrushedRecorder : RecorderBase<CrushedEvent>
         scenario.Map().CollapseRoofAndCrush(pawn).Execute();
 
         Expect.That(pawn).ToHaveHistoryRecordOf(HistoryRecordDefOf.Crushed, -2);
-        Expect.That(pawn).ToHaveHistoryRecordOf(HistoryRecordDefOf.Death, -1);
-        Expect.That(pawn).ToHaveHistoryRecordPosition(pawn.Position, HistoryRecordDefOf.Death);
+        Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.Death,
+            Position = pawn.Position,
+            Map = pawn.Map,
+        }, index: -1);
 
-        Expect.That(spouse).ToHaveHistoryRecordPosition(pawn.Position, HistoryRecordDefOf.RelativeDeath);
+        Expect.That(spouse).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.RelativeDeath,
+            Position = pawn.Position,
+            Map = pawn.Map,
+            Concerns = [pawn]
+        });
     }
 }

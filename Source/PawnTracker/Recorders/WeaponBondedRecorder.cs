@@ -22,7 +22,7 @@ public class WeaponBondedRecorder : RecorderBase<WeaponBondedEvent>
             .AddRule("Wpn", e.Weapon.Label.Colorize(ColoredText.SubtleGrayColor), addSubsymbols: true)
             .Resolve();
 
-        AddRecord(recordDef, e.Pawn, desc, [e.Pawn, e.Weapon]);
+        AddRecord(recordDef, e.Pawn, desc, [e.Weapon]);
     }
 
     [RequiresRoyalty]
@@ -33,7 +33,11 @@ public class WeaponBondedRecorder : RecorderBase<WeaponBondedEvent>
 
         weapon.GetComp<CompBladelinkWeapon>().CodeFor(pawn);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] formed a persona bond with [Weapon].", HistoryRecordDefOf.WeaponBonded);
-        Expect.That(pawn).ToHaveHistoryRecordConcern(weapon, HistoryRecordDefOf.WeaponBonded);
+        Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.WeaponBonded,
+            Description = "[PAWN] formed a persona bond with [Weapon].",
+            Concerns = [weapon],
+        });
     }
 }

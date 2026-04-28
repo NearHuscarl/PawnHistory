@@ -43,22 +43,27 @@ public class RescueRecorder : RecorderBase<RescueRecorder.Input>
 
     public void Test(TestScenario scenario)
     {
-        var pawns = scenario.Pawn(2).Colonist().Execute();
-        var rescuer = pawns[0];
-        var victim = pawns[1];
+        var rescuer = scenario.Pawn().Colonist().CreateSingle();
+        var victim = scenario.Pawn().Colonist().CreateSingle();
 
         HealthUtility.DamageUntilDowned(victim);
 
         scenario.SpeedUp();
         scenario.Map()
             .BuildRoom(7, 7, "Bedroom")
-            .AsBarrack(pawns)
+            .AsBarrack([victim])
             .Execute();
 
         scenario.Pawn(rescuer)
             .StartJob(JobDefOf.Rescue, victim, RestUtility.FindBedFor(victim))
             .Execute();
-        
-        Expect.ThatAll(pawns).Eventually().ToHaveHistoryRecord("[PAWN] was rescued by [Rescuer]. [Tale].", HistoryRecordDefOf.Rescued);
+
+        var expected = new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.Rescued,
+            Description = "[PAWN] was rescued by [Rescuer]. [Tale].",
+        };
+        Expect.That(rescuer).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [victim] }));
+        Expect.That(victim).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [rescuer] }));
     }
 }
