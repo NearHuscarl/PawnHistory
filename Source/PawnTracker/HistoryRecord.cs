@@ -68,6 +68,7 @@ public class HistoryRecord : IExposable
     public int tileId;
     public RecordLocation location;
     public Quest quest;
+    public bool pinned;
     public int CurrentPawnToJumpTo { get; private set; }
 
     private static readonly Dictionary<string, Texture2D> CachedIconTextures = [];
@@ -129,6 +130,7 @@ public class HistoryRecord : IExposable
         Scribe_Values.Look(ref tileId, "tileId");
         Scribe_Deep.Look(ref location, "location");
         Scribe_References.Look(ref quest, "quest");
+        Scribe_Values.Look(ref pinned, "pinned");
     }
 }
 

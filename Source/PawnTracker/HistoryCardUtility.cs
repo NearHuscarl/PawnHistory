@@ -3,6 +3,7 @@ using PawnHistory.Source.Helper;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 using Verse;
 
@@ -10,6 +11,9 @@ namespace PawnHistory.Source.PawnTracker;
 
 public static class HistoryCardUtility
 {
+    private const float PinnedBorderWidth = 2f;
+    private static readonly Color PinnedBorderColor = NeedsCardUtility.MoodColorNegative;
+
     private static float containerPadding;
     /// <summary>
     /// default gap between common UI controls
@@ -70,6 +74,31 @@ public static class HistoryCardUtility
         return h;
     }
 
+    private static void DrawPinnedBorder(Rect row)
+    {
+        var pinnedBorderRect = new Rect(row.xMax - PinnedBorderWidth, row.y, PinnedBorderWidth, row.height);
+        GUI.color = PinnedBorderColor;
+        GUI.DrawTexture(pinnedBorderRect, BaseContent.WhiteTex);
+        GUI.color = Color.white;
+    }
+
+    private static string GetTooltipOf(HistoryRecord record)
+    {
+        var sb = new StringBuilder();
+        var ticksAgo = GenTicks.TicksAbs - record.date;
+
+        sb.AppendLine(record.def.label.CapitalizeFirst());
+        sb.AppendLine();
+        sb.AppendLine($"Occurred {ticksAgo.ToStringTicksToPeriod()} ago");
+        
+        if (record.pinned)
+            sb.AppendLine("This record is pinned. Pinned record will never be removed.");
+
+        sb.AppendLine("Right click: Open the action menu.");
+        
+        return sb.ToString();
+    }
+
     public static void DrawHistoryCard(Rect tabRect, Pawn pawn)
     {
         var color = GUI.color;
@@ -105,6 +134,7 @@ public static class HistoryCardUtility
             var rowHeight = GetRowHeight(record);
             var row = new Rect(0, curY, viewRect.width, rowHeight);
             if (i % 2 == 0) Widgets.DrawHighlight(row);
+            if (record.pinned) DrawPinnedBorder(row);
 
             var dateCell = new Rect(row.x + cellPx, row.y, colWidthDate, row.height);
             GUI.color = Color.gray; Text.Font = GameFont.Tiny; Text.Anchor = TextAnchor.MiddleLeft;
@@ -132,21 +162,22 @@ public static class HistoryCardUtility
                     TooltipHandler.TipRegion(questCell, record.quest.name);
             }
 
-            var ticksAgo = GenTicks.TicksAbs - record.date;
-            var dateAgoText = $"Occurred {ticksAgo.ToStringTicksToPeriod()} ago";
-            TooltipHandler.TipRegion(descCell, dateAgoText);
+            TooltipHandler.TipRegion(descCell, GetTooltipOf(record));
 
             if (Mouse.IsOver(row))
             {
                 foreach (var target in record.GlobalTargets)
                     TargetHighlighter.Highlight(target);
             }
-            if (Mouse.IsOver(row) && Event.current.type == EventType.MouseDown && Event.current.button == 0)
-                CameraJumper.TryJumpAndSelect(record.GetThingToJumpTo());
-            else if (Mouse.IsOver(descCell) && Event.current.type == EventType.MouseDown && Event.current.button == 1)
+
+            if (Mouse.IsOver(row) && Event.current.type == EventType.MouseDown && (Event.current.button == 0 || Event.current.button == 1))
             {
-                GUIUtility.systemCopyBuffer = LangUtility.StripColorTags(record.description);
-                Messages.Message("Record is copied to clipboard.", MessageTypeDefOf.NeutralEvent);
+                if (Event.current.button == 0)
+                    CameraJumper.TryJumpAndSelect(record.GetThingToJumpTo());
+                else if (Event.current.button == 1)
+                    Find.WindowStack.Add(new FloatMenu(HistoryCardMenuOptions.GetActionMenuOptions(record)));
+
+                Event.current.Use();
             }
             curY += rowHeight;
         }

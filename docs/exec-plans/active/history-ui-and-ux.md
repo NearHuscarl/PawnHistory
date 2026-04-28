@@ -11,6 +11,10 @@ Backlog for presentation and interaction quality.
 - [x] Add some icons for records.
 - [x] Link visible quests directly from quest-related history records.
 - [ ] Add a dimmed color treatment for `[PAWN_title]` or similar title rendering.
+- [ ] Action menu
+  - [x] Copy description to clipboard
+  - [x] Pinn/unpin record
+  - [ ] Edit record, support color tag
 
 ## World Pawn Window
 

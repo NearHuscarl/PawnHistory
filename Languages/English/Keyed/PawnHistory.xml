@@ -7,6 +7,13 @@
 	<NH_PH_HistoryCard_HeaderDate>Date</NH_PH_HistoryCard_HeaderDate>
 	<NH_PH_HistoryCard_HeaderEvent>Event</NH_PH_HistoryCard_HeaderEvent>
 	<NH_PH_HistoryCard_HeaderDescription>Description</NH_PH_HistoryCard_HeaderDescription>
+	<NH_PH_HistoryCard_MenuCopyDescription>Copy description to clipboard</NH_PH_HistoryCard_MenuCopyDescription>
+
+	<!-- History Card's Action Menu -->
+	<NH_PH_HistoryCard_MenuEdit>Edit</NH_PH_HistoryCard_MenuEdit>
+	<NH_PH_HistoryCard_MenuPin>Pin</NH_PH_HistoryCard_MenuPin>
+	<NH_PH_HistoryCard_MenuUnpin>Unpin</NH_PH_HistoryCard_MenuUnpin>
+	<NH_PH_HistoryCard_RecordCopied>Record is copied to clipboard.</NH_PH_HistoryCard_RecordCopied>
 
 	<NH_PH_List_Two>{0} and {1}</NH_PH_List_Two>
 	<NH_PH_List_Three>{0}, {1} and 1 {2}</NH_PH_List_Three>
