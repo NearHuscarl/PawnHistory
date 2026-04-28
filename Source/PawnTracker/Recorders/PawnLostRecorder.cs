@@ -33,7 +33,7 @@ public class PawnLostRecorder : RecorderBase<PawnLostEvent>
 
         Current.Game.DeinitAndRemoveMap(Find.CurrentMap, true);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] was lost after [WorldObject] was abandoned.", HistoryRecordDefOf.PawnLost);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.PawnLost, "[PAWN] was lost after [WorldObject] was abandoned.");
     }
 
     // TODO: fix and test tileid because map deinit remove that information
@@ -49,7 +49,7 @@ public class PawnLostRecorder : RecorderBase<PawnLostEvent>
             .OnMapGenerated(e =>
             {
                 Current.Game.DeinitAndRemoveMap(e.Map, true);
-                Expect.That(pawn).ToHaveHistoryRecord("[PAWN] was lost after the caravan was disbanded.", HistoryRecordDefOf.PawnLost);
+                Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.PawnLost, "[PAWN] was lost after the caravan was disbanded.");
             })
             .Execute();
     }

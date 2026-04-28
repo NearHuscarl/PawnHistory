@@ -29,7 +29,7 @@ public class WeaponBondedRecorder : RecorderBase<WeaponBondedEvent>
     public void Test(TestScenario scenario)
     {
         var pawn = scenario.Pawn().Colonist().CreateSingle();
-        var weapon = scenario.Thing(DefLookup.Thing.MeleeWeapon_MonoSwordBladelink).CreateSingle<ThingWithComps>();
+        var weapon = scenario.Thing(Extra.ThingDefOf.MeleeWeapon_MonoSwordBladelink).CreateSingle<ThingWithComps>();
 
         weapon.GetComp<CompBladelinkWeapon>().CodeFor(pawn);
 

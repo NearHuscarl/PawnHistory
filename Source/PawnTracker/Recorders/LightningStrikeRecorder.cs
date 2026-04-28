@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
@@ -71,6 +71,6 @@ public class LightningStrikeRecorder : RecorderBase<LightningStrikeRecorder.Inpu
             .Do(p => Find.CurrentMap.weatherManager.eventHandler.AddEvent(new WeatherEvent_LightningStrike(Find.CurrentMap, p.Position)))
             .Execute();
 
-        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecord("[PAWN] was struck by lightning, burning [POSSESSIVE] [PART].", HistoryRecordDefOf.LightningStrike);
+        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecord(HistoryRecordDefOf.LightningStrike, "[PAWN] was struck by lightning, burning [POSSESSIVE] [PART].");
     }
 }

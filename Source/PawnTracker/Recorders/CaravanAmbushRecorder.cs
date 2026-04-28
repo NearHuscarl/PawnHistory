@@ -56,6 +56,6 @@ public class CaravanAmbushRecorder : RecorderBase<CaravanAmbushedEvent>
             })
             .Execute();
 
-        scenario.Incident(DefLookup.Incident.Ambush, caravan).Point(200).Execute();
+        scenario.Incident(Extra.IncidentDefOf.Ambush, caravan).Point(200).Execute();
     }
 }

@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using Verse;
@@ -43,7 +43,7 @@ public class SocialFightRecorder : RecorderBase<SocialFightRecorder.Input>
                 .Do((p, i, pawns) => p.interactions.TryInteractWith(pawns[(i + 1) % pawns.Count], InteractionDefOf.Insult))
                 .Execute();
 
-            Expect.ThatAny(pawns).ToHaveHistoryRecord("This drove [RECIPIENT] into a rage and [RECIPIENT] began a fight!", HistoryRecordDefOf.SocialFight);
+            Expect.ThatAny(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.SocialFight, "This drove [RECIPIENT] into a rage and [RECIPIENT] began a fight!");
         }
         finally
         {

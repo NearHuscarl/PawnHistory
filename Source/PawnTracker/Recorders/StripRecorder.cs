@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using Verse;
@@ -15,7 +15,7 @@ public class StripRecorder : HistoryTaleRecorder<StripRecorder.Input>
     {
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
         {
-            if (e.Tale != DefLookup.Tale.Stripped)
+            if (e.Tale != Extra.TaleDefOf.Stripped)
                 return;
 
             CreateRecord(new Input(e.Pawn, e.Params[0] as Pawn));
@@ -43,9 +43,9 @@ public class StripRecorder : HistoryTaleRecorder<StripRecorder.Input>
 
         for (var i = 0; i < pawns.Count; i++)
         {
-            TaleRecorder.RecordTale(DefLookup.Tale.Stripped, pawns[i], pawns[(i + 1) % pawns.Count]);
-            TaleRecorder.RecordTale(DefLookup.Tale.Stripped, pawns[i], pawns[(i + 1) % pawns.Count]);
-            TaleRecorder.RecordTale(DefLookup.Tale.Stripped, pawns[i], pawns[(i + 1) % pawns.Count]);
+            TaleRecorder.RecordTale(Extra.TaleDefOf.Stripped, pawns[i], pawns[(i + 1) % pawns.Count]);
+            TaleRecorder.RecordTale(Extra.TaleDefOf.Stripped, pawns[i], pawns[(i + 1) % pawns.Count]);
+            TaleRecorder.RecordTale(Extra.TaleDefOf.Stripped, pawns[i], pawns[(i + 1) % pawns.Count]);
         }
     }
 }

@@ -16,7 +16,7 @@ public class PlayedGameRecorder : HistoryTaleRecorder<PlayedGameRecorder.Input>
     {
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
         {
-            if (e.Tale != DefLookup.Tale.PlayedGame)
+            if (e.Tale != Extra.TaleDefOf.PlayedGame)
                 return;
             if (e.Params[0] is not ThingDef objectDef)
                 return;
@@ -44,15 +44,15 @@ public class PlayedGameRecorder : HistoryTaleRecorder<PlayedGameRecorder.Input>
     {
         var joyThings = new List<ThingDef>
         {
-            DefLookup.Thing.HorseshoesPin,
-            DefLookup.Thing.HoopstoneRing,
-            DefLookup.Thing.GameOfUrBoard,
-            DefLookup.Thing.ChessTable,
-            DefLookup.Thing.PokerTable,
+            Extra.ThingDefOf.HorseshoesPin,
+            Extra.ThingDefOf.HoopstoneRing,
+            Extra.ThingDefOf.GameOfUrBoard,
+            Extra.ThingDefOf.ChessTable,
+            Extra.ThingDefOf.PokerTable,
             ThingDefOf.BilliardsTable,
         };
         var pawns = scenario.Pawn(joyThings.Count).Colonist()
-            .Do((p, i) => TaleRecorder.RecordTale(DefLookup.Tale.PlayedGame, p, joyThings[i]))
+            .Do((p, i) => TaleRecorder.RecordTale(Extra.TaleDefOf.PlayedGame, p, joyThings[i]))
             .Execute();
 
         Expect.ThatAll(pawns).ToHaveHistoryRecordOf(HistoryRecordDefOf.PlayedGame);

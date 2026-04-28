@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using Verse;
@@ -38,7 +38,7 @@ public class BreakupRecorder : RecorderBase<BreakupEvent>
             .Colonist()
             .SetRelation(recipient, PawnRelationDefOf.Lover)
             .Position(recipient.Position) 
-            .Do(p => p.interactions.TryInteractWith(recipient, DefLookup.Interaction.Breakup))
+            .Do(p => p.interactions.TryInteractWith(recipient, Extra.InteractionDefOf.Breakup))
             .CreateSingle();
 
         Expect.That(initiator).ToHaveHistoryRecord(new ExpectedHistoryRecord()
@@ -65,7 +65,7 @@ public class BreakupRecorder : RecorderBase<BreakupEvent>
             .SetRelation(recipient, PawnRelationDefOf.Lover)
             .Position(recipient.Position) 
             .Do(p => p.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.CheatedOnMe, recipient))
-            .Do(p => p.interactions.TryInteractWith(recipient, DefLookup.Interaction.Breakup))
+            .Do(p => p.interactions.TryInteractWith(recipient, Extra.InteractionDefOf.Breakup))
             .CreateSingle();
         
         Expect.That(initiator).ToHaveHistoryRecord(new ExpectedHistoryRecord()

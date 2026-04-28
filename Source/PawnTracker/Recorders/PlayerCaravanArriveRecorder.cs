@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using PawnHistory.Source.DebugTools;
@@ -110,7 +110,7 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
         var settlement = Find.WorldObjects.Settlements.First();
         scenario.Caravan(pawns).Attack(settlement).Execute();
         
-        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN]'s caravan arrived at [WorldObject] to attack [Faction] with 2 others.", HistoryRecordDefOf.PlayerCaravanArrived);
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.PlayerCaravanArrived, "[PAWN]'s caravan arrived at [WorldObject] to attack [Faction] with 2 others.");
     }
 
     public void TestEnter(TestScenario scenario)
@@ -119,13 +119,13 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
         var settlement = Find.WorldObjects.Settlements.First(s => s.Faction == Faction.OfPlayer);
         scenario.Caravan(pawns).Enter(settlement).Execute();
 
-        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN]'s caravan arrived at the colony with 2 others.", HistoryRecordDefOf.PlayerCaravanArrived);
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.PlayerCaravanArrived, "[PAWN]'s caravan arrived at the colony with 2 others.");
         
         var pawns2 = scenario.Pawn(3).Colonist().Execute();
         var settlement2 = Find.WorldObjects.Settlements.First(s => s.Faction.RelationKindWith(Faction.OfPlayer) != FactionRelationKind.Hostile);
         scenario.Caravan(pawns2).Enter(settlement2).Execute();
 
-        Expect.ThatAll(pawns2).ToHaveHistoryRecord("[PAWN]'s caravan arrived at [WorldObject] of [Faction] with 2 others.", HistoryRecordDefOf.PlayerCaravanArrived);
+        Expect.ThatAll(pawns2).ToHaveHistoryRecord(HistoryRecordDefOf.PlayerCaravanArrived, "[PAWN]'s caravan arrived at [WorldObject] of [Faction] with 2 others.");
     }
 
     public void TestOfferGifts(TestScenario scenario)
@@ -135,7 +135,7 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
         var silvers = scenario.Thing(ThingDefOf.Silver).Stack(3000).Create();
         scenario.Caravan(pawns).Give(silvers).OfferGifts(settlement).Execute();
 
-        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN]'s caravan arrived at [WorldObject] with 2 others to offer gifts to [Faction].", HistoryRecordDefOf.PlayerCaravanArrived);
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.PlayerCaravanArrived, "[PAWN]'s caravan arrived at [WorldObject] with 2 others to offer gifts to [Faction].");
     }
 
     public void TestTrade(TestScenario scenario)
@@ -144,7 +144,7 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
         var settlement = Find.WorldObjects.Settlements.First(s => s.Faction.RelationKindWith(Faction.OfPlayer) != FactionRelationKind.Hostile);
         scenario.Caravan(pawns).Trade(settlement).Execute();
 
-        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN]'s caravan arrived at [WorldObject] with 2 others to trade with [Faction].", HistoryRecordDefOf.PlayerCaravanArrived);
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.PlayerCaravanArrived, "[PAWN]'s caravan arrived at [WorldObject] with 2 others to trade with [Faction].");
     }
 
     public Action TestEscapeShip(TestScenario scenario)
@@ -152,18 +152,18 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
         NearDebugSettings.ShipEscapeSpawnNearby = true;
 
         var pawns = scenario.Pawn(3).Colonist().Execute();
-        scenario.Incident(DefLookup.Incident.GiveQuest_EndGame_ShipEscape).Execute();
+        scenario.Incident(Extra.IncidentDefOf.GiveQuest_EndGame_ShipEscape).Execute();
         var escapeShip =  Find.WorldObjects.AllWorldObjects.OfType<EscapeShip>().FirstOrDefault();
         scenario.Caravan(pawns).VisitEscapeShip(escapeShip).Execute();
         
-        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN]'s caravan arrived at the starship with 2 others that can be used to escape the planet.", HistoryRecordDefOf.PlayerCaravanArrived);
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.PlayerCaravanArrived, "[PAWN]'s caravan arrived at the starship with 2 others that can be used to escape the planet.");
         
         return () => NearDebugSettings.ShipEscapeSpawnNearby = false;
     }
 
     public void TestPeaceTalks(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.OpportunitySite_PeaceTalks).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.OpportunitySite_PeaceTalks).Execute();
         var peaceTalks = QuestHelper.GetWorldObject<PeaceTalks>(quest);
         var pawns = scenario.Pawn(3).Colonist().Execute();
 
@@ -197,7 +197,7 @@ public class PlayerCaravanArriveRecorder : RecorderBase<PlayerCaravanArriveRecor
         var settlement = Find.WorldObjects.Settlements.First(s => s.Faction.RelationKindWith(Faction.OfPlayer) != FactionRelationKind.Hostile);
         scenario.Caravan(pawns).Visit(settlement).Execute();
 
-        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN]'s caravan visited [WorldObject] of [Faction] with 2 others.", HistoryRecordDefOf.PlayerCaravanArrived);
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.PlayerCaravanArrived, "[PAWN]'s caravan visited [WorldObject] of [Faction] with 2 others.");
     }
 
     [SkipTest]

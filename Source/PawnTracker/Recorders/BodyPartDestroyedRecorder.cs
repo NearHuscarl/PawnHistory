@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.Helper;
+using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
@@ -67,9 +67,9 @@ public class BodyPartDestroyedRecorder : RecorderBase<HediffAddedEvent>
             BodyPartDefOf.Hand,
             BodyPartDefOf.Eye,
             BodyPartDefOf.Shoulder,
-            DefLookup.BodyPart.Nose,
-            DefLookup.BodyPart.Ear,
-            DefLookup.BodyPart.Foot,
+            Extra.BodyPartDefOf.Nose,
+            Extra.BodyPartDefOf.Ear,
+            Extra.BodyPartDefOf.Foot,
         ];
 
         var pawns1 = scenario.Incident(IncidentDefOf.RaidEnemy)
@@ -83,9 +83,9 @@ public class BodyPartDestroyedRecorder : RecorderBase<HediffAddedEvent>
             .Execute();
 
         scenario.Pawn(pawns1.Concat(pawns2))
-            .AddHediff(DefLookup.Hediff.Painstopper, DefLookup.BodyPart.Brain)
-            .AddHediff(DefLookup.Hediff.GoJuiceHigh, DefLookup.BodyPart.Brain)
-            .EquipWeapon(DefLookup.Thing.Weapon_GrenadeFrag, (_, i) => i % 2 == 0)
+            .AddHediff(Extra.HediffDefOf.Painstopper, Extra.BodyPartDefOf.Brain)
+            .AddHediff(Extra.HediffDefOf.GoJuiceHigh, Extra.BodyPartDefOf.Brain)
+            .EquipWeapon(Extra.ThingDefOf.Weapon_GrenadeFrag, (_, i) => i % 2 == 0)
             .WeakenParts(nonVitalParts, oneSide: true)
             .Execute();
 
@@ -101,8 +101,8 @@ public class BodyPartDestroyedRecorder : RecorderBase<HediffAddedEvent>
             BodyPartDefOf.Eye,
             BodyPartDefOf.Shoulder,
             BodyPartDefOf.Leg,
-            DefLookup.BodyPart.Nose,
-            DefLookup.BodyPart.Ear,
+            Extra.BodyPartDefOf.Nose,
+            Extra.BodyPartDefOf.Ear,
         ];
 
         var pawns = scenario.RaidFriendly()
@@ -111,8 +111,8 @@ public class BodyPartDestroyedRecorder : RecorderBase<HediffAddedEvent>
             .Execute();
 
         scenario.Pawn(pawns)
-            .AddHediff(DefLookup.Hediff.Painstopper, DefLookup.BodyPart.Brain)
-            .AddHediff(DefLookup.Hediff.GoJuiceHigh, DefLookup.BodyPart.Brain)
+            .AddHediff(Extra.HediffDefOf.Painstopper, Extra.BodyPartDefOf.Brain)
+            .AddHediff(Extra.HediffDefOf.GoJuiceHigh, Extra.BodyPartDefOf.Brain)
             .WeakenParts(nonVitalParts, true)
             .Execute();
 

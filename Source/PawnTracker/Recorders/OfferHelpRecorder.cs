@@ -33,7 +33,7 @@ public class OfferHelpRecorder : RecorderBase<OfferHelpEvent>
 
     public void Test(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.OpportunitySite_DownedRefugee).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.OpportunitySite_DownedRefugee).Execute();
         var site = QuestHelper.GetWorldObject<Site>(quest);
         var rescuer = scenario.Pawn().Colonist().CreateSingle();
 

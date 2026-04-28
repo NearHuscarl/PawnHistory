@@ -11,6 +11,9 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
 {
+    private const string GenericArrivalText = "[PAWN][AlongWithOthers] arrived at [PlayerSettlement] as part of [Quest] quest.";
+    private const string GenericRewardText = "[PAWN] arrived at [PlayerSettlement] as a reward for completing [Quest] quest.";
+    
     public override void Register()
     {
         GameEventBus.Subscribe<QuestPawnArrivedEvent>(CreateRecord);
@@ -70,7 +73,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     // IncidentWorker_GiveQuest, QuestPart_PawnsArrive, quest.DropPods()
     public void TestIncident(TestScenario scenario)
     {
-        scenario.Incident(DefLookup.Incident.WandererJoin).Execute();
+        scenario.Incident(Extra.IncidentDefOf.WandererJoin).Execute();
         scenario.Letter<ChoiceLetter_AcceptJoiner>().Accept();
         
         var pawns1 = QuestHelper.GetArrivalPawns();
@@ -80,7 +83,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
             Description = "A [PAWN_title] named [PAWN] arrived and joined the colony. [He] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.",
         });
         
-        scenario.Incident(DefLookup.Incident.RefugeePodCrash).Execute();
+        scenario.Incident(Extra.IncidentDefOf.RefugeePodCrash).Execute();
         var pawns2 = QuestHelper.GetArrivalPawns();
         Expect.That(pawns2.Last()).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
@@ -112,7 +115,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         scenario.SpeedUp();
         Expect.Assertions(2);
         
-        var quest = scenario.Quest(DefLookup.QuestScript.ShuttleCrash_Rescue).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.ShuttleCrash_Rescue).Execute();
 
         // QuestNode_Root_ShuttleCrash_Rescue.QuestStartDelay
         TickDelayManager.Delay(120, () =>
@@ -144,7 +147,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     // QuestNode_PawnsArrive, QuestNode_Raid (Raid Incident)
     public void TestRaidJoiner(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_Raid_Joiner).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.ThreatReward_Raid_Joiner).Execute();
         scenario.ForwardTime(1f);
         
         Expect.Assertions(2);
@@ -173,7 +176,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     [RequiresRoyalty]
     public void TestEmpireDeserter(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.Intro_Deserter).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.Intro_Deserter).Execute();
         scenario.ForwardTime(1f);
         
         Expect.Assertions(2);
@@ -206,7 +209,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         
         scenario.ForceRewardPawnInQuest = rewardPawn;
 
-        var quest = scenario.Quest(DefLookup.QuestScript.TradeRequest)
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.TradeRequest)
             .ChooseReward(choice => choice.rewards.OfType<Reward_Pawn>().Any())
             .Execute();
 
@@ -225,7 +228,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     
     public void TestBanditCamp(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.OpportunitySite_BanditCamp).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.OpportunitySite_BanditCamp).Execute();
         var site = QuestHelper.GetWorldObject<Site>(quest);
         var pawns = scenario.Pawn(3).Colonist().Execute();
 
@@ -236,7 +239,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     [RequiresRoyalty]
     public void TestRoyalty(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.WandererJoinAbasia).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.WandererJoinAbasia).Execute();
         AssertArrived(quest, GenericArrivalText);
     }
 
@@ -244,7 +247,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     [RequiresRoyalty]
     public void TestHospitalityJoiners(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.Hospitality_Joiners).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.Hospitality_Joiners).Execute();
         AssertArrived(quest, GenericArrivalText);
     }
 
@@ -252,7 +255,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     [RequiresRoyalty]
     public void TestHospitalityPrisoners(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.Hospitality_Prisoners).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.Hospitality_Prisoners).Execute();
         AssertArrived(quest, GenericArrivalText);
     }
 
@@ -260,7 +263,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     [RequiresRoyalty]
     public void TestThreatRewardInfestationJoiner(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_Infestation_Joiner).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.ThreatReward_Infestation_Joiner).Execute();
         AssertArrived(quest, GenericArrivalText, pawn => pawn.Faction?.IsPlayer == true);
     }
 
@@ -268,7 +271,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     [RequiresRoyalty]
     public void TestThreatRewardManhuntersJoiner(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_Manhunters_Joiner).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.ThreatReward_Manhunters_Joiner).Execute();
         AssertArrived(quest, GenericArrivalText, pawn => pawn.Faction?.IsPlayer == true);
     }
 
@@ -276,7 +279,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     [RequiresRoyalty]
     public void TestThreatRewardGameConditionJoiner(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_GameCondition_Joiner).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.ThreatReward_GameCondition_Joiner).Execute();
         AssertArrived(quest, GenericArrivalText, pawn => pawn.Faction?.IsPlayer == true);
     }
 
@@ -284,7 +287,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     [RequiresRoyalty]
     public void TestThreatRewardSiteThreatJoiner(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_SiteThreat_Joiner).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.ThreatReward_SiteThreat_Joiner).Execute();
         AssertArrived(quest, GenericArrivalText, pawn => pawn.Faction?.IsPlayer == true);
     }
 
@@ -292,7 +295,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     [RequiresRoyalty]
     public void TestThreatRewardRaidMultiFactionJoiner(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_RaidMultiFaction_Joiner).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.ThreatReward_RaidMultiFaction_Joiner).Execute();
         AssertArrived(quest, GenericArrivalText, pawn => pawn.Faction?.IsPlayer == true);
     }
 
@@ -300,7 +303,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     [RequiresRoyalty]
     public void TestThreatRewardMysteryThreatJoiner(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.ThreatReward_MysteryThreat_Joiner).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.ThreatReward_MysteryThreat_Joiner).Execute();
         AssertArrived(quest, GenericArrivalText, pawn => pawn.Faction?.IsPlayer == true);
     }
 
@@ -311,7 +314,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         var rewardPawn = scenario.Pawn().WorldPawn().CreateSingle(false);
         
         scenario.ForceRewardPawnInQuest = rewardPawn;
-        var quest = scenario.Quest(DefLookup.QuestScript.Hospitality_Joiners).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.Hospitality_Joiners).Execute();
 
         Expect.Assertions(1);
         scenario.SpeedUp();

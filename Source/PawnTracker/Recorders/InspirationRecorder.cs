@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using Verse;
@@ -41,7 +41,7 @@ public class InspirationRecorder : RecorderBase<InspirationStartedEvent>
 
         pawn.mindState.inspirationHandler.TryStartInspiration(InspirationDefOf.Inspired_Recruitment, "LetterInspirationBeginThanksToHighMoodPart".Translate());
 
-        Expect.That(pawn).ToHaveHistoryRecord("Thanks to high mood, [PAWN] gained an inspiration: Inspired recruitment.", HistoryRecordDefOf.Inspiration);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.Inspiration, "Thanks to high mood, [PAWN] gained an inspiration: Inspired recruitment.");
     }
 
     public void TestTrait(TestScenario scenario)
@@ -51,11 +51,11 @@ public class InspirationRecorder : RecorderBase<InspirationStartedEvent>
             .Colonist()
             .FullHeal()
             .ResetSkillLevel(SkillDefOf.Artistic, 20)
-            .GiveTrait(DefLookup.Trait.TorturedArtist, traitCreated: t => trait = t)
+            .GiveTrait(Extra.TraitDefOf.TorturedArtist, traitCreated: t => trait = t)
             .CreateSingle();
 
         trait.Notify_MentalStateEndedOn(pawn);
 
-        Expect.That(pawn).ToHaveHistoryRecord("After a mental break, [PAWN], who has the tortured artist trait, gained an inspiration: Inspired creativity.", HistoryRecordDefOf.Inspiration);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.Inspiration, "After a mental break, [PAWN], who has the tortured artist trait, gained an inspiration: Inspired creativity.");
     }
 }

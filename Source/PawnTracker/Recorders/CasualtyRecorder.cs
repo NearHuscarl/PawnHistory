@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.Helper;
+using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
@@ -201,7 +201,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         var friend = scenario.Pawn().SetRelation(victim, PawnRelationDefOf.Lover).CreateSingle();
         HealthUtility.DamageUntilDead(victim);
 
-        Expect.That(victim).ToHaveHistoryRecord("[PAWN] died because of [HediffInPart].", HistoryRecordDefOf.Death);
+        Expect.That(victim).ToHaveHistoryRecord(HistoryRecordDefOf.Death, "[PAWN] died because of [HediffInPart].");
         Expect.That(friend).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.RelativeDeath,
@@ -212,12 +212,12 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
 
     public void TestBondedAnimalDead(TestScenario scenario)
     {
-        var bondedAnimal = scenario.Pawn().Animal(DefLookup.PawnKind.Husky).CreateSingle();
+        var bondedAnimal = scenario.Pawn().Animal(Extra.PawnKindDefOf.Husky).CreateSingle();
         var human = scenario.Pawn().Colonist().SetRelation(bondedAnimal, PawnRelationDefOf.Bond).CreateSingle();
         
         HealthUtility.DamageUntilDead(bondedAnimal);
 
-        Expect.That(bondedAnimal).ToHaveHistoryRecord("The husky died because of [HediffInPart].", HistoryRecordDefOf.Death);
+        Expect.That(bondedAnimal).ToHaveHistoryRecord(HistoryRecordDefOf.Death, "The husky died because of [HediffInPart].");
         Expect.That(human).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.BondedAnimalDeath,
@@ -233,7 +233,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         
         HealthUtility.DamageUntilDead(bondedAnimal);
 
-        Expect.That(bondedAnimal).ToHaveHistoryRecord("Steve died because of [HediffInPart].", HistoryRecordDefOf.Death);
+        Expect.That(bondedAnimal).ToHaveHistoryRecord(HistoryRecordDefOf.Death, "Steve died because of [HediffInPart].");
         Expect.That(human).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.BondedAnimalDeath,
@@ -248,7 +248,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         var spouse = scenario.Pawn().SetRelation(leader, PawnRelationDefOf.ExLover).CreateSingle();
         HealthUtility.DamageUntilDead(leader);
 
-        Expect.That(leader).ToHaveHistoryRecord("[PAWN], a faction leader of [PAWN_factionName], died because of [HediffInPart].", HistoryRecordDefOf.Death);
+        Expect.That(leader).ToHaveHistoryRecord(HistoryRecordDefOf.Death, "[PAWN], a faction leader of [PAWN_factionName], died because of [HediffInPart].");
         Expect.That(spouse).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.RelativeDeath,
@@ -265,8 +265,8 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         var pawn2 = scenario.Pawn().FullHeal().CreateSingle();
         pawn2.Kill(null);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] died because of [HediffInPart].", HistoryRecordDefOf.Death);
-        Expect.That(pawn2).ToHaveHistoryRecord("[PAWN] died.", HistoryRecordDefOf.Death, exactMatch: true);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.Death, "[PAWN] died because of [HediffInPart].");
+        Expect.That(pawn2).ToHaveHistoryRecord(HistoryRecordDefOf.Death, "[PAWN] died.", exactMatch: true);
     }
 
     public void TestDowned(TestScenario scenario)
@@ -277,7 +277,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         var pawn2 = scenario.Pawn().Enemy().FullHeal().CreateSingle();
         pawn2.MakeDowned();
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] was incapacitated due to [HediffInPart].", HistoryRecordDefOf.Downed);
-        Expect.That(pawn2).ToHaveHistoryRecord("[PAWN] was incapacitated.", HistoryRecordDefOf.Downed, exactMatch: true);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.Downed, "[PAWN] was incapacitated due to [HediffInPart].");
+        Expect.That(pawn2).ToHaveHistoryRecord(HistoryRecordDefOf.Downed, "[PAWN] was incapacitated.", exactMatch: true);
     }
 }

@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 
@@ -31,18 +31,18 @@ public class DrugAddictedRecorder : RecorderBase<DrugAddictedEvent>
         var drug1 = scenario.Thing(ThingDefOf.WakeUp).CreateSingle();
         var pawn1 = scenario.Pawn()
             .FullHeal()
-            .AddHediff(DefLookup.Hediff.WakeUpTolerance, hediffCreated: h => h.Severity = 1f)
+            .AddHediff(Extra.HediffDefOf.WakeUpTolerance, hediffCreated: h => h.Severity = 1f)
             .ForceAddictionTo(drug1)
             .CreateSingle();
         
         var drug2 = scenario.Thing(ThingDefOf.Beer).CreateSingle();
         var pawn2 = scenario.Pawn()
             .FullHeal()
-            .AddHediff(DefLookup.Hediff.AlcoholTolerance, hediffCreated: h => h.Severity = 1f)
+            .AddHediff(Extra.HediffDefOf.AlcoholTolerance, hediffCreated: h => h.Severity = 1f)
             .ForceAddictionTo(drug2)
             .CreateSingle();
         
-        Expect.That(pawn1).ToHaveHistoryRecord("[PAWN] developed a wake-up addiction.", HistoryRecordDefOf.DrugAddicted);
-        Expect.That(pawn2).ToHaveHistoryRecord("[PAWN] developed an alcohol addiction.", HistoryRecordDefOf.DrugAddicted);
+        Expect.That(pawn1).ToHaveHistoryRecord(HistoryRecordDefOf.DrugAddicted, "[PAWN] developed a wake-up addiction.");
+        Expect.That(pawn2).ToHaveHistoryRecord(HistoryRecordDefOf.DrugAddicted, "[PAWN] developed an alcohol addiction.");
     }
 }

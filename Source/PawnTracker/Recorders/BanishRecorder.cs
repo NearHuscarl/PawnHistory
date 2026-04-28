@@ -31,11 +31,11 @@ public class BanishRecorder : RecorderBase<BanishEvent>
     {
         var pawn = scenario.Pawn().Colonist().CreateSingle();
         PawnBanishUtility.Banish(pawn, pawn.Tile);
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] was banished from the colony.", HistoryRecordDefOf.Banish);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.Banish, "[PAWN] was banished from the colony.");
 
         var pawn2 = scenario.Pawn().Colonist().Do(p => HealthUtility.DamageUntilDowned(p)).CreateSingle();
         PawnBanishUtility.Banish(pawn2, pawn.Tile);
-        Expect.That(pawn2).ToHaveHistoryRecord("[PAWN] was banished from the colony and left to die.", HistoryRecordDefOf.Banish);
+        Expect.That(pawn2).ToHaveHistoryRecord(HistoryRecordDefOf.Banish, "[PAWN] was banished from the colony and left to die.");
     }
 
     // TODO: test anomaly dlc
@@ -54,6 +54,6 @@ public class BanishRecorder : RecorderBase<BanishEvent>
 
         Accessor.CompGoldenCube.OnInteracted(cube.GetComp<CompGoldenCube>(), dickhead);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] banished the colony after the golden cube was destroyed.", HistoryRecordDefOf.Banish);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.Banish, "[PAWN] banished the colony after the golden cube was destroyed.");
     }
 }

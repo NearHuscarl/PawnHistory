@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
@@ -31,6 +31,6 @@ public class WildManWanderedInRecorder : RecorderBase<WandererJoinedEvent>
     [SkipTest]
     public void Test(TestScenario scenario)
     {
-        scenario.Incident(DefLookup.Incident.WildManWandersIn).Execute();
+        scenario.Incident(Extra.IncidentDefOf.WildManWandersIn).Execute();
     }
 }

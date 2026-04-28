@@ -61,7 +61,7 @@ public class PeaceTalksOutcomeRecorder : RecorderBase<PeaceTalksOutcomeEvent>
 
     private static Pawn SetupPeaceTalkOutcome(TestScenario scenario, PeaceTalksOutcome outcome)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.OpportunitySite_PeaceTalks).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.OpportunitySite_PeaceTalks).Execute();
         var peaceTalks = QuestHelper.GetWorldObject<PeaceTalks>(quest);
         var pawn = scenario.Pawn().Colonist().Execute().First();
         var caravan = scenario.Caravan([pawn]).Position(peaceTalks.Tile).Execute();
@@ -76,28 +76,28 @@ public class PeaceTalksOutcomeRecorder : RecorderBase<PeaceTalksOutcomeEvent>
     {
         var negotiator = SetupPeaceTalkOutcome(scenario, PeaceTalksOutcome.Backfire);
 
-        Expect.That(negotiator).ToHaveHistoryRecord("[PAWN] negotiated peace talks with [Faction], but they backfired.", HistoryRecordDefOf.PeaceTalksOutcome);
+        Expect.That(negotiator).ToHaveHistoryRecord(HistoryRecordDefOf.PeaceTalksOutcome, "[PAWN] negotiated peace talks with [Faction], but they backfired.");
     }
 
     public void TestTalksFlounder(TestScenario scenario)
     {
         var negotiator = SetupPeaceTalkOutcome(scenario, PeaceTalksOutcome.TalksFlounder);
 
-        Expect.That(negotiator).ToHaveHistoryRecord("[PAWN] negotiated peace talks with [Faction], but they floundered.", HistoryRecordDefOf.PeaceTalksOutcome);
+        Expect.That(negotiator).ToHaveHistoryRecord(HistoryRecordDefOf.PeaceTalksOutcome, "[PAWN] negotiated peace talks with [Faction], but they floundered.");
     }
 
     public void TestSuccess(TestScenario scenario)
     {
         var negotiator = SetupPeaceTalkOutcome(scenario, PeaceTalksOutcome.Success);
 
-        Expect.That(negotiator).ToHaveHistoryRecord("[PAWN] successfully negotiated peace talks with [Faction].", HistoryRecordDefOf.PeaceTalksOutcome);
+        Expect.That(negotiator).ToHaveHistoryRecord(HistoryRecordDefOf.PeaceTalksOutcome, "[PAWN] successfully negotiated peace talks with [Faction].");
     }
 
     public void TestTriumph(TestScenario scenario)
     {
         var negotiator = SetupPeaceTalkOutcome(scenario, PeaceTalksOutcome.Triumph);
 
-        Expect.That(negotiator).ToHaveHistoryRecord("[PAWN] negotiated peace talks with [Faction] to a great triumph.", HistoryRecordDefOf.PeaceTalksOutcome);
+        Expect.That(negotiator).ToHaveHistoryRecord(HistoryRecordDefOf.PeaceTalksOutcome, "[PAWN] negotiated peace talks with [Faction] to a great triumph.");
     }
 
     public void TestDisaster(TestScenario scenario)
@@ -120,6 +120,6 @@ public class PeaceTalksOutcomeRecorder : RecorderBase<PeaceTalksOutcomeEvent>
             });
         });
 
-        Expect.That(negotiator).ToHaveHistoryRecord("[PAWN] negotiated peace talks with [Faction], but they ended in disaster.", HistoryRecordDefOf.PeaceTalksOutcome);
+        Expect.That(negotiator).ToHaveHistoryRecord(HistoryRecordDefOf.PeaceTalksOutcome, "[PAWN] negotiated peace talks with [Faction], but they ended in disaster.");
     }
 }

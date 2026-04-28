@@ -59,7 +59,7 @@ public class DefenderGeneratedRecorder : RecorderBase<DefenderGeneratedRecorder.
 
     public void TestSite(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.OpportunitySite_BanditCamp).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.OpportunitySite_BanditCamp).Execute();
         var site = QuestHelper.GetWorldObject<Site>(quest);
         var pawns = scenario.Pawn(3).Colonist().Execute();
 
@@ -83,7 +83,7 @@ public class DefenderGeneratedRecorder : RecorderBase<DefenderGeneratedRecorder.
 
     public void TestSettlement(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.OpportunitySite_BanditCamp).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.OpportunitySite_BanditCamp).Execute();
         var settlement = Find.WorldObjects.Settlements.FirstOrDefault(s => s.Faction.HostileTo(Faction.OfPlayer));
         var pawns = scenario.Pawn(3).Colonist().Execute();
 
@@ -95,7 +95,7 @@ public class DefenderGeneratedRecorder : RecorderBase<DefenderGeneratedRecorder.
             {
                 var enemies = e.Map.mapPawns.AllPawnsSpawned.Where(pawn => pawn.HostileTo(Faction.OfPlayer)).ToList();
 
-                Expect.ThatAll(enemies).ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] were stationed at [WorldObject] as defenders.", HistoryRecordDefOf.DefenderGenerated);
+                Expect.ThatAll(enemies).ToHaveHistoryRecord(HistoryRecordDefOf.DefenderGenerated, "[PAWN] and [n] others from [Faction] were stationed at [WorldObject] as defenders.");
                 Expect.ThatAll(enemies).Not().ToHaveHistoryRecord(new ExpectedHistoryRecord
                 {
                     Def = HistoryRecordDefOf.DefenderGenerated,

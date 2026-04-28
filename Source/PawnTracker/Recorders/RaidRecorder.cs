@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
@@ -95,9 +95,9 @@ public class RaidRecorder : RecorderBase<RaidStartedEvent>
 
     public void TestSiege(TestScenario scenario)
     {
-        var pawns = scenario.Incident(IncidentDefOf.RaidEnemy).RaidStrategy(DefLookup.RaidStrategy.Siege).Point(500).Execute();
+        var pawns = scenario.Incident(IncidentDefOf.RaidEnemy).RaidStrategy(Extra.RaidStrategyDefOf.Siege).Point(500).Execute();
         
-        Expect.ThatAll(pawns).ToHaveHistoryRecord("[PAWN] and [n] others from [FACTION] besieged the colony.", HistoryRecordDefOf.Raid);
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.Raid, "[PAWN] and [n] others from [FACTION] besieged the colony.");
     }
 
     [SkipTest]

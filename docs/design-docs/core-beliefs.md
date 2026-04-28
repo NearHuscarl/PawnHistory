@@ -10,7 +10,7 @@
 - Prefer rulepacks through `descriptionMaker` and finish with `Resolve()`.
 - Use literal feature naming: `XyzEvent`, `XyzRecorder`, `HistoryRecordDefOf.Xyz`.
 - If transient patch state is needed, use a dedicated `XyzContext` in the event file.
-- Use RimWorld `DefOf` first. Use `Source/DefLookup.cs` only when no suitable `DefOf` exists.
+- Use RimWorld `DefOf` first. Use `Source/Extra.cs` only when no suitable `DefOf` exists, via `Extra.XyzDefOf` lookups.
 - Put reflected field and method access in `Source/Accessor.cs`. Do not use raw `AccessTools` outside it.
 - Use the simplest viable Harmony state.
 - Reset patch context in `Finalizer()`.

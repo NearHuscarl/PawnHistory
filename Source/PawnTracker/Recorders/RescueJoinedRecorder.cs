@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using Verse;
@@ -54,7 +54,7 @@ public class RescueJoinedRecorder : RecorderBase<RescueJoinedEvent>
         scenario.WaitUntil(victim.InBed, () =>
         {
             scenario.Pawn(victim).FullHeal().Execute();
-            Expect.That(victim).ToHaveHistoryRecord("[PAWN] was grateful after being rescued. Instead of leaving, [He] decided to stay and joined the colony.", HistoryRecordDefOf.RescueJoined);
+            Expect.That(victim).ToHaveHistoryRecord(HistoryRecordDefOf.RescueJoined, "[PAWN] was grateful after being rescued. Instead of leaving, [He] decided to stay and joined the colony.");
             scenario.SlowDown();
         });
     }

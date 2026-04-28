@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Linq;
@@ -38,7 +38,7 @@ public class HediffRecorder : RecorderBase<HediffAddedEvent>
             .CreateSingle();
         scenario.OpenHistoryRecordTab(patient);
 
-        Expect.That(patient).ToHaveHistoryRecord("[PAWN] was put under anesthetic.", HistoryRecordDefOf.Anesthetized);
+        Expect.That(patient).ToHaveHistoryRecord(HistoryRecordDefOf.Anesthetized, "[PAWN] was put under anesthetic.");
     }
 
     public void TestInvert(TestScenario scenario)

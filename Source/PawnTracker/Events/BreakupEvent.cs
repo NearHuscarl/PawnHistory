@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using Verse;
 
@@ -27,7 +27,7 @@ internal class InteractionWorker_Breakup_RandomBreakupReason_Patch
 [HarmonyPatch(typeof(PlayLog), nameof(PlayLog.Add))]
 internal class PlayLog_Add_Patch_5
 {
-    private static readonly InteractionDef BreakupDef = DefLookup.Interaction.Breakup;
+    private static readonly InteractionDef BreakupDef = Extra.InteractionDefOf.Breakup;
     
     private static void Postfix(LogEntry entry)
     {

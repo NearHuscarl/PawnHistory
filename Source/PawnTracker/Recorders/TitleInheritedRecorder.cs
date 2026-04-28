@@ -44,7 +44,7 @@ public class TitleInheritedRecorder : RecorderBase<TitleInheritanceEvent>
     [RequiresRoyalty]
     public void TestWasInherited(TestScenario scenario)
     {
-        var (heir, deceased) = SetupInheritance(scenario, DefLookup.RoyalTitle.Praetor);
+        var (heir, deceased) = SetupInheritance(scenario, Extra.RoyalTitleDefOf.Praetor);
 
         Expect.That(heir).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
@@ -57,7 +57,7 @@ public class TitleInheritedRecorder : RecorderBase<TitleInheritanceEvent>
     [RequiresRoyalty]
     public void TestAsReplacement(TestScenario scenario)
     {
-        var (heir, deceased) = SetupInheritance(scenario, RoyalTitleDefOf.Count, DefLookup.RoyalTitle.Praetor);
+        var (heir, deceased) = SetupInheritance(scenario, RoyalTitleDefOf.Count, Extra.RoyalTitleDefOf.Praetor);
 
         Expect.That(heir).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {

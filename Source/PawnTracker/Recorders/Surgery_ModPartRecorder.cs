@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.Helper;
+using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
@@ -64,7 +64,7 @@ public class Surgery_ModPartRecorder : SurgeryRecorder<SurgeryInstallArtificialP
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing(DefLookup.Thing.BionicArm, 1)
+            .WithThing(Extra.ThingDefOf.BionicArm, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -76,7 +76,7 @@ public class Surgery_ModPartRecorder : SurgeryRecorder<SurgeryInstallArtificialP
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, DefLookup.Recipe.InstallBionicArm, BodyPartDefOf.Shoulder)
+            .DoSurgery(patient, Extra.RecipeDefOf.InstallBionicArm, BodyPartDefOf.Shoulder)
             .CreateSingle();
     }
 
@@ -86,7 +86,7 @@ public class Surgery_ModPartRecorder : SurgeryRecorder<SurgeryInstallArtificialP
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing(DefLookup.Thing.BionicHeart, 1)
+            .WithThing(Extra.ThingDefOf.BionicHeart, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -97,7 +97,7 @@ public class Surgery_ModPartRecorder : SurgeryRecorder<SurgeryInstallArtificialP
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, DefLookup.Recipe.InstallBionicHeart, BodyPartDefOf.Heart)
+            .DoSurgery(patient, Extra.RecipeDefOf.InstallBionicHeart, BodyPartDefOf.Heart)
             .CreateSingle();
     }
 
@@ -107,19 +107,19 @@ public class Surgery_ModPartRecorder : SurgeryRecorder<SurgeryInstallArtificialP
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing(DefLookup.Thing.SimpleProstheticHeart, 1)
+            .WithThing(Extra.ThingDefOf.SimpleProstheticHeart, 1)
             .Execute();
 
         var patient = scenario.Pawn()
             .Colonist()
-            .AddHediff(DefLookup.Hediff.BionicHeart, BodyPartDefOf.Heart)
+            .AddHediff(Extra.HediffDefOf.BionicHeart, BodyPartDefOf.Heart)
             .CreateSingle();
 
         scenario.Pawn()
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, DefLookup.Recipe.InstallSimpleProstheticHeart, BodyPartDefOf.Heart)
+            .DoSurgery(patient, Extra.RecipeDefOf.InstallSimpleProstheticHeart, BodyPartDefOf.Heart)
             .CreateSingle();
     }
 
@@ -129,19 +129,19 @@ public class Surgery_ModPartRecorder : SurgeryRecorder<SurgeryInstallArtificialP
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing(DefLookup.Thing.BionicHeart, 1)
+            .WithThing(Extra.ThingDefOf.BionicHeart, 1)
             .Execute();
 
         var patient = scenario.Pawn()
             .Colonist()
-            .AddHediff(DefLookup.Hediff.HeartArteryBlockage, BodyPartDefOf.Heart)
+            .AddHediff(Extra.HediffDefOf.HeartArteryBlockage, BodyPartDefOf.Heart)
             .CreateSingle();
 
         scenario.Pawn()
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, DefLookup.Recipe.InstallBionicHeart, BodyPartDefOf.Heart)
+            .DoSurgery(patient, Extra.RecipeDefOf.InstallBionicHeart, BodyPartDefOf.Heart)
             .CreateSingle();
     }
 
@@ -151,7 +151,7 @@ public class Surgery_ModPartRecorder : SurgeryRecorder<SurgeryInstallArtificialP
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing(DefLookup.Thing.BionicHeart, 1)
+            .WithThing(Extra.ThingDefOf.BionicHeart, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -161,7 +161,7 @@ public class Surgery_ModPartRecorder : SurgeryRecorder<SurgeryInstallArtificialP
         scenario.Pawn()
             .Colonist()
             .SetDoctor(isBadDoctor: true)
-            .DoSurgery(patient, DefLookup.Recipe.InstallBionicHeart, BodyPartDefOf.Heart, instant: true)
+            .DoSurgery(patient, Extra.RecipeDefOf.InstallBionicHeart, BodyPartDefOf.Heart, instant: true)
             .CreateSingle();
     }
 }

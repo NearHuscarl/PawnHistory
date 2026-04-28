@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 
@@ -10,7 +10,7 @@ public class ManInBlackJoinedRecorder : RecorderBase<WandererJoinedEvent>
     {
         GameEventBus.Subscribe<WandererJoinedEvent>(e =>
         {
-            if (e.IncidentDef != DefLookup.Incident.StrangerInBlackJoin)
+            if (e.IncidentDef != Extra.IncidentDefOf.StrangerInBlackJoin)
                 return;
 
             CreateRecord(e);
@@ -38,6 +38,6 @@ public class ManInBlackJoinedRecorder : RecorderBase<WandererJoinedEvent>
     [SkipTest]
     public void Test(TestScenario scenario)
     {
-        scenario.Incident(DefLookup.Incident.StrangerInBlackJoin).Execute();
+        scenario.Incident(Extra.IncidentDefOf.StrangerInBlackJoin).Execute();
     }
 }

@@ -31,7 +31,7 @@ public class PredatorHuntingColonistRecorder : RecorderBase<PredatorHuntingColon
         var prey = scenario.Pawn().Colonist().Position(mapCenter, 0).CreateSingle();
         
         var predator = scenario.Pawn()
-            .Animal(DefLookup.PawnKind.Cougar)
+            .Animal(Extra.PawnKindDefOf.Cougar)
             .StartJob(JobDefOf.PredatorHunt, prey)
             .CreateSingle();
 

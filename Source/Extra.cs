@@ -6,21 +6,21 @@ using Verse;
 namespace PawnHistory.Source;
 
 /// <summary>
-/// Adds missing RimWorld <c>[DefOf]</c> entries used by the mod.
+/// Fallback container for RimWorld <c>[DefOf]</c> entries the mod needs beyond the built-in classes.
 /// </summary>
 [SuppressMessage("ReSharper", "InconsistentNaming")]
-public static class DefLookup
+public static class Extra
 {
     [DefOf]
-    public static class RulePack
+    public static class RulePackDefOf
     {
         public static RulePackDef PH_Var;
 
-        static RulePack() => DefOfHelper.EnsureInitializedInCtor(typeof(RulePack));
+        static RulePackDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RulePackDefOf));
     }
 
     [DefOf]
-    public static class Hediff
+    public static class HediffDefOf
     {
         // ReSharper disable once IdentifierTypo
         public static HediffDef Alzheimers;
@@ -43,11 +43,11 @@ public static class DefLookup
         public static HediffDef SimpleProstheticHeart;
         public static HediffDef BionicHeart;
 
-        static Hediff() => DefOfHelper.EnsureInitializedInCtor(typeof(Hediff));
+        static HediffDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(HediffDefOf));
     }
 
     [DefOf]
-    public static class BodyPart
+    public static class BodyPartDefOf
     {
         public static BodyPartDef Brain;
         public static BodyPartDef Ear;
@@ -56,29 +56,29 @@ public static class DefLookup
         public static BodyPartDef Foot;
         public static BodyPartDef Kidney;
 
-        static BodyPart() => DefOfHelper.EnsureInitializedInCtor(typeof(BodyPart));
+        static BodyPartDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(BodyPartDefOf));
     }
 
     [DefOf]
-    public static class Interaction
+    public static class InteractionDefOf
     {
         public static InteractionDef Breakup;
 
-        static Interaction() => DefOfHelper.EnsureInitializedInCtor(typeof(Interaction));
+        static InteractionDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(InteractionDefOf));
     }
 
     [DefOf]
-    public static class MentalBreak
+    public static class MentalBreakDefOf
     {
         public static MentalBreakDef Slaughterer;
         public static MentalBreakDef Jailbreaker;
         public static MentalBreakDef SadisticRage;
 
-        static MentalBreak() => DefOfHelper.EnsureInitializedInCtor(typeof(MentalBreak));
+        static MentalBreakDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(MentalBreakDefOf));
     }
 
     [DefOf]
-    public static class Incident
+    public static class IncidentDefOf
     {
         public static IncidentDef Ambush;
         public static IncidentDef Disease_OrganDecay;
@@ -92,38 +92,38 @@ public static class DefLookup
         public static IncidentDef GiveQuest_EndGame_ShipEscape;
         public static IncidentDef RansomDemand;
 
-        static Incident() => DefOfHelper.EnsureInitializedInCtor(typeof(Incident));
+        static IncidentDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(IncidentDefOf));
     }
 
     [DefOf]
-    public static class RaidStrategy
+    public static class RaidStrategyDefOf
     {
         public static RaidStrategyDef Siege;
 
-        static RaidStrategy() => DefOfHelper.EnsureInitializedInCtor(typeof(RaidStrategy));
+        static RaidStrategyDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RaidStrategyDefOf));
     }
 
     [DefOf]
-    public static class PawnKind
+    public static class PawnKindDefOf
     {
         public static PawnKindDef Husky;
         public static PawnKindDef Cougar;
         public static PawnKindDef Bear_Grizzly;
 
-        static PawnKind() => DefOfHelper.EnsureInitializedInCtor(typeof(PawnKind));
+        static PawnKindDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(PawnKindDefOf));
     }
 
     [DefOf]
-    public static class TraderKind
+    public static class TraderKindDefOf
     {
         public static TraderKindDef Caravan_Neolithic_Slaver;
         public static TraderKindDef Orbital_PirateMerchant;
 
-        static TraderKind() => DefOfHelper.EnsureInitializedInCtor(typeof(TraderKind));
+        static TraderKindDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(TraderKindDefOf));
     }
 
     [DefOf]
-    public static class QuestScript
+    public static class QuestScriptDefOf
     {
         public static QuestScriptDef TradeRequest;
         public static QuestScriptDef ThreatReward_Raid_Joiner;
@@ -163,30 +163,30 @@ public static class DefLookup
         [MayRequireBiotech]
         public static QuestScriptDef SanguophageMeetingHost;
 
-        static QuestScript() => DefOfHelper.EnsureInitializedInCtor(typeof(QuestScript));
+        static QuestScriptDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(QuestScriptDefOf));
     }
 
     [DefOf]
-    public static class RoyalTitle
+    public static class RoyalTitleDefOf
     {
         [MayRequireRoyalty]
         public static RoyalTitleDef Praetor;
 
-        static RoyalTitle() => DefOfHelper.EnsureInitializedInCtor(typeof(RoyalTitle));
+        static RoyalTitleDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RoyalTitleDefOf));
     }
 
     [DefOf]
-    public static class Tale
+    public static class TaleDefOf
     {
         public static TaleDef PlayedGame;
         public static TaleDef Stripped;
         public static TaleDef VisitedGrave;
 
-        static Tale() => DefOfHelper.EnsureInitializedInCtor(typeof(Tale));
+        static TaleDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(TaleDefOf));
     }
 
     [DefOf]
-    public static class Recipe
+    public static class RecipeDefOf
     {
         public static RecipeDef InstallJoywire;
         public static RecipeDef InstallNaturalLung;
@@ -196,11 +196,11 @@ public static class DefLookup
         public static RecipeDef InstallBionicHeart;
         public static RecipeDef InstallSimpleProstheticHeart;
 
-        static Recipe() => DefOfHelper.EnsureInitializedInCtor(typeof(Recipe));
+        static RecipeDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RecipeDefOf));
     }
 
     [DefOf]
-    public static class Thing
+    public static class ThingDefOf
     {
         public static ThingDef PodLauncher;
         public static ThingDef HorseshoesPin;
@@ -222,32 +222,32 @@ public static class DefLookup
         [MayRequireRoyalty]
         public static ThingDef MeleeWeapon_MonoSwordBladelink;
 
-        static Thing() => DefOfHelper.EnsureInitializedInCtor(typeof(Thing));
+        static ThingDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(ThingDefOf));
     }
 
     [DefOf]
-    public static class RitualOutcomeEffect
+    public static class RitualOutcomeEffectDefOf
     {
         public static RitualOutcomeEffectDef AttendedSpeech;
 
-        static RitualOutcomeEffect() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualOutcomeEffect));
+        static RitualOutcomeEffectDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualOutcomeEffectDefOf));
     }
 
     [DefOf]
-    public static class Backstory
+    public static class BackstoryDefOf
     {
         public static BackstoryDef MusicalKid86;
         public static BackstoryDef NavyScientist52;
 
-        static Backstory() => DefOfHelper.EnsureInitializedInCtor(typeof(Backstory));
+        static BackstoryDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(BackstoryDefOf));
     }
 
     [DefOf]
-    public static class Trait
+    public static class TraitDefOf
     {
         public static TraitDef TorturedArtist;
         public static TraitDef Gourmand;
 
-        static Trait() => DefOfHelper.EnsureInitializedInCtor(typeof(Trait));
+        static TraitDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(TraitDefOf));
     }
 }

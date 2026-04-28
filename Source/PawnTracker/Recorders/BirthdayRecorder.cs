@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.Helper;
+using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using System.Linq;
@@ -45,7 +45,7 @@ public class BirthdayRecorder : RecorderBase<BirthdayEvent>
             scenario.Pawn(victim).ForceBirthday().Execute();
         }
 
-        Expect.That(victim).ToHaveHistoryRecord("[PAWN] turned [Age] and began suffering from [Hediffs] due to aging.", HistoryRecordDefOf.Birthday);
+        Expect.That(victim).ToHaveHistoryRecord(HistoryRecordDefOf.Birthday, "[PAWN] turned [Age] and began suffering from [Hediffs] due to aging.");
     }
 
     public void TestCancer(TestScenario scenario)
@@ -53,6 +53,6 @@ public class BirthdayRecorder : RecorderBase<BirthdayEvent>
         scenario.AlwaysHaveCancerOnBirthday = true;
         var victim = scenario.Pawn().ThatMatches(ShouldRecord).ForceBirthday().CreateSingle();
 
-        Expect.That(victim).ToHaveHistoryRecord("[PAWN] turned [Age] and began suffering from a carcinoma in [His] [Part] due to aging.", HistoryRecordDefOf.Birthday);
+        Expect.That(victim).ToHaveHistoryRecord(HistoryRecordDefOf.Birthday, "[PAWN] turned [Age] and began suffering from a carcinoma in [His] [Part] due to aging.");
     }
 }

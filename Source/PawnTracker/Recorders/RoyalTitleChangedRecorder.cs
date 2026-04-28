@@ -57,28 +57,28 @@ public class RoyalTitleChangedRecorder : RecorderBase<RoyalTitleChangedEvent>
     {
         var pawn = scenario.Pawn().Colonist().SetRoyalTitle(RoyalTitleDefOf.Count).CreateSingle();
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] gained the royal title of Archon from [Faction].", HistoryRecordDefOf.TitleGained);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.TitleGained, "[PAWN] gained the royal title of Archon from [Faction].");
     }
 
     [RequiresRoyalty]
     public void TestLoss(TestScenario scenario)
     {
         var pawn = scenario.Pawn().Colonist()
-            .SetRoyalTitle(DefLookup.RoyalTitle.Praetor)
+            .SetRoyalTitle(Extra.RoyalTitleDefOf.Praetor)
             .SetRoyalTitle(null)
             .CreateSingle();
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] lost the royal title of Praetor from [Faction].", HistoryRecordDefOf.TitleLost);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.TitleLost, "[PAWN] lost the royal title of Praetor from [Faction].");
     }
 
     [RequiresRoyalty]
     public void TestDemotion(TestScenario scenario)
     {
         var pawn = scenario.Pawn().Colonist()
-            .SetRoyalTitle(DefLookup.RoyalTitle.Praetor)
+            .SetRoyalTitle(Extra.RoyalTitleDefOf.Praetor)
             .SetRoyalTitle(RoyalTitleDefOf.Knight)
             .CreateSingle();
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] was demoted from Praetor to Knight by [Faction].", HistoryRecordDefOf.TitleLost);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.TitleLost, "[PAWN] was demoted from Praetor to Knight by [Faction].");
     }
 }

@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using System.Linq;
 using Verse;
@@ -33,14 +33,14 @@ public class DiseaseRecorder : RecorderBase<DiseaseEvent>
     public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(8).Colonist().Execute();
-        scenario.Incident(DefLookup.Incident.Disease_Malaria).Execute();
-        scenario.Incident(DefLookup.Incident.Disease_SleepingSickness).Execute();
-        scenario.Incident(DefLookup.Incident.Disease_SensoryMechanites).Execute();
-        scenario.Incident(DefLookup.Incident.Disease_OrganDecay).Execute();
+        scenario.Incident(Extra.IncidentDefOf.Disease_Malaria).Execute();
+        scenario.Incident(Extra.IncidentDefOf.Disease_SleepingSickness).Execute();
+        scenario.Incident(Extra.IncidentDefOf.Disease_SensoryMechanites).Execute();
+        scenario.Incident(Extra.IncidentDefOf.Disease_OrganDecay).Execute();
 
-        Expect.ThatAny(pawns).ToHaveHistoryRecord("[PAWN] got sick from malaria along with [n] [Others].", HistoryRecordDefOf.Disease);
-        Expect.ThatAny(pawns).ToHaveHistoryRecord("[PAWN] got sick from sleeping sickness along with [n] [Others].", HistoryRecordDefOf.Disease);
-        Expect.ThatAny(pawns).ToHaveHistoryRecord("[PAWN] got sick from sensory mechanites along with [n] [Others].", HistoryRecordDefOf.Disease);
-        Expect.ThatAny(pawns).ToHaveHistoryRecord("[PAWN] developed a flesh-eating infection known as organ decay in [His] [Part].", HistoryRecordDefOf.Disease);
+        Expect.ThatAny(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.Disease, "[PAWN] got sick from malaria along with [n] [Others].");
+        Expect.ThatAny(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.Disease, "[PAWN] got sick from sleeping sickness along with [n] [Others].");
+        Expect.ThatAny(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.Disease, "[PAWN] got sick from sensory mechanites along with [n] [Others].");
+        Expect.ThatAny(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.Disease, "[PAWN] developed a flesh-eating infection known as organ decay in [His] [Part].");
     }
 }

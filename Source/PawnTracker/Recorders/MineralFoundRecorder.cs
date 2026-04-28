@@ -51,13 +51,13 @@ public class MineralFoundRecorder : RecorderBase<LongRangeMineralFoundEvent>, IR
     public void TestLongRange(TestScenario scenario)
     {
         var pawn = scenario.Pawn().Colonist().CreateSingle();
-        var scanner = scenario.Thing(DefLookup.Thing.LongRangeMineralScanner).CreateSingle();
+        var scanner = scenario.Thing(Extra.ThingDefOf.LongRangeMineralScanner).CreateSingle();
         var longRangeScanner = scanner.TryGetComp<CompLongRangeMineralScanner>();
         
         Accessor.CompLongRangeMineralScanner.TargetMineable(longRangeScanner) = ThingDefOf.MineableGold;
         Accessor.CompLongRangeMineralScanner.DoFind(longRangeScanner, pawn);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] found a lump of gold some distance away using the long-range mineral scanner.", HistoryRecordDefOf.LongRangeMineralFound);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.LongRangeMineralFound, "[PAWN] found a lump of gold some distance away using the long-range mineral scanner.");
     }
 
     public void TestDeep(TestScenario scenario)
@@ -68,6 +68,6 @@ public class MineralFoundRecorder : RecorderBase<LongRangeMineralFoundEvent>, IR
 
         Accessor.CompDeepScanner.DoFind(deepScanner, pawn);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] found a lump of buried [Material] using the ground-penetrating scanner.", HistoryRecordDefOf.DeepMineralFound);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.DeepMineralFound, "[PAWN] found a lump of buried [Material] using the ground-penetrating scanner.");
     }
 }

@@ -51,7 +51,7 @@ public class SiteAmbushRecorder : RecorderBase<SiteAmbushRecorder.Input>
     [SkipTest]
     public void Test(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.OpportunitySite_DownedRefugee).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.OpportunitySite_DownedRefugee).Execute();
         var site = QuestHelper.GetWorldObject<Site>(quest);
         var pawns = scenario.Pawn(3).Colonist().Execute();
         const string ambushSignal = "PH_Ambush";
@@ -71,7 +71,7 @@ public class SiteAmbushRecorder : RecorderBase<SiteAmbushRecorder.Input>
 
                 Expect.ThatAll(enemies)
                     .Eventually()
-                    .ToHaveHistoryRecord("[PAWN] and [n] others from [Faction] ambushed the colonists at the downed refugee.", HistoryRecordDefOf.SiteAmbush);
+                    .ToHaveHistoryRecord(HistoryRecordDefOf.SiteAmbush, "[PAWN] and [n] others from [Faction] ambushed the colonists at the downed refugee.");
             })
             .Execute();
     }

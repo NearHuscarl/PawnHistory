@@ -139,7 +139,7 @@ public class DropPodBuilder
 
     private static Building SpawnLauncher(Map map, IntVec3 cell)
     {
-        var def = DefLookup.Thing.PodLauncher;
+        var def = Extra.ThingDefOf.PodLauncher;
         var launcher = (Building)ThingMaker.MakeThing(def);
         GenSpawn.Spawn(launcher, cell, map);
 
@@ -158,7 +158,7 @@ public class DropPodBuilder
 
     private static List<IntVec3> FindLauncherCells(Map map, int count)
     {
-        var launcherDef = DefLookup.Thing.PodLauncher;
+        var launcherDef = Extra.ThingDefOf.PodLauncher;
         var cells = GenRadial.RadialCellsAround(map.Center, 30f, true);
         
         foreach (var root in cells)

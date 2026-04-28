@@ -153,14 +153,6 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         });
     }
     
-    public void ToHaveHistoryRecord(string descriptionTemplate, HistoryRecordDef recordDef, bool exactMatch = false, int index = -1)
-    {
-        ToHaveHistoryRecord(new ExpectedHistoryRecord
-        {
-            Def = recordDef,
-            Description = descriptionTemplate
-        });
-    }
     public void ToHaveHistoryRecord(HistoryRecordDef recordDef, string descriptionTemplate, bool exactMatch = false, int index = -1)
     {
         ToHaveHistoryRecord(new ExpectedHistoryRecord

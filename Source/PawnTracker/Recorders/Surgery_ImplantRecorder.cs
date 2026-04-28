@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using Verse;
 
@@ -41,7 +41,7 @@ public class Surgery_ImplantRecorder : SurgeryRecorder<SurgeryInstallImplantEven
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing(DefLookup.Thing.Joywire, 1)
+            .WithThing(Extra.ThingDefOf.Joywire, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -52,7 +52,7 @@ public class Surgery_ImplantRecorder : SurgeryRecorder<SurgeryInstallImplantEven
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, DefLookup.Recipe.InstallJoywire, DefLookup.BodyPart.Brain)
+            .DoSurgery(patient, Extra.RecipeDefOf.InstallJoywire, Extra.BodyPartDefOf.Brain)
             .CreateSingle();
     }
 
@@ -62,7 +62,7 @@ public class Surgery_ImplantRecorder : SurgeryRecorder<SurgeryInstallImplantEven
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing(DefLookup.Thing.Joywire, 1)
+            .WithThing(Extra.ThingDefOf.Joywire, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -72,7 +72,7 @@ public class Surgery_ImplantRecorder : SurgeryRecorder<SurgeryInstallImplantEven
         scenario.Pawn()
             .Colonist()
             .SetDoctor(isBadDoctor: true)
-            .DoSurgery(patient, DefLookup.Recipe.InstallJoywire, DefLookup.BodyPart.Brain, instant: true)
+            .DoSurgery(patient, Extra.RecipeDefOf.InstallJoywire, Extra.BodyPartDefOf.Brain, instant: true)
             .CreateSingle();
     }
 }

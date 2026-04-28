@@ -1,4 +1,4 @@
-﻿using LudeonTK;
+using LudeonTK;
 using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
@@ -50,8 +50,8 @@ public class HealthComplicationRecorder : RecorderBase<HealthComplicationEvent>
         var cause = (Hediff)null;
         var cause2 = (Hediff)null;
         var pawn = scenario.Pawn()
-            .AddHediff(DefLookup.Hediff.WakeUpTolerance, hediffCreated: h => cause = h)
-            .AddHediff(DefLookup.Hediff.AlcoholTolerance, hediffCreated: h => cause2 = h)
+            .AddHediff(Extra.HediffDefOf.WakeUpTolerance, hediffCreated: h => cause = h)
+            .AddHediff(Extra.HediffDefOf.AlcoholTolerance, hediffCreated: h => cause2 = h)
             .CreateSingle();
         var giver = cause.def.hediffGivers
             .OfType<HediffGiver_RandomDrugEffect>()
@@ -75,7 +75,7 @@ public class HealthComplicationRecorder : RecorderBase<HealthComplicationEvent>
     public void TestNoCause(TestScenario scenario)
     {
         var pawn = scenario.Pawn()
-            .AddHediff(DefLookup.Hediff.HeartAttack)
+            .AddHediff(Extra.HediffDefOf.HeartAttack)
             .CreateSingle();
         var giver = pawn.def.race.hediffGiverSets
             .SelectMany(set => set.hediffGivers)

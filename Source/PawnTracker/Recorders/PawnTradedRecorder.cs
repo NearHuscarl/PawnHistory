@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
@@ -46,7 +46,7 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
 
     public void TestSell(TestScenario scenario)
     {
-        var traderKind = DefLookup.TraderKind.Caravan_Neolithic_Slaver;
+        var traderKind = Extra.TraderKindDefOf.Caravan_Neolithic_Slaver;
         scenario.Incident(IncidentDefOf.TraderCaravanArrival).TraderKind(traderKind).Execute();
         var prisoners = new List<Pawn>();
 
@@ -72,7 +72,7 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
 
     public void TestBuy(TestScenario scenario)
     {
-        var traderKind = DefLookup.TraderKind.Caravan_Neolithic_Slaver;
+        var traderKind = Extra.TraderKindDefOf.Caravan_Neolithic_Slaver;
         scenario.Incident(IncidentDefOf.TraderCaravanArrival).TraderKind(traderKind).Execute();
 
         scenario.Map()
@@ -97,7 +97,7 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
 
     public void TestBuy2(TestScenario scenario)
     {
-        var traderKind = DefLookup.TraderKind.Orbital_PirateMerchant;
+        var traderKind = Extra.TraderKindDefOf.Orbital_PirateMerchant;
         scenario.Incident(IncidentDefOf.OrbitalTraderArrival).TraderKind(traderKind).Execute();
 
         scenario.Map()

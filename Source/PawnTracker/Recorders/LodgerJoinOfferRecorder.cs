@@ -38,7 +38,7 @@ public class LodgerJoinOfferRecorder : RecorderBase<LodgerJoinOfferAcceptedEvent
     [RequiresBiotech]
     public void TestSanguophageMeetingHost(TestScenario scenario)
     {
-        TestJoinOffer(scenario, DefLookup.QuestScript.SanguophageMeetingHost);
+        TestJoinOffer(scenario, Extra.QuestScriptDefOf.SanguophageMeetingHost);
     }
 
     private static void TestJoinOffer(TestScenario scenario, QuestScriptDef questScript)

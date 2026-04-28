@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using Verse;
@@ -15,7 +15,7 @@ public class VisitedGraveRecorder : HistoryTaleRecorder<VisitedGraveRecorder.Inp
     {
         GameEventBus.Subscribe<TaleRecordedEvent>(e =>
         {
-            if (e.Tale != DefLookup.Tale.VisitedGrave)
+            if (e.Tale != Extra.TaleDefOf.VisitedGrave)
                 return;
 
             CreateRecord(new Input(e.Pawn, e.Params[0] as Pawn));
@@ -45,9 +45,9 @@ public class VisitedGraveRecorder : HistoryTaleRecorder<VisitedGraveRecorder.Inp
 
         for (var i = 0; i < pawns.Count; i++)
         {
-            TaleRecorder.RecordTale(DefLookup.Tale.VisitedGrave, pawns[i], pawns[(i + 1) % pawns.Count]);
-            TaleRecorder.RecordTale(DefLookup.Tale.VisitedGrave, pawns[i], pawns[(i + 1) % pawns.Count]);
-            TaleRecorder.RecordTale(DefLookup.Tale.VisitedGrave, pawns[i], pawns[(i + 1) % pawns.Count]);
+            TaleRecorder.RecordTale(Extra.TaleDefOf.VisitedGrave, pawns[i], pawns[(i + 1) % pawns.Count]);
+            TaleRecorder.RecordTale(Extra.TaleDefOf.VisitedGrave, pawns[i], pawns[(i + 1) % pawns.Count]);
+            TaleRecorder.RecordTale(Extra.TaleDefOf.VisitedGrave, pawns[i], pawns[(i + 1) % pawns.Count]);
         }
     }
 }

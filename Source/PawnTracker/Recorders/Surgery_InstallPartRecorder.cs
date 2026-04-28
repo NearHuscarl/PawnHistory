@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.Helper;
+using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
@@ -62,7 +62,7 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing(DefLookup.Thing.Lung, 1)
+            .WithThing(Extra.ThingDefOf.Lung, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -74,7 +74,7 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, DefLookup.Recipe.InstallNaturalLung, BodyPartDefOf.Lung)
+            .DoSurgery(patient, Extra.RecipeDefOf.InstallNaturalLung, BodyPartDefOf.Lung)
             .CreateSingle();
     }
 
@@ -84,19 +84,19 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing(DefLookup.Thing.Heart, 1)
+            .WithThing(Extra.ThingDefOf.Heart, 1)
             .Execute();
 
         var patient = scenario.Pawn()
             .Colonist()
-            .AddHediff(DefLookup.Hediff.SimpleProstheticHeart, BodyPartDefOf.Heart)
+            .AddHediff(Extra.HediffDefOf.SimpleProstheticHeart, BodyPartDefOf.Heart)
             .CreateSingle();
 
         scenario.Pawn()
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, DefLookup.Recipe.InstallNaturalHeart, BodyPartDefOf.Heart)
+            .DoSurgery(patient, Extra.RecipeDefOf.InstallNaturalHeart, BodyPartDefOf.Heart)
             .CreateSingle();
     }
 
@@ -106,19 +106,19 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing(DefLookup.Thing.Heart, 1)
+            .WithThing(Extra.ThingDefOf.Heart, 1)
             .Execute();
 
         var patient = scenario.Pawn()
             .Colonist()
-            .AddHediff(DefLookup.Hediff.HeartArteryBlockage, BodyPartDefOf.Heart)
+            .AddHediff(Extra.HediffDefOf.HeartArteryBlockage, BodyPartDefOf.Heart)
             .CreateSingle();
 
         scenario.Pawn()
             .Colonist()
             .SetDoctor()
             .Heal()
-            .DoSurgery(patient, DefLookup.Recipe.InstallNaturalHeart, BodyPartDefOf.Heart)
+            .DoSurgery(patient, Extra.RecipeDefOf.InstallNaturalHeart, BodyPartDefOf.Heart)
             .CreateSingle();
     }
 
@@ -128,7 +128,7 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
         scenario.Map()
             .BuildRoom(6, 6, tag: "Hospital")
             .AsHospital(bedCount: 2)
-            .WithThing(DefLookup.Thing.Kidney, 1)
+            .WithThing(Extra.ThingDefOf.Kidney, 1)
             .Execute();
 
         var patient = scenario.Pawn()
@@ -138,7 +138,7 @@ public class Surgery_InstallPartRecorder : SurgeryRecorder<SurgeryInstallNatural
         scenario.Pawn()
             .Colonist()
             .SetDoctor(isBadDoctor: true)
-            .DoSurgery(patient, DefLookup.Recipe.InstallNaturalKidney, DefLookup.BodyPart.Kidney, instant: true)
+            .DoSurgery(patient, Extra.RecipeDefOf.InstallNaturalKidney, Extra.BodyPartDefOf.Kidney, instant: true)
             .CreateSingle();
     }
 }

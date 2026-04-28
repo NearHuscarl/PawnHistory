@@ -37,7 +37,7 @@ public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
     [RequiresRoyalty]
     public void TestSpeech(TestScenario scenario)
     {
-        var organizer = scenario.Pawn().FullHeal().Colonist().SetRoyalTitle(DefLookup.RoyalTitle.Praetor).CreateSingle();
+        var organizer = scenario.Pawn().FullHeal().Colonist().SetRoyalTitle(Extra.RoyalTitleDefOf.Praetor).CreateSingle();
         var spectators = scenario.Pawn(4).Colonist().Execute();
 
         scenario.Map()
@@ -47,10 +47,10 @@ public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
         
         scenario
             .Ritual(organizer)
-            .Outcome(DefLookup.RitualOutcomeEffect.AttendedSpeech.BestOutcome)
+            .Outcome(Extra.RitualOutcomeEffectDefOf.AttendedSpeech.BestOutcome)
             .ThroneSpeech(spectators)
             .Execute();
 
-        Expect.That(organizer).ToHaveHistoryRecord("[PAWN] delivered an inspirational throne speech to 4 others.", HistoryRecordDefOf.RitualOutcome);
+        Expect.That(organizer).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] delivered an inspirational throne speech to 4 others.");
     }
 }

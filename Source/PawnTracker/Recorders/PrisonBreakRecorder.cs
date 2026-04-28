@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.Helper;
+using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
@@ -105,7 +105,7 @@ public class PrisonBreakRecorder : RecorderBase<PrisonBreakStartedEvent>
             .AsPrison(prisonerCount, prisoners: prisoners)
             .Execute();
 
-        var jailbreakerBreak = DefLookup.MentalBreak.Jailbreaker;
+        var jailbreakerBreak = Extra.MentalBreakDefOf.Jailbreaker;
         var pawn = scenario.Pawn()
             .Position(scenario.OutsideOf("Prison"))
             .ThatMatches(ShouldRecord)

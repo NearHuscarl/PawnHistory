@@ -37,6 +37,6 @@ public class TechprintAppliedRecorder : RecorderBase<TechprintAppliedEvent>
 
         Find.ResearchManager.ApplyTechprint(project, pawn);
 
-        Expect.That(pawn).ToHaveHistoryRecord("[PAWN] applied a techprint to [Project], gaining [n] XP in intellectual.", HistoryRecordDefOf.TechprintApplied);
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.TechprintApplied, "[PAWN] applied a techprint to [Project], gaining [n] XP in intellectual.");
     }
 }

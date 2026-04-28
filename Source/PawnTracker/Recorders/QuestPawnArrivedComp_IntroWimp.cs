@@ -7,7 +7,7 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class QuestPawnArrivedComp_IntroWimp : QuestPawnArrivedComp
 {
-    public override bool Match(Quest quest) => quest.root.defName == nameof(DefLookup.QuestScript.Intro_Wimp);
+    public override bool Match(Quest quest) => quest.root.defName == nameof(Extra.QuestScriptDefOf.Intro_Wimp);
 
     public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, Quest quest, Pawn pawn, List<Pawn> questPawns)
     {
@@ -27,7 +27,7 @@ public class QuestPawnArrivedComp_IntroWimp : QuestPawnArrivedComp
     [RequiresRoyalty]
     public void Test(TestScenario scenario)
     {
-        var quest = scenario.Quest(DefLookup.QuestScript.Intro_Wimp).Execute();
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.Intro_Wimp).Execute();
         scenario.ForwardTicks(1800); // QuestNode_Delay before pawn arrives
         
         QuestPawnArrivedRecorder.AssertArrived(quest, "[PAWN] arrived at the colony looking for protection while being followed by a manhunting [Animal].");

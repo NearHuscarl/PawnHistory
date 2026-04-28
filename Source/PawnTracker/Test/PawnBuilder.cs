@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.Helper;
+using PawnHistory.Source.Helper;
 using RimWorld;
 using RimWorld.Planet;
 using System;
@@ -257,7 +257,7 @@ public class PawnBuilder(int count = 1)
             if (!isBadDoctor)
             {
                 var arms = pawn.RaceProps.body.GetPartsWithDef(BodyPartDefOf.Arm).ToList();
-                var archotechArm = DefLookup.Hediff.ArchotechArm;
+                var archotechArm = Extra.HediffDefOf.ArchotechArm;
 
                 foreach (var arm in arms)
                     pawn.health.AddHediff(archotechArm, arm);
@@ -270,7 +270,7 @@ public class PawnBuilder(int count = 1)
 
                 foreach (var part in arms.Concat(eyes))
                     pawn.health.AddHediff(HediffDefOf.MissingBodyPart, part);
-                pawn.health.AddHediff(DefLookup.Hediff.SmokeleafHigh, torso);
+                pawn.health.AddHediff(Extra.HediffDefOf.SmokeleafHigh, torso);
             }
 
             pawn.inventory.innerContainer.TryAdd(ThingMaker.MakeThing(ThingDefOf.MedicineUltratech), 4);
@@ -426,8 +426,8 @@ public class PawnBuilder(int count = 1)
         return res;
     }
 
-    private static readonly BackstoryDef Childhood = DefLookup.Backstory.MusicalKid86;
-    private static readonly BackstoryDef Adulthood = DefLookup.Backstory.NavyScientist52;
+    private static readonly BackstoryDef Childhood = Extra.BackstoryDefOf.MusicalKid86;
+    private static readonly BackstoryDef Adulthood = Extra.BackstoryDefOf.NavyScientist52;
     private void MakePawnCapable(Pawn pawn)
     {
         if (!pawn.RaceProps.Humanlike)
@@ -520,7 +520,7 @@ internal static class PawnBuilderExtension
 
         public PawnBuilder WeakenParts(HashSet<BodyPartDef> weakenParts, bool oneSide = false)
         {
-            var bruise = DefLookup.Hediff.Bruise;
+            var bruise = Extra.HediffDefOf.Bruise;
             return builder.Do(pawn =>
             {
                 var hediffSet = pawn.health.hediffSet;

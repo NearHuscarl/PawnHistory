@@ -37,10 +37,10 @@ public class RansomRecorder : RecorderBase<RansomEvent>
         var enemy = scenario.Pawn().Enemy().CreateSingle(false);
         
         Faction.OfPirates.kidnapped.Kidnap(hostage, enemy);
-        scenario.Incident(DefLookup.Incident.RansomDemand).Execute();
+        scenario.Incident(Extra.IncidentDefOf.RansomDemand).Execute();
         scenario.Letter<ChoiceLetter_RansomDemand>().Reject();
 
-        Expect.That(hostage).ToHaveHistoryRecord("[EnemyFaction] demanded [n] silvers for [Hostage]'s release, but the colony refused.", HistoryRecordDefOf.Ransom);
+        Expect.That(hostage).ToHaveHistoryRecord(HistoryRecordDefOf.Ransom, "[EnemyFaction] demanded [n] silvers for [Hostage]'s release, but the colony refused.");
     }
 
     public void TestAccept(TestScenario scenario)
@@ -49,10 +49,10 @@ public class RansomRecorder : RecorderBase<RansomEvent>
         var enemy = scenario.Pawn().Enemy().CreateSingle(false);
         
         Faction.OfPirates.kidnapped.Kidnap(hostage, enemy);
-        scenario.Incident(DefLookup.Incident.RansomDemand).Execute();
+        scenario.Incident(Extra.IncidentDefOf.RansomDemand).Execute();
         scenario.Map().BuildRoom(8, 8).AsBank().Execute();
         scenario.Letter<ChoiceLetter_RansomDemand>().Accept();
 
-        Expect.That(hostage).ToHaveHistoryRecord("The colony paid [EnemyFaction] [n] silvers to ransom [Hostage].", HistoryRecordDefOf.Ransom);
+        Expect.That(hostage).ToHaveHistoryRecord(HistoryRecordDefOf.Ransom, "The colony paid [EnemyFaction] [n] silvers to ransom [Hostage].");
     }
 }

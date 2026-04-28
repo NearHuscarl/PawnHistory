@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using RimWorld.BaseGen;
 using System;
 using System.Collections.Generic;
@@ -225,7 +225,7 @@ public class MapBuilder
             new ThingBuilder(ThingDefOf.Silver).Stack(silvers).Map(map).At(rect.CenterCell).Create();
             var beacon = new ThingBuilder(ThingDefOf.OrbitalTradeBeacon).Faction(Faction.OfPlayer).Map(map).At(rect.CenterCell).CreateSingle();
             new ThingBuilder(ThingDefOf.CommsConsole).Faction(Faction.OfPlayer).Map(map).At(rect.CenterCell).Create();
-            new ThingBuilder(DefLookup.Thing.VanometricPowerCell).Faction(Faction.OfPlayer).Map(map).At(rect.CenterCell).Create();
+            new ThingBuilder(Extra.ThingDefOf.VanometricPowerCell).Faction(Faction.OfPlayer).Map(map).At(rect.CenterCell).Create();
 
             beacon.TryGetComp<CompPowerTrader>().PowerOn = true; // turns power on immediately to assert any test this tick
         });

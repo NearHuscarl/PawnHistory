@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.Helper;
+using PawnHistory.Source.Helper;
 using RimWorld;
 using System.Collections.Generic;
 using RimWorld.Planet;
@@ -176,7 +176,7 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
 
 public static class HistoryDescriptionBuilderExtensions
 {
-    private static readonly RulePackDef VarRulePack = DefLookup.RulePack.PH_Var;
+    private static readonly RulePackDef VarRulePack = Extra.RulePackDefOf.PH_Var;
     public static string GetOtherText(string ruleName, int otherCount)
     {
         var request = new GrammarRequest();

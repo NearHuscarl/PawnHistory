@@ -58,7 +58,7 @@ public class AnimalTamedRecorder : RecorderBase<AnimalTamedEvent>
     public Action Test(TestScenario scenario)
     {
         Expect.Assertions(1);
-        var (tamer, target) = SetupTest(scenario, DefLookup.PawnKind.Bear_Grizzly);
+        var (tamer, target) = SetupTest(scenario, Extra.PawnKindDefOf.Bear_Grizzly);
         
         GameEventBus.SubscribeOnce<AnimalTamedEvent>(e =>
         {
