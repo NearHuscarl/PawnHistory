@@ -11,7 +11,10 @@ public enum QuestDiscoveredSource
     Book,
     Trader,
     Beggar,
+    Uplink,
 }
+
+// Search "SendLetterQuestAvailable(" for new source of quest
 
 public record QuestDiscoveredEvent(Pawn Discoverer, Quest Quest, QuestDiscoveredSource Source, Thing SourceThing = null, Pawn SourcePawn = null) : GameEventBase;
 
@@ -56,6 +59,24 @@ internal static class TradeUtility_ReceiveQuestFromTrader_Patch
             return;
 
         GameEventBus.Publish(new QuestDiscoveredEvent(negotiator, quest, QuestDiscoveredSource.Trader, SourcePawn: trader));
+    }
+}
+
+[HarmonyPatch(typeof(CompAncientUplink), nameof(CompAncientUplink.Notify_Hacked))]
+internal static class CompAncientUplink_Notify_Hacked_Patch
+{
+    private static void Prefix(out QuestDiscoveredState __state) => __state = new QuestDiscoveredState(Find.QuestManager.QuestsListForReading.Count);
+
+    private static void Postfix(CompAncientUplink __instance, Pawn hacker, QuestDiscoveredState __state)
+    {
+        if (hacker == null)
+            return;
+
+        var quest = QuestDiscoveredContext.GetNewQuest(__state.QuestCount);
+        if (quest == null)
+            return;
+
+        GameEventBus.Publish(new QuestDiscoveredEvent(hacker, quest, QuestDiscoveredSource.Uplink, __instance.parent));
     }
 }
 

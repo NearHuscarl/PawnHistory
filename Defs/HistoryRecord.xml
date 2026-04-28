@@ -903,6 +903,11 @@
 			<li>Life</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
+		<defName>PsylinkLevelGained</defName>
+		<label>psylink level gained</label>
+		<descriptionMaker>PH_PsylinkLevelGained</descriptionMaker>
+		<icon>Things/Item/Special/PsylinkNeuroformer</icon>
 		<categories>
 			<li>Life</li>
 		</categories>

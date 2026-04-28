@@ -20,6 +20,19 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+
+	<RulePackDef MayRequire="Ludeon.RimWorld.Royalty">
+		<defName>PH_PsylinkLevelGained</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>AbilityClause(hasNewAbility==True)-> and learned the psycast [NewAbility].</li>
+				<li>AbilityClause(hasNewAbility==False)->.</li>
+				<li>entry(isFirstPsylink==True)->[PAWN] gained a psylink[AbilityClause]</li>
+				<li>entry(isFirstPsylink==False)->[PAWN] reached psylink level [NewLevel][AbilityClause]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
 	<RulePackDef MayRequire="Ludeon.RimWorld.Biotech">
 		<defName>PH_MechlinkInstalled</defName>
 		<rulePack>

@@ -30,7 +30,7 @@ public class QuestDiscoveredRecorder : RecorderBase<QuestDiscoveredEvent>
         if (source == QuestDiscoveredSource.Book && sourceThing is Book book)
             builder.AddRule("SourceThing", book.Title.Colorize(ColoredText.SubtleGrayColor));
         else
-            builder.AddRule("SourceThing", sourceThing?.def);
+            builder.AddRule("SourceThing", sourceThing?.def, addSubsymbols: true);
         var desc = builder.Resolve();
         
         AddRecord(recordDef, discoverer, desc, [sourcePawn, sourceThing], quest: quest);
@@ -75,6 +75,25 @@ public class QuestDiscoveredRecorder : RecorderBase<QuestDiscoveredEvent>
         };
         Expect.That(negotiator).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [trader] }));
         Expect.That(trader).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [negotiator] }));
+    }
+
+    [RequiresOdyssey]
+    public void TestUplink(TestScenario scenario)
+    {
+        var hacker = scenario.Pawn().Colonist().CreateSingle();
+        var uplink = scenario.Thing(Extra.ThingDefOf.AncientUplink).CreateSingle();
+        var comp = uplink.TryGetComp<CompAncientUplink>();
+
+        comp.Notify_Hacked(hacker);
+        var quest = Find.QuestManager.QuestsListForReading.Last();
+
+        Expect.That(hacker).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.QuestDiscovered,
+            Description = "[PAWN] hacked an ancient uplink and discovered [Quest].",
+            Concerns = [uplink],
+            Quest = quest,
+        });
     }
 
     // TODO: test beggar quest with subquest

@@ -221,6 +221,9 @@ public static class Extra
         public static ThingDef Kidney;
         public static ThingDef Joywire;
         public static ThingDef VanometricPowerCell;
+
+        [MayRequireOdyssey]
+        public static ThingDef AncientUplink;
         
         [MayRequireRoyalty]
         public static ThingDef MeleeWeapon_MonoSwordBladelink;
