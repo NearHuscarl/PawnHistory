@@ -1,0 +1,112 @@
+using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Test;
+using RimWorld;
+using System.Linq;
+using Verse;
+
+namespace PawnHistory.Source.PawnTracker.Recorders;
+
+public class QuestDiscoveredRecorder : RecorderBase<QuestDiscoveredEvent>
+{
+    public override void Register()
+    {
+        GameEventBus.Subscribe<QuestDiscoveredEvent>(CreateRecord);
+    }
+
+    public override void CreateRecord(QuestDiscoveredEvent input)
+    {
+        var (discoverer, quest, source, sourceThing, sourcePawn ) = input;
+        
+        if (!ShouldRecord(discoverer))
+            return;
+
+        var recordDef = HistoryRecordDefOf.QuestDiscovered;
+        var builder = recordDef.Description(discoverer)
+            .IncludePawnGrammar()
+            .AddRule("Quest", quest.name.Colorize(ColoredText.GeneColor))
+            .AddRule("SourcePawn", sourcePawn)
+            .AddConstant("source", source);
+
+        if (source == QuestDiscoveredSource.Book && sourceThing is Book book)
+            builder.AddRule("SourceThing", book.Title.Colorize(ColoredText.SubtleGrayColor));
+        else
+            builder.AddRule("SourceThing", sourceThing?.def);
+        var desc = builder.Resolve();
+        
+        AddRecord(recordDef, discoverer, desc, [sourcePawn, sourceThing], quest: quest);
+        if (ShouldRecord(sourcePawn))
+            AddRecord(recordDef, sourcePawn, desc, [discoverer, sourceThing], quest: quest);
+    }
+
+    [RequiresOdyssey]
+    public void TestBook(TestScenario scenario)
+    {
+        var reader = scenario.Pawn().Colonist().CreateSingle();
+        var book = scenario.Thing(ThingDefOf.Map).CreateSingle();
+        var doer = book.TryGetComp<CompBook>().Doers.OfType<BookOutcomeDoer_GiveQuest>().SingleOrDefault();
+        
+        Accessor.BookOutcomeDoer_GiveQuest.GenerateQuest(doer, reader);
+        var quest = Find.QuestManager.QuestsListForReading.Last();
+
+        Expect.That(reader).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.QuestDiscovered,
+            Description = "While reading [Book], [PAWN] discovered [Quest].",
+            Concerns = [book],
+            Quest = quest,
+        });
+    }
+
+    [RequiresOdyssey]
+    public void TestTrader(TestScenario scenario)
+    {
+        var negotiator = scenario.Pawn().Colonist().CreateSingle();
+        var trader = scenario.Pawn().WithFriendlyFaction().CreateSingle(false);
+        trader.mindState.hasQuest = true;
+
+        TradeUtility.ReceiveQuestFromTrader(trader, negotiator);
+        var quest = Find.QuestManager.QuestsListForReading.Last();
+
+        var expected = new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.QuestDiscovered,
+            Description = "While talking with the trader [Trader], [PAWN] learned about [Quest].",
+            Quest = quest,
+        };
+        Expect.That(negotiator).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [trader] }));
+        Expect.That(trader).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [negotiator] }));
+    }
+
+    // TODO: test beggar quest with subquest
+    [RequiresIdeology]
+    [RequiresOdyssey]
+    public void TestBeggar(TestScenario scenario)
+    {
+        var giver = scenario.Pawn().Colonist().CreateSingle();
+        var receiver = scenario.Pawn().WithFriendlyFaction().CreateSingle(false);
+        var beggarQuest = scenario.Quest(Extra.QuestScriptDefOf.Beggars).Execute();
+        var giverQuest = QuestScriptDefOf.OpportunitySite_ItemStash;
+        // QuestNode_Root_Beggars
+        var addGiverQuest = new QuestPart_AddGiverQuest
+        {
+            inSignal = "test.beggar.received",
+            questScript = giverQuest,
+            discoveryMethodTranslationKey = "QuestDiscoveredFromBeggar",
+            points = 500f,
+            sendAvailableLetter = true,
+        };
+        beggarQuest.AddPart(addGiverQuest);
+
+        // JobDriver_GiveToPawn.cs
+        addGiverQuest.Notify_QuestSignalReceived(new Signal(addGiverQuest.inSignal, giver.Named("GIVER"), receiver.Named("RECEIVER")));
+        var quest = Find.QuestManager.QuestsListForReading.Last();
+
+        Expect.That(giver).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.QuestDiscovered,
+            Description = "[PAWN] learned of [Quest] after the beggar [Receiver] shared a secret in gratitude for the colony's charity.",
+            Concerns = [receiver],
+            Quest = quest,
+        });
+    }
+}

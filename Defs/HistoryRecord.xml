@@ -865,6 +865,15 @@
 		</categories>
 		<importance>Minor</importance>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Odyssey">
+		<defName>QuestDiscovered</defName>
+		<label>quest discovered</label>
+		<descriptionMaker>PH_QuestDiscovered</descriptionMaker>
+		<icon>Things/Item/Book/Map/Map</icon>
+		<categories>
+			<li>World</li>
+		</categories>
+	</HistoryRecordDef>
 
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
 		<defName>TechprintApplied</defName>

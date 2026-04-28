@@ -401,4 +401,18 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_QuestDiscovered</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(source==Book)  ->While reading [SourceThing], [PAWN] discovered [Quest].</li>
+				<li>entry(source==Trader)->While talking with the trader [SourcePawn], [PAWN] learned about [Quest].</li>
+				<li>entry(source==Beggar)->[PAWN] learned about [Quest] after the beggar [SourcePawn] shared a secret in gratitude for the colony's charity.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>

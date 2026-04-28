@@ -112,6 +112,9 @@ public class HistoryRecordDefOf
     [MayRequireRoyalty]
     public static HistoryRecordDef TitleInherited;
 
+    [MayRequireOdyssey]
+    public static HistoryRecordDef QuestDiscovered;
+
     static HistoryRecordDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(HistoryRecordDefOf));
 }
 #pragma warning restore CS0649

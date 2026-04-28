@@ -163,6 +163,9 @@ public static class Extra
         [MayRequireBiotech]
         public static QuestScriptDef SanguophageMeetingHost;
 
+        [MayRequireIdeology]
+        public static QuestScriptDef Beggars;
+
         static QuestScriptDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(QuestScriptDefOf));
     }
 

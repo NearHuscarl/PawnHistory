@@ -73,7 +73,7 @@ public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
 
     private T CreateSingleStack<T>(int count) where T : Thing
     {
-        var thing = ThingMaker.MakeThing(def, stuff);
+        var thing = def.HasComp<CompBook>() ? BookUtility.MakeBook(def, ArtGenerationContext.Colony) : ThingMaker.MakeThing(def, stuff);
         thing.stackCount = count;
 
         if (faction != null)

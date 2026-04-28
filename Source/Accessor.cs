@@ -119,6 +119,12 @@ public static class Accessor
             AccessTools.MethodDelegate<Action<RimWorld.Planet.TradeRequestComp, Caravan>>(AccessTools.Method(typeof(RimWorld.Planet.TradeRequestComp), "Fulfill"));
     }
 
+    public class BookOutcomeDoer_GiveQuest
+    {
+        public static readonly Action<RimWorld.BookOutcomeDoer_GiveQuest, Pawn> GenerateQuest =
+            AccessTools.MethodDelegate<Action<RimWorld.BookOutcomeDoer_GiveQuest, Pawn>>(AccessTools.Method(typeof(RimWorld.BookOutcomeDoer_GiveQuest), "GenerateQuest"));
+    }
+
     public class DiaOption
     {
         public static readonly AccessTools.FieldRef<Verse.DiaOption, string> Text = AccessTools.FieldRefAccess<Verse.DiaOption, string>("text");
