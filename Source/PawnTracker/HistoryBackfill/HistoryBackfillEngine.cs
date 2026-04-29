@@ -2,6 +2,7 @@ using PawnHistory.Source.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PawnHistory.Source.DebugTools;
 using RimWorld;
 using Verse;
 
@@ -30,18 +31,15 @@ internal static class HistoryBackfillEngine
         var result = ResolvePlacements(candidates, logWarnings: true);
         foreach (var pair in result.Placements)
             pair.Key.Record.date = pair.Value;
+
+        var invalidRecords = result.AnchoredCandidates.Select(c => c.Record).ToHashSet();
         
+        L.Debug($"Cannot find a valid date for the following records: {DebugUtility.FormatSequence(invalidRecords)}. They will be removed from HistoryRecords.");
+        
+        pawn.HistoryRecords.RemoveWhere(invalidRecords.Contains);
         pawn.HistoryRecords.Sort((a, b) => a.date.CompareTo(b.date));
         
         Context = null;
-    }
-
-    internal static HistoryBackfillPlacementResult ResolvePlacementsForTesting(HistoryBackfillContext context, IReadOnlyList<PlacementCandidate> candidates)
-    {
-        Context = context;
-        var res = ResolvePlacements(candidates, logWarnings: false);
-        Context = null;
-        return res;
     }
 
     private static HistoryBackfillPlacementResult ResolvePlacements(IReadOnlyList<PlacementCandidate> candidates, bool logWarnings)
@@ -57,11 +55,13 @@ internal static class HistoryBackfillEngine
         var resolvedPlacements = new Dictionary<PlacementCandidate, int>(placeableCandidates.Count);
         if (placeableCandidates.Count > 0)
         {
-            if (!TryPlaceWithRetries(placeableCandidates, out resolvedPlacements))
+            if (!TryPlaceWithRetries(placeableCandidates, out resolvedPlacements, out var retryAnchoredCandidates))
             {
-                if (!TryBuildDeterministicPlacements(placeableCandidates, anchoredCandidates, out resolvedPlacements))
+                if (!TryPlace(placeableCandidates, randomize: false, anchoredCandidates, out resolvedPlacements))
                     resolvedPlacements = [];
             }
+            else
+                anchoredCandidates.UnionWith(retryAnchoredCandidates);
         }
 
         var finalPlacements = new Dictionary<PlacementCandidate, int>(candidates.Count);
@@ -170,19 +170,31 @@ internal static class HistoryBackfillEngine
         }
     }
 
-    private static bool TryPlaceWithRetries(List<PlacementCandidate> orderedCandidates, out Dictionary<PlacementCandidate, int> placements)
+    private static bool TryPlaceWithRetries(
+        List<PlacementCandidate> orderedCandidates,
+        out Dictionary<PlacementCandidate, int> placements,
+        out HashSet<PlacementCandidate> anchoredCandidates)
     {
         for (var attempt = 0; attempt < MaxRandomPlacementAttempts; attempt++)
         {
-            if (TryPlace(orderedCandidates, randomize: true, out placements))
+            var localAnchoredCandidates = new HashSet<PlacementCandidate>();
+            if (TryPlace(orderedCandidates, randomize: true, localAnchoredCandidates, out placements))
+            {
+                anchoredCandidates = localAnchoredCandidates;
                 return true;
+            }
         }
 
         placements = null;
+        anchoredCandidates = null;
         return false;
     }
 
-    private static bool TryBuildDeterministicPlacements(List<PlacementCandidate> orderedCandidates, ISet<PlacementCandidate> anchoredCandidates, out Dictionary<PlacementCandidate, int> placements)
+    private static bool TryPlace(
+        List<PlacementCandidate> orderedCandidates,
+        bool randomize,
+        ISet<PlacementCandidate> anchoredCandidates,
+        out Dictionary<PlacementCandidate, int> placements)
     {
         var state = new PlacementState(orderedCandidates);
 
@@ -195,7 +207,7 @@ internal static class HistoryBackfillEngine
                 continue;
             }
 
-            if (!TrySampleTick(candidate, state, window, randomize: false, out var tick))
+            if (!TrySampleTick(candidate, state, window, randomize, out var tick))
             {
                 anchoredCandidates.Add(candidate);
                 continue;
@@ -211,38 +223,6 @@ internal static class HistoryBackfillEngine
 
         var placedCandidates = state.Placements.Select(pair => pair.Key).ToList();
         if (!Validate(placedCandidates, state))
-        {
-            placements = null;
-            return false;
-        }
-
-        placements = state.Placements.ToDictionary(pair => pair.Key, pair => pair.Value);
-        return true;
-    }
-
-    private static bool TryPlace(List<PlacementCandidate> orderedCandidates, bool randomize, out Dictionary<PlacementCandidate, int> placements)
-    {
-        var state = new PlacementState(orderedCandidates);
-
-        foreach (var candidate in orderedCandidates.AsEnumerable().Reverse())
-        {
-            var window = BuildWindow(candidate, state);
-            if (!window.IsValid)
-            {
-                placements = null;
-                return false;
-            }
-
-            if (!TrySampleTick(candidate, state, window, randomize, out var tick))
-            {
-                placements = null;
-                return false;
-            }
-
-            state.Place(candidate, tick);
-        }
-
-        if (!Validate(orderedCandidates, state))
         {
             placements = null;
             return false;

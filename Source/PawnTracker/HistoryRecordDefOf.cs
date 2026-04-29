@@ -107,6 +107,8 @@ public class HistoryRecordDefOf
     [MayRequireRoyalty]
     public static HistoryRecordDef WeaponBonded;
     [MayRequireRoyalty]
+    public static HistoryRecordDef PsylinkLevelGained;
+    [MayRequireRoyalty]
     public static HistoryRecordDef TitleGained;
     [MayRequireRoyalty]
     public static HistoryRecordDef TitleLost;

@@ -99,10 +99,6 @@ internal sealed class PlacementState(IReadOnlyList<PlacementCandidate> candidate
         return placements.Where(pair => pair.Key.Definition.DensityGroup == densityGroup);
     }
 
-    public int CountCandidatesForDefinition(HistoryRecordDef def)
-    {
-        return Candidates.Count(candidate => candidate.Record.def == def);
-    }
 }
 
 internal record HistoryBackfillPlacementResult(IReadOnlyDictionary<PlacementCandidate, int> Placements, IReadOnlyList<PlacementCandidate> AnchoredCandidates);

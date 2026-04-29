@@ -79,12 +79,27 @@ internal static class HistoryBackfillRegistry
                     GenDate.DaysToTicks(14f),
                     HistoryRecordDefOf.PsylinkLevelGained))
         );
+
+        definitions.Add(HistoryRecordDefOf.WeaponBonded, new HistoryBackfillDefinition(HistoryRecordDefOf.WeaponBonded)
+            .AddHard(
+                new MinimumAgeRule(13f),
+                new MaximumCountRule(1),
+                new LogicalGateRule((_, _) => ModsConfig.RoyaltyActive))
+            .AddSoft(new AgeCurveSoftRule([
+                new CurvePoint(13f, 0.01f),
+                new CurvePoint(18f, 0.12f),
+                new CurvePoint(24f, 0.45f),
+                new CurvePoint(32f, 1f),
+                new CurvePoint(48f, 1.1f),
+                new CurvePoint(70f, 0.35f)
+            ]))
+        );
         
         definitions.Add(HistoryRecordDefOf.PsylinkLevelGained, new HistoryBackfillDefinition(HistoryRecordDefOf.PsylinkLevelGained)
             .AddHard(
                 new MinimumAgeRule(13f),
-                new LogicalGateRule((_, _) => ModsConfig.RoyaltyActive),
-                new SiblingSequenceRule(GenDate.TicksPerDay))
+                new MaximumCountRule(1),
+                new LogicalGateRule((_, _) => ModsConfig.RoyaltyActive))
             .AddSoft(new ShiftedAgeCurveSoftRule([
                 new CurvePoint(13f, 0.02f),
                 new CurvePoint(18f, 0.1f),

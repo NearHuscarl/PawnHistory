@@ -38,6 +38,7 @@ When adding an event or recorder:
 4. Add the Harmony patch and typed event if needed.
 5. Implement `RecorderBase<TEvent>`.
 6. Add recorder-local tests when coverage is needed.
+7. If the recorder can emit during pawn generation and the record should read as pre-arrival history, evaluate and update `Source/PawnTracker/HistoryBackfill/HistoryBackfillRegistry.cs` and `Source/PawnTracker/Recorders/PawnGeneratedRecorder.cs`.
 
 ## Safety
 

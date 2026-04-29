@@ -412,6 +412,7 @@
 				<li>entry(source==Book)  ->While reading [SourceThing], [PAWN] discovered [Quest].</li>
 				<li>entry(source==Trader)->While talking with the trader [SourcePawn], [PAWN] learned about [Quest].</li>
 				<li>entry(source==Beggar)->[PAWN] learned about [Quest] after the beggar [SourcePawn] shared a secret in gratitude for the colony's charity.</li>
+				<li>entry(source==Uplink)->[PAWN] hacked [SourceThing_indefinite] and discovered [Quest].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

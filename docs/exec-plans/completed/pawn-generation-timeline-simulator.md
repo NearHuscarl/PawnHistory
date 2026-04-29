@@ -13,6 +13,7 @@ Phase 1 is generator-only. The simulator only backdates records that are emitted
 Managed generator-time defs:
 - `TitleGained`
 - `PsylinkLevelGained`
+- `WeaponBonded`
 - `BodyPartScarred`
 - `BodyPartDestroyed`
 - `MechlinkInstalled`
@@ -43,14 +44,15 @@ The engine:
 2. Selects only same-anchor-tick records whose defs are explicitly registered.
 3. Builds sibling-aware candidates.
 4. Builds dependency edges from hard ordering rules and topologically orders the candidates.
-5. Samples dates in day buckets before the anchor using `Rand`, age curves, density weighting, and intra-day jitter.
+5. Samples dates before the anchor using `Rand`, age curves, density weighting, and intra-day jitter.
 6. Retries placement a bounded number of times and validates hard/global rules after each full pass.
-7. Falls back to the latest feasible pre-anchor placement when retries fail.
+7. Anchors max-count overflow, unresolved, or invalid candidates during placement instead of inventing invalid dates.
 
 ## Phase 1 Rules
 Implemented hard and soft rules for the managed defs:
-- `TitleGained`: minimum age 13, maximum count 1, Royalty-only gate, must precede generated psylinks by at least one day, adulthood-weighted age curve.
-- `PsylinkLevelGained`: minimum age 13, Royalty-only gate, sibling order with minimum one-day gaps, later-adulthood age curve shifted by sibling index.
+- `TitleGained`: minimum age 13, maximum count 1, Royalty-only gate, must precede generated psylinks by at least one day, adulthood-weighted age curve, and soft preference to stay close to generated psylinks.
+- `PsylinkLevelGained`: minimum age 13, maximum count 1, Royalty-only gate, sibling order with minimum one-day gaps, later-adulthood age curve shifted by sibling index, and overflow anchoring that keeps only the latest generated candidate.
+- `WeaponBonded`: minimum age 13, maximum count 1, Royalty-only gate, adult-skewed age curve.
 - `BodyPartScarred`: minimum age 7, sibling cooldown of 45 days, health density group weighting, rising age curve through adolescence and adulthood.
 - `BodyPartDestroyed`: minimum age 7, sibling cooldown of 90 days, shared health density weighting, older-skewed age curve.
 - `MechlinkInstalled`: minimum age 13, maximum count 1, Biotech-only gate, adult-skewed age curve.
@@ -63,14 +65,11 @@ Global behavior:
 - repeated sibling records use sampled, non-uniform spacing instead of deterministic intervals.
 
 ## Verification
-Updated recorder-local simulator tests to cover:
+Updated recorder-local simulator tests to keep a small core set:
 - pinned `PawnGenerated`
 - arrival records staying at anchor
 - unregistered same-tick records staying at anchor
-- royal record ordering and non-anchor backdating
-- health cooldown and density behavior
-- mechlink backdating
-- same-seed determinism with different-seed variation
-- registry audit for the phase 1 managed-def set
+- royal psylink overflow keeping only the latest generated psylink
+- bonded-weapon backdating
 
 Ran the approved Debug MSBuild build successfully after the simulator and test changes.

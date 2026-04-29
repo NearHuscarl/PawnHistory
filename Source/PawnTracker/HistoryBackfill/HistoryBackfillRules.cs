@@ -31,7 +31,7 @@ internal sealed class MaximumCountRule(int maxCount) : IHardBackfillRule
 
     public bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state)
     {
-        return state.CountCandidatesForDefinition(candidate.Record.def) <= maxCount;
+        return state.GetPlacementsForDefinition(candidate.Record.def).Count() <= maxCount;
     }
 }
 

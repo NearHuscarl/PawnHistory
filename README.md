@@ -3,6 +3,8 @@
 This mod expands RimWorld's storytelling aspect by tracking important pawn events during their life on the rim.
 It watches for significant colonist-related incidents, then turns them into flavorful narrative records.
 
+It also backdates selected generator-time records. When RimWorld creates an older pawn with things like scars, royal milestones, bonded persona weapons, or mechlinks all at the spawn tick, PawnHistory redistributes those supported records earlier across the pawn's life so the log reads like lived history instead of a same-second dump.
+
 ## Data flow
 
 ```

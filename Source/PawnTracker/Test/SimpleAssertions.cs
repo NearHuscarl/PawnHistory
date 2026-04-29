@@ -81,7 +81,7 @@ public sealed class SimpleAssertions<T>
         }, source);
     }
     
-    public void ToContain(T expected, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+    public void Contain(T expected, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         var source = new AssertionSource(memberName, filePath, lineNumber);
         AssertionRunner.RunAssertion(() =>
@@ -112,7 +112,7 @@ public sealed class SimpleAssertions<T>
         }, source);
     }
     
-    public void ToBeLessThan(T expected, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+    public void LessThan(T expected, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         var source = new AssertionSource(memberName, filePath, lineNumber);
         AssertionRunner.RunAssertion(() =>
@@ -129,7 +129,7 @@ public sealed class SimpleAssertions<T>
         }, source);
     }
 
-    public void ToBeGreaterThan(T expected, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+    public void GreaterThan(T expected, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         var source = new AssertionSource(memberName, filePath, lineNumber);
         AssertionRunner.RunAssertion(() =>
@@ -146,7 +146,7 @@ public sealed class SimpleAssertions<T>
         }, source);
     }
     
-    public void ToBeTrue([CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+    public void True([CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         var source = new AssertionSource(memberName, filePath, lineNumber);
         AssertionRunner.RunAssertion(() =>
@@ -163,10 +163,10 @@ public sealed class SimpleAssertions<T>
         }, source);
     }
 
-    public void ToBeFalse([CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) =>
-        Not().ToBeTrue(memberName, filePath, lineNumber);
+    public void False([CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) =>
+        Not().True(memberName, filePath, lineNumber);
 
-    public void ToBeNull([CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+    public void Null([CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         var source = new AssertionSource(memberName, filePath, lineNumber);
         AssertionRunner.RunAssertion(() =>
@@ -183,8 +183,8 @@ public sealed class SimpleAssertions<T>
         }, source);
     }
 
-    public void ToBeNotNull([CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) =>
-        Not().ToBeNull(memberName, filePath, lineNumber);
+    public void NotNull([CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) =>
+        Not().Null(memberName, filePath, lineNumber);
 
     private void Fail(string message, object expected, object actual)
     {
