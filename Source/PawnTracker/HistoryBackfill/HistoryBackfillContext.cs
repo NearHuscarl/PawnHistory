@@ -3,12 +3,10 @@ using System;
 using System.Collections.Generic;
 using Verse;
 
-namespace PawnHistory.Source.PawnTracker;
+namespace PawnHistory.Source.PawnTracker.HistoryBackfill;
 
 internal sealed class HistoryBackfillContext(Pawn pawn, HistoryRecord anchorRecord, IReadOnlyList<HistoryRecord> allRecords)
 {
-    public const int MaxPlacementAttempts = 24;
-
     public Pawn Pawn { get; } = pawn ?? throw new ArgumentNullException(nameof(pawn));
     public HistoryRecord AnchorRecord { get; } = anchorRecord ?? throw new ArgumentNullException(nameof(anchorRecord));
     public IReadOnlyList<HistoryRecord> AllRecords { get; } = allRecords ?? throw new ArgumentNullException(nameof(allRecords));

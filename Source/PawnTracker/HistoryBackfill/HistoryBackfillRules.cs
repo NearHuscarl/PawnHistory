@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 
-namespace PawnHistory.Source.PawnTracker;
+namespace PawnHistory.Source.PawnTracker.HistoryBackfill;
 
 internal sealed class MinimumAgeRule(float minimumAgeYears) : IHardBackfillRule
 {
@@ -143,6 +143,36 @@ internal sealed class ShiftedAgeCurveSoftRule(SimpleCurve curve, float yearsPerS
     {
         var age = context.BiologicalAgeAt(tick) - candidate.SiblingIndex * yearsPerSibling;
         return Mathf.Max(curve.Evaluate(age), 0.001f);
+    }
+}
+
+internal sealed class PreferGapBeforePlacedRule(int minimumGapTicks, int maximumGapTicks, params HistoryRecordDef[] laterDefinitions) : ISoftBackfillRule
+{
+    private readonly HashSet<HistoryRecordDef> laterDefinitions = laterDefinitions.Where(def => def != null).ToHashSet();
+
+    public float GetWeight(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state, int tick)
+    {
+        var laterPlacements = state.Placements
+            .Where(pair => laterDefinitions.Contains(pair.Key.Record.def))
+            .Select(pair => pair.Value)
+            .ToList();
+
+        if (laterPlacements.Count == 0)
+            return 1f;
+
+        var targetTick = laterPlacements.Min();
+        var gapTicks = targetTick - tick;
+        if (gapTicks <= 0)
+            return 0.001f;
+
+        if (gapTicks < minimumGapTicks)
+            return Mathf.Lerp(0.15f, 1f, gapTicks / (float)Math.Max(minimumGapTicks, 1));
+
+        if (gapTicks <= maximumGapTicks)
+            return 1.25f;
+
+        var extraDays = (gapTicks - maximumGapTicks) / (float)GenDate.TicksPerDay;
+        return Mathf.Max(1.25f / (1f + extraDays / 14f), 0.05f);
     }
 }
 

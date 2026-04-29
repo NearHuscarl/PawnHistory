@@ -9,6 +9,14 @@ namespace PawnHistory.Source.DebugTools;
 public static class DebugUtility
 {
     public static string FormatDict(Dictionary<string, string> dict) => "[" + dict.Select(p => $"{p.Key}={p.Value}").JoinToString() + "]";
+
+    public static string FormatSequence<T>(IEnumerable<T> values)
+    {
+        if (values == null)
+            return "null";
+
+        return "[" + values.Select(v => v?.ToString() ?? "null").JoinToString() + "]";
+    }
     
     public static string Format(object obj)
     {

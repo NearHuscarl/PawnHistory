@@ -40,15 +40,13 @@ public class HistoryRecord : IExposable
         IEnumerable<Thing> concerns = null,
         RecordLocation location = null,
         int? tileId = null,
-        Quest quest = null,
-        int? date = null,
-        bool pinned = false) : this()
+        Quest quest = null) : this()
     {
         this.def = def;
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
         this.description = desc.Resolve();
         this.concerns = (concerns ?? []).Where(p => p != null && p != pawn).Distinct().ToList();
-        this.date = date ?? GenTicks.TicksAbs;
+        this.date = GenTicks.TicksAbs;
         this.tileId = tileId
             ?? location?.map?.Tile.tileId
             ?? pawn.MapHeld?.Tile.tileId
@@ -65,7 +63,6 @@ public class HistoryRecord : IExposable
             Log.Message($"[PawnHistory] record for {pawn} is created but cannot find tileId, falling back to PlayerHomeMap's tile..\n\n{DebugUtility.Format(this)}");
 
         this.location = location;
-        this.pinned = pinned;
 
         CurrentPawnToJumpTo = 0;
     }
@@ -142,6 +139,8 @@ public class HistoryRecord : IExposable
         Scribe_References.Look(ref quest, "quest");
         Scribe_Values.Look(ref pinned, "pinned");
     }
+
+    public override string ToString() => $"{def.defName}_{date}";
 }
 
 public static class HistoryRecordExtensions

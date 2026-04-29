@@ -63,6 +63,7 @@ public static class DebugOutputsHistoryRecords
                     new TableDataGetter<HistoryRecord>("Position", r => r.location == null ? "" : $"{r.location.map} {r.location.position}"),
                     new TableDataGetter<HistoryRecord>("tileId", r => r.tileId),
                     new TableDataGetter<HistoryRecord>("quest", r => r.quest?.name),
+                    new TableDataGetter<HistoryRecord>("pinned", r => r.pinned.ToStringCheckBlank()),
                     new TableDataGetter<HistoryRecord>("currentPawnToJumpTo", r => r.CurrentPawnToJumpTo)
                 );
             }));

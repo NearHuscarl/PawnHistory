@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
@@ -17,6 +18,8 @@ public class TestFailure : IExposable
         this.testId = testId;
         this.message = message;
     }
+
+    public override string ToString() => $"{testId} failed: {message}";
 
     public virtual void ExposeData()
     {
@@ -40,6 +43,19 @@ public class TestAssertionFailure : TestFailure
     }
     
     public TestAssertionFailure() { }
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+
+        sb.AppendLine(message);
+        sb.AppendLine("Expected:");
+        sb.AppendLine(expected);
+        sb.AppendLine("Actual:");
+        sb.AppendLine(actual);
+        
+        return sb.ToString();
+    }
 
     public override void ExposeData()
     {

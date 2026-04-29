@@ -30,4 +30,22 @@ public static class Expect
         Ctx(nameof(ThatAny));
         return new PawnHistoryAssertions(pawns, MatchCondition.Any);
     }
+    
+    public static SimpleAssertions<T> That<T>(T value)
+    {
+        Ctx(nameof(That));
+        return new SimpleAssertions<T>(value);
+    }
+    
+    public static SimpleAssertions<T> That<T>(IEnumerable<T> value)
+    {
+        Ctx(nameof(That));
+        return new SimpleAssertions<T>(value);
+    }
+    
+    public static SimpleAssertions<T> That<T>(List<T> value)
+    {
+        Ctx(nameof(That));
+        return new SimpleAssertions<T>(value);
+    }
 }

@@ -17,7 +17,7 @@ These docs cover the public testing surface you are expected to use when writing
 
 - `TestScenario`
 - builder APIs returned by `TestScenario`
-- `Expect` and `PawnHistoryAssertions`
+- `Expect`, `SimpleAssertions<T>`, and `PawnHistoryAssertions`
 - test attributes used by recorder methods
 
 ## Boundary

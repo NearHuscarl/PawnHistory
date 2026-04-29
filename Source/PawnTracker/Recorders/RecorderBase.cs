@@ -65,11 +65,9 @@ public abstract class RecorderBase
         IEnumerable<Thing> concerns = null,
         RecordLocation location = null,
         int? tileId = null,
-        Quest quest = null,
-        int? date = null,
-        bool pinned = false)
+        Quest quest = null)
     {
-        var record = new HistoryRecord(def, pawn, resolvedDesc, concerns, location, tileId, quest, date, pinned);
+        var record = new HistoryRecord(def, pawn, resolvedDesc, concerns, location, tileId, quest);
         pawn.HistoryRecords.Add(record);
         
         if (record.def == HistoryRecordDefOf.PawnGenerated)

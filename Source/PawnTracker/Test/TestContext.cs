@@ -69,13 +69,14 @@ internal sealed class TestContext(string testId)
             PendingEventually--;
     }
 
-    public void Fail(Exception ex)
+    public void Fail(Exception ex, AssertionSource source = null)
     {
         if (ex is not TestException te)
         {
-            te = new TestException(new TestFailure(TestId, "Unknown error happened during a test run"), ex);
+            te = new TestException(new TestFailure(TestId, "Unknown error happened during a test run"), ex, source);
         }
-        
+
+        te.AssertionSource = source;
         switch (te.Failure)
         {
             case TimeoutFailure:

@@ -1,4 +1,4 @@
-namespace PawnHistory.Source.PawnTracker;
+namespace PawnHistory.Source.PawnTracker.HistoryBackfill;
 
 internal struct TimelineWindow(int earliestTick, int latestTick)
 {

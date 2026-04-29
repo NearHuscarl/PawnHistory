@@ -8,6 +8,7 @@
 - `Expect.That(Pawn pawn)`: assert against one pawn.
 - `Expect.ThatAll(IEnumerable<Pawn> pawns)`: every pawn must satisfy the assertion.
 - `Expect.ThatAny(IEnumerable<Pawn> pawns)`: at least one pawn must satisfy the assertion.
+- `Expect.That(value)` / `Expect.That(sequence)`: generic entrypoints for scalar and sequence assertions via `SimpleAssertions<T>`.
 
 All of these require an active test context. They are meant to be called inside recorder tests only.
 
@@ -17,6 +18,26 @@ All of these require an active test context. They are meant to be called inside 
 - `Eventually(int timeoutTicks = 3000, int pollIntervalTicks = 25)`: poll until the assertion passes or times out.
 
 Use `Eventually(...)` when the recorder is reached by delayed jobs, letters, travel, or other multi-tick flows.
+
+## Simple Assertions
+
+Use `Expect.That(value)` when the test is checking plain values instead of history-record shape.
+
+Supported `SimpleAssertions<T>` methods:
+
+- `Equal(...)` / `NotEqual(...)`
+- `Same(...)` / `NotSame(...)`
+- `SequenceEqual(...)`
+- `ToContain(...)`
+- `ToBeLessThan(...)`
+- `ToBeGreaterThan(...)`
+- `ToBeTrue()` / `ToBeFalse()`
+- `ToBeNull()` / `ToBeNotNull()`
+
+Preferred usage:
+
+- Use `SimpleAssertions<T>` for dates, counts, booleans, object identity, and simple sequences.
+- Keep `PawnHistoryAssertions` for `ToHaveHistoryRecord(...)`, `ToHaveHistoryRecordOf(...)`, and other history-specific checks.
 
 ## History Assertions
 

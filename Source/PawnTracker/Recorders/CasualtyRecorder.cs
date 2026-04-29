@@ -159,9 +159,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         IEnumerable<Thing> concerns = null,
         RecordLocation location = null,
         int? tileId = null,
-        Quest quest = null,
-        int? date = null,
-        bool pinned = false)
+        Quest quest = null)
     {
         if (def == HistoryRecordDefOf.Death)
         {
@@ -181,7 +179,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
                 location = lastRecord?.location;
         }
 
-        base.AddRecord(def, pawn, resolvedDesc, concerns, location, tileId, quest, date, pinned);
+        base.AddRecord(def, pawn, resolvedDesc, concerns, location, tileId, quest);
     }
 
     [TestTag("Flaky")]

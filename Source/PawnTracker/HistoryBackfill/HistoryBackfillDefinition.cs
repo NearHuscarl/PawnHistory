@@ -1,8 +1,7 @@
-using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PawnHistory.Source.PawnTracker;
+namespace PawnHistory.Source.PawnTracker.HistoryBackfill;
 
 internal sealed class HistoryBackfillDefinition(HistoryRecordDef def, string densityGroup = null)
 {
@@ -75,6 +74,11 @@ internal sealed class PlacementState(IReadOnlyList<PlacementCandidate> candidate
         placements[candidate] = tick;
     }
 
+    public bool Remove(PlacementCandidate candidate)
+    {
+        return placements.Remove(candidate);
+    }
+
     public bool TryGetPlacement(PlacementCandidate candidate, out int tick)
     {
         return placements.TryGetValue(candidate, out tick);
@@ -100,3 +104,5 @@ internal sealed class PlacementState(IReadOnlyList<PlacementCandidate> candidate
         return Candidates.Count(candidate => candidate.Record.def == def);
     }
 }
+
+internal record HistoryBackfillPlacementResult(IReadOnlyDictionary<PlacementCandidate, int> Placements, IReadOnlyList<PlacementCandidate> AnchoredCandidates);

@@ -16,7 +16,7 @@ Execution planning lives under `docs/exec-plans/`.
 
 ## Implementation Plan Records
 
-- Whenever an implementation follows a plan, record that plan or a concise execution note in `docs/exec-plans/completed/<short-name>.md`.
+- Whenever an implementation follows a plan, record that plan in full details in `docs/exec-plans/completed/<short-name>.md`.
 - If work was first discussed in Plan Mode and the user then says to implement it, execute the work and add the completed plan file as part of the implementation.
 
 ## Intent

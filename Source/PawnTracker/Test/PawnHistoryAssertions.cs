@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using PawnHistory.Source.DebugTools;
 using Verse;
 
@@ -137,8 +138,8 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
                     
                     return new AssertionResult(
                         record?.def == def,
-                        $"Expect HistoryRecordDef to exist for {pawn} {testParams}.\nExpected:\n{def}\nActual:\n{record?.def}.",
-                        $"Expect HistoryRecordDef NOT to exist for {pawn} {testParams}.\nExpected:\n{def}\nActual:\n{record?.def}.",
+                        $"Expect HistoryRecordDef to exist for {pawn} {testParams}.",
+                        $"Expect HistoryRecordDef NOT to exist for {pawn} {testParams}.",
                         def?.defName,
                         record?.def?.defName
                     );
@@ -153,8 +154,8 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             AssertCollection(
                 pawn => new AssertionResult(
                     pawn.HistoryRecords.Count == expected,
-                    $"Expect correct number of HistoryRecord for {pawn}.\nExpected:\n{expected}\nActual:\n{pawn.HistoryRecords.Count}.",
-                    $"Expect HistoryRecordDef NOT to match for {pawn}.\nExpected:\n{expected}\nActual:\n{pawn.HistoryRecords.Count}.",
+                    $"Expect correct number of HistoryRecord for {pawn}.",
+                    $"Expect HistoryRecordDef NOT to match for {pawn}.",
                     expected.ToString(),
                     pawn.HistoryRecords.Count.ToString()
                 )
@@ -192,8 +193,8 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
 
                     return new AssertionResult(
                         match.Matches,
-                        $"Expect HistoryRecord to match for {pawn} {testParams}.\nMismatched fields: {mismatchedFields}\nExpected:\n{expectedSummary}\nActual:\n{actualSummary}",
-                        $"Expect HistoryRecord NOT to match for {pawn} {testParams}.\nMatched record:\n{actualSummary}",
+                        $"Expect HistoryRecord to match for {pawn} {testParams}.\nMismatched fields: {mismatchedFields}",
+                        $"Expect HistoryRecord NOT to match for {pawn} {testParams}.\nMismatched fields: {mismatchedFields}",
                         expectedSummary,
                         actualSummary
                     );
@@ -335,67 +336,17 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         return this;
     }
 
-    private void RunAssertion(Action assertion)
+    private void RunAssertion(Action assertion, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         var ctx = TestManager.Ctx;
-        if (!ctx.TryRegisterAssertion())
-            return;
+        var source = new AssertionSource(memberName, filePath, lineNumber);
         
         if (pawns.Count == 0)
         {
-            // TODO: test stacktrace
             ctx.Fail(new TestException(new TestExecutionFailure(ctx.TestId, "No pawns to assert.")));
             return;
         }
 
-        ctx.PendingEventually++;
-        // don't run immediately, so Test method can return cleanup action even if synchronous test call failed.
-        TickDelayManager.Delay(0, () => DoRunAssertion(assertion));
-    }
-
-    private void DoRunAssertion(Action assertion)
-    {
-        var ctx = TestManager.Ctx;
-        var tickStart = Find.TickManager.TicksGame;
-        Exception lastException = null;
-
-        var action = TickDelayManager.Interval(eventuallyPollIntervalTicks, a =>
-        {
-            if (!isEventually)
-            {
-                try
-                {
-                    assertion();
-                    ctx.Pass();
-                }
-                catch (Exception ex)
-                {
-                    ctx.Fail(ex);
-                } 
-                a.Cancelled = true;
-                return;
-            }
-
-            if (Find.TickManager.TicksGame - tickStart > eventuallyTimeoutTicks)
-            { 
-                var failure = new TimeoutFailure(ctx.TestId, $"Test assertion failed after waiting for {eventuallyTimeoutTicks} ticks.");
-                ctx.Fail(new TestException(failure, lastException));
-                a.Cancelled = true;
-                return;
-            }
-
-            try
-            {
-                assertion();
-                ctx.Pass();
-                a.Cancelled = true;
-            }
-            catch (Exception ex)
-            {
-                lastException = ex;
-            }
-        });
-
-        ctx.OnCleanup(() => action.Data.Cancelled = true);
+        AssertionRunner.RunAssertion(assertion, source, new AssertionRunOptions(isEventually, eventuallyTimeoutTicks, eventuallyPollIntervalTicks));
     }
 }
