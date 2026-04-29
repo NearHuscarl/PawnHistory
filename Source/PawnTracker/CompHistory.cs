@@ -86,6 +86,7 @@ public class CompHistory : ThingComp
         records = [];
         pawnRecordSnapshot = [];
         recordsShownInCurrentRound = [];
+        PawnGeneratedRecord = null;
     }
 
     private void EnsureInitialized()

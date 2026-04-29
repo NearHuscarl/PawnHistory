@@ -62,11 +62,11 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         return this;
     }
 
-    private void Assert<T>(T expected, T actual, string positiveMessage, string negativeMessage, Func<T, T, bool> comparator = null)
+    private void AssertPassed(AssertionResult assertionResult)
     {
-        var result = comparator?.Invoke(expected, actual) ?? EqualityComparer<T>.Default.Equals(expected, actual);
-
-        if (negate ? !result : result)
+        var (passed, positiveMessage, negativeMessage, expected, actual) = assertionResult;
+        
+        if (negate ? !passed : passed)
             return;
         
         var ctx = TestManager.Ctx;
@@ -74,26 +74,25 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         var failure = new TestAssertionFailure(
             ctx.TestId,
             message,
-            expected?.ToString() ?? "null",
-            actual?.ToString() ?? "null",
+            expected ?? "null",
+            actual ?? "null",
             negate
         );
         throw new TestException(failure);
     }
 
-    private record AssertionData<T>(T Actual, string PositiveMessage, string NegativeMessage);
+    private record AssertionResult(bool Passed, string PositiveMessage, string NegativeMessage, string Expected, string Actual);
     private record HistoryRecordMatch(HistoryRecord Record, List<string> MismatchedFields)
     {
         public bool Matches => MismatchedFields.Count == 0;
     }
-    private void AssertCollection<T>(T expected, Func<Pawn, AssertionData<T>> getAssertionData, Func<T, T, bool> comparator = null)
+    private void AssertCollection(Func<Pawn, AssertionResult> getResult)
     {
         if (matchCondition == MatchCondition.All)
         {
             foreach (var pawn in pawns)
             {
-                var (actual, positiveMessage, negativeMessage) = getAssertionData(pawn);
-                Assert(expected, actual, positiveMessage, negativeMessage, comparator);
+                AssertPassed(getResult(pawn));
             }
         }
 
@@ -102,11 +101,9 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             Exception lastException = null;
             foreach (var pawn in pawns)
             {
-                var (actual, positiveMessage, negativeMessage) = getAssertionData(pawn);
-
                 try
                 {
-                    Assert(expected, actual, positiveMessage, negativeMessage, comparator);
+                    AssertPassed(getResult(pawn));
                     return;
                 }
                 catch (TestException ex)
@@ -120,23 +117,32 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         }
     }
 
-    public void ToHaveHistoryRecordOf(HistoryRecordDef def, int index = -1)
+    public void ToHaveHistoryRecordOf(HistoryRecordDef def, int? index = null)
     {
         RunAssertion(() =>
         {
             var testParams = DebugUtility.FormatDict(new Dictionary<string, string>
             {
-                { "index", index.ToString() },
+                { "index", index?.ToString() },
             });
 
             AssertCollection(
-                def,
-                pawn => new AssertionData<HistoryRecordDef>(
-                    !pawn.HistoryRecords.TryAt(index, out var record) ? null : record.def,
-                    $"Expect HistoryRecordDef to exist for {pawn} {testParams}.\nExpected:\n{def}\nActual:\n{record?.def}.",
-                    $"Expect HistoryRecordDef NOT to exist for {pawn} {testParams}.\nExpected:\n{def}\nActual:\n{record?.def}."
-                    )
-                );
+                pawn =>
+                {
+                    HistoryRecord record;
+                    if (index.HasValue)
+                        pawn.HistoryRecords.TryAt(index.Value, out record);
+                    else
+                        record = pawn.HistoryRecords.FirstOrDefault(r => r.def == def) ?? pawn.HistoryRecords.LastOrDefault();
+                    
+                    return new AssertionResult(
+                        record?.def == def,
+                        $"Expect HistoryRecordDef to exist for {pawn} {testParams}.\nExpected:\n{def}\nActual:\n{record?.def}.",
+                        $"Expect HistoryRecordDef NOT to exist for {pawn} {testParams}.\nExpected:\n{def}\nActual:\n{record?.def}.",
+                        def?.defName,
+                        record?.def?.defName
+                    );
+                });
         });
     }
 
@@ -145,11 +151,12 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         RunAssertion(() =>
         {
             AssertCollection(
-                expected,
-                pawn => new AssertionData<int>(
-                    pawn.HistoryRecords.Count,
+                pawn => new AssertionResult(
+                    pawn.HistoryRecords.Count == expected,
                     $"Expect correct number of HistoryRecord for {pawn}.\nExpected:\n{expected}\nActual:\n{pawn.HistoryRecords.Count}.",
-                    $"Expect HistoryRecordDef NOT to match for {pawn}.\nExpected:\n{expected}\nActual:\n{pawn.HistoryRecords.Count}."
+                    $"Expect HistoryRecordDef NOT to match for {pawn}.\nExpected:\n{expected}\nActual:\n{pawn.HistoryRecords.Count}.",
+                    expected.ToString(),
+                    pawn.HistoryRecords.Count.ToString()
                 )
             );
         });
@@ -161,7 +168,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
         {
             Def = recordDef,
             Description = descriptionTemplate
-        });
+        }, exactMatch, index);
     }
 
     public void ToHaveHistoryRecord(ExpectedHistoryRecord expected, bool exactMatch = false, int? index = null)
@@ -175,42 +182,49 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             });
             
             AssertCollection(
-                true,
                 pawn =>
                 {
-                    var match = BestHistoryRecordMatch(pawn, expected, index);
+                    var match = BestHistoryRecordMatch(pawn, expected, exactMatch, index);
                     var actual = match.Record;
                     var expectedSummary = FormatExpectedHistoryRecord(expected);
                     var actualSummary = FormatActualHistoryRecord(actual);
                     var mismatchedFields = match.MismatchedFields.JoinToString();
 
-                    return new AssertionData<bool>(
+                    return new AssertionResult(
                         match.Matches,
                         $"Expect HistoryRecord to match for {pawn} {testParams}.\nMismatched fields: {mismatchedFields}\nExpected:\n{expectedSummary}\nActual:\n{actualSummary}",
-                        $"Expect HistoryRecord NOT to match for {pawn} {testParams}.\nMatched record:\n{actualSummary}"
+                        $"Expect HistoryRecord NOT to match for {pawn} {testParams}.\nMatched record:\n{actualSummary}",
+                        expectedSummary,
+                        actualSummary
                     );
                 }
             );
         });
     }
 
-    private static HistoryRecordMatch BestHistoryRecordMatch(Pawn pawn, ExpectedHistoryRecord expected, int? index = null)
+    private static HistoryRecordMatch BestHistoryRecordMatch(Pawn pawn, ExpectedHistoryRecord expected, bool exactMatch = false, int? index = null)
     {
-        if (pawn.HistoryRecords.Count == 0)
-            return new HistoryRecordMatch(null, GetMismatchedHistoryRecordFields(expected, null));
-
-        if (index.HasValue && pawn.HistoryRecords.TryAt(index.Value, out var record))
-            return new HistoryRecordMatch(record, GetMismatchedHistoryRecordFields(expected, record));
+        if (index.HasValue)
+        {
+            if (pawn.HistoryRecords.TryAt(index.Value, out var record))
+                return Match(expected, record, exactMatch);
+            else
+                return Match(expected, null, exactMatch);
+        }
 
         return pawn.HistoryRecords
-            .Select(r => new HistoryRecordMatch(r, GetMismatchedHistoryRecordFields(expected, r)))
-            .OrderByDescending(match => match.Matches)
-            .ThenBy(match => match.MismatchedFields.Count)
+            .Select(r => Match(expected, r, exactMatch))
+            .OrderBy(match => match.MismatchedFields.Count)
             .ThenByDescending(match => match.Record.date)
-            .FirstOrDefault() ?? new HistoryRecordMatch(pawn.HistoryRecords.LastOrDefault(), GetMismatchedHistoryRecordFields(expected, pawn.HistoryRecords.LastOrDefault()));
+            .FirstOrDefault() ?? Match(expected, pawn.HistoryRecords.LastOrDefault(), exactMatch);
+    }
+    
+    private static HistoryRecordMatch Match(ExpectedHistoryRecord expected, HistoryRecord actual, bool exactMatch)
+    {
+        return new HistoryRecordMatch(actual, GetMismatchedHistoryRecordFields(expected, actual, exactMatch));
     }
 
-    private static List<string> GetMismatchedHistoryRecordFields(ExpectedHistoryRecord expected, HistoryRecord actual)
+    private static List<string> GetMismatchedHistoryRecordFields(ExpectedHistoryRecord expected, HistoryRecord actual, bool exactMatch)
     {
         if (expected == null)
             return [nameof(ExpectedHistoryRecord)];
@@ -224,7 +238,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             mismatchedFields.Add(nameof(expected.Date));
         if (expected.Pawn != null && actual.pawn != expected.Pawn)
             mismatchedFields.Add(nameof(expected.Pawn));
-        if (expected.Description != null && !LangUtility.IsStructurallyTheSame(expected.Description, actual.description?.StripTags(), false))
+        if (expected.Description != null && !LangUtility.IsStructurallyTheSame(expected.Description, actual.description?.StripTags(), exactMatch))
             mismatchedFields.Add(nameof(expected.Description));
         if (expected.Concerns != null && !ThingListsEqual(expected.Concerns, actual.concerns))
             mismatchedFields.Add(nameof(expected.Concerns));
@@ -367,6 +381,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
                 var failure = new TimeoutFailure(ctx.TestId, $"Test assertion failed after waiting for {eventuallyTimeoutTicks} ticks.");
                 ctx.Fail(new TestException(failure, lastException));
                 a.Cancelled = true;
+                return;
             }
 
             try
