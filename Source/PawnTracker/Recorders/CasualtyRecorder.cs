@@ -152,7 +152,16 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         }
     }
 
-    protected override void AddRecord(HistoryRecordDef def, Pawn pawn, TaggedString resolvedDesc, IEnumerable<Thing> concerns = null, RecordLocation location = null, int? tileId = null, Quest quest = null)
+    protected override void AddRecord(
+        HistoryRecordDef def,
+        Pawn pawn,
+        TaggedString resolvedDesc,
+        IEnumerable<Thing> concerns = null,
+        RecordLocation location = null,
+        int? tileId = null,
+        Quest quest = null,
+        int? date = null,
+        bool pinned = false)
     {
         if (def == HistoryRecordDefOf.Death)
         {
@@ -172,7 +181,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
                 location = lastRecord?.location;
         }
 
-        base.AddRecord(def, pawn, resolvedDesc, concerns, location, tileId, quest);
+        base.AddRecord(def, pawn, resolvedDesc, concerns, location, tileId, quest, date, pinned);
     }
 
     [TestTag("Flaky")]

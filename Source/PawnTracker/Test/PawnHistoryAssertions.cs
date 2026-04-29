@@ -20,6 +20,7 @@ public record ExpectedHistoryRecord
     public IntVec3? Position { get; init; }
     public Map Map { get; init; }
     public Quest Quest { get; init; }
+    public bool? Pinned { get; init; }
 
     public ExpectedHistoryRecord With(ExpectedHistoryRecord other)
     {
@@ -35,6 +36,7 @@ public record ExpectedHistoryRecord
             Position = other.Position ?? Position,
             Map = other.Map ?? Map,
             Quest = other.Quest ?? Quest,
+            Pinned = other.Pinned ?? Pinned,
         };
     }
 }
@@ -236,6 +238,8 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             mismatchedFields.Add(nameof(expected.Map));
         if (expected.Quest != null && actual.quest?.id != expected.Quest.id)
             mismatchedFields.Add(nameof(expected.Quest));
+        if (expected.Pinned.HasValue && actual.pinned != expected.Pinned.Value)
+            mismatchedFields.Add(nameof(expected.Pinned));
 
         return mismatchedFields;
     }
@@ -272,6 +276,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             $"  Position: {FormatExpectedValue(expected.Position)}",
             $"  Map: {FormatExpectedValue(expected.Map)}",
             $"  Quest: {FormatExpectedQuest(expected.Quest)}",
+            $"  Pinned: {FormatExpectedValue(expected.Pinned)}",
         }.JoinToString("\n");
     }
 
@@ -292,6 +297,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             $"  Position: {FormatActualValue(actual.location?.position)}",
             $"  Map: {FormatActualValue(actual.location?.map)}",
             $"  Quest: {FormatActualQuest(actual.quest)}",
+            $"  Pinned: {FormatActualValue(actual.pinned)}",
         }.JoinToString("\n");
     }
 

@@ -16,6 +16,7 @@
 		<descriptionMaker>PH_PeaceTalksRaid</descriptionMaker>
 		<icon>Ui/Commands/AttackSettlement</icon>
 		<categories>
+			<li>Arrival</li>
 			<li>Combat</li>
 			<li>World</li>
 		</categories>
@@ -53,6 +54,7 @@
 		<descriptionMaker>PH_CaravanAmbush</descriptionMaker>
 		<icon>Ui/Commands/AttackSettlement</icon>
 		<categories>
+			<li>Arrival</li>
 			<li>Combat</li>
 			<li>World</li>
 		</categories>
@@ -288,7 +290,16 @@
 		<descriptionMaker>PH_NewArrival</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
-			<li>Joined</li>
+			<li>Arrival</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PawnGenerated</defName>
+		<label>pawn generated</label>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<importance>Debug</importance>
+		<categories>
+			<li>None</li>
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
@@ -452,6 +463,7 @@
 		<descriptionMaker>PH_ManInBlackJoin</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
+			<li>Arrival</li>
 			<li>Joined</li>
 		</categories>
 	</HistoryRecordDef>
@@ -461,6 +473,7 @@
 		<descriptionMaker>PH_GameEndedWanderersJoined</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
+			<li>Arrival</li>
 			<li>Joined</li>
 		</categories>
 	</HistoryRecordDef>

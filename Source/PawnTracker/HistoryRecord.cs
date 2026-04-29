@@ -33,13 +33,22 @@ public class HistoryRecord : IExposable
     /// Empty constructor is required so Scribe can instantiate it
     /// </summary>
     public HistoryRecord() {}
-    public HistoryRecord(HistoryRecordDef def, Pawn pawn, TaggedString desc, IEnumerable<Thing> concerns = null, RecordLocation location = null, int? tileId = null, Quest quest = null) : this()
+    public HistoryRecord(
+        HistoryRecordDef def,
+        Pawn pawn,
+        TaggedString desc,
+        IEnumerable<Thing> concerns = null,
+        RecordLocation location = null,
+        int? tileId = null,
+        Quest quest = null,
+        int? date = null,
+        bool pinned = false) : this()
     {
         this.def = def;
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
         this.description = desc.Resolve();
         this.concerns = (concerns ?? []).Where(p => p != null && p != pawn).Distinct().ToList();
-        this.date = GenTicks.TicksAbs;
+        this.date = date ?? GenTicks.TicksAbs;
         this.tileId = tileId
             ?? location?.map?.Tile.tileId
             ?? pawn.MapHeld?.Tile.tileId
@@ -56,6 +65,7 @@ public class HistoryRecord : IExposable
             Log.Message($"[PawnHistory] record for {pawn} is created but cannot find tileId, falling back to PlayerHomeMap's tile..\n\n{DebugUtility.Format(this)}");
 
         this.location = location;
+        this.pinned = pinned;
 
         CurrentPawnToJumpTo = 0;
     }
