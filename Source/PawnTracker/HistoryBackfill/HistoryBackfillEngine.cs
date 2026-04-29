@@ -23,6 +23,7 @@ internal static class HistoryBackfillEngine
 
     public static void BackdateGeneratorRecords(Pawn pawn, HistoryRecord anchorRecord)
     {
+        // TODO: returns early?
         Context = new HistoryBackfillContext(pawn, anchorRecord, pawn.HistoryRecords.ToList());
         var candidates = BuildCandidates();
         if (candidates.Count == 0)
@@ -38,8 +39,6 @@ internal static class HistoryBackfillEngine
         
         pawn.HistoryRecords.RemoveWhere(invalidRecords.Contains);
         pawn.HistoryRecords.Sort((a, b) => a.date.CompareTo(b.date));
-        
-        Context = null;
     }
 
     private static HistoryBackfillPlacementResult ResolvePlacements(IReadOnlyList<PlacementCandidate> candidates, bool logWarnings)

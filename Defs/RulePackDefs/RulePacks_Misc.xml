@@ -25,10 +25,10 @@
 		<defName>PH_PsylinkLevelGained</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>AbilityClause(hasNewAbility==True)-> and learned the psycast [NewAbility].</li>
+				<li>AbilityClause(hasNewAbility==True) ->. [PAWN_pronoun] learned a new psychic power: [NewAbility].</li>
 				<li>AbilityClause(hasNewAbility==False)->.</li>
-				<li>entry(isFirstPsylink==True)->[PAWN] gained a psylink[AbilityClause]</li>
-				<li>entry(isFirstPsylink==False)->[PAWN] reached psylink level [NewLevel][AbilityClause]</li>
+				<li>entry(isFirstLvl==True) ->[PAWN] gained [PAWN_possessive] first psylink level and became a psycaster[AbilityClause]</li>
+				<li>entry(isFirstLvl==False)->[PAWN] advanced to psylink level [NewLevel][AbilityClause]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
