@@ -7,54 +7,54 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
 
-public class TradeSessionBuilder
+public class TradeDealBuilder
 {
     private readonly List<Action> processors = [];
     
     private ITrader trader;
     private readonly Pawn negotiator;
     private bool giftMode;
-    private Map map = Find.CurrentMap;
+    private Map Map => negotiator.MapHeld;
     private readonly TradeSessionResult result = new([], [], false);
     
     public record TradeSessionResult(List<Thing> Bought, List<Thing> Sold, bool ActuallyTraded);
 
-    public TradeSessionBuilder(Pawn negotiator)
+    public TradeDealBuilder(Pawn negotiator)
     {
         this.negotiator = negotiator;
     }
 
-    public TradeSessionBuilder WithCaravanTrader(TraderKindDef traderKindDef)
+    public TradeDealBuilder WithCaravanTrader(TraderKindDef traderKindDef)
     {
         if (traderKindDef.orbital)
         {
-            Log.Warning($"Expect a caravan trader but got an orbital trader kind: {traderKindDef.defName}");
+            Log.Warning($"Expect a caravan trader kind but got an orbital trader kind: {traderKindDef.defName}");
             return this;
         }
 
-        trader = map.mapPawns.AllHumanlikeSpawned.FirstOrDefault(p => p.trader?.traderKind == traderKindDef);
+        trader = Map.mapPawns.AllHumanlikeSpawned.FirstOrDefault(p => p.trader?.traderKind == traderKindDef);
         return this;
     }
 
-    public TradeSessionBuilder WithOrbitalTrader(TraderKindDef traderKindDef)
+    public TradeDealBuilder WithOrbitalTrader(TraderKindDef traderKindDef)
     {
         if (!traderKindDef.orbital)
         {
-            Log.Warning($"Expect a an orbital trader but got an caravan trader kind: {traderKindDef.defName}");
+            Log.Warning($"Expect an orbital trader kind but got an caravan trader kind: {traderKindDef.defName}");
             return this;
         }
 
-        trader = map.passingShipManager.passingShips.OfType<TradeShip>().FirstOrDefault(s => s.TraderKind == traderKindDef);
+        trader = Map.passingShipManager.passingShips.OfType<TradeShip>().FirstOrDefault(s => s.TraderKind == traderKindDef);
         return this;
     }
     
-    public TradeSessionBuilder WithSettlementTrader(Settlement settlement)
+    public TradeDealBuilder WithSettlementTrader(Settlement settlement)
     {
         trader = settlement;
         return this;
     }
 
-    public TradeSessionBuilder Buy(Func<Tradeable, bool> filter = null, int count = -1)
+    public TradeSessionResult Buy(Func<Tradeable, bool> filter = null, int count = -1)
     {
         processors.Add(() =>
         {
@@ -67,10 +67,10 @@ public class TradeSessionBuilder
             tradeable.AdjustBy(adjustment);
             result.Bought.Add(tradeable.AnyThing);
         });
-        return this;
+        return Execute();
     }
 
-    public TradeSessionBuilder Sell(Func<Tradeable, bool> filter = null, int count = -1)
+    public TradeSessionResult Sell(Func<Tradeable, bool> filter = null, int count = -1)
     {
         processors.Add(() =>
         {
@@ -83,10 +83,10 @@ public class TradeSessionBuilder
             tradeable.AdjustBy(-adjustment);
             result.Sold.Add(tradeable.AnyThing);
         });
-        return this;
+        return Execute();
     }
 
-    public TradeSessionBuilder Gift(Func<Tradeable, bool> filter = null, int count = -1)
+    public TradeSessionResult Gift(Func<Tradeable, bool> filter = null, int count = -1)
     {
         giftMode = true;
         processors.Add(() =>
@@ -100,11 +100,14 @@ public class TradeSessionBuilder
             tradeable.AdjustBy(adjustment);
             result.Sold.Add(tradeable.AnyThing);
         });
-        return this;
+        return Execute();
     }
 
-    public TradeSessionResult Execute()
+    private TradeSessionResult Execute()
     {
+        if (trader == null)
+            throw new InvalidOperationException("No trader was selected or found.");
+        
         TradeSession.SetupWith(trader, negotiator, giftMode);
 
         processors.ForEach(processor => processor());

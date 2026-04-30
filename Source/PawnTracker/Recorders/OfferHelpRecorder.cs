@@ -46,20 +46,14 @@ public class OfferHelpRecorder : RecorderBase<OfferHelpEvent>
                 var refugee = QuestHelper.GetPawnReward(quest);
                 refugee.mindState.JoinColonyBecauseRescuedBy(rescuer);
 
-                Expect.That(rescuer).ToHaveHistoryRecord(new ExpectedHistoryRecord
+                var expected = new ExpectedHistoryRecord
                 {
                     Def = HistoryRecordDefOf.OfferHelp,
                     Description = "[Refugee] joined the colony after being rescued by [Rescuer].",
-                    Concerns = [refugee],
                     Quest = quest,
-                });
-                Expect.That(refugee).ToHaveHistoryRecord(new ExpectedHistoryRecord
-                {
-                    Def = HistoryRecordDefOf.OfferHelp,
-                    Description = "[Refugee] joined the colony after being rescued by [Rescuer].",
-                    Concerns = [rescuer],
-                    Quest = quest,
-                });
+                };
+                Expect.That(rescuer).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [refugee] }));
+                Expect.That(refugee).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [rescuer] }));
             })
             .Execute();
     }

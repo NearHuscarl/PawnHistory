@@ -5,11 +5,13 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public record TradedEvent(Pawn Negotiator, ITrader Trader, List<Tradeable> Tradeables, bool GiftMode = false) : GameEventBase;
+public record TradedEvent(Pawn Negotiator, ITrader Trader, List<TradedItem> TradedItems, bool GiftMode = false) : GameEventBase;
+
+public record TradedItem(Thing Thing, int Price, TradeAction Action);
 
 internal class PawnTradedState
 {
-    public readonly List<Tradeable> PendingTradables = [];
+    public readonly List<TradedItem> PendingItems = [];
 }
 
 [HarmonyPatch(typeof(TradeDeal), nameof(TradeDeal.TryExecute))]
@@ -23,8 +25,12 @@ internal static class TradeDeal_TryExecute_Patch
         {
             if (tradeable.ActionToDo == TradeAction.None)
                 continue;
-
-            __state.PendingTradables.Add(tradeable);
+            
+            __state.PendingItems.Add(new TradedItem(
+                tradeable.AnyThing, // may not safe to get after trade deal completed
+                tradeable.CostToInt(tradeable.GetPriceFor(tradeable.ActionToDo)),
+                tradeable.ActionToDo
+            ));
         }
     }
 
@@ -36,6 +42,6 @@ internal static class TradeDeal_TryExecute_Patch
         if (!__result || !actuallyTraded)
             return;
 
-        GameEventBus.Publish(new TradedEvent(negotiator, trader, __state.PendingTradables, TradeSession.giftMode));
+        GameEventBus.Publish(new TradedEvent(negotiator, trader, __state.PendingItems, TradeSession.giftMode));
     }
 }

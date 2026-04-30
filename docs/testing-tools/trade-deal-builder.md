@@ -1,10 +1,10 @@
-# TradeSessionBuilder
+# TradeDealBuilder
 
 Sets up a trade session and records what was bought, sold, or gifted.
 
 ## Constructor
 
-- `TradeSessionBuilder(Pawn negotiator)`: start a trade session for the given negotiator.
+- `TradeDealBuilder(Pawn negotiator)`: start a trade session for the given negotiator.
 
 ## Trader Selection
 

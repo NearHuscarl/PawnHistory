@@ -20,8 +20,7 @@ internal static class MapGenerator_GenerateMap_DefenderGenerated_Patch
         
         // generated in GenStep_* e.g. GenStep_SettlementPawnsLoot
         var pawns = __result.mapPawns.AllPawnsSpawned
-            .Where(pawn => pawn.HostileTo(Faction.OfPlayer))
-            .Where(pawn => pawn.HistoryRecords.Count == 0)
+            .Where(p => p.HostileTo(Faction.OfPlayer) && p.HistoryRecords.Count == 0 && p.Spawned)
             .ToList();
 
         if (pawns.Count == 0)

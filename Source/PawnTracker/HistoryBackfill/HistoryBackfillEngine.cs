@@ -23,7 +23,6 @@ internal static class HistoryBackfillEngine
 
     public static void BackdateGeneratorRecords(Pawn pawn, HistoryRecord anchorRecord)
     {
-        // TODO: returns early?
         Context = new HistoryBackfillContext(pawn, anchorRecord, pawn.HistoryRecords.ToList());
         var candidates = BuildCandidates();
         if (candidates.Count == 0)
@@ -177,11 +176,11 @@ internal static class HistoryBackfillEngine
         for (var attempt = 0; attempt < MaxRandomPlacementAttempts; attempt++)
         {
             var localAnchoredCandidates = new HashSet<PlacementCandidate>();
-            if (TryPlace(orderedCandidates, randomize: true, localAnchoredCandidates, out placements))
-            {
-                anchoredCandidates = localAnchoredCandidates;
-                return true;
-            }
+            if (!TryPlace(orderedCandidates, randomize: true, localAnchoredCandidates, out placements))
+                continue;
+
+            anchoredCandidates = localAnchoredCandidates;
+            return true;
         }
 
         placements = null;
@@ -200,13 +199,7 @@ internal static class HistoryBackfillEngine
         foreach (var candidate in orderedCandidates.AsEnumerable().Reverse())
         {
             var window = BuildWindow(candidate, state);
-            if (!window.IsValid)
-            {
-                anchoredCandidates.Add(candidate);
-                continue;
-            }
-
-            if (!TrySampleTick(candidate, state, window, randomize, out var tick))
+            if (!window.IsValid || !TrySampleTick(candidate, state, window, randomize, out var tick))
             {
                 anchoredCandidates.Add(candidate);
                 continue;
@@ -220,8 +213,7 @@ internal static class HistoryBackfillEngine
             anchoredCandidates.Add(candidate);
         }
 
-        var placedCandidates = state.Placements.Select(pair => pair.Key).ToList();
-        if (!Validate(placedCandidates, state))
+        if (!ValidatePlacedState(state))
         {
             placements = null;
             return false;
@@ -264,7 +256,8 @@ internal static class HistoryBackfillEngine
             return false;
         }
 
-        var focusedWindow = CreateFocusedWindow(window, focusTick);
+        var radiusTicks = GenDate.DaysToTicks(LocalRefinementRadiusDays);
+        var focusedWindow = window.ShrinkTo(focusTick - radiusTicks, focusTick + radiusTicks);
         return TrySampleTickExact(candidate, state, focusedWindow, randomize, out tick);
     }
 
@@ -281,7 +274,9 @@ internal static class HistoryBackfillEngine
         var weightedWindows = new List<WeightedWindow>(lastDay - firstDay + 1);
         for (var day = firstDay; day <= lastDay; day++)
         {
-            var bucket = CreateDayWindow(window, day, day);
+            var startTick = checked(day * GenDate.TicksPerDay);
+            var endTick = checked(day * GenDate.TicksPerDay + (GenDate.TicksPerDay - 1));
+            var bucket = window.ShrinkTo(startTick, endTick);
             weightedWindows.Add(new WeightedWindow(bucket, GetWeight(candidate, state, bucket.RepresentativeTick())));
         }
 
@@ -320,27 +315,15 @@ internal static class HistoryBackfillEngine
             .Select(probeTick => new WeightedProbe(probeTick, GetWeight(candidate, state, probeTick)))
             .ToList();
 
-        if (randomize)
+        if (randomize && weightedProbes.TryRandomElementByWeight(w => w.Weight, out var weightedProbe))
         {
-            var totalWeight = weightedProbes.Sum(weightedProbe => Math.Max(weightedProbe.Weight, 0f));
-            if (totalWeight > 0f)
-            {
-                var pick = Rand.Value * totalWeight;
-                foreach (var weightedProbe in weightedProbes)
-                {
-                    pick -= Math.Max(weightedProbe.Weight, 0f);
-                    if (pick > 0f)
-                        continue;
-
-                    selectedTick = weightedProbe.Tick;
-                    return true;
-                }
-            }
+            selectedTick = weightedProbe.Tick;
+            return true;
         }
 
         var bestProbe = weightedProbes
-            .OrderByDescending(weightedProbe => weightedProbe.Weight)
-            .ThenByDescending(weightedProbe => weightedProbe.Tick)
+            .OrderByDescending(w => w.Weight)
+            .ThenByDescending(w => w.Tick)
             .FirstOrDefault();
 
         selectedTick = bestProbe.Tick;
@@ -430,21 +413,6 @@ internal static class HistoryBackfillEngine
         }
 
         return probes.OrderBy(tick => tick).ToList();
-    }
-
-    private static TimelineWindow CreateDayWindow(TimelineWindow parentWindow, int startDay, int endDay)
-    {
-        var startTick = checked(startDay * GenDate.TicksPerDay);
-        var endTick = checked(endDay * GenDate.TicksPerDay + (GenDate.TicksPerDay - 1));
-        return new TimelineWindow(Math.Max(parentWindow.EarliestTick, startTick), Math.Min(parentWindow.LatestTick, endTick));
-    }
-
-    private static TimelineWindow CreateFocusedWindow(TimelineWindow window, int focusTick)
-    {
-        var radiusTicks = GenDate.DaysToTicks((float)LocalRefinementRadiusDays);
-        return new TimelineWindow(
-            Math.Max(window.EarliestTick, focusTick - radiusTicks),
-            Math.Min(window.LatestTick, focusTick + radiusTicks));
     }
 
     private static int FloorToDay(int tick) => (int)Math.Floor(tick / (double)GenDate.TicksPerDay);

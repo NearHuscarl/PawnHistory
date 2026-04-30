@@ -37,7 +37,7 @@ public class TestScenario
     public CaravanBuilder Caravan(List<Pawn> pawns) => new(pawns);
     public DropPodBuilder DropPod(List<Thing> things) => new(things);
     public DropPodBuilder DropPod(List<Pawn> pawns) => new(pawns.Cast<Thing>().ToList());
-    public TradeSessionBuilder Trade(Pawn negotiator) => new(negotiator);
+    public TradeDealBuilder Trade(Pawn negotiator) => new(negotiator);
     public RitualBuilder Ritual(Pawn organizer) => new(organizer);
     public LetterAction<T> Letter<T>() where T : Letter => new();
 

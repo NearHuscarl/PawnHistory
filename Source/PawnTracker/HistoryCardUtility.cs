@@ -87,7 +87,7 @@ public static class HistoryCardUtility
         var sb = new StringBuilder();
         var ticksAgo = GenTicks.TicksAbs - record.date;
 
-        sb.AppendLine(record.def.label.CapitalizeFirst());
+        sb.AppendLine(record.def.LabelCap.Colorize(ColoredText.TipSectionTitleColor));
         sb.AppendLine();
         sb.AppendLine($"Occurred {ticksAgo.ToStringTicksToPeriod()} ago");
         

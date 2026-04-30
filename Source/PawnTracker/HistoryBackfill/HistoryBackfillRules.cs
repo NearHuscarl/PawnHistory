@@ -13,7 +13,7 @@ internal sealed class MinimumAgeRule(float minimumAgeYears) : IHardBackfillRule
 
     public void ApplyWindow(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state, ref TimelineWindow window)
     {
-        window.ClampEarliest(HistoryBackfillContext.ClampToInt(context.BirthAbsTicks + minimumAgeTicks));
+        window.ShrinkStartTo(HistoryBackfillContext.ClampToInt(context.BirthAbsTicks + minimumAgeTicks));
     }
 
     public bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state)
@@ -42,7 +42,7 @@ internal sealed class LogicalGateRule(Func<HistoryBackfillContext, PlacementCand
         if (predicate(context, candidate))
             return;
 
-        window.ClampEarliest(context.AnchorTick);
+        window.ShrinkStartTo(context.AnchorTick);
     }
 
     public bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state) => predicate(context, candidate);
@@ -64,7 +64,7 @@ internal sealed class OrderBeforeRule(int minimumGapTicks, params HistoryRecordD
             if (!laterDefinitions.Contains(pair.Key.Record.def))
                 continue;
 
-            window.ClampLatest(pair.Value - minimumGapTicks);
+            window.ShrinkEndTo(pair.Value - minimumGapTicks);
         }
     }
 
@@ -110,7 +110,7 @@ internal sealed class SiblingSequenceRule(int minimumGapTicks) : IHardBackfillRu
         if (nextSibling == null || !state.TryGetPlacement(nextSibling, out var nextTick))
             return;
 
-        window.ClampLatest(nextTick - minimumGapTicks);
+        window.ShrinkEndTo(nextTick - minimumGapTicks);
     }
 
     public bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state)

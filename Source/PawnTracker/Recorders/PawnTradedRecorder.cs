@@ -15,14 +15,12 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
     {
         GameEventBus.Subscribe<TradedEvent>(e =>
         {
-            foreach (var tradeable in e.Tradeables)
+            foreach (var tradedItem in e.TradedItems)
             {
-                if (tradeable.AnyThing is not Pawn soldVictim)
+                if (tradedItem.Thing is not Pawn soldVictim)
                     continue;
 
-                var price = tradeable.CostToInt(tradeable.GetPriceFor(tradeable.ActionToDo));
-                var tradeAction = tradeable.ActionToDo;
-                CreateRecord(new Input(soldVictim, e.Negotiator, e.Trader, price, tradeAction));
+                CreateRecord(new Input(soldVictim, e.Negotiator, e.Trader, tradedItem.Price, tradedItem.Action));
             }
         });
     }
@@ -59,8 +57,7 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
         var negotiator = scenario.Pawn().Colonist().CreateSingle();
         var result = scenario.Trade(negotiator)
             .WithCaravanTrader(traderKind)
-            .Sell(t => t.AnyThing is Pawn)
-            .Execute();
+            .Sell(t => t.AnyThing is Pawn);
         
         Expect.That(result.Sold[0] as Pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
@@ -84,8 +81,7 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
         var negotiator = scenario.Pawn().Colonist().CreateSingle();
         var result = scenario.Trade(negotiator)
             .WithCaravanTrader(traderKind)
-            .Buy(t => t.AnyThing is Pawn)
-            .Execute();
+            .Buy(t => t.AnyThing is Pawn);
         
         Expect.That(result.Bought[0] as Pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
@@ -113,8 +109,7 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
         var negotiator = scenario.Pawn().Colonist().CreateSingle();
         var result = scenario.Trade(negotiator)
             .WithOrbitalTrader(traderKind)
-            .Buy(t => t.AnyThing is Pawn)
-            .Execute();
+            .Buy(t => t.AnyThing is Pawn);
         
         Expect.That(result.Bought[0] as Pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
