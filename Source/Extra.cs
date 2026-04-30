@@ -257,4 +257,11 @@ public static class Extra
 
         static TraitDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(TraitDefOf));
     }
+
+    [DefOf]
+    public static class GeneDefOf
+    {
+        [MayRequireBiotech]
+        public static GeneDef PsychicBonding;
+    }
 }

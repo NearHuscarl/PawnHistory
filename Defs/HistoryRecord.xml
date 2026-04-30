@@ -952,4 +952,13 @@
 			<li>Life</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>PsychicBonded</defName>
+		<label>psychic bonded</label>
+		<descriptionMaker>PH_PsychicBonded</descriptionMaker>
+		<icon>UI/Icons/Genes/Gene_PsychicBonding</icon>
+		<categories>
+			<li>Relationship</li>
+		</categories>
+	</HistoryRecordDef>
 </Defs>

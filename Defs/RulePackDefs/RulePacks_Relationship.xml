@@ -84,6 +84,15 @@
 		</rulePack>
 	</RulePackDef>
 
+	<RulePackDef MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>PH_PsychicBonded</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] and [BondedPawn] formed a psychic bond.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
 	<RulePackDef>
 		<defName>PH_Married</defName>
 		<include>

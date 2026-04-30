@@ -219,7 +219,6 @@
 				<li>entry(priority=1,isReward==True,quest==TradeRequest)            ->[PAWN] joined [PlayerSettlement] as a reward for fulfilling a trade request from [Faction].</li>
 
 				<!-- Other questlines -->
-				<li>entry(priority=1,isEnemy==False,quest==Intro_Wimp)->[PAWN] arrived at [PlayerSettlement] looking for protection while being followed by a (*Threat)manhunting [AnimalKind](/Threat).</li>
 				<li>entry(priority=1,isEnemy==False,quest==Intro_Wimp)                ->[PAWN] arrived at [PlayerSettlement] looking for protection while being followed by a (*Threat)manhunting [AnimalKind](/Threat).</li>
 				<li>entry(priority=1,isReward==True,quest==OpportunitySite_BanditCamp)->[PAWN] joined [PlayerSettlement] as a reward from [Faction] for clearing out [WorldObject_definite].</li>
 
