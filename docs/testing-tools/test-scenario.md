@@ -13,6 +13,7 @@
 - `Quest(Quest)` and `Quest(QuestScriptDef, float points = 500f)`: create `QuestBuilder`.
 - `Caravan(List<Pawn>)`: create `CaravanBuilder`.
 - `DropPod(List<Thing>)` and `DropPod(List<Pawn>)`: create `DropPodBuilder`.
+- `Shuttle(TransportShip)`: create `ShuttleBuilder` for shuttle/transport ship.
 - `Trade(Pawn negotiator)`: create `TradeDealBuilder`.
 - `Ritual(Pawn organizer)`: create `RitualBuilder`.
 - `Letter<T>() where T : ChoiceLetter`: create `LetterAction<T>`.

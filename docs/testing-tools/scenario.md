@@ -11,6 +11,7 @@ Use these references instead of opening the implementation first:
 - [quest-builder.md](quest-builder.md)
 - [caravan-builder.md](caravan-builder.md)
 - [drop-pod-builder.md](drop-pod-builder.md)
+- [shuttle-builder.md](shuttle-builder.md)
 - [trade-deal-builder.md](trade-deal-builder.md)
 - [ritual-builder.md](ritual-builder.md)
 - [gathering-builder.md](gathering-builder.md)

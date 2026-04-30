@@ -221,6 +221,7 @@
 				<!-- Other questlines -->
 				<li>entry(priority=1,isEnemy==False,quest==Intro_Wimp)                ->[PAWN] arrived at [PlayerSettlement] looking for protection while being followed by a (*Threat)manhunting [AnimalKind](/Threat).</li>
 				<li>entry(priority=1,isReward==True,quest==OpportunitySite_BanditCamp)->[PAWN] joined [PlayerSettlement] as a reward from [Faction] for clearing out [WorldObject_definite].</li>
+				<li>entry(priority=1,isReward==True,quest==PawnLend)                  ->[PAWN] joined [PlayerSettlement] as a reward after [PlayerSettlement] lent [RequiredCount] colonists to [Faction] for [DaysLent] days.</li>
 
 				<li>entry(priority=0,isReward==True)                 ->[PAWN] arrived at [PlayerSettlement] as a reward for completing [Quest] quest.</li>
 				<li>entry(priority=0,isEnemy==False)                 ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] as part of [Quest] quest.</li>

@@ -159,6 +159,8 @@ public static class Extra
         [MayRequireRoyalty]
         public static QuestScriptDef Hospitality_Prisoners;
         [MayRequireRoyalty]
+        public static QuestScriptDef PawnLend;
+        [MayRequireRoyalty]
         public static QuestScriptDef EndGame_RoyalAscent;
 
         [MayRequireBiotech]
