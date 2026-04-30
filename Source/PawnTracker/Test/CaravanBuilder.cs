@@ -150,6 +150,9 @@ public class CaravanBuilder
 
     public Caravan Execute()
     {
+        foreach (var pawn in pawns)
+            pawn.holdingOwner?.Remove(pawn);
+
         var caravan = CaravanMaker.MakeCaravan(pawns, Faction.OfPlayer, tile, true);
         CaravanInventoryUtility.GiveThing(caravan, ThingMaker.MakeThing(ThingDefOf.MealSurvivalPack));
 

@@ -470,8 +470,9 @@
 				<li>contextClause(testPermutation==False)->[Prisoner], a member of [HostileFaction], was put into [RoomQuality_indefinite] prison</li>
 				<li>contextClause(testPermutation==True)-></li>
 
-				<li>entry->[image]. [contextClause].</li>
-				<li>entry->[image]. [desc_sentence] [contextClause].</li>
+				<li>entry(autoCaptured==True) ->[Prisoner] was captured by [CaptureFaction]'s caravan.</li>
+				<li>entry(autoCaptured==False)->[image]. [contextClause].</li>
+				<li>entry(autoCaptured==False)->[image]. [desc_sentence] [contextClause].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

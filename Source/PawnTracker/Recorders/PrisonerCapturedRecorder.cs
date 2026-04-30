@@ -10,41 +10,44 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class PrisonerCapturedRecorder : RecorderBase<PrisonerCapturedRecorder.Input>
+public class PrisonerCapturedRecorder : RecorderBase<PrisonerCapturedEvent>
 {
-    public record Input(Pawn Prisoner, Pawn Captor, Quest Quest, string Quality);
-
     public override void Register()
     {
-        GameEventBus.Subscribe<PrisonerCapturedEvent>(e =>
-        {
-            if (e.Prisoner.GetRoom() is not { } room)
-                return;
-            var impressiveScore = room.GetStat(RoomStatDefOf.Impressiveness);
-            var quality = RoomStatDefOf.Impressiveness.GetScoreStage(impressiveScore).label;
-
-            CreateRecord(new Input(e.Prisoner, e.Captor, e.Quest, quality));
-        });
+        GameEventBus.Subscribe<PrisonerCapturedEvent>(CreateRecord);
     }
 
-    public override void CreateRecord(Input input)
+    public override void CreateRecord(PrisonerCapturedEvent e)
     {
-        var (prisoner, captor, quest, quality) = input;
+        var (prisoner, faction,  captor, quest) = e;
         var recordDef = HistoryRecordDefOf.PrisonerCaptured;
-        var desc = GetDescription(captor, prisoner, quality);
+        
+        var desc = GetDescription(captor, prisoner, faction);
 
-        AddRecord(recordDef, captor, desc, [prisoner], quest: quest);
+        if (ShouldRecord(captor))
+            AddRecord(recordDef, captor, desc, [prisoner], quest: quest);
         AddRecord(recordDef, prisoner, desc, [captor], quest: quest);
     }
 
-    private string GetDescription(Pawn captor, Pawn prisoner, string quality, bool testPermutation = false)
+    private string GetDescription(Pawn captor, Pawn prisoner, Faction faction, bool testPermutation = false)
     {
         var recordDef = HistoryRecordDefOf.PrisonerCaptured;
+        // Auto captured by moving a non-prisoner to a caravan of different faction.
+        var isAutoCapturedByCaravan = captor == null;
+        string quality = null;
 
-        return recordDef.Description(captor, "Captor")
-            .AddRule("Prisoner", prisoner, addSubsymbols: true)
+        if (prisoner.GetRoom() is { } room)
+        {
+            var impressiveScore = room.GetStat(RoomStatDefOf.Impressiveness);
+            quality = RoomStatDefOf.Impressiveness.GetScoreStage(impressiveScore).label.ToLower();
+        }
+
+        return recordDef.Description(prisoner, "Prisoner")
+            .AddRule("Captor", captor, addSubsymbols: true)
             .AddRule("HostileFaction", prisoner.Faction)
-            .AddRule("RoomQuality", quality.ToLower(), addSubsymbols: true)
+            .AddRule("CaptureFaction", faction)
+            .AddRule("RoomQuality", quality, addSubsymbols: true)
+            .AddConstant("autoCaptured", isAutoCapturedByCaravan)
             .AddConstant("testPermutation", testPermutation)
             .Resolve();
     }
@@ -93,6 +96,7 @@ public class PrisonerCapturedRecorder : RecorderBase<PrisonerCapturedRecorder.In
             .OnMapGenerated(e =>
             {
                 scenario.Map(e.Map).ClaimAllBuildings().Execute();
+                e.Map.mapPawns.FreeHumanlikesSpawnedOfFaction(e.MapParent.Faction).ForEach(p => p.Kill(null));
                 prisoner.guest.CapturedBy(captor.Faction, captor);
                 
                 var expected = new ExpectedHistoryRecord
@@ -103,7 +107,34 @@ public class PrisonerCapturedRecorder : RecorderBase<PrisonerCapturedRecorder.In
                 };
                 Expect.That(prisoner).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [captor] }));
                 Expect.That(captor).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [prisoner] }));
-                scenario.SlowDown();
+            })
+            .Execute();
+    }
+
+    public void TestAutoCapture(TestScenario scenario)
+    {
+        Rand.PushState(12345); // site occasionally doesn't spawn prison due to small map size
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.OpportunitySite_PrisonerWillingToJoin).Execute();
+        
+        var site = QuestHelper.GetWorldObject<Site>(quest);
+        var captor = scenario.Pawn().Colonist().CreateSingle();
+        var prisoner = QuestHelper.GetPawnReward(quest);
+
+        Rand.PopState();
+        scenario.Caravan([captor]).VisitSite(site)
+            .OnMapGenerated(e =>
+            {
+                scenario.Map(e.Map).ClaimAllBuildings().Execute();
+                e.Map.mapPawns.FreeHumanlikesSpawnedOfFaction(e.MapParent.Faction).ForEach(p => p.Kill(null));
+                HealthUtility.DamageUntilDowned(prisoner);
+
+                scenario.Caravan([captor, prisoner]).Execute();
+                Expect.That(prisoner).ToHaveHistoryRecord(new ExpectedHistoryRecord
+                {
+                    Def = HistoryRecordDefOf.PrisonerCaptured,
+                    Description = "[Prisoner] was captured by [CaptureFaction]'s caravan.",
+                    Quest = quest,
+                });
             })
             .Execute();
     }
@@ -123,22 +154,22 @@ public class PrisonerCapturedRecorder : RecorderBase<PrisonerCapturedRecorder.In
 
         var descriptions = new List<string>();
 
-        for (int i = 0; i < n; i++)
+        for (var i = 0; i < n; i++)
         {
-            var desc = GetDescription(captor, prisoner, "decent", testPermutation: true);
+            var desc = GetDescription(captor, prisoner,  Faction.OfPlayer, testPermutation: true);
             descriptions.Add(desc);
         }
 
         Log.Message("=== ALL DESCRIPTIONS ===");
-        for (int i = 0; i < descriptions.Count; i++)
+        for (var i = 0; i < descriptions.Count; i++)
         {
             Log.Message($"[{i}] {descriptions[i]}");
         }
 
         var overlaps = new List<(int i, int j, float score)>();
-        for (int i = 0; i < descriptions.Count; i++)
+        for (var i = 0; i < descriptions.Count; i++)
         {
-            for (int j = i + 1; j < descriptions.Count; j++)
+            for (var j = i + 1; j < descriptions.Count; j++)
             {
                 var score = LangUtility.GetOverlapScore(descriptions[i], descriptions[j]);
                 overlaps.Add((i, j, score));
