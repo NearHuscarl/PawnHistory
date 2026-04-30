@@ -4,7 +4,6 @@ Cross-cutting defects, refactors, and cleanup items.
 
 ## Bugs
 
-- Prisoner capture is not recorded when the prisoner is incapacitated and added to a caravan.
 - Test multiple maps to verify whether `CasualtyRecorder` uses the correct battle log.
 - `RulesForPawn` bug, works: "a elephant" -> "an elephant", doesn't work: "<color>a elephant</color>" -> "<color>a elephant</color>"
 - Kill handling should cover turret and animal cases (handle `Thing` rather than `Pawn`).

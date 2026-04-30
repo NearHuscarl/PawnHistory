@@ -32,10 +32,9 @@ public class CaravanAmbushRecorder : RecorderBase<CaravanAmbushedEvent>
         }
     }
 
-    [SkipTest]
     public void Test(TestScenario scenario)
     {
-        var pawns = scenario.Pawn(3).Colonist().Execute();
+        var pawns = scenario.Pawn().Colonist().Execute();
         var spot = Find.WorldGrid.GetNearbyTile();
         Expect.Assertions(1);
 
@@ -47,7 +46,7 @@ public class CaravanAmbushRecorder : RecorderBase<CaravanAmbushedEvent>
 
                 Expect.ThatAll(enemies)
                     .Eventually()
-                    .ToHaveHistoryRecord(new ExpectedHistoryRecord()
+                    .ToHaveHistoryRecord(new ExpectedHistoryRecord
                     {
                         Def = HistoryRecordDefOf.CaravanAmbush,
                         Description = "[PAWN] and [n] others from [Faction] ambushed [Caravan].",

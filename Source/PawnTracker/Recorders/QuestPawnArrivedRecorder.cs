@@ -148,7 +148,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     public void TestRaidJoiner(TestScenario scenario)
     {
         var quest = scenario.Quest(Extra.QuestScriptDefOf.ThreatReward_Raid_Joiner).Execute();
-        scenario.ForwardTime(1f);
+        scenario.ForwardDays(1f);
         
         Expect.Assertions(2);
 
@@ -177,7 +177,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     public void TestEmpireDeserter(TestScenario scenario)
     {
         var quest = scenario.Quest(Extra.QuestScriptDefOf.Intro_Deserter).Execute();
-        scenario.ForwardTime(1f);
+        scenario.ForwardDays(1f);
         
         Expect.Assertions(2);
 
@@ -200,19 +200,25 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
             });
         });
     }
+
+    public static (Quest, Pawn) SetupQuestWithReward(TestScenario scenario, QuestScriptDef questScriptDef)
+    {
+        var rewardPawn = scenario.Pawn().WorldPawn().CreateSingle(false);
+        
+        scenario.ForceRewardPawnInQuest = rewardPawn;
+
+        var quest = scenario.Quest(questScriptDef)
+            .ChooseReward(choice => choice.rewards.OfType<Reward_Pawn>().Any())
+            .Execute();
+
+        return (quest, rewardPawn);
+    }
     
     // QuestNode_GiveRewards > Reward_Pawn > QuestPart_GiveToCaravan
     public void TestTradeRequest(TestScenario scenario)
     {
         var colonist = scenario.Pawn().Colonist().CreateSingle();
-        var rewardPawn = scenario.Pawn().WorldPawn().CreateSingle(false);
-        
-        scenario.ForceRewardPawnInQuest = rewardPawn;
-
-        var quest = scenario.Quest(Extra.QuestScriptDefOf.TradeRequest)
-            .ChooseReward(choice => choice.rewards.OfType<Reward_Pawn>().Any())
-            .Execute();
-
+        var (quest, rewardPawn) = SetupQuestWithReward(scenario, Extra.QuestScriptDefOf.TradeRequest);
         var tradePart = quest.GetFirstPartOfType<QuestPart_InitiateTradeRequest>();
         var gifts = scenario.Thing(tradePart.requestedThingDef).Stack(tradePart.requestedCount).Create();
 
@@ -224,15 +230,6 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
             Description = "[PAWN] joined the colony as a reward for fulfilling a trade request from [Faction].",
             Quest = quest,
         });
-    }
-    
-    public void TestBanditCamp(TestScenario scenario)
-    {
-        var quest = scenario.Quest(Extra.QuestScriptDefOf.OpportunitySite_BanditCamp).Execute();
-        var site = QuestHelper.GetWorldObject<Site>(quest);
-        var pawns = scenario.Pawn(3).Colonist().Execute();
-
-        scenario.Caravan(pawns).VisitSite(site).Execute();
     }
     
     [SkipTest]
@@ -320,7 +317,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         scenario.SpeedUp();
         scenario.RunUntil(
             () => rewardPawn.HistoryRecords.Any(record => record.def == HistoryRecordDefOf.QuestPawnArrived),
-            () => scenario.ForwardTime(0.25f),
+            () => scenario.ForwardDays(0.25f),
             () =>
             {
                 Expect.That(rewardPawn).ToHaveHistoryRecord(new ExpectedHistoryRecord

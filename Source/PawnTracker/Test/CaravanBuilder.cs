@@ -36,6 +36,15 @@ public class CaravanBuilder
         return this;
     }
 
+    public CaravanBuilder KillAllEnemies(Action<MapGeneratedEvent> onFinished = null)
+    {
+        OnMapGenerated(e =>
+        {
+            e.Map.mapPawns.FreeHumanlikesSpawnedOfFaction(e.MapParent.Faction).ForEach(p => p.Kill(null));
+            onFinished?.Invoke(e);
+        });
+        return this;
+    }
 
     public CaravanBuilder OnMapGenerated(Action<MapGeneratedEvent> action)
     {

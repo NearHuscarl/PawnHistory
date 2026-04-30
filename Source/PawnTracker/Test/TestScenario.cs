@@ -75,7 +75,7 @@ public static class TestScenarioExtensions
 {
     extension(TestScenario scenario)
     {
-        public TestScenario ForwardTime(float day)
+        public TestScenario ForwardDays(float day)
         {
             Find.TickManager.DebugSetTicksGame(Find.TickManager.TicksGame + GenDate.DaysToTicks(day));
             return scenario;

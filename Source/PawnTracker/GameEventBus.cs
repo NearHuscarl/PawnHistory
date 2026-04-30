@@ -68,7 +68,6 @@ public class GameEventBus
             return;
 
         // TODO: for record during world/map generation, add to a queue to process in Playing state
-        // so information are available. TODO: Simulate past event
         if (Current.ProgramState != ProgramState.Playing)
         {
             if (NearDebugSettings.LogDebug)

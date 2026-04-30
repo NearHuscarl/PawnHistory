@@ -41,7 +41,7 @@ public class GameEndedWanderersJoinedRecorder : RecorderBase<WandererJoinedEvent
         // wait for the 'game over' letter appears
         TickDelayManager.Delay(1200, () =>
         {
-            scenario.ForwardTime(1);
+            scenario.ForwardDays(1);
             scenario.SlowDown();
         });
     }
