@@ -10,17 +10,12 @@ namespace PawnHistory.Source.PawnTracker.Test;
 public class MapBuilder
 {
     private readonly Map map;
-    private IntVec3 center;
     private readonly List<Action> actions = [];
 
-    public MapBuilder(IntVec3? center = null)
+    public MapBuilder(Map map = null)
     {
-        map = Find.CurrentMap;
-        this.center = center ?? map.Center;
+        this.map = map ?? Find.CurrentMap;
     }
-
-    public static MapBuilder At(IntVec3 pos) => new(pos);
-    public static MapBuilder AtMouse() => new(UI.MouseCell());
 
     // Copied and modified from GenStep_ScatterShrines.ScatterAt()
     public MapBuilder GenerateAncientTemple(int width, int height)
@@ -300,6 +295,24 @@ public class MapBuilder
             }
             else
                 casket.TryAcceptThing(victim);
+        });
+        return this;
+    }
+    
+    public MapBuilder ClaimAllBuildings()
+    {
+        actions.Add(() =>
+        {
+            foreach (var building in map.listerBuildings.allBuildingsNonColonist.ToList())
+            {
+                if (building == null || building.Destroyed)
+                    continue;
+
+                if (!building.def.Claimable)
+                    continue;
+
+                building.SetFaction(Faction.OfPlayer);
+            }
         });
         return this;
     }

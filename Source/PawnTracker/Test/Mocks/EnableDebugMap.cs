@@ -21,8 +21,6 @@ internal static class EnableDebugMap
         var size = TestManager.Scenario.ForcedDebugMapSize;
         if (parent is Settlement s && s.Faction != Faction.OfPlayer)
             size = Math.Max(size, MinSettlementDebugSize);
-        
-        
         mapSize = new IntVec3(size, 1, size);
     }
 }
@@ -34,7 +32,7 @@ internal static class GenStep_MutatorPostTerrain_Generate_Patch
     {
         if (!TestManager.EnableDebugMap)
             return;
-        
+
         // reset to heavy terrain so building can be placed on a tiny map
         foreach (var allCell in map.AllCells)
         {

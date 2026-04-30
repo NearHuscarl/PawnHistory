@@ -5,23 +5,36 @@ using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
+using RimWorld.Planet;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class PrisonerCapturedRecorder : RecorderBase<PrisonerCapturedRecorder.Input>
 {
-    public record Input(Pawn Prisoner, Pawn Captor, string quality);
+    public record Input(Pawn Prisoner, Pawn Captor, Quest Quest, string Quality);
 
     public override void Register()
     {
         GameEventBus.Subscribe<PrisonerCapturedEvent>(e =>
         {
-            var impressiveScore = e.Room.GetStat(RoomStatDefOf.Impressiveness);
+            if (e.Prisoner.GetRoom() is not { } room)
+                return;
+            var impressiveScore = room.GetStat(RoomStatDefOf.Impressiveness);
             var quality = RoomStatDefOf.Impressiveness.GetScoreStage(impressiveScore).label;
 
-            CreateRecord(new Input(e.Prisoner, e.Captor, quality));
+            CreateRecord(new Input(e.Prisoner, e.Captor, e.Quest, quality));
         });
+    }
+
+    public override void CreateRecord(Input input)
+    {
+        var (prisoner, captor, quest, quality) = input;
+        var recordDef = HistoryRecordDefOf.PrisonerCaptured;
+        var desc = GetDescription(captor, prisoner, quality);
+
+        AddRecord(recordDef, captor, desc, [prisoner], quest: quest);
+        AddRecord(recordDef, prisoner, desc, [captor], quest: quest);
     }
 
     private string GetDescription(Pawn captor, Pawn prisoner, string quality, bool testPermutation = false)
@@ -36,17 +49,6 @@ public class PrisonerCapturedRecorder : RecorderBase<PrisonerCapturedRecorder.In
             .Resolve();
     }
 
-    public override void CreateRecord(Input input)
-    {
-        var (prisoner, captor, quality) = input;
-        var recordDef = HistoryRecordDefOf.PrisonerCaptured;
-        var desc = GetDescription(captor, prisoner, quality);
-
-        AddRecord(recordDef, captor, desc, [prisoner]);
-        AddRecord(recordDef, prisoner, desc, [captor]);
-    }
-
-    [SkipTest]
     public void Test(TestScenario scenario)
     {
         scenario.SpeedUp();
@@ -64,36 +66,46 @@ public class PrisonerCapturedRecorder : RecorderBase<PrisonerCapturedRecorder.In
             .Capture(prisoner)
             .CreateSingle();
 
-        GameEventBus.SubscribeOnce<PrisonerCapturedEvent>(e =>
+        scenario.RunOnceOn<PrisonerCapturedEvent>(_ =>
         {
+            var expected = new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.PrisonerCaptured,
+                Description = "[Prisoner], a member of [HostileFaction], was put into [RoomQuality_indefinite] prison."
+            };
+            Expect.That(prisoner).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [captor] }));
+            Expect.That(captor).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [prisoner] }));
             scenario.SlowDown();
-            scenario.OpenHistoryRecordTab(prisoner);
         });
     }
 
-    [SkipTest]
-    public void TestArrest(TestScenario scenario)
+    public void TestQuest(TestScenario scenario)
     {
-        scenario.SpeedUp();
+        Rand.PushState(12345); // site occasionally doesn't spawn prison due to small map size
+        var quest = scenario.Quest(Extra.QuestScriptDefOf.OpportunitySite_PrisonerWillingToJoin).Execute();
+        
+        var site = QuestHelper.GetWorldObject<Site>(quest);
+        var captor = scenario.Pawn().Colonist().CreateSingle();
+        var prisoner = QuestHelper.GetPawnReward(quest);
 
-        scenario.Map()
-            .BuildRoom(8, 8, tag: "Prison")
-            .AsPrison(prisonerCount: 0, bedCount: 2)
+        Rand.PopState();
+        scenario.Caravan([captor]).VisitSite(site)
+            .OnMapGenerated(e =>
+            {
+                scenario.Map(e.Map).ClaimAllBuildings().Execute();
+                prisoner.guest.CapturedBy(captor.Faction, captor);
+                
+                var expected = new ExpectedHistoryRecord
+                {
+                    Def = HistoryRecordDefOf.PrisonerCaptured,
+                    Description = "[Prisoner], a member of [HostileFaction], was put into [RoomQuality_indefinite] prison.",
+                    Quest = quest,
+                };
+                Expect.That(prisoner).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [captor] }));
+                Expect.That(captor).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [prisoner] }));
+                scenario.SlowDown();
+            })
             .Execute();
-        var friend = scenario.Pawn()
-            .Colonist()
-            .Do(p => HealthUtility.DamageUntilDowned(p))
-            .CreateSingle();
-        var captor = scenario.Pawn()
-            .Colonist()
-            .Do(p => CaptureUtility.OrderArrest(p, friend))
-            .CreateSingle();
-
-        GameEventBus.SubscribeOnce<PrisonerCapturedEvent>(e =>
-        {
-            scenario.SlowDown();
-            scenario.OpenHistoryRecordTab(friend);
-        });
     }
 
     [SkipTest]

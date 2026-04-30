@@ -30,7 +30,7 @@ public class TestScenario
     public IncidentBuilder Incident(IncidentDef def) => new(def);
     public IncidentBuilder Incident(IncidentDef def, IIncidentTarget target) => new(def, target);
     public IncidentBuilder RaidFriendly() => Incident(IncidentDefOf.RaidFriendly).NonHostileFaction();
-    public MapBuilder Map(IntVec3? pos = null) => new(pos);
+    public MapBuilder Map(Map map = null) => new(map);
     public ThingBuilder Thing(ThingDef thingDef, ThingDef stuffDef = null) => new(thingDef, stuffDef);
     public QuestBuilder Quest(Quest quest) => new QuestBuilder().WithQuest(quest);
     public QuestBuilder Quest(QuestScriptDef quest, float points = 500f) => new(quest, points);

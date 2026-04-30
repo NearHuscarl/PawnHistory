@@ -21,14 +21,11 @@ public class OfferHelpRecorder : RecorderBase<OfferHelpEvent>
             .WithPlayerFaction()
             .AddRule("Rescuer", e.Rescuer)
             .Resolve();
-        
-        // OfferHelp is only used in the OpportunitySite_DownedRefugee quest atm
-        var quest = Find.QuestManager.QuestsListForReading.LastOrDefault(q => !q.hidden && QuestHelper.IsReward(q, e.Refugee));
 
         if (ShouldRecord(e.Rescuer))
-            AddRecord(recordDef, e.Rescuer, desc, [e.Refugee], quest: quest);
+            AddRecord(recordDef, e.Rescuer, desc, [e.Refugee], quest: e.Quest);
         if (ShouldRecord(e.Refugee))
-            AddRecord(recordDef, e.Refugee, desc, [e.Rescuer], quest: quest);
+            AddRecord(recordDef, e.Refugee, desc, [e.Rescuer], quest: e.Quest);
     }
 
     public void Test(TestScenario scenario)

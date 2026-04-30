@@ -127,9 +127,10 @@ public static class Extra
     {
         public static QuestScriptDef TradeRequest;
         public static QuestScriptDef ThreatReward_Raid_Joiner;
+        public static QuestScriptDef OpportunitySite_DownedRefugee;
         public static QuestScriptDef OpportunitySite_BanditCamp;
         public static QuestScriptDef OpportunitySite_PeaceTalks;
-        public static QuestScriptDef OpportunitySite_DownedRefugee;
+        public static QuestScriptDef OpportunitySite_PrisonerWillingToJoin;
 
         [MayRequireRoyalty]
         public static QuestScriptDef Intro_Deserter;
