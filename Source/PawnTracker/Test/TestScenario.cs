@@ -21,6 +21,7 @@ public class TestScenario
     public Pawn ForceRewardPawnInQuest;
     public bool ForceInjuryScar = false;
     public bool ForcePostHealScar = false;
+    public bool AlwaysHaveHelpersInQuest = false;
     public readonly int ForcedDebugMapSize = 25;
 
     public PawnBuilder Pawn(int count = 1) => new(count);
@@ -110,25 +111,17 @@ public static class TestScenarioExtensions
             return scenario;
         }
 
-        public TestScenario RunUntil(Func<bool> stopCondition, Action action, Action onFinish = null, int interval = 1)
+        public TestScenario Loop(Action<ScheduledActionData> action, int interval = 1, int? timeout = null)
         {
-            TickDelayManager.Interval(interval, TestManager.Timeout, data =>
+            TickDelayManager.Interval(interval, timeout ?? TestManager.Timeout, data =>
             {
                 try
                 {
-                    action();
+                    action(data);
                 }
                 catch (Exception ex)
                 {
                     Log.Error($"Error while executing action {action}, {ex}");
-                }
-                finally
-                {
-                    if (stopCondition())
-                    {
-                        data.Cancelled = true;
-                        onFinish?.Invoke();
-                    }
                 }
             });
             return scenario;

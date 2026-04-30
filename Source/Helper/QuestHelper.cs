@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using RimWorld;
 using RimWorld.QuestGen;
 using Verse;
@@ -8,8 +7,50 @@ using RimWorld.Planet;
 
 namespace PawnHistory.Source.Helper;
 
+public enum QuestPawnKind
+{
+    Lodger,
+    Helper,
+    Joiner,
+    Raider,
+    Guest,
+}
+
 public static class QuestHelper
 {
+    // from Util_ChooseRandomQuestHelperKind
+    private static readonly HashSet<PawnKindDef> CombatKinds =
+    [
+        PawnKindDefOf.Empire_Fighter_Trooper,
+        PawnKindDefOf.Empire_Fighter_Janissary,
+        Extra.PawnKindDefOf.Empire_Fighter_Champion,
+        PawnKindDefOf.Empire_Fighter_Cataphract,
+        Extra.PawnKindDefOf.Tribal_Archer,
+        Extra.PawnKindDefOf.Tribal_Berserker,
+        Extra.PawnKindDefOf.Tribal_HeavyArcher,
+        Extra.PawnKindDefOf.Tribal_Warrior,
+        Extra.PawnKindDefOf.Mercenary_Elite_Acidifier,
+        Extra.PawnKindDefOf.Mercenary_Slasher_Acidifier,
+        Extra.PawnKindDefOf.Mercenary_Gunner_Acidifier,
+        Extra.PawnKindDefOf.Mercenary_Sniper_Acidifier
+    ];
+
+    public static QuestPawnKind GetQuestPawnKind(Quest quest, Pawn pawn)
+    {
+        var kind = QuestPawnKind.Guest;
+        
+        if (pawn.HostileTo(Faction.OfPlayer))
+            kind = QuestPawnKind.Raider;
+        else if (QuestHelper.IsReward(quest, pawn))
+            kind = QuestPawnKind.Joiner;
+        else if (CombatKinds.Contains(pawn.kindDef))
+            kind = QuestPawnKind.Helper;
+        else if (pawn.HostFaction == Faction.OfPlayer)
+            kind = QuestPawnKind.Lodger;
+
+        return kind;
+    }
+    
     public static bool IsReward(Quest quest, Pawn pawn)
     {
         var partChoice = quest.GetFirstPartOfType<QuestPart_Choice>();

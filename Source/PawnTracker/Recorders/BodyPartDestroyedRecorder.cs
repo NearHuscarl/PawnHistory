@@ -116,15 +116,12 @@ public class BodyPartDestroyedRecorder : RecorderBase<HediffAddedEvent>
             .WeakenParts(nonVitalParts, true)
             .Execute();
 
-        var tickStart = Find.TickManager.TicksGame;
-
         scenario.SpeedUp();
-        scenario.RunUntil(() => Find.TickManager.TicksGame - tickStart > 2500, () =>
+        scenario.Loop(_ =>
         {
             foreach (var pawn in pawns)
             {
-                if (pawn == null) continue;
-                FireUtility.TryAttachFire(pawn, 1.75f, null);
+                pawn.TryAttachFire(1.75f, null);
             }
         }, interval: 100);
     }

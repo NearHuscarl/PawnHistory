@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using RimWorld.Planet;
-using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -11,9 +9,9 @@ public class QuestPawnArrivedComp_BanditCamp : QuestPawnArrivedComp
 {
     public override bool Match(Quest quest) => quest.root.defName == nameof(Extra.QuestScriptDefOf.OpportunitySite_BanditCamp);
 
-    public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, Quest quest, Pawn pawn, List<Pawn> questPawns)
+    public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
-        var worldObject = QuestHelper.GetWorldObject<WorldObject>(quest);
+        var worldObject = QuestHelper.GetWorldObject<WorldObject>(input.Quest);
         return builder.AddRule("WorldObject", worldObject.ColoredLabel, addSubsymbols: true);
     }
 

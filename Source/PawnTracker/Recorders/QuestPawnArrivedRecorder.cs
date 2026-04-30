@@ -4,7 +4,6 @@ using PawnHistory.Source.Helper;
 using RimWorld;
 using System;
 using System.Linq;
-using RimWorld.Planet;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
@@ -26,30 +25,30 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         var involvedFactions = e.Quest.InvolvedFactions.ToList();
         var questPawns = QuestHelper.GetQuestPawns(e.Quest).ToList();
 
+        // TODO: handle helper from Util_MaybeGenerateHelpers
         foreach (var pawn in e.Pawns)
         {
             if (!ShouldRecord(pawn))
                 continue;
 
-            var isReward = QuestHelper.IsReward(e.Quest, pawn);
+            var questKind = QuestHelper.GetQuestPawnKind(e.Quest, pawn);
             var builder = recordDef.Description(pawn)
                 .IncludePawnGrammar()
                 .AddRule("Quest", e.Quest.name.Colorize(ColoredText.GeneColor))
                 .AddRule("Faction", involvedFactions.Count > 0 ? involvedFactions[0] : null)
                 .WithPlayerSettlement(pawn.MapHeld?.Parent)
                 .WithOthers(e.Pawns)
-                .AddConstant("isEnemy", pawn.HostileTo(Faction.OfPlayer))
                 .AddConstant("quest", questScriptDef)
-                .AddConstant("isReward", isReward);
+                .AddConstant("kind", questKind);
             var concerns = e.Pawns.Cast<Thing>();
+            var input = new QuestPawnArrivedComp.BuildInput(e.Pawns, e.Quest, e.ArrivalMode, pawn, questPawns);
 
             foreach (var comp in Comps.OfType<QuestPawnArrivedComp>())
             {
                 if (!comp.Match(e.Quest))
                     continue;
-
-                builder = comp.BuildGrammarRequest(builder, e.Quest, pawn, questPawns);
-                concerns = concerns.Concat(comp.GetConcerns(e.Quest, questPawns));
+                builder = comp.BuildGrammarRequest(builder, input);
+                concerns = concerns.Concat(comp.GetConcerns(input));
             }
             
             AddRecord(recordDef, pawn, builder.Resolve(), concerns, quest: e.Quest);
@@ -201,13 +200,13 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         });
     }
 
-    public static (Quest, Pawn) SetupQuestWithReward(TestScenario scenario, QuestScriptDef questScriptDef)
+    public static (Quest, Pawn) SetupQuestWithReward(TestScenario scenario, QuestScriptDef questScriptDef, float points = 500)
     {
         var rewardPawn = scenario.Pawn().WorldPawn().CreateSingle(false);
         
         scenario.ForceRewardPawnInQuest = rewardPawn;
 
-        var quest = scenario.Quest(questScriptDef)
+        var quest = scenario.Quest(questScriptDef, points)
             .ChooseReward(choice => choice.rewards.OfType<Reward_Pawn>().Any())
             .Execute();
 
@@ -313,22 +312,15 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         scenario.ForceRewardPawnInQuest = rewardPawn;
         var quest = scenario.Quest(Extra.QuestScriptDefOf.Hospitality_Joiners).Execute();
 
-        Expect.Assertions(1);
+        scenario.ForwardDays(50f);
         scenario.SpeedUp();
-        scenario.RunUntil(
-            () => rewardPawn.HistoryRecords.Any(record => record.def == HistoryRecordDefOf.QuestPawnArrived),
-            () => scenario.ForwardDays(0.25f),
-            () =>
-            {
-                Expect.That(rewardPawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
-                {
-                    Def = HistoryRecordDefOf.QuestPawnArrived,
-                    Description = GenericRewardText,
-                    Quest = quest,
-                });
-            },
-            60);
-
+      
+        Expect.That(rewardPawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.QuestPawnArrived,
+            Description = GenericRewardText,
+            Quest = quest,
+        });
         return () => scenario.SlowDown();
     }
 }

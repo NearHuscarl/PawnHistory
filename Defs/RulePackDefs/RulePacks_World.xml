@@ -43,8 +43,7 @@
 
 				<li>questClause(priority=1,quest==ThreatReward_Raid_Joiner)-> [PAWN_pronoun] came to take [QuestAsker].</li>
 				<li>questClause(priority=1,quest==Intro_Deserter)          -> [PAWN_pronoun] came to hunt down [QuestAsker].</li>
-				<li>questClause(priority=0)                                -> [PAWN_pronoun] came to attack [QuestAsker].</li>
-				<li>questClause(priority=0,quest==)                        -></li>
+				<li>questClause(priority=0)                                -></li>
 			</rulesStrings>
         </rulePack>
     </RulePackDef>
@@ -202,30 +201,47 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<!-- TODO: polish descriptions-->
-				<li>entry(priority=1,isEnemy==False,quest==Beggars)                 ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] to beg for aid.</li>
-				<li>entry(priority=1,isEnemy==False,quest==SanguophageMeetingHost)  ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] for a meeting with the colony.</li>
 				
 				<!-- Important quests that cover different code paths, full test coverage -->
-				<li>entry(priority=1,isEnemy==False,quest==WandererJoins)           ->A [PAWN_title] named [PAWN] arrived and joined [PlayerSettlement]. [PAWN_pronoun] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.</li>
-				<li>entry(priority=1,               quest==RefugeePodCrash)         ->[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [PAWN_pronoun] survived the impact but was badly wounded.</li>
-				<li>entry(priority=1,isEnemy==False,quest==Hospitality_Refugee)     ->[PAWN][AndOthers] arrived at [PlayerSettlement] seeking shelter and a place to regroup, with nowhere else to go.</li>
-				<li>entry(priority=1,isEnemy==False,quest==ShuttleCrash_Rescue)     ->[PAWN][AlongWithOthers] made an emergency landing at [PlayerSettlement] after their shuttle was damaged.</li>
-				<li>entry(priority=1,isEnemy==True, quest==ShuttleCrash_Rescue)     ->[PAWN][AndOthers] from [PAWN_factionName] attacked the crashed shuttle site.</li>
-				<li>entry(priority=1,isEnemy==False,quest==ThreatReward_Raid_Joiner)->[PAWN] joined [PlayerSettlement] in exchange for safety while being pursued.</li>
-				<li>entry(priority=1,isEnemy==False,quest==BestowingCeremony)       ->[PAWN] arrived at [PlayerSettlement] to perform a bestowing ceremony, granting [Recipient] the title of [NewTitle].</li>
-				<!-- <li>entry(priority=1,quest==ThreatReward_Raid_Joiner,isEnemy==True) -> handled in PH_Raid since it spawns an incident -->
-				<li>entry(priority=1,isEnemy==False,quest==Intro_Deserter)          ->[PAWN] joined [PlayerSettlement] after deserting [Faction], while being hunted by a loyalty squad.</li>
-				<li>entry(priority=1,isReward==True,quest==TradeRequest)            ->[PAWN] joined [PlayerSettlement] as a reward for fulfilling a trade request from [Faction].</li>
+				<li>entry(priority=1,kind==Joiner,quest==WandererJoins)           ->A [PAWN_title] named [PAWN] arrived and joined [PlayerSettlement]. [PAWN_pronoun] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.</li>
+				<li>entry(priority=1,kind==Joiner,quest==RefugeePodCrash)         ->[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [PAWN_pronoun] survived the impact but was badly wounded.</li>
+				<li>entry(priority=1,kind==Lodger,quest==Hospitality_Refugee)     ->[PAWN][AndOthers] arrived at [PlayerSettlement] seeking shelter and a place to regroup, with nowhere else to go.</li>
+				
+				<li>entry(priority=1,kind==Lodger,quest==ShuttleCrash_Rescue)     ->[PAWN][AlongWithOthers] made an emergency landing at [PlayerSettlement] after their shuttle was damaged.</li>
+				<li>entry(priority=1,kind==Raider,quest==ShuttleCrash_Rescue)     ->[PAWN][AndOthers] from [PAWN_factionName] attacked the crashed shuttle site.</li>
+				
+				<li>entry(priority=1,kind==Joiner,quest==ThreatReward_Raid_Joiner)->[PAWN] joined [PlayerSettlement] in exchange for safety while being pursued.</li>
+				<li>entry(priority=1,kind==Guest, quest==BestowingCeremony)       ->[PAWN] arrived at [PlayerSettlement] to perform a bestowing ceremony, granting [Recipient] the title of [NewTitle].</li>
+				<li>entry(priority=1,kind==Helper,quest==BestowingCeremony)       ->[PAWN] along with [Count] others accompanied the bestower to [PlayerSettlement] for [Recipient]'s bestowing ceremony, where [Recipient_pronoun] received the title of [NewTitle].</li>
+				<!-- <li>entry(priority=1,kind==Raider,quest==ThreatReward_Raid_Joiner) -> handled in PH_Raid since it spawns an incident -->
+				<li>entry(priority=1,kind==Joiner,quest==Intro_Deserter)          ->[PAWN] joined [PlayerSettlement] after deserting [Faction], while being hunted by a loyalty squad.</li>
+				<li>entry(priority=1,kind==Joiner,quest==TradeRequest)            ->[PAWN] joined [PlayerSettlement] as a reward for fulfilling a trade request from [Faction].</li>
 
 				<!-- Other questlines -->
-				<li>entry(priority=1,isEnemy==False,quest==Intro_Wimp)                ->[PAWN] arrived at [PlayerSettlement] looking for protection while being followed by a (*Threat)manhunting [AnimalKind](/Threat).</li>
-				<li>entry(priority=1,isReward==True,quest==OpportunitySite_BanditCamp)->[PAWN] joined [PlayerSettlement] as a reward from [Faction] for clearing out [WorldObject_definite].</li>
-				<li>entry(priority=1,isReward==True,quest==PawnLend)                  ->[PAWN] joined [PlayerSettlement] as a reward after [PlayerSettlement] lent [RequiredCount] colonists to [Faction] for [DaysLent] days.</li>
+				<li>entry(priority=1,kind==Guest, quest==Intro_Wimp)                  ->[PAWN] arrived at [PlayerSettlement] looking for protection while being followed by a (*Threat)manhunting [AnimalKind](/Threat).</li>
+				<li>entry(priority=1,kind==Joiner,quest==OpportunitySite_BanditCamp)  ->[PAWN] joined [PlayerSettlement] as a reward from [Faction] for clearing out [WorldObject_definite].</li>
+				<li>entry(priority=1,kind==Joiner,quest==PawnLend)                    ->[PAWN] joined [PlayerSettlement] as a reward after [PlayerSettlement] lent [RequiredCount] colonists to [Faction] for [DaysLent] days.</li>
+				<li>entry(priority=1,kind==Joiner,quest==ThreatReward_Raid_MiscReward)->[PAWN] joined [PlayerSettlement] as a reward for defeating a raid from [HostileFaction].</li>
+				<li>entry(priority=1,kind==Helper,quest==ThreatReward_Raid_MiscReward)->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] to help fight off a raid from [HostileFaction].</li>
+				
+				<!-- TODO: not tested, needs polishment -->
+				<li>entry(priority=1,kind==Joiner,quest==Mission_BanditCamp)        ->[PAWN] joined [PlayerSettlement] as a reward from [Faction] for clearing out [WorldObject_definite].</li>
+				<li>entry(priority=1,kind==Joiner,quest==BuildMonument_Basic)       ->[PAWN] joined [PlayerSettlement] as a reward for completing the monument for [Faction].</li>
+				<li>entry(priority=1,kind==Joiner,quest==BuildMonument_TimeProtect) ->[PAWN] joined [PlayerSettlement] as a reward for completing the monument for [Faction].</li>
+				<li>entry(priority=1,kind==Joiner,quest==Hospitality_Animals)       ->[PAWN] joined [PlayerSettlement] as a reward for caring for the hosted animals.</li>
+				<li>entry(priority=1,kind==Joiner,quest==Hospitality_Joiners)       ->[PAWN] joined [PlayerSettlement] as a reward for hosting the guests.</li>
+				<li>entry(priority=1,kind==Joiner,quest==Hospitality_Prisoners)     ->[PAWN] joined [PlayerSettlement] as a reward for guarding the prisoners.</li>
+				<li>entry(priority=1,kind==Joiner,quest==ThreatReward_MechPods_MiscReward)->[PAWN] joined [PlayerSettlement] as a reward for defending the colony from the mechanoid cluster.</li>
+				<li>entry(priority=1,kind==Joiner,quest==SanguophageMeetingHost)    ->[PAWN] joined [PlayerSettlement] as a reward for hosting the sanguophage meeting.</li>
+				<li>entry(priority=1,kind==Joiner,quest==ShuttleCrash_Rescue)       ->[PAWN] joined [PlayerSettlement] as a reward for protecting the shuttle crash survivors.</li>
+				<li>entry(priority=1,kind==Lodger,quest==Beggars)                 ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] to beg for aid.</li>
+				<li>entry(priority=1,kind==Lodger,quest==SanguophageMeetingHost)  ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] for a meeting with the colony.</li>
 
-				<li>entry(priority=0,isReward==True)                 ->[PAWN] arrived at [PlayerSettlement] as a reward for completing [Quest] quest.</li>
-				<li>entry(priority=0,isEnemy==False)                 ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] as part of [Quest] quest.</li>
-				<li>entry(priority=0,isEnemy==True)                  ->[PAWN][AndOthers] from [PAWN_factionName] raided [PlayerSettlement] during [Quest] quest.</li>
+				<li>entry(priority=0,kind==Joiner)                   ->[PAWN] arrived at [PlayerSettlement] as a reward for completing [Quest] quest.</li>
+				<li>entry(priority=0,kind==Lodger)                   ->[PAWN][AlongWithOthers] came to stay at [PlayerSettlement] as part of the [Quest] quest.</li>
+				<li>entry(priority=0,kind==Helper)                   ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] to help fend off attackers during [Quest] quest.</li>
+				<li>entry(priority=0,kind==Raider)                   ->[PAWN][AndOthers] from [PAWN_factionName] raided [PlayerSettlement] during [Quest] quest.</li>
+				<li>entry(priority=0,kind==Guest)                    ->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] as part of [Quest] quest.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

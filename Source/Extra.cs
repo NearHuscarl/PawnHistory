@@ -106,9 +106,18 @@ public static class Extra
     [DefOf]
     public static class PawnKindDefOf
     {
+        public static PawnKindDef Mercenary_Sniper_Acidifier;
+        public static PawnKindDef Mercenary_Gunner_Acidifier;
+        public static PawnKindDef Mercenary_Slasher_Acidifier;
+        public static PawnKindDef Mercenary_Elite_Acidifier;
+        public static PawnKindDef Tribal_Warrior;
         public static PawnKindDef Husky;
         public static PawnKindDef Cougar;
         public static PawnKindDef Bear_Grizzly;
+        public static PawnKindDef Empire_Fighter_Champion;
+        public static PawnKindDef Tribal_Archer;
+        public static PawnKindDef Tribal_Berserker;
+        public static PawnKindDef Tribal_HeavyArcher;
 
         static PawnKindDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(PawnKindDefOf));
     }
@@ -148,6 +157,8 @@ public static class Extra
         public static QuestScriptDef ThreatReward_RaidMultiFaction_Joiner;
         [MayRequireRoyalty]
         public static QuestScriptDef ThreatReward_MysteryThreat_Joiner;
+        [MayRequireRoyalty]
+        public static QuestScriptDef ThreatReward_Raid_MiscReward;
         [MayRequireRoyalty]
         public static QuestScriptDef WandererJoinAbasia;
         [MayRequireRoyalty]

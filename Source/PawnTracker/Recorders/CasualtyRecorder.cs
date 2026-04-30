@@ -11,6 +11,7 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecord<CasualtyRecorder.KilledOrDownedInput>
 {
+    // TODO: add instigator from combat log in cause transition log misses it. 
     public record KillInput(Pawn Subject, Pawn Initiator, string CombatLogText, string TransitionText, Pawn OriginalTargetPawn);
     public record KilledOrDownedInput(Pawn Subject, Pawn Initiator, CasualtyType Casualty, HediffDef CulpritHediff, string CombatLogText, string TransitionText, Pawn OriginalTargetPawn, bool IsLeader);
 

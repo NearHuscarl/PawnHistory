@@ -145,6 +145,11 @@ public static class Accessor
     {
         public static readonly AccessTools.FieldRef<RimWorld.QuestPart_Incident, IncidentParms> IncidentParms = AccessTools.FieldRefAccess<RimWorld.QuestPart_Incident, IncidentParms>("incidentParms");
     }
+    
+    public class SlateRef<T>
+    {
+        public static readonly AccessTools.StructFieldRef<RimWorld.QuestGen.SlateRef<T>, string> slateRef = AccessTools.StructFieldRefAccess<RimWorld.QuestGen.SlateRef<T>, string>("slateRef");
+    }
 
     public class Dialog_BeginRitual
     {

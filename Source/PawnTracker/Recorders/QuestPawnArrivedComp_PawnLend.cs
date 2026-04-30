@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using RimWorld.QuestGen;
-using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -10,10 +8,10 @@ public class QuestPawnArrivedComp_PawnLend : QuestPawnArrivedComp
 {
     public override bool Match(Quest quest) => quest.root.defName == nameof(Extra.QuestScriptDefOf.PawnLend);
 
-    public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, Quest quest, Pawn pawn, List<Pawn> questPawns)
+    public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
-        var daysLent = quest.GetFirstPartOfType<QuestPart_LendColonistsToFaction>().returnLentColonistsInTicks  / GenDate.TicksPerDay;
-        var requiredCount = quest.GetFirstPartOfType<QuestPart_SetupTransportShip>().transportShip.ShuttleComp.requiredColonistCount;
+        var daysLent = input.Quest.GetFirstPartOfType<QuestPart_LendColonistsToFaction>().returnLentColonistsInTicks  / GenDate.TicksPerDay;
+        var requiredCount = input.Quest.GetFirstPartOfType<QuestPart_SetupTransportShip>().transportShip.ShuttleComp.requiredColonistCount;
         return builder.AddRule("DaysLent", daysLent)
             .AddRule("RequiredCount", requiredCount.ToString());
     }

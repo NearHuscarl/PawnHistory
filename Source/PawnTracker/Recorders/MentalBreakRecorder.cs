@@ -148,9 +148,8 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
 
         scenario.SpeedUp();
 
-        // MentalBreaker.CurrentDesiredMoodBreakIntensity -> only allows mental break after 2000 ticks
         var tickStart = Find.TickManager.TicksGame;
-        scenario.RunUntil(() => Find.TickManager.TicksGame - tickStart > 2100, () =>
+        scenario.Loop(d =>
         {
             pawn.needs.mood.CurLevel = 0;
             pawn.needs.food.CurLevel = 0;
@@ -158,12 +157,15 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             pawn.needs.beauty.CurLevel = 0;
             pawn.needs.comfort.CurLevel = 0;
             pawn.needs.rest.CurLevel = 0.05f;
-        },
-        onFinish: () =>
-        {
+
+            // MentalBreaker.CurrentDesiredMoodBreakIntensity -> only allows mental break after 2000 ticks
+            if (Find.TickManager.TicksGame - tickStart <= 2100)
+                return;
+            d.Cancelled = true;
             pawn.jobs?.EndCurrentJob(JobCondition.InterruptForced); // wake the fuck up
             pawn.mindState.mentalBreaker.TryDoRandomMoodCausedMentalBreak();
-        }, 50);
+        },
+        50);
         
         var recordDef = pawn.MentalState?.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
         

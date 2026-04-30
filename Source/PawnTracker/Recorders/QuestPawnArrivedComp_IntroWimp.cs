@@ -9,15 +9,15 @@ public class QuestPawnArrivedComp_IntroWimp : QuestPawnArrivedComp
 {
     public override bool Match(Quest quest) => quest.root.defName == nameof(Extra.QuestScriptDefOf.Intro_Wimp);
 
-    public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, Quest quest, Pawn pawn, List<Pawn> questPawns)
+    public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
-        var animalKind = Accessor.QuestPart_Incident.IncidentParms(quest.GetFirstPartOfType<QuestPart_Incident>()).pawnKind;
+        var animalKind = Accessor.QuestPart_Incident.IncidentParms(input.Quest.GetFirstPartOfType<QuestPart_Incident>()).pawnKind;
         return builder.AddRule("AnimalKind", animalKind.label);
     }
     
-    public override IEnumerable<Thing> GetConcerns(Quest quest, List<Pawn> questPawns)
+    public override IEnumerable<Thing> GetConcerns(BuildInput input)
     {
-        var chasingAnimal = questPawns.FirstOrDefault(p => p.IsAnimal); // only exists if animal is not mad
+        var chasingAnimal = input.QuestPawns.FirstOrDefault(p => p.IsAnimal); // only exists if animal is not mad
         if (chasingAnimal == null)
             yield break;
         

@@ -190,6 +190,7 @@ public static class HistoryDescriptionBuilderExtensions
 
     extension(HistoryDescriptionBuilder builder)
     {
+        // TODO: Define markers using translation key to replace 'x others' with a colorized version post resolve.
         public HistoryDescriptionBuilder WithOthers(List<Pawn> pawns)
         {
             var otherCount = pawns.Count - 1;
