@@ -15,7 +15,7 @@ public enum QuestDiscoveredSource
 }
 
 // Search "SendLetterQuestAvailable(" for new source of quest
-
+// TODO: CompProperties_UseEffectGiveQuest for mechanator
 public record QuestDiscoveredEvent(Pawn Discoverer, Quest Quest, QuestDiscoveredSource Source, Thing SourceThing = null, Pawn SourcePawn = null) : GameEventBase;
 
 internal record QuestDiscoveredState(int QuestCount);
@@ -25,7 +25,7 @@ internal static class QuestDiscoveredContext
     public static Quest GetNewQuest(int questCountBefore)
     {
         var quests = Find.QuestManager.QuestsListForReading;
-        if (quests == null || quests.Count <= questCountBefore)
+        if (quests.Count <= questCountBefore)
             return null;
 
         return quests.Skip(questCountBefore).LastOrDefault();
@@ -83,17 +83,16 @@ internal static class CompAncientUplink_Notify_Hacked_Patch
 [HarmonyPatch(typeof(QuestPart_AddGiverQuest), nameof(QuestPart_AddGiverQuest.Notify_QuestSignalReceived))]
 internal static class QuestPart_AddGiverQuest_Notify_QuestSignalReceived_Patch
 {
-    private const string BeggarTranslationKey = "QuestDiscoveredFromBeggar";
-
     private static void Prefix(out QuestDiscoveredState __state) => __state = new QuestDiscoveredState(Find.QuestManager.QuestsListForReading.Count);
 
-    private static void Postfix(QuestPart_AddGiverQuest __instance, Signal signal, QuestDiscoveredState __state)
+    private static void Postfix(Signal signal, QuestDiscoveredState __state)
     {
         var quest = QuestDiscoveredContext.GetNewQuest(__state.QuestCount);
         if (quest == null)
             return;
 
-        // signal.args.TryGetArg("RECEIVER", out Pawn receiver);
-        // GameEventBus.Publish(new QuestDiscoveredEvent(giver, quest, QuestDiscoveredSource.Beggar, SourcePawn: receiver));
+        signal.args.TryGetArg(SignalArgsNames.Receiver, out Pawn receiver);
+        signal.args.TryGetArg(SignalArgsNames.Giver, out Pawn giver);
+        GameEventBus.Publish(new QuestDiscoveredEvent(giver, quest, QuestDiscoveredSource.Beggar, SourcePawn: receiver));
     }
 }

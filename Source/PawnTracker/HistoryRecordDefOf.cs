@@ -47,6 +47,8 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef VisitorLeftGift;
     public static HistoryRecordDef QuestPawnArrived;
     public static HistoryRecordDef LodgerJoinOffer;
+    [MayRequireRoyalty]
+    public static HistoryRecordDef QuestRefugeeBetrayalOffer;
     public static HistoryRecordDef PeaceTalksOutcome;
     public static HistoryRecordDef PeaceTalksRaid;
     public static HistoryRecordDef RitualOutcome;
