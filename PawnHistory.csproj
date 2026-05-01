@@ -49,6 +49,7 @@
     <Content Include="AGENTS.md" />
     <Content Include="ARCHITECTURE.md" />
     <Content Include="docs\**\*.md" />
+    <Content Include=".agents\**\*.md" />
     <Compile Include="Source\**\*.cs" />
   </ItemGroup>
   <ItemGroup>

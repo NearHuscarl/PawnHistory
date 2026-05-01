@@ -22,3 +22,17 @@ Read in this order before changing code:
 ## Implementation Plan Records
 
 When a planned implementation is executed, write the plan or a concise execution note into `docs/exec-plans/completed/` so future agents can find the reasoning later. See [docs/PLANS.md](docs/PLANS.md).
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked in GitHub for this repository. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Use the default triage labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, and `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Treat this repo as single-context. Read the root `CONTEXT.md` and `docs/adr/` when they exist. See `docs/agents/domain.md`.
