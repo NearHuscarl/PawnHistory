@@ -70,6 +70,26 @@ internal static class PawnUtility
             if (!pawn.mindState.mentalBreaker.TryDoMentalBreak(reason, def))
                 Log.Warning($"[PawnHistory] Failed to force mental break {def.defName} on {pawn.LabelShort}");
         }
+
+        public Pawn GiveBirth(Pawn parent2)
+        {
+            pawn.gender = Gender.Female;
+            parent2.gender = Gender.Male;
+            Hediff_Pregnant.DoBirthSpawn(pawn, parent2);
+
+            var pawns = pawn.Map.mapPawns.AllHumanlikeSpawned;
+            for (var i = pawns.Count - 1; i >= 0; i--)
+            {
+                var candidate = pawns[i];
+                if (candidate.DevelopmentalStage != DevelopmentalStage.Baby)
+                    continue;
+                
+                if (candidate.relations.DirectRelationExists(PawnRelationDefOf.Parent, parent2))
+                    return candidate;
+            }
+
+            return null;
+        }
     }
 
     extension(Pawn pawn)

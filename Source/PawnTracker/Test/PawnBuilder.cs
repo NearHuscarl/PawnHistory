@@ -314,23 +314,6 @@ public class PawnBuilder(int count = 1)
         });
     }
 
-    public PawnBuilder MakeHostile()
-    {
-        var hostileFactions = Find.FactionManager.AllFactions
-            .Where(f => f.HostileTo(Faction.OfPlayer) && !f.def.isPlayer && f.def.humanlikeFaction)
-            .ToList();
-
-        if (hostileFactions.Count == 0)
-            return this;
-
-        return Do((pawn, index) =>
-        {
-            pawn.SetFaction(hostileFactions[index % hostileFactions.Count]);
-            pawn.jobs.StopAll();
-            pawn.mindState.duty = new PawnDuty(DutyDefOf.AssaultColony);
-        });
-    }
-
     public Pawn CreateSingle(bool reusePawns = true)
     {
         return Execute(reusePawns).FirstOrDefault();
@@ -438,6 +421,11 @@ public class PawnBuilder(int count = 1)
 
         // 4. IMPORTANT: Refresh the pawn's internal work-tag cache
         pawn.Notify_DisabledWorkTypesChanged();
+    }
+
+    public PawnBuilder SetFaction(Faction faction2)
+    {
+        return Do(p => p.SetFaction(faction2));
     }
 }
 

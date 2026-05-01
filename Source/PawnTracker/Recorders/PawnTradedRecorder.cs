@@ -51,7 +51,6 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
         scenario.Map()
             .BuildRoom(8, 8, tag: "Prison")
             .AsPrison(2, prisoners: prisoners)
-            .WithThing(ThingDefOf.Silver, 3000)
             .Execute();
 
         var negotiator = scenario.Pawn().Colonist().CreateSingle();

@@ -14,5 +14,11 @@ public static class FactionHelper
                 !f.def.hidden &&
                 (f.RelationKindWith(Faction.OfPlayer) == FactionRelationKind.Neutral || f.RelationKindWith(Faction.OfPlayer) == FactionRelationKind.Ally)
             );
+        
+        public static Faction OfHostile => Find.FactionManager.AllFactions
+            .FirstOrDefault(f =>
+                !f.def.hidden &&
+                f.RelationKindWith(Faction.OfPlayer) == FactionRelationKind.Hostile
+            );
     }
 }

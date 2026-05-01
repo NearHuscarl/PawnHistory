@@ -129,4 +129,18 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+
+	<RulePackDef MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>PH_BabyAdopted</defName>
+		<include>
+			<li>PH_Faction</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(pov==Baby,hasFaction==True) ->[PAWN], a baby from [FormerFaction], was adopted by [PlayerFaction].</li>
+				<li>entry(pov==Baby,hasFaction==False)->[PAWN] was adopted by [PlayerFaction].</li>
+				<li>entry(pov==Parent)->[PAWN]'s [ChildRelation], [Child], was adopted by [PlayerFaction].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>

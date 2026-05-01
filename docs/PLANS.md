@@ -16,8 +16,14 @@ Execution planning lives under `docs/exec-plans/`.
 
 ## Implementation Plan Records
 
-- Whenever an implementation follows a plan, record that plan in full details in `docs/exec-plans/completed/<short-name>.md`.
+- Whenever an implementation follows a plan, write a real implementation record in `docs/exec-plans/completed/<short-name>.md`.
 - If work was first discussed in Plan Mode and the user then says to implement it, execute the work and add the completed plan file as part of the implementation.
+- Start with a short domain-facing explanation of the purpose and why it matters.
+- Include a `## Summary` section that explains the shipped behavior.
+- Include scoped sections such as `## Shipped Scope`, `## Design`, `## Rules` when they help future agents understand the implementation.
+- Call out important exclusions, invariants, and player-facing semantics when those were part of the decision.
+- Record what was actually verified.
+- Do not rely on source diffs alone to preserve reasoning; the completed note should stand on its own months later.
 
 ## Intent
 

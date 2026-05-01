@@ -926,6 +926,16 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>BabyAdopted</defName>
+		<label>baby adopted</label>
+		<descriptionMaker>PH_BabyAdopted</descriptionMaker>
+		<icon>UI/Designators/Adopt</icon>
+		<categories>
+			<li>Joined</li>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">
 		<defName>GrowthMoment</defName>
 		<label>growth moment</label>
 		<descriptionMaker>PH_GrowthMoment</descriptionMaker>
