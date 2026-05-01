@@ -42,6 +42,22 @@
 		</rulePack>
 	</RulePackDef>
 
+	<RulePackDef MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>PH_GrowthMoment</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>Passion(passionCount==1)->a passion for [SkillList]</li>
+				<li>Passion(passionCount>=2)->passions for [SkillList]</li>
+				
+				<li>Intro->At biological age [PAWN_age], [PAWN] experienced a growth moment</li>
+				
+				<li>entry(hasTrait==True, hasNewPassion==False)->[Intro] and gained the [Trait] trait.</li>
+				<li>entry(hasTrait==False,hasNewPassion==True) ->[Intro] and developed [Passion].</li>
+				<li>entry(hasTrait==True, hasNewPassion==True) ->[Intro], gaining the [Trait] trait and developing [Passion].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
 	<RulePackDef MayRequire="Ludeon.RimWorld.Royalty">
 		<defName>PH_TitleGained</defName>
 		<rulePack>

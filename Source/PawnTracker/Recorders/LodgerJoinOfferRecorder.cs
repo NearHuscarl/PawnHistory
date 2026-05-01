@@ -49,7 +49,7 @@ public class LodgerJoinOfferRecorder : RecorderBase<LodgerJoinOfferAcceptedEvent
         var joinOffer = quest.GetFirstPartOfType<QuestPart_PawnJoinOffer>();
         Accessor.QuestPart_PawnJoinOffer.SendLetter(joinOffer);
 
-        var letter = scenario.Letter<ChoiceLetter_AcceptVisitors>().Accept();
+        var letter = scenario.Letter<ChoiceLetter_AcceptVisitors>().Accept().Execute();
         var joiner = letter.pawns.Single();
 
         Expect.That(joiner).ToHaveHistoryRecord(new ExpectedHistoryRecord

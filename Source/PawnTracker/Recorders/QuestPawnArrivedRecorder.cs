@@ -73,7 +73,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
     public void TestIncident(TestScenario scenario)
     {
         scenario.Incident(Extra.IncidentDefOf.WandererJoin).Execute();
-        scenario.Letter<ChoiceLetter_AcceptJoiner>().Accept();
+        scenario.Letter<ChoiceLetter_AcceptJoiner>().Accept().Execute();
         
         var pawns1 = QuestHelper.GetArrivalPawns();
         Expect.That(pawns1.Last()).ToHaveHistoryRecord(new ExpectedHistoryRecord

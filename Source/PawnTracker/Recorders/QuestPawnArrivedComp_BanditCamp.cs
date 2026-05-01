@@ -7,7 +7,8 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class QuestPawnArrivedComp_BanditCamp : QuestPawnArrivedComp
 {
-    public override bool Match(Quest quest) => quest.root.defName == nameof(Extra.QuestScriptDefOf.OpportunitySite_BanditCamp);
+    public override bool Match(Quest quest) =>
+        quest.root.defName is nameof(Extra.QuestScriptDefOf.OpportunitySite_BanditCamp) or nameof(Extra.QuestScriptDefOf.Mission_BanditCamp);
 
     public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {

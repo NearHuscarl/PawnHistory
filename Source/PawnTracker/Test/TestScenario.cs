@@ -41,7 +41,8 @@ public class TestScenario
     public ShuttleBuilder Shuttle(TransportShip transportShip) => new(transportShip);
     public TradeDealBuilder Trade(Pawn negotiator) => new(negotiator);
     public RitualBuilder Ritual(Pawn organizer) => new(organizer);
-    public LetterAction<T> Letter<T>() where T : Letter => new();
+    public LetterActionSimple<T> Letter<T>() where T : ChoiceLetter => new();
+    public LetterActionGrowthMoment GrowthMomentLetter() => new();
 
     public void OpenHistoryRecordTab(Pawn pawn)
     {

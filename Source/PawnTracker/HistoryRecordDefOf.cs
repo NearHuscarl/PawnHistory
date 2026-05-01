@@ -118,6 +118,8 @@ public class HistoryRecordDefOf
     [MayRequireBiotech]
     public static HistoryRecordDef MechlinkInstalled;
     [MayRequireBiotech]
+    public static HistoryRecordDef GrowthMoment;
+    [MayRequireBiotech]
     public static HistoryRecordDef PsychicBonded;
 
     [MayRequireOdyssey]

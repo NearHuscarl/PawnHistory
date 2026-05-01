@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using PawnHistory.Source.DebugTools;
-using RimWorld;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
@@ -13,10 +11,10 @@ internal enum LetterChoiceKind
     Reject
 }
 
-public sealed class LetterAction<TLetter> where TLetter : ChoiceLetter
+public abstract class LetterAction<TLetter> where TLetter : Letter
 {
+    protected TLetter Letter;
     private readonly List<Func<TLetter, bool>> filters = [];
-    private TLetter letter;
 
     public LetterAction<TLetter> Filter(Func<TLetter, bool> predicate)
     {
@@ -24,77 +22,22 @@ public sealed class LetterAction<TLetter> where TLetter : ChoiceLetter
         return this;
     }
 
-    public TLetter Accept()
+    private TLetter ResolveLetter()
     {
-        return Execute(LetterChoiceKind.Accept);
-    }
-
-    public TLetter Reject()
-    {
-        return Execute(LetterChoiceKind.Reject);
-    }
-
-    private TLetter Execute(LetterChoiceKind choiceKind)
-    {
-        letter = Find.LetterStack.LettersListForReading
+        Letter = Find.LetterStack.LettersListForReading
             .OfType<TLetter>()
             .Reverse()
             .FirstOrDefault(l => filters.All(f => f(l)));
 
-        if (letter == null)
+        if (Letter == null)
             throw new InvalidOperationException($"No active letter of type {typeof(TLetter).Name} was found.");
 
-        Choose(choiceKind);
-        return letter;
+        return Letter;
     }
 
-    private void Choose(LetterChoiceKind choiceKind)
+    public virtual TLetter Execute()
     {
-        var choice = ResolveChoice(letter, choiceKind);
-
-        if (choice == null)
-            throw new InvalidOperationException($"{choiceKind} option not found in {typeof(TLetter).Name}: {DebugUtility.Format(letter.Choices)}.");
-
-        if (!choice.disabledReason.NullOrEmpty())
-            throw new InvalidOperationException($"{choiceKind} option is disabled in {typeof(TLetter).Name}: {choice.disabledReason}");
-
-        choice.action.Invoke();
-    }
-
-    private static DiaOption ResolveChoice(TLetter letter, LetterChoiceKind choiceKind)
-    {
-        var choices = letter.Choices.ToList();
-
-        if (typeof(TLetter) == typeof(ChoiceLetter_AcceptJoiner))
-            return choiceKind switch
-            {
-                LetterChoiceKind.Accept => ChoiceWithName(choices, "AcceptButton"),
-                LetterChoiceKind.Reject => ChoiceWithName(choices, "RejectLetter"),
-                _ => null
-            };
-
-        if (typeof(TLetter) == typeof(ChoiceLetter_RansomDemand))
-            return choiceKind switch
-            {
-                LetterChoiceKind.Accept => ChoiceWithName(choices, "RansomDemand_Accept"),
-                LetterChoiceKind.Reject => ChoiceWithName(choices, "RejectLetter"),
-                _ => null
-            };
-
-        if (typeof(TLetter) == typeof(ChoiceLetter_AcceptVisitors))
-            return choiceKind switch
-            {
-                LetterChoiceKind.Accept => ChoiceWithName(choices, "AcceptButton"),
-                LetterChoiceKind.Reject => ChoiceWithName(choices, "RejectLetter"), // TODO: have a confirm dialog
-                _ => null
-            };
-
-        return null;
-    }
-
-    private static DiaOption ChoiceWithName(List<DiaOption> choices, string translateKey)
-    {
-        var textToMatch = translateKey.Translate();
-        return choices.FirstOrDefault(c => Accessor.DiaOption.Text(c) == textToMatch);
+        Letter = ResolveLetter();
+        return Letter;
     }
 }

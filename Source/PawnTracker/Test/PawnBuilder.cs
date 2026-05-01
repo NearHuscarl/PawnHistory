@@ -481,6 +481,23 @@ internal static class PawnBuilderExtension
             });
         }
 
+        public PawnBuilder SetAge(int age)
+        {
+            return builder.Do(p =>
+            {
+                p.ageTracker.AgeBiologicalTicks = age * GenDate.TicksPerYear;
+            });
+        }
+
+        public PawnBuilder SetGrowthTier(int tier)
+        {
+            return builder.Do(p =>
+            {
+                p.ageTracker.growthPoints = GrowthUtility.GrowthTiers[tier].pointsRequirement;
+                p.ageTracker.canGainGrowthPoints = true;
+            });
+        }
+
         public PawnBuilder EquipWeapon(ThingDef weaponDef, Func<Pawn, int, bool> shouldEquip = null)
         {
             return builder.Do((pawn, i) =>

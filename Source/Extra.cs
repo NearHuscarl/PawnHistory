@@ -114,6 +114,7 @@ public static class Extra
         public static PawnKindDef Husky;
         public static PawnKindDef Cougar;
         public static PawnKindDef Bear_Grizzly;
+        [MayRequireRoyalty]
         public static PawnKindDef Empire_Fighter_Champion;
         public static PawnKindDef Tribal_Archer;
         public static PawnKindDef Tribal_Berserker;
@@ -171,6 +172,8 @@ public static class Extra
         public static QuestScriptDef Hospitality_Prisoners;
         [MayRequireRoyalty]
         public static QuestScriptDef PawnLend;
+        [MayRequireRoyalty]
+        public static QuestScriptDef Mission_BanditCamp;
         [MayRequireRoyalty]
         public static QuestScriptDef EndGame_RoyalAscent;
 

@@ -19,8 +19,8 @@ public enum QuestPawnKind
 public static class QuestHelper
 {
     // from Util_ChooseRandomQuestHelperKind
-    private static readonly HashSet<PawnKindDef> CombatKinds =
-    [
+    private static readonly HashSet<PawnKindDef> CombatKinds = new List<PawnKindDef>
+    {
         PawnKindDefOf.Empire_Fighter_Trooper,
         PawnKindDefOf.Empire_Fighter_Janissary,
         Extra.PawnKindDefOf.Empire_Fighter_Champion,
@@ -33,7 +33,7 @@ public static class QuestHelper
         Extra.PawnKindDefOf.Mercenary_Slasher_Acidifier,
         Extra.PawnKindDefOf.Mercenary_Gunner_Acidifier,
         Extra.PawnKindDefOf.Mercenary_Sniper_Acidifier
-    ];
+    }.Where(k => k != null).ToHashSet();
 
     public static QuestPawnKind GetQuestPawnKind(Quest quest, Pawn pawn)
     {
@@ -41,7 +41,7 @@ public static class QuestHelper
         
         if (pawn.HostileTo(Faction.OfPlayer))
             kind = QuestPawnKind.Raider;
-        else if (QuestHelper.IsReward(quest, pawn))
+        else if (IsReward(quest, pawn))
             kind = QuestPawnKind.Joiner;
         else if (CombatKinds.Contains(pawn.kindDef))
             kind = QuestPawnKind.Helper;
