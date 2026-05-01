@@ -394,6 +394,15 @@
 			<li>World</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
+		<defName>QuestRefugeeBetrayalOffer</defName>
+		<label>quest refugee betrayal offer</label>
+		<descriptionMaker>PH_QuestRefugeeBetrayalOffer</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>World</li>
+		</categories>
+	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TradeCaravanArrived</defName>
 		<label>trade caravan arrived</label>

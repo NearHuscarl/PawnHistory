@@ -2,9 +2,6 @@
 <Defs>
 	<RulePackDef>
 		<defName>PH_PeaceTalksOutcome</defName>
-		<include>
-			<li>PH_Common</li>
-		</include>
 		<rulePack>
 			<rulesStrings>
 				<li>entry(outcome==Backfire)     ->[PAWN] negotiated peace talks with [Faction], but they backfired.</li>
@@ -171,9 +168,6 @@
 
 	<RulePackDef>
 		<defName>PH_AICoreOffer</defName>
-		<include>
-			<li>PH_Common</li>
-		</include>
 		<rulePack>
 			<rulesStrings>
 				<li>entry->[PAWN] from [Faction] contacted the colony with an offer of information about a persona core that can be used to build a spaceship.</li>
@@ -183,9 +177,6 @@
 
 	<RulePackDef>
 		<defName>PH_VisitorLeftGift</defName>
-		<include>
-			<li>PH_Common</li>
-		</include>
 		<rulePack>
 			<rulesStrings>
 				<li>entry->[PAWN] from [Faction] left a gift for the colony: [Gifts].</li>
@@ -249,7 +240,6 @@
 	<RulePackDef>
 		<defName>PH_LodgerJoinOffer</defName>
 		<include>
-			<li>PH_Common</li>
 			<li>PH_Faction</li>
 		</include>
 		<rulePack>
@@ -260,6 +250,18 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_QuestRefugeeBetrayalOffer</defName>
+		<include>
+			<li>PH_Faction</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>Refugee(refugeeCount>=2)->all refugees from [RefugeeFaction]</li>
+				<li>Refugee(refugeeCount==1)->[RefugeePawn]</li>
+				<li>entry->[PAWN] asked [Acceptor] to betray and kill [Refugee], who had taken shelter at [PlayerSettlement], in exchange for a reward: [RewardThings] ([SilverCount]).</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 		<defName>PH_TradeCaravanArrived</defName>
 		<rulePack>
 			<rulesStrings>
@@ -334,7 +336,6 @@
 	<RulePackDef>
 		<defName>PH_Banish</defName>
 		<include>
-			<li>PH_Common</li>
 			<li>PH_Faction</li>
 		</include>
 		<rulePack>
@@ -367,9 +368,6 @@
 
 	<RulePackDef>
 		<defName>PH_PawnLost</defName>
-		<include>
-			<li>PH_Common</li>
-		</include>
 		<rulePack>
 			<rulesStrings>
 				<li>entry(mapType==Home)   ->[PAWN] was lost after [WorldObject] was abandoned.</li>
@@ -422,15 +420,12 @@
 
 	<RulePackDef>
 		<defName>PH_QuestDiscovered</defName>
-		<include>
-			<li>PH_Common</li>
-		</include>
 		<rulePack>
 			<rulesStrings>
 				<li>entry(source==Book)  ->While reading [SourceThing], [PAWN] discovered [Quest].</li>
 				<li>entry(source==Trader)->While talking with the trader [SourcePawn], [PAWN] learned about [Quest].</li>
+				<li>entry(source==Uplink)->[PAWN] hacked [SourceThing_definite] and discovered [Quest].</li>
 				<li>entry(source==Beggar)->[PAWN] learned about [Quest] after the beggar [SourcePawn] shared a secret in gratitude for the colony's charity.</li>
-				<li>entry(source==Uplink)->[PAWN] hacked [SourceThing_indefinite] and discovered [Quest].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

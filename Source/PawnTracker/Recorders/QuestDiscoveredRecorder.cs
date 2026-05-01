@@ -62,7 +62,7 @@ public class QuestDiscoveredRecorder : RecorderBase<QuestDiscoveredEvent>
     public void TestTrader(TestScenario scenario)
     {
         var negotiator = scenario.Pawn().Colonist().CreateSingle();
-        var trader = scenario.Pawn().WithFriendlyFaction().CreateSingle(false);
+        var trader = scenario.Pawn().WithFaction(Faction.OfNonHostile).CreateSingle(false);
         trader.mindState.hasQuest = true;
 
         TradeUtility.ReceiveQuestFromTrader(trader, negotiator);
@@ -101,7 +101,7 @@ public class QuestDiscoveredRecorder : RecorderBase<QuestDiscoveredEvent>
     [RequiresOdyssey]
     public void TestBeggar(TestScenario scenario)
     {
-        var receiver = scenario.Pawn().WithFriendlyFaction().CreateSingle(false);
+        var receiver = scenario.Pawn().WithFaction(Faction.OfNonHostile).CreateSingle(false);
         var quest = scenario.Quest(Extra.QuestScriptDefOf.Beggars).Execute();
         var giver = QuestHelper.GetArrivalPawns(quest).First();
         // QuestNode_Root_Beggars

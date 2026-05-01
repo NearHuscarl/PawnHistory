@@ -58,12 +58,6 @@ public class IncidentBuilder
         return this;
     }
 
-    public IncidentBuilder NonHostileFaction()
-    {
-        var faction = Find.FactionManager.AllFactions.FirstOrDefault(f => f.PlayerRelationKind == FactionRelationKind.Neutral && !f.def.hidden);
-        return Faction(faction);
-    }
-
     /// <summary>
     /// Executes the incident and returns the list of pawns it spawned.
     /// </summary>

@@ -47,8 +47,6 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef VisitorLeftGift;
     public static HistoryRecordDef QuestPawnArrived;
     public static HistoryRecordDef LodgerJoinOffer;
-    [MayRequireRoyalty]
-    public static HistoryRecordDef QuestRefugeeBetrayalOffer;
     public static HistoryRecordDef PeaceTalksOutcome;
     public static HistoryRecordDef PeaceTalksRaid;
     public static HistoryRecordDef RitualOutcome;
@@ -116,6 +114,8 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef TitleLost;
     [MayRequireRoyalty]
     public static HistoryRecordDef TitleInherited;
+    [MayRequireRoyalty]
+    public static HistoryRecordDef QuestRefugeeBetrayalOffer;
 
     [MayRequireBiotech]
     public static HistoryRecordDef MechlinkInstalled;

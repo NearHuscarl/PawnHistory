@@ -21,7 +21,16 @@ Read in this order before changing code:
 
 ## Implementation Plan Records
 
-When a planned implementation is executed, write the plan or a concise execution note into `docs/exec-plans/completed/` so future agents can find the reasoning later. See [docs/PLANS.md](docs/PLANS.md).
+When a planned implementation is executed, write a proper implementation record into `docs/exec-plans/completed/` so future agents can find the reasoning later. See [docs/PLANS.md](docs/PLANS.md).
+
+Use [docs/exec-plans/completed/pawn-generation-timeline-simulator.md](docs/exec-plans/completed/pawn-generation-timeline-simulator.md) as the quality bar:
+
+- explain the behavior and why it matters before listing mechanics
+- include a meaningful `## Summary`
+- add high-signal sections like scope, design, rules, and verification when relevant
+- capture exclusions, invariants, and what was actually tested
+
+Do not leave behind a minimal bullet dump that only restates files changed.
 
 ## Agent skills
 

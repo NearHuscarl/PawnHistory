@@ -51,18 +51,6 @@ public class PawnBuilder(int count = 1)
         return this;
     }
 
-    public PawnBuilder WithFriendlyFaction()
-    {
-        var friendlyFaction = Find.FactionManager.AllFactions
-            .FirstOrDefault(f =>
-                !f.IsPlayer &&
-                (f.def == FactionDefOf.OutlanderCivil || f.def == FactionDefOf.TribeCivil) &&
-                (f.RelationKindWith(Faction.OfPlayer) == FactionRelationKind.Neutral || f.RelationKindWith(Faction.OfPlayer) == FactionRelationKind.Ally)
-            );
-        faction = friendlyFaction;
-        return this;
-    }
-
     public PawnBuilder HumanLike(bool value = true)
     {
         humanLike = value;

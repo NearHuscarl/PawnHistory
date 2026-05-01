@@ -85,8 +85,11 @@ internal static class QuestPart_AddGiverQuest_Notify_QuestSignalReceived_Patch
 {
     private static void Prefix(out QuestDiscoveredState __state) => __state = new QuestDiscoveredState(Find.QuestManager.QuestsListForReading.Count);
 
-    private static void Postfix(Signal signal, QuestDiscoveredState __state)
+    private static void Postfix(QuestPart_AddQuest_RefugeeBetrayal __instance, QuestDiscoveredState __state, Signal signal)
     {
+        if (signal.tag != __instance.inSignal)
+            return;
+
         var quest = QuestDiscoveredContext.GetNewQuest(__state.QuestCount);
         if (quest == null)
             return;
