@@ -1,6 +1,7 @@
 using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 using Verse.AI;
 
@@ -12,11 +13,12 @@ public enum MentalBreakCause
     Mood,
     Hediff,
     Trait,
+    Royalty,
 }
 
 public record MentalBreakReason(MentalBreakCause Cause, string InGameReason, Hediff Hediff = null, string Trait = null);
 
-public record MentalBreakStartedEvent(Pawn Pawn, MentalBreakReason Reason, MentalBreakDef MentalBreak, MentalStateDef MentalState = null, Pawn Target = null) : GameEventBase;
+public record MentalBreakStartedEvent(Pawn Pawn, MentalBreakReason Reason, MentalBreakDef MentalBreak, MentalStateDef MentalState = null, Pawn Target = null, Quest Quest = null) : GameEventBase;
 
 internal static class MentalBreakContext
 {
@@ -28,15 +30,15 @@ internal static class MentalBreakContext
         "SocialFighting", // Handled by SocialFightStartedEvent
     ];
 
-    public static MentalBreakReason CreateReason(bool causedByMood, string inGameReason)
+    public static MentalBreakReason CreateReason(bool causedByMood, string inGameReason, bool issueDecree = false)
     {
-        var cause = GetCause(causedByMood);
+        var cause = GetCause(causedByMood, issueDecree);
         var hediff = CurrentTickingHediff;
         var trait = CurrentTickingTraitData;
         return new MentalBreakReason(cause, inGameReason, hediff, trait?.label);
     }
 
-    private static MentalBreakCause GetCause(bool causedByMood)
+    private static MentalBreakCause GetCause(bool causedByMood, bool issueDecree = false)
     {
         if (CurrentTickingHediff != null)
             return MentalBreakCause.Hediff;
@@ -44,6 +46,8 @@ internal static class MentalBreakContext
             return MentalBreakCause.Trait;
         if (causedByMood)
             return MentalBreakCause.Mood;
+        if (issueDecree)
+            return MentalBreakCause.Royalty;
         return MentalBreakCause.Other;
     }
 
@@ -130,7 +134,7 @@ internal static class MentalBreakWorker_RunWild_TryStart_Patch
     {
         var mentalBreakReason = MentalBreakContext.CreateReason(causedByMood, reason);
         // fire in prefix before they run wild and change their faction to null
-        GameEventBus.Publish(new MentalBreakStartedEvent(pawn, mentalBreakReason, __instance.def, MentalState: null, Target: null));
+        GameEventBus.Publish(new MentalBreakStartedEvent(pawn, mentalBreakReason, __instance.def));
     }
 }
 
@@ -140,7 +144,25 @@ internal static class MentalBreakWorker_Catatonic_TryStart_Patch
     public static void Postfix(MentalBreakWorker_Catatonic __instance, Pawn pawn, string reason, bool causedByMood)
     {
         var mentalBreakReason = MentalBreakContext.CreateReason(causedByMood, reason);
-        GameEventBus.Publish(new MentalBreakStartedEvent(pawn, mentalBreakReason, __instance.def, MentalState: null, Target: null));
+        GameEventBus.Publish(new MentalBreakStartedEvent(pawn, mentalBreakReason, __instance.def));
+    }
+}
+
+[HarmonyPatch(typeof(Pawn_RoyaltyTracker), nameof(Pawn_RoyaltyTracker.IssueDecree))]
+internal static class Pawn_RoyaltyTracker_IssueDecree_Patch
+{
+    public static void Prefix(ref int __state, Pawn_RoyaltyTracker __instance)
+    {
+        __state = __instance.lastDecreeTicks;
+    }
+    public static void Postfix(int __state, Pawn_RoyaltyTracker __instance, bool causedByMentalBreak, string mentalBreakReason)
+    {
+        if (__state == __instance.lastDecreeTicks)
+            return;
+        var pawn = __instance.pawn;
+        var reason = MentalBreakContext.CreateReason(causedByMentalBreak, mentalBreakReason, true);
+        var quest = Find.QuestManager.QuestsListForReading.LastOrDefault(q => q.root.decreeTags.Any());
+        GameEventBus.Publish(new MentalBreakStartedEvent(pawn, reason, Extra.MentalBreakDefOf.WildDecree, Quest: quest));
     }
 }
 

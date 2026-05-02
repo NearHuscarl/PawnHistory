@@ -70,9 +70,14 @@ public static class Extra
     [DefOf]
     public static class MentalBreakDefOf
     {
+        public static MentalBreakDef Binging_DrugMajor;
+        public static MentalBreakDef Binging_DrugExtreme;
+        public static MentalBreakDef WildDecree;
         public static MentalBreakDef Slaughterer;
         public static MentalBreakDef Jailbreaker;
         public static MentalBreakDef SadisticRage;
+        public static MentalBreakDef RunWild;
+        public static MentalBreakDef TargetedTantrum;
 
         static MentalBreakDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(MentalBreakDefOf));
     }

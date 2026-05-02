@@ -20,7 +20,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
 
     public override void CreateRecord(MentalBreakStartedEvent input)
     {
-        var (pawn, reason, mentalBreak, mentalStateDef, target) = input;
+        var (pawn, reason, mentalBreak, mentalStateDef, target, quest) = input;
         var mentalState = pawn.MentalState; // mentalState could be null in some MentalBreak
 
         if (!ShouldRecord(pawn))
@@ -35,80 +35,28 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         }
 
         var recordDef = mentalState?.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
-        var hasCustomDescription = HasCustomDescription(defName, recordDef);
         var concerns = new List<Thing> { mentalState?.causedByPawn, target };
-        var descBuilder = recordDef.Description(pawn)
+        var builder = recordDef.Description(pawn)
             .IncludePawnGrammar()
-            .AddRule("Faction", pawn.Faction)
-            .AddRule("Reason", GetReason(reason, recordDef, pawn))
             .AddRule("Target", target, addSubsymbols: true)
+            .AddRule("InGameDesc", mentalState?.GetBeginLetterText().Resolve().Replace("\r", " ").Replace("\n", " ").Trim('.'))
+            .AddRule("ReasonHediff", reason.Hediff?.LabelNounInBracket())
+            .AddRule("ReasonTrait", reason.Trait?.Colorize(NeedsCardUtility.MoodColorNegative))
+            .AddRule("ReasonMood", ParsePoorMoodReason(reason.InGameReason)?.Colorize(NeedsCardUtility.MoodColorNegative))
+            .AddConstant("cause", reason.Cause)
             .AddConstant("name", defName);
+        var buildInput = new MentalBreakComp.BuildInput(pawn, reason, mentalBreak, mentalStateDef, mentalState, target, quest);
 
-        // Reasons to override mental state's description:
-        // - Too long to fit in history record (RunWild, GiveUpExit)
-        // - Change to past tense as this is a history mod.
-        // - Some mental break messages are in strange places rather than from MentalBreakDef
-        if (hasCustomDescription)
+        foreach (var comp in Comps.OfType<MentalBreakComp>())
         {
-            if (mentalState is MentalState_BingingDrug bd)
-                descBuilder.AddRule("Drug", bd.chemical.label);
-            else if (mentalState is MentalState_TargetedTantrum tt)
-            {
-                descBuilder.AddRule("Thing", tt.target.Label.Colorize(ColoredText.SubtleGrayColor));
-                concerns.Add(tt.target);
-            }
-            else if (mentalState is MentalState_Jailbreaker)
-            {
-                var room = target.GetRoom();
-                var allPrisonersInRoom = room.ContainedThings<Pawn>().Where(p => p.IsPrisoner).ToList();
-                concerns.AddRange(allPrisonersInRoom);
-                descBuilder.AddRule("Prisoners", LangUtility.FormatList(allPrisonersInRoom));
-            }
-        }
-        else
-        {
-            // modded mental states or something I am missing in vanilla
-            var inGameDesc = mentalState?.GetBeginLetterText().Resolve().Replace("\r", " ").Replace("\n", " ");
+            if (!comp.Match(buildInput))
+                continue;
 
-            if (inGameDesc.NullOrEmpty())
-            {
-                Log.Warning($"Cannot resolve description of {defName}: inGameDesc is null");
-                return;
-            }
-
-            descBuilder.AddRule("InGameDesc", inGameDesc);
+            builder = comp.BuildGrammarRequest(builder, buildInput);
+            concerns.AddRange(comp.GetConcerns(buildInput));
         }
 
-        AddRecord(recordDef, pawn, descBuilder.Resolve(), concerns);
-    }
-
-    private static bool HasCustomDescription(string defName, HistoryRecordDef recordDef)
-    {
-        return recordDef.descriptionMaker.RulesPlusIncludes.Any(r => r.keyword == "entry"
-            && r.constantConstraints != null
-            && r.Priority == 1
-            && r.constantConstraints.Any(c => c.key == "name" && c.value == defName)
-        );
-    }
-
-    private static string GetReason(MentalBreakReason reason, HistoryRecordDef recordDef, Pawn pawn)
-    {
-        if (reason.Cause == MentalBreakCause.Hediff)
-            return recordDef.Description(pawn)
-                .AddRule("Hediff", reason.Hediff.LabelNounInBracket())
-                .Resolve("ReasonHediff");
-
-        if (reason.Cause == MentalBreakCause.Trait)
-            return recordDef.Description(pawn)
-                .AddRule("Trait", reason.Trait.Colorize(NeedsCardUtility.MoodColorNegative))
-                .Resolve("ReasonTrait");
-
-        if (reason.Cause == MentalBreakCause.Mood)
-            return recordDef.Description(pawn)
-                .AddRule("Mood", ParsePoorMoodReason(reason.InGameReason).Colorize(NeedsCardUtility.MoodColorNegative))
-                .Resolve("ReasonMood");
-
-        return reason.InGameReason;
+        AddRecord(recordDef, pawn, builder.Resolve(), concerns, quest: quest);
     }
 
     // This happened because of poor mood. The final straw was: {0} -> {0}
@@ -135,8 +83,6 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         
         return string.Empty;
     }
-
-    private const string Reason = "This happened because of poor mood: [Reason].";
     
     [SkipTest]
     public Action TestNaturalBreak(TestScenario scenario)
@@ -169,25 +115,35 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         
         var recordDef = pawn.MentalState?.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
         
-        Expect.That(pawn).Eventually().ToHaveHistoryRecord(recordDef, Reason);
+        Expect.That(pawn).Eventually().ToHaveHistoryRecord(recordDef, MoodReasonTemplate);
 
         return () => scenario.SlowDown();
     }
 
-    private static readonly List<MentalBreakDef> IndividuallyTestedMentalBreaks = [
-        Extra.MentalBreakDefOf.Slaughterer,
-        Extra.MentalBreakDefOf.Jailbreaker,
-        Extra.MentalBreakDefOf.SadisticRage,
-        MentalBreakDefOf.CorpseObsession,
-    ];
-
+    internal const string MoodReasonTemplate = "This happened because of poor mood: [Reason].";
+    
     public void Test(TestScenario scenario)
     {
+        var mentalBreakTemplateLookup = new Dictionary<string, string>
+        {
+            { "Berserk", $"[PAWN] went berserk. [He] was going to attack anyone [He] sees. {MoodReasonTemplate}" },
+            { "FireStartingSpree", $"[PAWN] was on a fire starting spree. [He] wandered around for a while, randomly starting fires. {MoodReasonTemplate}" },
+            { "Catatonic", $"[PAWN] suffered a total mental breakdown and entered a catatonic state for several days. {MoodReasonTemplate}" },
+            { "GiveUpExit", $"[PAWN] gave up on this community. [He] decided to leave and pursue a better life elsewhere. {MoodReasonTemplate}" },
+            { "Binging_Food", $"[PAWN] pigged out on food. {MoodReasonTemplate}" },
+            { "Wander_Psychotic", $"[PAWN] wandered around in a psychotic state. {MoodReasonTemplate}" },
+            { "Wander_Sad", $"[PAWN] broke down and wandered around in sadness. {MoodReasonTemplate}" },
+            { "Wander_OwnRoom", $"[PAWN] hid in [His] room. {MoodReasonTemplate}" },
+            { "Tantrum", $"[PAWN] had a tantrum. [He] was going to smash up random furniture, items and structures. {MoodReasonTemplate}" },
+            { "BedroomTantrum", $"[PAWN] had a tantrum. [He] was going to smash things in [His] room. {MoodReasonTemplate}" },
+            { "InsultingSpree", $"[PAWN] was on an insulting spree. [He] was going to wander around, randomly insulting others. {MoodReasonTemplate}" },
+            { "TargetedInsultingSpree", $"[PAWN] fixated [His] rage on [Target]. [He] was going to follow [Target_objective] around, hurling insults. {MoodReasonTemplate}" },
+            { "MurderousRage", $"[PAWN] flew into a murderous rage and decided to kill [Target]. {MoodReasonTemplate}" },
+        };
+        
         scenario.Map()
             .BuildRoom(7, 7, "Bedroom")
             .AsBarrack(bedCount: 2) // BedroomTantrum
-            .WithThing(ThingDefOf.GoJuice) // Binging_DrugExtreme
-            .WithThing(ThingDefOf.Beer) // Binging_DrugMajor
             .Execute();
 
         scenario.Map()
@@ -195,47 +151,24 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .WithThing(ThingDefOf.MealFine, 300) // Binging_Food
             .Execute();
 
-        scenario.Map()
-            .BuildRoom(MapBuilder.Beside("Bedroom", Rot4.West, 5, 5), "Common")
-            .Execute();
-
-        var mentalBreaks = DefDatabase<MentalBreakDef>.AllDefs.Except(IndividuallyTestedMentalBreaks).ToList();
+        var mentalBreaks = DefDatabase<MentalBreakDef>.AllDefs
+            .Where(d => !mentalBreakTemplateLookup.ContainsKey(d.defName))
+            .ToList();
 
         var pawns = scenario.Pawn(mentalBreaks.Count)
             .ThatMatches(ShouldRecord)
             .StopMentalState()
-            .Position(scenario.TaggedRooms["Common"].CenterCell, 4)
+            .Position(scenario.TaggedRooms["Freezer"].CenterCell, 4)
             .GiveTrait(TraitDefOf.Pyromaniac) // FireStartingSpree
             .Do((p, i) =>
             {
-                if (mentalBreaks[i].defName == "BedroomTantrum" || mentalBreaks[i].defName.Contains("Wander_OwnRoom"))
+                if (mentalBreaks[i].defName == "BedroomTantrum" || mentalBreaks[i].defName == "Wander_OwnRoom")
                 {
                     p.ownership.ClaimBedIfNonMedical(RestUtility.FindBedFor(p));
                 }
             })
             .Do((p, i) => p.StartMentalBreakWithMadeUpThought(mentalBreaks[i]))
             .Execute();
-
-        var mentalBreakTemplateLookup = new Dictionary<string, string>
-        {
-            { "Berserk", $"[PAWN] went berserk. [PAWN_pronoun] was going to attack anyone [PAWN_pronoun] sees. {Reason}" },
-            { "FireStartingSpree", $"[PAWN] was on a fire starting spree. [PAWN_pronoun] wandered around for a while, randomly starting fires. {Reason}" },
-            { "Catatonic", $"[PAWN] suffered a total mental breakdown and entered a catatonic state for several days. {Reason}" },
-            { "RunWild", $"[PAWN] was fed up with civilization. [PAWN_pronoun] decided to leave [FACTION] to live with the animals in the wild. {Reason}" },
-            { "GiveUpExit", $"[PAWN] gave up on this community. [PAWN_pronoun] decided to leave and pursue a better life elsewhere. {Reason}" },
-            { "Binging_DrugExtreme", $"[PAWN] binged on [Drug] during an extreme mental break. {Reason}" },
-            { "Binging_DrugMajor", $"[PAWN] binged on [Drug] during a major mental break. {Reason}" },
-            { "Binging_Food", $"[PAWN] pigged out on food. {Reason}" },
-            { "Wander_Psychotic", $"[PAWN] wandered around in a psychotic state. {Reason}" },
-            { "Wander_Sad", $"[PAWN] broke down and wandered around in sadness. {Reason}" },
-            { "Wander_OwnRoom", $"[PAWN] hid in [PAWN_possessive] room. {Reason}" },
-            { "Tantrum", $"[PAWN] had a tantrum. [PAWN_pronoun] was going to smash up random furniture, items and structures. {Reason}" },
-            { "TargetedTantrum", $"[PAWN] had a tantrum. [PAWN_pronoun] was going to destroy [Thing]. {Reason}" },
-            { "BedroomTantrum", $"[PAWN] had a tantrum. [PAWN_pronoun] was going to smash things in [PAWN_possessive] room. {Reason}" },
-            { "InsultingSpree", $"[PAWN] was on an insulting spree. [PAWN_pronoun] was going to wander around, randomly insulting others. {Reason}" },
-            { "TargetedInsultingSpree", $"[PAWN] fixated [PAWN_possessive] rage on [Target]. [PAWN_pronoun] was going to follow [Target_objective] around, hurling insults. {Reason}" },
-            { "MurderousRage", $"[PAWN] flew into a murderous rage and decided to kill [Target]. {Reason}" },
-        };
 
         for (var i = 0; i < mentalBreaks.Count; i++)
         {
@@ -262,7 +195,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         Expect.That(pawn).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.MentalBreakViolent,
-            Description = $"[PAWN] had a mental breakdown and was going to vent [PAWN_possessive] anger by slaughtering [Target]. {Reason}",
+            Description = $"[PAWN] had a mental breakdown and was going to vent [PAWN_possessive] anger by slaughtering [Target]. {MoodReasonTemplate}",
             Concerns = [animal],
         });
     }
@@ -281,34 +214,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .Do(p => p.StartMentalBreakWithMadeUpThought(Extra.MentalBreakDefOf.SadisticRage))
             .CreateSingle();
 
-        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.MentalBreakViolent, $"[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. {Reason}");
-    }
-
-    public Action TestPrisonBreak(TestScenario scenario)
-    {
-        scenario.SpeedUp();
-        var prisoners = new List<Pawn>();
-        scenario.Map()
-            .BuildRoom(6, 6, tag: "Prison")
-            .AsPrison(prisonerCount: 2, prisoners: prisoners) // Jailbreaker
-            .Execute();
-
-        var jailbreakerBreak = Extra.MentalBreakDefOf.Jailbreaker;
-        var pawn = scenario.Pawn()
-            .Colonist()
-            .StopMentalState()
-            .Position(scenario.OutsideOf("Prison"))
-            .Do((p, i) => p.StartMentalBreakWithMadeUpThought(jailbreakerBreak))
-            .CreateSingle();
-
-        Expect.That(pawn).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord
-        {
-            Def = HistoryRecordDefOf.MentalBreak,
-            Description = $"[PAWN] had a mental breakdown and was going to induce [Prisoners] to escape. {Reason}",
-            Concerns = prisoners.Cast<Thing>().ToList(),
-        });
-
-        return () => scenario.SlowDown();
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.MentalBreakViolent, $"[PAWN] flew into a sadistic rage. [PAWN_pronoun] was going to vent [PAWN_possessive] anger on the prisoners. {MoodReasonTemplate}");
     }
 
     public void TestCorpseObsession(TestScenario scenario)
@@ -328,7 +234,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.MentalBreak,
-            Description = $"[PAWN] became obsessed with corpses. [PAWN_pronoun] was going to find and present [Target]'s corpse for all to see. {Reason}",
+            Description = $"[PAWN] became obsessed with corpses. [He] was going to find and present [Target]'s corpse for all to see. {MoodReasonTemplate}",
             Concerns = [deadPawn],
         });
     }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
@@ -65,7 +64,7 @@ public class BabyAdoptedRecorder : RecorderBase<BabyAdoptedEvent>
         {
             Def = HistoryRecordDefOf.BabyAdopted,
             Description = "[PAWN], a baby from [FormerFaction], was adopted by the colony.",
-            Concerns = prisoners.Cast<Thing>().ToList()
+            Concerns = [..prisoners]
         });
         Expect.ThatAll(prisoners).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {

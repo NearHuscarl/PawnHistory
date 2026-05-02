@@ -186,7 +186,7 @@
 		<defName>Birthday</defName>
 		<label>birthday</label>
 		<descriptionMaker>PH_Birthday</descriptionMaker>
-		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<icon>EventIcons/Birthday</icon>
 		<categories>
 			<li>Life</li>
 			<li>Health</li>
@@ -258,7 +258,7 @@
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BodyPartModded</defName>
-		<label>artifical body part installed</label>
+		<label>artificial body part installed</label>
 		<descriptionMaker>PH_BodyPartModded</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
