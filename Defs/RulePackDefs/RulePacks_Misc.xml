@@ -510,6 +510,15 @@
 		</rulePack>
 	</RulePackDef>
 
+	<RulePackDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>PH_Enslaved</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[InteractionLog]. [Slave] accepted [Slave_possessive] fate and became enslaved by [Enslaver].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
 	<RulePackDef>
 		<defName>PH_PrisonBreak</defName>
 		<include>

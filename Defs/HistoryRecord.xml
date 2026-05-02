@@ -906,6 +906,15 @@
 			<li>World</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>Enslaved</defName>
+		<label>enslaved</label>
+		<descriptionMaker>PH_Enslaved</descriptionMaker>
+		<icon>UI/Icons/Slavery</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
 
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
 		<defName>TechprintApplied</defName>

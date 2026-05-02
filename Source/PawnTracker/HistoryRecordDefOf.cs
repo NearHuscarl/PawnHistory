@@ -128,6 +128,9 @@ public class HistoryRecordDefOf
     [MayRequireBiotech]
     public static HistoryRecordDef PsychicBonded;
 
+    [MayRequireIdeology]
+    public static HistoryRecordDef Enslaved;
+
     [MayRequireOdyssey]
     public static HistoryRecordDef QuestDiscovered;
 
