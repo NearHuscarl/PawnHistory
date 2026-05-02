@@ -22,7 +22,7 @@ Backlog for future event and recorder coverage.
 - Inspiration sources from base game, Royalty, Odyssey, and Ideology.
 - Mental breaks
   - [ ] Core: Bonded animal berserk breaks caused by pawn death.
-  - [ ] DLCs: MentalBreakWorker_WildDecree, MentalBreakWorker_HumanityBreak, MentalBreakWorker_IdeoChange, MentalBreakWorker_FireTerror[NO], EntityLiberator 
+  - [ ] DLCs: ~~MentalBreakWorker_WildDecree~~, MentalBreakWorker_HumanityBreak, MentalBreakWorker_IdeoChange, MentalBreakWorker_FireTerror[NO], EntityLiberator 
 - Raid type variants such as siege-specific presentation.
   - [ ] DLCs: like hate chanting from anomaly 
 - Ideology conversion and belief reduction.

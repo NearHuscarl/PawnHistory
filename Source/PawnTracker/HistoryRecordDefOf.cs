@@ -116,6 +116,8 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef TitleInherited;
     [MayRequireRoyalty]
     public static HistoryRecordDef QuestRefugeeBetrayalOffer;
+    [MayRequireRoyalty]
+    public static HistoryRecordDef QuestRefugeeAssault;
 
     [MayRequireBiotech]
     public static HistoryRecordDef MechlinkInstalled;

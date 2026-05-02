@@ -262,6 +262,27 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_QuestRefugeeAssault</defName>
+		<include>
+			<li>PH_Faction</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>AndOtherRefugee(otherCount==0)-></li>
+				<li>AndOtherRefugee(otherCount==1)-> and (*Threat)[OtherCount] other refugee(/Threat)</li>
+				<li>AndOtherRefugee(otherCount>=2)-> and (*Threat)[OtherCount] other refugees(/Threat)</li>
+				<li>entry(reason==Betrayal)           ->[PAWN][AndOtherRefugee] betrayed [PlayerFaction] after being given shelter.</li>
+				<li>entry(reason==Death)              ->[PAWN][AndOtherRefugee] turned violently against [PlayerFaction] after [Victim] died.</li>
+				<li>entry(reason==Arrested)           ->[PAWN][AndOtherRefugee] turned violently against [PlayerFaction] after [Victim] was arrested.</li>
+				<li>entry(reason==SurgeryViolation)   ->[PAWN][AndOtherRefugee] turned violently against [PlayerFaction] after [Victim] was harmed during surgery.</li>
+				<li>entry(reason==PsychicRitualTarget)->[PAWN][AndOtherRefugee] turned violently against [PlayerFaction] after [Victim] was targeted by a psychic ritual.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_TradeCaravanArrived</defName>
 		<rulePack>
 			<rulesStrings>

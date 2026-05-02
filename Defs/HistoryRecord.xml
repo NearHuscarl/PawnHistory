@@ -403,6 +403,16 @@
 			<li>World</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
+		<defName>QuestRefugeeAssault</defName>
+		<label>quest refugee assault</label>
+		<descriptionMaker>PH_QuestRefugeeAssault</descriptionMaker>
+		<icon>Ui/Commands/AttackSettlement</icon>
+		<categories>
+			<li>Combat</li>
+			<li>World</li>
+		</categories>
+	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>TradeCaravanArrived</defName>
 		<label>trade caravan arrived</label>

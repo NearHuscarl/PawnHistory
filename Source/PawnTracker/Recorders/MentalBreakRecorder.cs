@@ -108,7 +108,9 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             if (Find.TickManager.TicksGame - tickStart <= 2100)
                 return;
             d.Cancelled = true;
-            pawn.jobs?.EndCurrentJob(JobCondition.InterruptForced); // wake the fuck up
+            
+            if (!pawn.Awake())
+                RestUtility.WakeUp(pawn);
             pawn.mindState.mentalBreaker.TryDoRandomMoodCausedMentalBreak();
         },
         50);
