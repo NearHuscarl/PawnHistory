@@ -39,7 +39,7 @@ public static class QuestHelper
     {
         var kind = QuestPawnKind.Guest;
         
-        if (pawn.HostileTo(Faction.OfPlayer))
+        if (pawn.HostileTo(Faction.OfPlayer) && !pawn.Downed)
             kind = QuestPawnKind.Raider;
         else if (IsReward(quest, pawn))
             kind = QuestPawnKind.Joiner;

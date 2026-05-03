@@ -215,6 +215,8 @@
 				<li>entry(priority=1,kind==Joiner,quest==PawnLend)                    ->[PAWN] joined [PlayerSettlement] as a reward after [PlayerSettlement] lent [RequiredCount] colonists to [Faction] for [DaysLent] days.</li>
 				<li>entry(priority=1,kind==Joiner,quest==ThreatReward_Raid_MiscReward)->[PAWN] joined [PlayerSettlement] as a reward for defeating a raid from [HostileFaction].</li>
 				<li>entry(priority=1,kind==Helper,quest==ThreatReward_Raid_MiscReward)->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] to help fight off a raid from [HostileFaction].</li>
+				<li>entry(priority=1,hasDeadParent==True,quest==RefugeePodCrash_Baby) ->A baby named [PAWN] from [BabyFaction] crashed nearby in a transport pod. [PAWN_possessive] [Relation]'s body was in the pod as well.</li>
+				<li>entry(priority=1,hasDeadParent==False,quest==RefugeePodCrash_Baby)->A baby named [PAWN] from [BabyFaction] crashed nearby in a transport pod.</li>
 				
 				<!-- TODO: not tested, needs polishment -->
 				<li>entry(priority=1,kind==Joiner,quest==BuildMonument_Basic)       ->[PAWN] joined [PlayerSettlement] as a reward for completing the monument for [Faction].</li>

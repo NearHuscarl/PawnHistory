@@ -186,6 +186,8 @@ public static class Extra
 
         [MayRequireBiotech]
         public static QuestScriptDef SanguophageMeetingHost;
+        [MayRequireBiotech]
+        public static QuestScriptDef RefugeePodCrash_Baby;
 
         [MayRequireIdeology]
         public static QuestScriptDef Beggars;
