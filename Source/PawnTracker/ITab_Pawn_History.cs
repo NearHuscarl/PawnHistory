@@ -10,6 +10,7 @@ public class ITab_Pawn_History : ITab
 {
     public static readonly float DefaultWidth = 650f;
     public static readonly float DefaultHeight = 510f;
+    private readonly HistoryCardPage historyCardPage = new();
 
     public Pawn PawnToShowInfo
     {
@@ -21,10 +22,7 @@ public class ITab_Pawn_History : ITab
         }
     }
 
-    public override bool IsVisible
-    {
-        get => CompHistoryManager.GetComp(PawnToShowInfo).records.Count > 0;
-    }
+    public override bool IsVisible => CompHistoryManager.GetComp(PawnToShowInfo).records.Count > 0;
 
     public ITab_Pawn_History()
     {
@@ -33,16 +31,10 @@ public class ITab_Pawn_History : ITab
         this.tutorTag = "History";
     }
 
-    public override void OnOpen()
-    {
-        base.OnOpen();
-        HistoryCardUtility.ScrollPosition = Vector2.zero;
-    }
-
     protected override void FillTab()
     {
         var pawn = PawnToShowInfo;
         var tabRect = new Rect(0, 0, size.x, size.y);
-        HistoryCardUtility.DrawHistoryCard(tabRect, pawn);
+        historyCardPage.Draw(tabRect, pawn);
     }
 }

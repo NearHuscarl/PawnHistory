@@ -98,7 +98,6 @@ public class PawnGeneratedRecorder : RecorderBase<PawnGeneratedEvent>
 
         Expect.That(bonded.date).LessThan(generated.date);
     }
-
     private static void ResetHistory(Pawn pawn) => CompHistoryManager.GetComp(pawn).ClearAll();
 
     private static void RunWithSeed(int seed, Action action)

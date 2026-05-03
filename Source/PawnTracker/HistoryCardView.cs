@@ -1,27 +1,21 @@
-﻿using PawnHistory.Source.DebugTools;
 using PawnHistory.Source.Helper;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PawnHistory.Source.DebugTools;
 using UnityEngine;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
 
-public static class HistoryCardUtility
+public readonly record struct HistoryCardLayout(float Gap);
+
+public static class HistoryCardView
 {
     private const float PinnedBorderWidth = 2f;
     private static readonly Color PinnedBorderColor = NeedsCardUtility.MoodColorNegative;
-
-    private static float containerPadding;
-    /// <summary>
-    /// default gap between common UI controls
-    /// </summary>
-    private static float gap;
-
-    private static float filterHeight;
-
+    
     private static float headerHeight;
 
     private static float minRowHeight;
@@ -33,19 +27,11 @@ public static class HistoryCardUtility
     private static float cellPx;
 
     private static float scrollWidth;
-    public static Vector2 ScrollPosition;
-
-    static HistoryCardUtility() => ReloadLayoutConfig();
-
+    
     [Reloadable]
     [NearDebugAction]
-    private static void ReloadLayoutConfig()
+    private static void ReloadHistoryCardViewLayout()
     {
-        containerPadding = 8f;
-        gap = 10f;
-
-        filterHeight = 30f;
-
         headerHeight = 25f;
 
         minRowHeight = 32f;
@@ -57,87 +43,50 @@ public static class HistoryCardUtility
         cellPx = 5f;
 
         scrollWidth = 16f;
-        ScrollPosition = Vector2.zero;
     }
 
-    private static readonly Dictionary<HistoryRecord, float> CachedHeights = [];
-    private static float GetRowHeight(HistoryRecord record)
+    public static void Draw(
+        Rect inRect,
+        List<HistoryRecord> pageRecords,
+        ref Vector2 scrollPosition,
+        ref bool pendingScrollToBottom,
+        Dictionary<HistoryRecord, float> cachedHeights,
+        HistoryCardLayout layout)
     {
-        Text.Font = GameFont.Tiny;
+        Text.Font = GameFont.Small;
+        GUI.color = Color.gray;
+        Text.Anchor = TextAnchor.MiddleLeft;
 
-        if (CachedHeights.TryGetValue(record, out var h))
-            return h;
-        
-        var textHeight = Text.CalcHeight(LangUtility.StripColorTags(record.description), colWidthDesc);
-        h = Mathf.Max(textHeight, minRowHeight);
-        CachedHeights[record] = h;
-        return h;
-    }
-
-    private static void DrawPinnedBorder(Rect row)
-    {
-        var pinnedBorderRect = new Rect(row.xMax - PinnedBorderWidth, row.y, PinnedBorderWidth, row.height);
-        GUI.color = PinnedBorderColor;
-        GUI.DrawTexture(pinnedBorderRect, BaseContent.WhiteTex);
-        GUI.color = Color.white;
-    }
-
-    private static string GetTooltipOf(HistoryRecord record)
-    {
-        var sb = new StringBuilder();
-        var ticksAgo = GenTicks.TicksAbs - record.date;
-
-        sb.AppendLine(record.def.LabelCap.Colorize(ColoredText.TipSectionTitleColor));
-        sb.AppendLine();
-        sb.AppendLine($"Occurred {ticksAgo.ToStringTicksToPeriod()} ago");
-        
-        if (record.pinned)
-            sb.AppendLine("This record is pinned. Pinned record will never be removed.");
-
-        sb.AppendLine("Right click: Open the action menu.");
-        
-        return sb.ToString();
-    }
-
-    public static void DrawHistoryCard(Rect tabRect, Pawn pawn)
-    {
-        var color = GUI.color;
-        var font = Text.Font;
-        var anchor = Text.Anchor;
-
-        var inRect = tabRect.ContractedBy(containerPadding);
-        var records = pawn.HistoryRecords.Where(r => r.def.importance != RecordImportance.Debug).ToList();
-
-        GUI.BeginGroup(inRect);
-
-        // --- HEADER SETUP ---
-        Text.Font = GameFont.Small; GUI.color = Color.gray; Text.Anchor = TextAnchor.MiddleLeft;
-
-        var header = new Rect(0, filterHeight + gap, inRect.width, headerHeight);
+        var header = new Rect(0, layout.Gap, inRect.width, headerHeight);
         var dateHeaderCell = new Rect(cellPx, header.y, colWidthDate, headerHeight);
         Widgets.Label(dateHeaderCell, "NH_PH_HistoryCard_HeaderDate".Translate());
-        var iconHeaderCell = new Rect(dateHeaderCell.xMax, header.y + (header.height - colWidthIcon) / 2, colWidthIcon, colWidthIcon); // used to calculate next cell rect
+        var iconHeaderCell = new Rect(dateHeaderCell.xMax, header.y + (header.height - colWidthIcon) / 2, colWidthIcon, colWidthIcon);
         var descHeaderCell = new Rect(iconHeaderCell.xMax + colGap, header.y, colWidthDesc, headerHeight);
         Widgets.Label(descHeaderCell, "NH_PH_HistoryCard_HeaderDescription".Translate());
 
-        // --- SCROLL VIEW ---
-        var tableY = filterHeight + gap + headerHeight;
+        var tableY = headerHeight + layout.Gap;
         var outRect = new Rect(0, tableY, inRect.width, inRect.height - tableY);
-        var totalHeight = records.Sum(GetRowHeight);
+        var totalHeight = pageRecords.Sum(record => GetRowHeight(record, cachedHeights, layout));
         var viewRect = new Rect(0, 0, inRect.width - scrollWidth, totalHeight);
 
-        Widgets.BeginScrollView(outRect, ref ScrollPosition, viewRect);
+        ApplyScrollState(ref scrollPosition, ref pendingScrollToBottom, totalHeight, outRect.height);
+
+        Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
         var curY = 0f;
-        for (var i = 0; i < records.Count; i++)
+        for (var i = 0; i < pageRecords.Count; i++)
         {
-            var record = records[i];
-            var rowHeight = GetRowHeight(record);
+            var record = pageRecords[i];
+            var rowHeight = GetRowHeight(record, cachedHeights, layout);
             var row = new Rect(0, curY, viewRect.width, rowHeight);
-            if (i % 2 == 0) Widgets.DrawHighlight(row);
-            if (record.pinned) DrawPinnedBorder(row);
+            if (i % 2 == 0)
+                Widgets.DrawHighlight(row);
+            if (record.pinned)
+                DrawPinnedBorder(row);
 
             var dateCell = new Rect(row.x + cellPx, row.y, colWidthDate, row.height);
-            GUI.color = Color.gray; Text.Font = GameFont.Tiny; Text.Anchor = TextAnchor.MiddleLeft;
+            GUI.color = Color.gray;
+            Text.Font = GameFont.Tiny;
+            Text.Anchor = TextAnchor.MiddleLeft;
             Widgets.Label(dateCell, record.GetShortDate());
             TooltipHandler.TipRegion(dateCell, record.GetTipDate());
 
@@ -145,7 +94,9 @@ public static class HistoryCardUtility
             var iconCell = new Rect(dateCell.xMax, row.y + (row.height - colWidthIcon) / 2, colWidthIcon, colWidthIcon);
             GUI.DrawTexture(iconCell, record.Icon, ScaleMode.ScaleToFit);
 
-            GUI.color = Color.white; Text.Font = GameFont.Tiny; Text.Anchor = TextAnchor.MiddleLeft;
+            GUI.color = Color.white;
+            Text.Font = GameFont.Tiny;
+            Text.Anchor = TextAnchor.MiddleLeft;
             var descCell = new Rect(iconCell.xMax + colGap, row.y, colWidthDesc, row.height);
             Widgets.Label(descCell, record.description);
 
@@ -179,13 +130,62 @@ public static class HistoryCardUtility
 
                 Event.current.Use();
             }
+
             curY += rowHeight;
         }
-        Widgets.EndScrollView();
-        GUI.EndGroup();
 
-        GUI.color = color;
-        Text.Font = font;
-        Text.Anchor = anchor;
+        Widgets.EndScrollView();
+    }
+
+    private static void ApplyScrollState(ref Vector2 scrollPosition, ref bool pendingScrollToBottom, float totalHeight, float viewportHeight)
+    {
+        scrollPosition.x = 0f;
+
+        if (pendingScrollToBottom)
+        {
+            scrollPosition.y = Mathf.Max(0f, totalHeight - viewportHeight);
+            pendingScrollToBottom = false;
+            return;
+        }
+
+        scrollPosition.y = Mathf.Clamp(scrollPosition.y, 0f, Mathf.Max(0f, totalHeight - viewportHeight));
+    }
+
+    private static float GetRowHeight(HistoryRecord record, Dictionary<HistoryRecord, float> cachedHeights, HistoryCardLayout layout)
+    {
+        Text.Font = GameFont.Tiny;
+
+        if (cachedHeights.TryGetValue(record, out var height))
+            return height;
+
+        var textHeight = Text.CalcHeight(LangUtility.StripColorTags(record.description), colWidthDesc);
+        height = Mathf.Max(textHeight, minRowHeight);
+        cachedHeights[record] = height;
+        return height;
+    }
+
+    private static void DrawPinnedBorder(Rect row)
+    {
+        var pinnedBorderRect = new Rect(row.xMax - PinnedBorderWidth, row.y, PinnedBorderWidth, row.height);
+        GUI.color = PinnedBorderColor;
+        GUI.DrawTexture(pinnedBorderRect, BaseContent.WhiteTex);
+        GUI.color = Color.white;
+    }
+
+    private static string GetTooltipOf(HistoryRecord record)
+    {
+        var sb = new StringBuilder();
+        var ticksAgo = GenTicks.TicksAbs - record.date;
+
+        sb.AppendLine(record.def.LabelCap.Colorize(ColoredText.TipSectionTitleColor));
+        sb.AppendLine();
+        sb.AppendLine($"Occurred {ticksAgo.ToStringTicksToPeriod()} ago");
+
+        if (record.pinned)
+            sb.AppendLine("This record is pinned. Pinned record will never be removed.");
+
+        sb.AppendLine("Right click: Open the action menu.");
+
+        return sb.ToString();
     }
 }
