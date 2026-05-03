@@ -447,6 +447,8 @@ internal static class PawnBuilderExtension
                 }
             });
         }
+        
+        public PawnBuilder SetGender(Gender gender) => builder.Do(p => p.gender = gender);
 
         public PawnBuilder ForceBirthday()
         {

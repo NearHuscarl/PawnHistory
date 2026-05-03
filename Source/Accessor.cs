@@ -212,6 +212,12 @@ public static class Accessor
             AccessTools.MethodDelegate<Action<Verse.HediffGiver, Pawn, Verse.Hediff>>(AccessTools.Method(typeof(Verse.HediffGiver), "SendLetter"));
     }
 
+    public class HediffComp_MessageAfterTicks
+    {
+        public static readonly AccessTools.FieldRef<Verse.HediffComp_MessageAfterTicks, int> TicksUntilMessage =
+            AccessTools.FieldRefAccess<Verse.HediffComp_MessageAfterTicks, int>("ticksUntilMessage");
+    }
+
     public class LogLineDisplayableLog
     {
         public static readonly AccessTools.FieldRef<RimWorld.ITab_Pawn_Log_Utility.LogLineDisplayableLog, LogEntry> Log =

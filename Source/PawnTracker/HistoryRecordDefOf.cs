@@ -126,6 +126,8 @@ public class HistoryRecordDefOf
     [MayRequireBiotech]
     public static HistoryRecordDef GrowthMoment;
     [MayRequireBiotech]
+    public static HistoryRecordDef PregnancyStarted;
+    [MayRequireBiotech]
     public static HistoryRecordDef PsychicBonded;
 
     [MayRequireIdeology]

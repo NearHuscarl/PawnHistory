@@ -93,6 +93,19 @@
 		</rulePack>
 	</RulePackDef>
 
+	<RulePackDef MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>PH_PregnancyStarted</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(isIvf==True,hasFather==False)             ->[Carrier] became pregnant through embryo implantation. The baby had the genetic makeup of [Mother].</li>
+				<li>entry(isIvf==True,hasFather==True)              ->[Carrier] became pregnant through embryo implantation. The baby had the genetic makeup of [Father] and [Mother].</li>
+				<li>entry(isIvf==False,hasFather==False,pov!=Father)->[Carrier] became pregnant.</li>
+				<li>entry(isIvf==False,hasFather==True,pov!=Father) ->[Carrier] became pregnant with [Father]'s child.</li>
+				<li>entry(hasRelation==True,pov==Father)            ->[Father]'s [Relation], [Carrier], became pregnant.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
 	<RulePackDef>
 		<defName>PH_Married</defName>
 		<include>
