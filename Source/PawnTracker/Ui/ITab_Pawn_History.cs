@@ -1,10 +1,10 @@
-﻿using RimWorld;
-using System;
+﻿using System;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
 #nullable disable
-namespace PawnHistory.Source.PawnTracker;
+namespace PawnHistory.Source.PawnTracker.Ui;
 
 public class ITab_Pawn_History : ITab
 {
@@ -18,11 +18,13 @@ public class ITab_Pawn_History : ITab
         {
             if (this.SelPawn != null)
                 return this.SelPawn;
-            return this.SelThing is Corpse corpse ? corpse.InnerPawn : throw new InvalidOperationException("History tab found no selected pawn to display.");
+            if (this.SelThing is Corpse corpse)
+                return corpse.InnerPawn;
+            throw new InvalidOperationException($"History tab found no selected pawn to display. Check {nameof(CompHistoryManager.AttachHistoryComp)} for regression.");
         }
     }
 
-    public override bool IsVisible => CompHistoryManager.GetComp(PawnToShowInfo).records.Count > 0;
+    public override bool IsVisible => HistoryTableController.GetVisibleRecords(PawnToShowInfo).Any();
 
     public ITab_Pawn_History()
     {

@@ -1,4 +1,4 @@
-﻿using PawnHistory.Source.PawnTracker;
+﻿using PawnHistory.Source.PawnTracker.Ui;
 using RimWorld;
 using UnityEngine;
 using Verse;

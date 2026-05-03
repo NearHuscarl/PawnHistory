@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
+using PawnHistory.Source.PawnTracker.Ui;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker;

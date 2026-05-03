@@ -1,9 +1,9 @@
 using PawnHistory.Source.DebugTools;
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
-namespace PawnHistory.Source.PawnTracker;
+namespace PawnHistory.Source.PawnTracker.Ui;
 
 public static class PaginationView
 {
@@ -18,6 +18,7 @@ public static class PaginationView
     private static float buttonWidth;
     private static float inputWidth;
     private static float controlHeightMargin;
+    public static int PageSize;
 
     static PaginationView() => ReloadPaginationView();
 
@@ -30,12 +31,11 @@ public static class PaginationView
         buttonWidth = 24f;
         inputWidth = 42f;
         controlHeightMargin = 3f;
+        PageSize = 12;
     }
 
-    public static void Draw(Rect filterRect, PaginationState state, Action<PaginationCommand> emit)
+    public static void Draw(Rect filterRect, PaginationState state, List<PaginationCommand> commands)
     {
-        state.PageText ??= state.CurrentPage.ToString();
-
         var current = Event.current;
         var shouldSubmit = GUI.GetNameOfFocusedControl() == ControlName
             && current.type == EventType.KeyDown
@@ -56,13 +56,13 @@ public static class PaginationView
 
         var wasEnabled = GUI.enabled;
 
-        GUI.enabled = wasEnabled && CanGoToFirstPage(state);
+        GUI.enabled = wasEnabled && CanGoToPreviousPage(state);
         if (Widgets.ButtonText(firstButtonRect, FirstPageIcon))
-            emit(new FirstPageClicked());
+            commands.Add(new FirstPageClicked());
 
         GUI.enabled = wasEnabled && CanGoToPreviousPage(state);
         if (Widgets.ButtonText(previousButtonRect, PreviousPageIcon))
-            emit(new PreviousPageClicked());
+            commands.Add(new PreviousPageClicked());
 
         GUI.enabled = wasEnabled;
         GUI.SetNextControlName(ControlName);
@@ -71,25 +71,22 @@ public static class PaginationView
         {
             state.PageText = edited;
             state.Error = null;
-            state.ParsedPage = null;
         }
 
         if (shouldSubmit)
-            emit(new PageInputSubmitted());
+            commands.Add(new PageInputSubmitted());
 
         GUI.enabled = wasEnabled && CanGoToNextPage(state);
         if (Widgets.ButtonText(nextButtonRect, NextPageIcon))
-            emit(new NextPageClicked());
+            commands.Add(new NextPageClicked());
 
-        GUI.enabled = wasEnabled && CanGoToLastPage(state);
+        GUI.enabled = wasEnabled && CanGoToNextPage(state);
         if (Widgets.ButtonText(lastButtonRect, LastPageIcon))
-            emit(new LastPageClicked());
+            commands.Add(new LastPageClicked());
 
         GUI.enabled = wasEnabled;
     }
 
-    private static bool CanGoToFirstPage(PaginationState state) => state.TotalPages > 0 && state.CurrentPage > 1;
     private static bool CanGoToPreviousPage(PaginationState state) => state.TotalPages > 0 && state.CurrentPage > 1;
     private static bool CanGoToNextPage(PaginationState state) => state.TotalPages > 0 && state.CurrentPage < state.TotalPages;
-    private static bool CanGoToLastPage(PaginationState state) => state.TotalPages > 0 && state.CurrentPage < state.TotalPages;
 }

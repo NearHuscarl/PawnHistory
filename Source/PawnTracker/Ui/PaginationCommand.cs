@@ -1,4 +1,4 @@
-namespace PawnHistory.Source.PawnTracker;
+namespace PawnHistory.Source.PawnTracker.Ui;
 
 public abstract record PaginationCommand;
 

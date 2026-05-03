@@ -1,36 +1,38 @@
-using PawnHistory.Source.Helper;
+using PawnHistory.Source.DebugTools;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using PawnHistory.Source.DebugTools;
 using UnityEngine;
 using Verse;
 
-namespace PawnHistory.Source.PawnTracker;
+namespace PawnHistory.Source.PawnTracker.Ui;
 
-public readonly record struct HistoryCardLayout(float Gap);
+public readonly record struct HistoryTableLayout(float Gap);
 
-public static class HistoryCardView
+public static class HistoryTableView
 {
     private const float PinnedBorderWidth = 2f;
     private static readonly Color PinnedBorderColor = NeedsCardUtility.MoodColorNegative;
-    
+
     private static float headerHeight;
 
     private static float minRowHeight;
     private static float colGap;
     private static float colWidthDate;
     private static float colWidthIcon;
-    private static float colWidthDesc;
     private static float colWidthQuest;
     private static float cellPx;
 
     private static float scrollWidth;
+
+    private static bool drawDebuggingBox;
     
+    static HistoryTableView() => ReloadHistoryTableViewLayout();
+
     [Reloadable]
     [NearDebugAction]
-    private static void ReloadHistoryCardViewLayout()
+    private static void ReloadHistoryTableViewLayout()
     {
         headerHeight = 25f;
 
@@ -38,46 +40,49 @@ public static class HistoryCardView
         colGap = 5f;
         colWidthDate = 90f;
         colWidthIcon = 20f;
-        colWidthDesc = 470f;
         colWidthQuest = 20f;
         cellPx = 5f;
 
         scrollWidth = 16f;
+        drawDebuggingBox = false;
     }
 
-    public static void Draw(
-        Rect inRect,
-        List<HistoryRecord> pageRecords,
-        ref Vector2 scrollPosition,
-        ref bool pendingScrollToBottom,
-        Dictionary<HistoryRecord, float> cachedHeights,
-        HistoryCardLayout layout)
+    private static List<HistoryRecord> GetVisibleRecords(HistoryTableState tableState, PaginationState paginationState)
+    {
+        var visibleRecords = HistoryTableController.GetVisibleRecords(tableState.LastPawnShown);
+        var startIndex = (paginationState.CurrentPage - 1) * PaginationView.PageSize;
+        return visibleRecords.Skip(startIndex).Take(PaginationView.PageSize).ToList();
+    }
+
+    public static void Draw(Rect inRect, HistoryTableState tableState, PaginationState paginationState, ref Vector2 scrollPosition, HistoryTableLayout layout)
     {
         Text.Font = GameFont.Small;
         GUI.color = Color.gray;
         Text.Anchor = TextAnchor.MiddleLeft;
 
-        var header = new Rect(0, layout.Gap, inRect.width, headerHeight);
+        var header = new Rect(0f, layout.Gap, inRect.width, headerHeight);
+        var descWidth = inRect.width - cellPx * 2 - colWidthDate - colWidthIcon - colWidthQuest - colGap * 3f - scrollWidth;
         var dateHeaderCell = new Rect(cellPx, header.y, colWidthDate, headerHeight);
         Widgets.Label(dateHeaderCell, "NH_PH_HistoryCard_HeaderDate".Translate());
-        var iconHeaderCell = new Rect(dateHeaderCell.xMax, header.y + (header.height - colWidthIcon) / 2, colWidthIcon, colWidthIcon);
-        var descHeaderCell = new Rect(iconHeaderCell.xMax + colGap, header.y, colWidthDesc, headerHeight);
+        var iconHeaderCell = new Rect(dateHeaderCell.xMax + colGap, header.y + (header.height - colWidthIcon) / 2, colWidthIcon, colWidthIcon);
+        var descHeaderCell = new Rect(iconHeaderCell.xMax + colGap, header.y, descWidth, headerHeight);
         Widgets.Label(descHeaderCell, "NH_PH_HistoryCard_HeaderDescription".Translate());
 
-        var tableY = headerHeight + layout.Gap;
-        var outRect = new Rect(0, tableY, inRect.width, inRect.height - tableY);
-        var totalHeight = pageRecords.Sum(record => GetRowHeight(record, cachedHeights, layout));
-        var viewRect = new Rect(0, 0, inRect.width - scrollWidth, totalHeight);
+        var tableY = layout.Gap + headerHeight;
+        var outRect = new Rect(0f, tableY, inRect.width, inRect.height - tableY);
+        var visibleRecords = GetVisibleRecords(tableState, paginationState);
+        var totalHeight = visibleRecords.Sum(r => GetRowHeight(r, descWidth, tableState));
+        var viewRect = new Rect(0f, 0f, inRect.width - scrollWidth, totalHeight);
 
-        ApplyScrollState(ref scrollPosition, ref pendingScrollToBottom, totalHeight, outRect.height);
+        ApplyScrollState(tableState, ref scrollPosition, totalHeight, outRect.height);
 
         Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
         var curY = 0f;
-        for (var i = 0; i < pageRecords.Count; i++)
+        for (var i = 0; i < visibleRecords.Count; i++)
         {
-            var record = pageRecords[i];
-            var rowHeight = GetRowHeight(record, cachedHeights, layout);
-            var row = new Rect(0, curY, viewRect.width, rowHeight);
+            var record = visibleRecords[i];
+            var rowHeight = GetRowHeight(record, descWidth, tableState);
+            var row = new Rect(0f, curY, viewRect.width, rowHeight);
             if (i % 2 == 0)
                 Widgets.DrawHighlight(row);
             if (record.pinned)
@@ -89,18 +94,22 @@ public static class HistoryCardView
             Text.Anchor = TextAnchor.MiddleLeft;
             Widgets.Label(dateCell, record.GetShortDate());
             TooltipHandler.TipRegion(dateCell, record.GetTipDate());
+            if (drawDebuggingBox) Widgets.DrawBox(dateCell);
 
             GUI.color = Color.white;
-            var iconCell = new Rect(dateCell.xMax, row.y + (row.height - colWidthIcon) / 2, colWidthIcon, colWidthIcon);
+            var iconCell = new Rect(dateCell.xMax + colGap, row.y + (row.height - colWidthIcon) / 2, colWidthIcon, colWidthIcon);
             GUI.DrawTexture(iconCell, record.Icon, ScaleMode.ScaleToFit);
+            if (drawDebuggingBox) Widgets.DrawBox(iconCell);
 
             GUI.color = Color.white;
             Text.Font = GameFont.Tiny;
             Text.Anchor = TextAnchor.MiddleLeft;
-            var descCell = new Rect(iconCell.xMax + colGap, row.y, colWidthDesc, row.height);
+            var descCell = new Rect(iconCell.xMax + colGap, row.y, descWidth, row.height);
             Widgets.Label(descCell, record.description);
+            if (drawDebuggingBox) Widgets.DrawBox(descCell);
 
             var questCell = new Rect(descCell.xMax + colGap, row.y + (row.height - colWidthQuest) / 2, colWidthQuest, colWidthQuest);
+            if (drawDebuggingBox) Widgets.DrawBox(questCell);
             if (record.quest != null)
             {
                 if (Widgets.ButtonImage(questCell, TexCommand.OpenLinkedQuestTex))
@@ -109,8 +118,7 @@ public static class HistoryCardView
                     ((MainTabWindow_Quests)MainButtonDefOf.Quests.TabWindow).Select(record.quest);
                 }
 
-                if (Mouse.IsOver(questCell))
-                    TooltipHandler.TipRegion(questCell, record.quest.name);
+                TooltipHandler.TipRegion(questCell, record.quest.name);
             }
 
             TooltipHandler.TipRegion(descCell, GetTooltipOf(record));
@@ -137,30 +145,30 @@ public static class HistoryCardView
         Widgets.EndScrollView();
     }
 
-    private static void ApplyScrollState(ref Vector2 scrollPosition, ref bool pendingScrollToBottom, float totalHeight, float viewportHeight)
+    private static void ApplyScrollState(HistoryTableState tableState, ref Vector2 scrollPosition, float totalHeight, float viewportHeight)
     {
         scrollPosition.x = 0f;
 
-        if (pendingScrollToBottom)
+        if (tableState.PendingScrollToBottom)
         {
             scrollPosition.y = Mathf.Max(0f, totalHeight - viewportHeight);
-            pendingScrollToBottom = false;
+            tableState.PendingScrollToBottom = false;
             return;
         }
 
         scrollPosition.y = Mathf.Clamp(scrollPosition.y, 0f, Mathf.Max(0f, totalHeight - viewportHeight));
     }
 
-    private static float GetRowHeight(HistoryRecord record, Dictionary<HistoryRecord, float> cachedHeights, HistoryCardLayout layout)
+    private static float GetRowHeight(HistoryRecord record, float descWidth, HistoryTableState state)
     {
         Text.Font = GameFont.Tiny;
 
-        if (cachedHeights.TryGetValue(record, out var height))
+        if (state.CachedHeights.TryGetValue(record, out var height))
             return height;
-
-        var textHeight = Text.CalcHeight(LangUtility.StripColorTags(record.description), colWidthDesc);
+        
+        var textHeight = Text.CalcHeight(record.description, descWidth);
         height = Mathf.Max(textHeight, minRowHeight);
-        cachedHeights[record] = height;
+        state.CachedHeights[record] = height;
         return height;
     }
 
@@ -179,12 +187,12 @@ public static class HistoryCardView
 
         sb.AppendLine(record.def.LabelCap.Colorize(ColoredText.TipSectionTitleColor));
         sb.AppendLine();
-        sb.AppendLine($"Occurred {ticksAgo.ToStringTicksToPeriod()} ago");
+        sb.AppendLine("NH_PH_HistoryCard_OccurredAgo".Translate(ticksAgo.ToStringTicksToPeriod()));
 
         if (record.pinned)
-            sb.AppendLine("This record is pinned. Pinned record will never be removed.");
+            sb.AppendLine("NH_PH_HistoryCard_RecordPinned".TranslateSimple());
 
-        sb.AppendLine("Right click: Open the action menu.");
+        sb.AppendLine("NH_PH_HistoryCard_RightClickToOpenMenu".TranslateSimple());
 
         return sb.ToString();
     }

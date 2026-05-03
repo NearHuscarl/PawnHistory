@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using PawnHistory.Source.Helper;
+using PawnHistory.Source.PawnTracker.Ui;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;

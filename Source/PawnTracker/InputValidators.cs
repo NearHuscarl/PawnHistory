@@ -1,3 +1,4 @@
+using System.Linq;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
@@ -9,18 +10,12 @@ public static class InputValidators
         if (buffer.NullOrEmpty())
             return true;
 
-        foreach (var c in buffer)
-        {
-            if (!char.IsDigit(c))
-                return false;
-        }
-
-        return true;
+        return buffer.All(char.IsDigit);
     }
 
     public static bool TryPositiveInt(string text, out int value, out string error)
     {
-        value = default;
+        value = 0;
         error = null;
 
         if (text.NullOrEmpty())

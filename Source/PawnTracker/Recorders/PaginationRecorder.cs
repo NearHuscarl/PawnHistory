@@ -24,6 +24,7 @@ public class PaginationRecorder : RecorderBase<ScenarioStartEvent>
             .Colonist()
             .ThatMatches(ShouldRecord)
             .CreateSingle();
+        var quest = scenario.Quest(QuestScriptDefOf.OpportunitySite_ItemStash).Execute();
 
         CompHistoryManager.GetComp(pawn).ClearAll();
 
@@ -39,7 +40,12 @@ public class PaginationRecorder : RecorderBase<ScenarioStartEvent>
             var detail = i % 4 == 0
                 ? " This row is intentionally longer so the table has mixed heights and wrapped descriptions for manual pagination checks."
                 : "";
-            var record = new HistoryRecord(def, pawn, $"Pagination record {i + 1} for history tab verification.{detail}");
+            var record = new HistoryRecord(
+                def,
+                pawn,
+                $"Pagination record {i + 1} for history tab verification.{detail}",
+                quest: i % 8 == 0 ? quest : null
+                );
             record.date = startTick + i * GenDate.TicksPerHour;
             pawn.HistoryRecords.Add(record);
         }

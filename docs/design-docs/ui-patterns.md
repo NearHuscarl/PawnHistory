@@ -1,7 +1,5 @@
 # UI Patterns
 
-Read this doc only for UI-related tasks.
-
 `PawnHistory` UI code should stay idiomatic to RimWorld/Verse IMGUI while keeping responsibilities explicit.
 
 ## Immediate-Mode Presenter Split
@@ -38,7 +36,6 @@ Use this split for UI that has input, validation, or stateful interactions:
 
 ## Avoid
 
-- full MVC frameworks
 - fake persistent widget/control classes
 - routing every keystroke through the presenter
 - mixing draw code, validation, and page/domain mutations in one method

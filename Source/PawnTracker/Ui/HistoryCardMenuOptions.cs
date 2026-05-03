@@ -4,7 +4,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace PawnHistory.Source.PawnTracker;
+namespace PawnHistory.Source.PawnTracker.Ui;
 
 internal static class HistoryCardMenuOptions
 {

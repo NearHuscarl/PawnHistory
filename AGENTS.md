@@ -18,6 +18,7 @@ Read in this order before changing code:
 - [docs/PRODUCT_SENSE.md](docs/PRODUCT_SENSE.md): what is worth recording and how history entries should read.
 - [docs/QUALITY_SCORE.md](docs/QUALITY_SCORE.md): the rubric for judging recorder work.
 - [docs/exec-plans/](docs/exec-plans/): active backlog, technical debt, and archived execution notes.
+- [docs/design-docs/ui-patterns.md](docs/design-docs/ui-patterns.md). Only read for UI work.
 
 ## Implementation Plan Records
 
