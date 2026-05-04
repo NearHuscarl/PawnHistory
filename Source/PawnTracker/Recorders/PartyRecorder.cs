@@ -1,6 +1,7 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -8,11 +9,12 @@ using Verse.AI.Group;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRecord<PartyRecorder.PartyJoinedInput>, IRecord<PartyRecorder.PartyCancelledInput>
+public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRecord<PartyRecorder.PartyInterruptedInput>, IRecord<PartyRecorder.PartyAttendedInput>
 {
     public record PartyStartedInput(Pawn Organizer);
-    public record PartyJoinedInput(Pawn Organizer, List<Pawn> Partygoers, IEnumerable<Pawn> NewJoiners);
-    public record PartyCancelledInput(Pawn Organizer, List<Pawn> Partygoers, CancelledReason Reason, Pawn DeadPawn);
+    public record PartyJoinedInput(Pawn Organizer, IEnumerable<Pawn> NewJoiners);
+    public record PartyAttendedInput(Pawn Organizer, List<Pawn> Partygoers);
+    public record PartyInterruptedInput(Pawn Organizer, List<Pawn> Partygoers, PartyFinishedReason Reason, Pawn DeadPawn);
 
     public override void Register()
     {
@@ -25,17 +27,21 @@ public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRec
                 CreateRecord(new PartyStartedInput(partyJob.Organizer));
             if (e.NextToil is LordToil_End)
             {
-                var cancelledReason = GetCancelledReason(e.Lord, e.Trigger, partyJob.Organizer, e.Signal, out var deadPawn);
-                CreateRecord(new PartyCancelledInput(partyJob.Organizer, e.Lord.ownedPawns, cancelledReason, deadPawn));
+                var reason = GetFinishedReason(e.Lord, e.Trigger, partyJob.Organizer, e.Signal, out var deadPawn);
+                var partyGoers = e.Lord.ownedPawns.ToList().Concat(partyJob.Organizer /* might be unavailable */).Distinct().ToList();
+                
+                if (reason == PartyFinishedReason.Timeout)
+                    CreateRecord(new PartyAttendedInput(partyJob.Organizer, partyGoers));
+                else
+                    CreateRecord(new PartyInterruptedInput(partyJob.Organizer, partyGoers, reason, deadPawn));
             }
         });
-
         // pawn joins party over time, not instantly at the start
         GameEventBus.Subscribe<JoinedLordEvent>(e =>
         {
             if (e.Lord.LordJob is not LordJob_Joinable_Party partyJob)
                 return;
-            CreateRecord(new PartyJoinedInput(partyJob.Organizer, e.Lord.ownedPawns.ToList(), e.Pawns));
+            CreateRecord(new PartyJoinedInput(partyJob.Organizer, e.Pawns));
         });
     }
 
@@ -45,9 +51,8 @@ public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRec
         if (!ShouldRecord(organizer))
             return;
 
-        var recordDef = HistoryRecordDefOf.JoinedParty;
-        var desc = recordDef
-            .Description(organizer)
+        var recordDef = HistoryRecordDefOf.PartyStarted;
+        var desc = recordDef.Description(organizer)
             .AddConstant("isOrganizer", true)
             .Resolve();
 
@@ -56,8 +61,8 @@ public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRec
 
     public void CreateRecord(PartyJoinedInput input)
     {
-        var (organizer, partygoers, newJoiners) = input;
-        var recordDef = HistoryRecordDefOf.JoinedParty;
+        var (organizer, newJoiners) = input;
+        var recordDef = HistoryRecordDefOf.PartyJoined;
 
         foreach (var pawn in newJoiners)
         {
@@ -66,7 +71,6 @@ public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRec
 
             var desc = recordDef
                 .Description(pawn)
-                .WithOthers(partygoers)
                 .AddRule("Organizer", organizer)
                 .AddConstant("isOrganizer", false)
                 .Resolve();
@@ -75,101 +79,200 @@ public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRec
         }
     }
 
-    public enum CancelledReason
+    public enum PartyFinishedReason
     {
-        Unknown,
         Timeout,
+        Unknown,
         PawnKilled,
         OrganizerLeft,
         DangerousMap,
     }
 
-    private static CancelledReason GetCancelledReason(Lord lord, Trigger trigger, Pawn organizer, TriggerSignal? signal, out Pawn deadPawn)
+    private static PartyFinishedReason GetFinishedReason(Lord lord, Trigger trigger, Pawn organizer, TriggerSignal? signal, out Pawn deadPawn)
     {
         deadPawn = null;
 
         if (trigger is Trigger_TicksPassed)
-            return CancelledReason.Timeout; // party is finished
+            return PartyFinishedReason.Timeout;
 
-        var reason = CancelledReason.Unknown;
         deadPawn = signal?.condition == PawnLostCondition.Killed ? signal.Value.Pawn : null;
 
         if (trigger is Trigger_PawnKilled)
-            reason = CancelledReason.PawnKilled;
-        else if (trigger is Trigger_PawnLost || !GatheringsUtility.PawnCanStartOrContinueGathering(organizer))
-            reason = CancelledReason.OrganizerLeft;
-        else if (trigger is Trigger_TickCondition && !GatheringsUtility.AcceptableGameConditionsToContinueGathering(lord.LordJob.Map))
-            reason = CancelledReason.DangerousMap;
+            return PartyFinishedReason.PawnKilled;
+        if (trigger is Trigger_PawnLost || !GatheringsUtility.PawnCanStartOrContinueGathering(organizer))
+            return PartyFinishedReason.OrganizerLeft;
+        if (trigger is Trigger_TickCondition && !GatheringsUtility.AcceptableGameConditionsToContinueGathering(lord.LordJob.Map))
+            return PartyFinishedReason.DangerousMap;
 
-        return reason;
+        return PartyFinishedReason.Unknown;
     }
 
-    public void CreateRecord(PartyCancelledInput input)
+    public void CreateRecord(PartyAttendedInput input)
     {
-        var (organizer, partygoers, reason, deadPawn) = input;
-        var recordDef = HistoryRecordDefOf.PartyCancelled;
-
-        if (reason == CancelledReason.Timeout)
-            return;
+        var organizer = input.Organizer;
+        var partygoers = input.Partygoers;
+        var recordDef = HistoryRecordDefOf.PartyFinished;
 
         foreach (var pawn in partygoers)
         {
-            if (!ShouldRecord(pawn)) continue;
+            if (!ShouldRecord(pawn))
+                continue;
+            if (pawn == organizer)
+                continue;
+
+            var desc = recordDef
+                .Description(pawn)
+                .WithOthers(partygoers)
+                .AddRule("Organizer", organizer)
+                .AddConstant("reason", PartyFinishedReason.Timeout)
+                .Resolve();
+
+            AddRecord(recordDef, pawn, desc, [organizer]);
+        }
+    }
+
+    public void CreateRecord(PartyInterruptedInput input)
+    {
+        var organizer = input.Organizer;
+        var partygoers = input.Partygoers;
+        var recordDef = HistoryRecordDefOf.PartyFinished;
+
+        foreach (var pawn in partygoers)
+        {
+            if (!ShouldRecord(pawn))
+                continue;
 
             var desc = recordDef
                 .Description(pawn)
                 .AddRule("Organizer", organizer, addSubsymbols: true)
-                .AddRule("DeadPawn", deadPawn)
-                .AddConstant("reason", reason)
+                .AddRule("DeadPawn", input.DeadPawn)
+                .AddConstant("reason", input.Reason)
                 .Resolve();
 
-            AddRecord(recordDef, pawn, desc, [organizer, deadPawn]);
+            AddRecord(recordDef, pawn, desc, [organizer, input.DeadPawn]);
         }
     }
+    
+    private static readonly int MinPartyDuration = 1200; // must larger than this value in IsGatheringAboutToEnd()
 
-    [SkipTest]
-    public void TestDangerousMap(TestScenario scenario)
+    public void TestAttended(TestScenario scenario)
+    {
+        scenario.PartyDuration = MinPartyDuration + 30;
+        scenario.SpeedUp();
+        
+        Expect.Assertions(3);
+        var (organizer, lord) = SetupParty(scenario);
+        
+        scenario.WaitUntil(() => lord.CurLordToil is LordToil_End, () =>
+        {
+            var partygoers = lord.ownedPawns.ToList();
+            var attendees = partygoers.Where(p => p != organizer).ToList();
+            
+            Expect.ThatAny(attendees).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.PartyJoined,
+                Description = "[PAWN] joined [Organizer]'s party.",
+                Concerns = [organizer],
+            });
+            Expect.ThatAny(attendees).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.PartyFinished,
+                Description = "[PAWN] attended [Organizer]'s party with [Others].",
+                Concerns = [organizer],
+            });
+        });
+
+        Expect.That(organizer).ToHaveHistoryRecord(HistoryRecordDefOf.PartyStarted, "[PAWN] threw a party for the colony.");
+    }
+
+    public Action TestDangerousMap(TestScenario scenario)
     {
         scenario.SpeedUp();
-        scenario.Map().BuildRoom(5, 5).WithThing(ThingDefOf.PartySpot, 1, Faction.OfPlayer).Execute();
-        scenario.Pawn(8).Colonist().Execute();
-        scenario.Incident(GatheringDefOf.Party).Execute();
+        Expect.Assertions(2);
+        var (organizer, lord) = SetupParty(scenario);
+        scenario.WaitUntil(() => lord.CurLordToil is LordToil_End, () =>
+        {
+            var partygoers = lord.ownedPawns.ToList();
+            var attendees = partygoers.Where(p => p != organizer).ToList();
 
-        TickDelayManager.Delay(400, () =>
+            var expected = new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.PartyFinished,
+                Description = "[Organizer]'s party was cancelled due to nearby threats.",
+            };
+            Expect.ThatAny(attendees).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [organizer] }));
+            Expect.That(organizer).ToHaveHistoryRecord(expected);
+        });
+
+        TickDelayManager.Delay(200, () =>
         {
             scenario.Incident(IncidentDefOf.RaidEnemy).Point(500).Execute();
             scenario.RaidFriendly().Point(500).Execute();
-            scenario.SlowDown();
         });
+
+        return () => scenario.SlowDown();
     }
 
-    [SkipTest]
-    public void TestOrganizerLeft(TestScenario scenario)
+    public Action TestOrganizerLeft(TestScenario scenario)
     {
         scenario.SpeedUp();
-        scenario.Map().BuildRoom(5, 5).WithThing(ThingDefOf.PartySpot, 1, Faction.OfPlayer).Execute();
-        scenario.Pawn(8).Colonist().Execute();
-        var organizer = scenario.Incident(GatheringDefOf.Party).Execute().Organizers.Single();
+        Expect.Assertions(2);
+        var (organizer, lord) = SetupParty(scenario);
 
-        TickDelayManager.Delay(400, () =>
+        scenario.WaitUntil(() => lord.CurLordToil is LordToil_End, () =>
         {
-            scenario.Pawn(organizer).Do(p => p.needs.rest.CurLevel = 0f).Execute();
-            scenario.SlowDown();
+            var partygoers = lord.ownedPawns.ToList();
+            var attendees = partygoers.Where(p => p != organizer).ToList();
+
+            var expected = new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.PartyFinished,
+                Description = "[Organizer]'s party was cancelled after [He] left.",
+            };
+            Expect.ThatAny(attendees).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [organizer] }));
+            Expect.That(organizer).ToHaveHistoryRecord(expected);
         });
+
+        TickDelayManager.Delay(200, () => organizer.drafter.Drafted = true);
+
+        return () => scenario.SlowDown();
     }
 
-    [SkipTest]
-    public void TestPawnKilled(TestScenario scenario)
+    public Action TestPawnKilled(TestScenario scenario)
     {
         scenario.SpeedUp();
-        scenario.Map().BuildRoom(5, 5).WithThing(ThingDefOf.PartySpot, 1, Faction.OfPlayer).Execute();
-        scenario.Pawn(8).Colonist().Execute();
-        var res = scenario.Incident(GatheringDefOf.Party).Execute();
-
-        TickDelayManager.Delay(400, () =>
+        Expect.Assertions(2);
+        var (organizer, lord) = SetupParty(scenario);
+        var deadPawn = (Pawn)null;
+        scenario.WaitUntil(() => lord.CurLordToil is LordToil_End, () =>
         {
-            res.Lord.ownedPawns.FirstOrDefault(p => res.Organizers.Contains(p))?.Kill(null);
-            scenario.SlowDown();
+            var partygoers = lord.ownedPawns.ToList();
+            var attendees = partygoers.Where(p => p != organizer).ToList();
+            
+            var expected = new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.PartyFinished,
+                Description = "[Organizer]'s party was cancelled after [DeadPawn] died.",
+            };
+            Expect.ThatAny(attendees).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [organizer, deadPawn] }));
+            Expect.That(organizer).ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [deadPawn] }));
         });
+
+        scenario.WaitUntil( () => lord.ownedPawns.Count > 2,
+            () =>
+            {
+                deadPawn = lord.ownedPawns.First(p => p != organizer);
+                deadPawn.Kill(null);
+            });
+
+        return () => scenario.SlowDown();
+    }
+
+    private static (Pawn organizer, Lord lord) SetupParty(TestScenario scenario)
+    {
+        scenario.Map().BuildRoom(8, 8).WithThing(ThingDefOf.PartySpot, 1, Faction.OfPlayer).Execute();
+        scenario.Pawn(4).Colonist().Execute();
+        var result = scenario.Incident(GatheringDefOf.Party).Execute();
+        return (result.Organizers.Single(), result.Lord);
     }
 }

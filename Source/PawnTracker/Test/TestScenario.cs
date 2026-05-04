@@ -25,6 +25,7 @@ public class TestScenario
     public bool ForcePostHealScar = false;
     public bool AlwaysHaveHelpersInQuest = false;
     public bool RefugeeAlwaysAssaultOnViolation = false;
+    public int PartyDuration = 0;
     public readonly int ForcedDebugMapSize = 25;
 
     public PawnBuilder Pawn(int count = 1) => new(count);

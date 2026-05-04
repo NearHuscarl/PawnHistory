@@ -283,22 +283,23 @@
 	</RulePackDef>
 
 	<RulePackDef>
-		<defName>PH_JoinedParty</defName>
-		<include>
-			<li>PH_Common</li>
-		</include>
+		<defName>PH_PartyStarted</defName>
 		<rulePack>
 			<rulesStrings>
 				<li>entry(isOrganizer==True) ->[PAWN] threw a party for the colony.</li>
-				<li>entry(isOrganizer==False)->[PAWN] attended [Organizer]'s party[WithOthers].</li>
+				<li>entry(isOrganizer==False)->[PAWN] joined [Organizer]'s party.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
 
 	<RulePackDef>
-		<defName>PH_PartyCancelled</defName>
+		<defName>PH_PartyFinished</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
 		<rulePack>
 			<rulesStrings>
+				<li>entry(reason==Timeout)      ->[PAWN] attended [Organizer]'s party[WithOthers].</li>
 				<li>entry(reason==Unknown)      ->[Organizer]'s party was cancelled.</li>
 				<li>entry(reason==PawnKilled)   ->[Organizer]'s party was cancelled after [DeadPawn] died.</li>
 				<li>entry(reason==OrganizerLeft)->[Organizer]'s party was cancelled after [Organizer_pronoun] left.</li>

@@ -10,16 +10,16 @@ public record LordToilChangeEvent(LordToil CurrentToil, LordToil NextToil, Trigg
 [HarmonyPatch(typeof(LordMaker), nameof(LordMaker.MakeNewLord))]
 public static class LordMaker_MakeNewLord_Patch
 {
-    static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var SetJob = AccessTools.Method(typeof(Lord), nameof(Lord.SetJob));
+        var setJob = AccessTools.Method(typeof(Lord), nameof(Lord.SetJob));
         var hookMethod = AccessTools.Method(typeof(LordMaker_MakeNewLord_Patch), nameof(OnLordJobStart));
 
         foreach (var code in instructions)
         {
             yield return code;
 
-            if (code.Calls(SetJob))
+            if (code.Calls(setJob))
             {
                 yield return new CodeInstruction(OpCodes.Ldloc_0); // newLord
                 yield return new CodeInstruction(OpCodes.Call, hookMethod);
@@ -40,15 +40,15 @@ public static class LordMaker_MakeNewLord_Patch
 public static class Transition_CheckSignal_Patch
 {
     // Insert OnTransitionChange() right before changing lordToil to get the correct trigger type safely
-    static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         var list = new List<CodeInstruction>(instructions);
         var executeMethod = AccessTools.Method(typeof(Transition), nameof(Transition.Execute));
         var hookMethod = AccessTools.Method(typeof(Transition_CheckSignal_Patch), nameof(OnTransitionChange));
 
-        for (var i = 0; i < list.Count; i++)
+        foreach (var t in list)
         {
-            if (list[i].Calls(executeMethod))
+            if (t.Calls(executeMethod))
             {
                 // insert before Execute(lord)
                 yield return new CodeInstruction(OpCodes.Ldarg_0); // __instance
@@ -58,7 +58,7 @@ public static class Transition_CheckSignal_Patch
                 yield return new CodeInstruction(OpCodes.Call, hookMethod);
             }
 
-            yield return list[i];
+            yield return t;
         }
     }
 

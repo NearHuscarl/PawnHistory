@@ -563,9 +563,9 @@
 	</HistoryRecordDef>
 	
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>JoinedParty</defName>
+		<defName>PartyStarted</defName>
 		<label>party started</label>
-		<descriptionMaker>PH_JoinedParty</descriptionMaker>
+		<descriptionMaker>PH_PartyStarted</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
@@ -573,9 +573,19 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>PartyCancelled</defName>
-		<label>party cancelled</label>
-		<descriptionMaker>PH_PartyCancelled</descriptionMaker>
+		<defName>PartyJoined</defName>
+		<label>party joined</label>
+		<descriptionMaker>PH_PartyStarted</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Life</li>
+			<li>Gathering</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PartyFinished</defName>
+		<label>party finished</label>
+		<descriptionMaker>PH_PartyFinished</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
