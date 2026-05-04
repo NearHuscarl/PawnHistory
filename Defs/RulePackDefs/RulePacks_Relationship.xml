@@ -106,6 +106,16 @@
 		</rulePack>
 	</RulePackDef>
 
+	<RulePackDef MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>PH_Miscarried</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(reason==Starvation)->[PAWN] miscarried due to starvation.</li>
+				<li>entry(reason==PoorHealth)->[PAWN] miscarried due to poor health.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
 	<RulePackDef>
 		<defName>PH_Married</defName>
 		<include>

@@ -88,7 +88,7 @@ public class PawnBuilder(int count = 1)
     public PawnBuilder Enemy(bool value = true)
     {
         if (value)
-            return HumanLike().WithFaction(Faction.OfPirates);
+            return HumanLike().WithFaction(Faction.OfHostile);
 
         return this;
     }
@@ -532,6 +532,7 @@ internal static class PawnBuilderExtension
                     var damage = currentHp - 1;
                     var injury = HediffMaker.MakeHediff(bruise, pawn, part) as Hediff_Injury;
                     injury?.Severity = damage;
+                    pawn.health.forceDowned = true;
                     pawn.health.AddHediff(injury);
                 }
             });

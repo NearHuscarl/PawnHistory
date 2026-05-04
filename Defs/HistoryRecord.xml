@@ -992,6 +992,16 @@
 			<li>Life</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>Miscarried</defName>
+		<label>miscarried</label>
+		<descriptionMaker>PH_Miscarried</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Life</li>
+			<li>Health</li>
+		</categories>
+	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
 		<defName>PsylinkLevelGained</defName>
 		<label>psylink level gained</label>
