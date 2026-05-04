@@ -33,7 +33,7 @@ public class MarriedRecorder : RecorderBase<MarriedEvent>
 
     public void Test(TestScenario scenario)
     {
-        var (couple, _) = WeddingRecorder.SetupWedding(scenario);
+        var (couple, _, _) = WeddingRecorder.SetupWedding(scenario);
 
         MarriageCeremonyUtility.Married(couple[0], couple[1]);
 

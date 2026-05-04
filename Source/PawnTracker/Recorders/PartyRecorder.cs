@@ -153,7 +153,7 @@ public class PartyRecorder : RecorderBase<PartyRecorder.PartyStartedInput>, IRec
         }
     }
     
-    private static readonly int MinPartyDuration = 1200; // must larger than this value in IsGatheringAboutToEnd()
+    public static readonly int MinPartyDuration = 1200; // must larger than this value in IsGatheringAboutToEnd()
 
     public void TestAttended(TestScenario scenario)
     {

@@ -130,8 +130,10 @@
 
 				<li>desc_sentence->[Spouse1] snuggled up against [Spouse2_objective].</li>
 				<li>desc_sentence->[Spouse1] locked eyes with [Spouse2_objective].</li>
+				<li>desc_sentence->[Spouse1] is blowing air at [Spouse2_objective].</li>
+				<li>desc_sentence->[Spouse1] is stylistically bonded with [Spouse2_objective].</li>
+				<li>desc_sentence->[Spouse1] is touching [Spouse2_objective] aggressively.</li>
 				<li>desc_sentence->[Spouse1] smiled warmly at [Spouse2_objective].</li>
-				<li>desc_sentence->[Spouse1] held [Spouse2_objective]'s hands.</li>
 				<li>desc_sentence->[Spouse1] leaned affectionately toward [Spouse2_objective].</li>
 				<li>desc_sentence->[Spouse1] shared a quiet moment with [Spouse2_objective].</li>
 				<li>desc_sentence->[Spouse1] looked deeply happy beside [Spouse2_objective].</li>

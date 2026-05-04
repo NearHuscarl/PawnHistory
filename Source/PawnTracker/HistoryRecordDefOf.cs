@@ -70,8 +70,9 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef PartyJoined;
     public static HistoryRecordDef PartyFinished;
     public static HistoryRecordDef Married;
+    public static HistoryRecordDef WeddingStarted;
     public static HistoryRecordDef WeddingJoined;
-    public static HistoryRecordDef WeddingCancelled;
+    public static HistoryRecordDef WeddingFinished;
     public static HistoryRecordDef Disease;
     public static HistoryRecordDef LungRot;
     public static HistoryRecordDef MentalBreak;
