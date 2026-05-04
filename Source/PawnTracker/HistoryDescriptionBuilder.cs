@@ -121,6 +121,12 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
         return AddRule(keyword, royalTitle.GetLabelCapFor(Pawn).Colorize(Faction.OfEmpire.Color), addSubsymbols, replaceIfExist);
     }
 
+    public HistoryDescriptionBuilder AddRule(string keyword, Gene gene, bool addSubsymbols = false, bool replaceIfExist = false)
+    {
+        if (gene == null) return this;
+        return AddRule(keyword, gene.Label.Colorize(ColoredText.GeneColor), addSubsymbols, replaceIfExist);
+    }
+
     public HistoryDescriptionBuilder AddRules(IEnumerable<Rule> rules)
     {
         extraRules.AddRange(rules);

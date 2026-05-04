@@ -115,6 +115,18 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_ScarHealed</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>Why(cause==Drug)->[CauseHediff]</li>
+				<li>Why(cause==Gene)->[CauseGene] gene</li>
+				<li>entry->[PAWN] recovered from [Hediff_indefinite] in [PAWN_possessive] [Part] thanks to [Why].</li>
+				<li>entry->[PAWN] recovered from [Hediff_indefinite] in [PAWN_possessive] [Part] thanks to [Why].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_Casualty</defName>
 		<rulePack>
 			<rulesStrings>

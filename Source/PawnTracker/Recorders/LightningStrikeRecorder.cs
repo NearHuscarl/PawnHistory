@@ -57,8 +57,8 @@ public class LightningStrikeRecorder : RecorderBase<LightningStrikeRecorder.Inpu
         var (pawn, hediff, part) = input;
         var recordDef = HistoryRecordDefOf.LightningStrike;
         var desc = recordDef.Description(pawn)
-            .AddRule("POSSESSIVE", pawn.Possessive())
-            .AddRule("PART", part.Label.Colorize(hediff.LabelColor))
+            .IncludePawnGrammar()
+            .AddRule("Part", part)
             .Format();
 
         AddRecord(recordDef, pawn, desc);
@@ -71,6 +71,6 @@ public class LightningStrikeRecorder : RecorderBase<LightningStrikeRecorder.Inpu
             .Do(p => Find.CurrentMap.weatherManager.eventHandler.AddEvent(new WeatherEvent_LightningStrike(Find.CurrentMap, p.Position)))
             .Execute();
 
-        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecord(HistoryRecordDefOf.LightningStrike, "[PAWN] was struck by lightning, burning [POSSESSIVE] [PART].");
+        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecord(HistoryRecordDefOf.LightningStrike, "[PAWN] was struck by lightning, burning [His] [Part].");
     }
 }

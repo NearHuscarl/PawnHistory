@@ -283,6 +283,15 @@
 			<li>Health</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>ScarHealed</defName>
+		<label>scar healed</label>
+		<descriptionMaker>PH_ScarHealed</descriptionMaker>
+		<icon>EventIcons/Scars</icon>
+		<categories>
+			<li>Health</li>
+		</categories>
+	</HistoryRecordDef>
 
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>NewArrival</defName>
@@ -791,7 +800,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>LightningStrike</defName>
 		<label>hit by lightning strike</label>
-		<description>{PAWN} was struck by lightning, burning {POSSESSIVE} {PART}.</description>
+		<description>{PAWN} was struck by lightning, burning {PAWN_possessive} {Part}.</description>
 		<icon>EventIcons/Flashstorm</icon>
 		<categories>
 			<li>Life</li>

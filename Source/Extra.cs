@@ -42,6 +42,7 @@ public static class Extra
         public static HediffDef LuciferiumAddiction;
         public static HediffDef SimpleProstheticHeart;
         public static HediffDef BionicHeart;
+        public static HediffDef LuciferiumHigh;
 
         static HediffDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(HediffDefOf));
     }
@@ -288,5 +289,7 @@ public static class Extra
     {
         [MayRequireBiotech]
         public static GeneDef PsychicBonding;
+        [MayRequireBiotech]
+        public static GeneDef TotalHealing;
     }
 }

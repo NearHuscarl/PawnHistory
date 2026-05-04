@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine.Profiling;
 
 namespace PawnHistory.Source.Helper;
 
@@ -70,5 +67,11 @@ public static class ListExtensions
 
         for (var i = start; i < source.Count; i++)
             yield return source[i];
+    }
+    
+    public static List<T> ExceptList<T>(this IEnumerable<T> source, IEnumerable<T> except)
+    {
+        var exceptSet = except.ToHashSet();
+        return source.Where(x => !exceptSet.Contains(x)).ToList();
     }
 }

@@ -138,7 +138,7 @@ public static class ThingBuilderExtensions
     {
         builder.Do(thing =>
         {
-            thing.TryGetComp<CompCookTracker>()?.cook = cook;
+            thing.TryGetComp<CompCookTracker>()?.Cook = cook;
             thing.TryGetComp<CompFoodPoisonable>()?.SetPoisoned(FoodPoisonCause.IncompetentCook);
         });
 

@@ -8,7 +8,7 @@ public record FoodPoisoningEvent(Pawn Victim, Thing Ingestible, FoodPoisonCause 
 
 public class CompCookTracker : ThingComp
 {
-    public Pawn cook;
+    public Pawn Cook;
 
     public static void InjectComp()
     {
@@ -24,7 +24,7 @@ public class CompCookTracker : ThingComp
     public override void PostSplitOff(Thing piece)
     {
         base.PostSplitOff(piece);
-        piece.TryGetComp<CompCookTracker>()?.cook = cook;
+        piece.TryGetComp<CompCookTracker>()?.Cook = Cook;
     }
 
     public override void PreAbsorbStack(Thing otherStack, int count)
@@ -32,7 +32,7 @@ public class CompCookTracker : ThingComp
         base.PreAbsorbStack(otherStack, count);
 
         var otherTracker = otherStack.TryGetComp<CompCookTracker>();
-        if (otherTracker?.cook == null)
+        if (otherTracker?.Cook == null)
             return;
 
         var thisPoison = parent.TryGetComp<CompFoodPoisonable>();
@@ -42,15 +42,15 @@ public class CompCookTracker : ThingComp
         var incomingWeight = otherPoison.PoisonPercent * count;
 
         if (incomingWeight > currentWeight)
-            cook = otherTracker.cook;
+            Cook = otherTracker.Cook;
         else
-            cook ??= otherTracker.cook;
+            Cook ??= otherTracker.Cook;
     }
 
     public override void PostExposeData()
     {
         base.PostExposeData();
-        Scribe_References.Look(ref cook, "PH_cook");
+        Scribe_References.Look(ref Cook, "PH_cook");
     }
 }
 
@@ -64,7 +64,7 @@ internal class CompFoodPoisonable_Notify_RecipeProduced_Patch
 {
     private static void Postfix(CompFoodPoisonable __instance, Pawn pawn)
     {
-        __instance.parent.TryGetComp<CompCookTracker>()?.cook = pawn;
+        __instance.parent.TryGetComp<CompCookTracker>()?.Cook = pawn;
     }
 }
 
@@ -73,7 +73,7 @@ internal class FoodUtility_AddFoodPoisoningHediff_Patch
 {
     private static void Postfix(Pawn pawn, Thing ingestible, FoodPoisonCause cause)
     {
-        var cook = ingestible.TryGetComp<CompCookTracker>()?.cook;
+        var cook = ingestible.TryGetComp<CompCookTracker>()?.Cook;
         GameEventBus.Publish(new FoodPoisoningEvent(pawn, ingestible, cause, cook));
     }
 }

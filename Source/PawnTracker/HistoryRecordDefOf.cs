@@ -31,6 +31,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef Inspiration;
     public static HistoryRecordDef BodyPartDestroyed;
     public static HistoryRecordDef BodyPartScarred;
+    public static HistoryRecordDef ScarHealed;
     public static HistoryRecordDef BodyPartRemoved;
     public static HistoryRecordDef BodyPartImplanted;
     public static HistoryRecordDef BodyPartInstalled;
