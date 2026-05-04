@@ -95,6 +95,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef LightningStrike;
     public static HistoryRecordDef WalkNaked;
     public static HistoryRecordDef OnFire;
+    public static HistoryRecordDef Exhausted;
     public static HistoryRecordDef PlayedGame;
     public static HistoryRecordDef ReadBook;
     public static HistoryRecordDef Stripped;

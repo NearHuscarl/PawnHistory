@@ -829,6 +829,16 @@
 		<importance>Minor</importance>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Exhausted</defName>
+		<label>exhausted</label>
+		<descriptionMaker>PH_Exhausted</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+		<importance>Minor</importance>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>ReadBook</defName>
 		<label>reading book</label>
 		<descriptionMaker>PH_ReadBook</descriptionMaker>

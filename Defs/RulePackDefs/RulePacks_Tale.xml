@@ -89,6 +89,39 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_Exhausted</defName>
+		<rulePack>
+			<rulesStrings>
+				<!--Core\Defs\TaleDefs\Tales_Health.xml#Exhausted-->
+				<li>image->[PAWN] collapsed from exhaustion</li>
+				<li>image->[PAWN] collapsed on the ground [circumstance_phrase]</li>
+				<li>image->[PAWN] lay on the ground [circumstance_phrase]</li>
+				<li>image->[PAWN] had collapsed in a chair [circumstance_phrase]</li>
+				<li>image->[PAWN] slept peacefully [circumstance_phrase]</li>
+				<li>image->[PAWN] was found unable to stand [circumstance_phrase]</li>
+
+				<li>circumstance_phrase->with eyes closed</li>
+				<li>circumstance_phrase->while covered in sweat</li>
+				<li>circumstance_phrase->and unable to move a muscle</li>
+				<li>circumstance_phrase->after working without enough rest</li>
+				<li>circumstance_phrase->after pushing past safe limits</li>
+				<li>circumstance_phrase->after days of strain</li>
+				<li>circumstance_phrase->with no strength left to continue</li>
+				
+				<li>desc_sentence->[PAWN_pronoun] could no longer stay on [PAWN_possessive] feet.</li>
+				<li>desc_sentence->[PAWN_pronoun] had to stop where [PAWN_pronoun] fell.</li>
+				<li>desc_sentence->[PAWN_pronoun] had pushed too far, and [PAWN_possessive] body gave out.</li>
+				<li>desc_sentence->Whatever [PAWN_pronoun] had been doing ended there.</li>
+				<li>desc_sentence->[PAWN_pronoun] reached [PAWN_possessive] limit and fell where [PAWN_pronoun] stood.</li>
+				<li>desc_sentence->[PAWN_pronoun] reached the end of what [PAWN_pronoun] could endure.</li>
+				<li>desc_sentence->[PAWN_pronoun] tried to keep going, but [PAWN_possessive] body refused.</li>
+				
+				<li>entry->[image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_ReadBook</defName>
 		<rulePack>
 			<rulesStrings>

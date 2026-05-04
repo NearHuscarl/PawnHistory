@@ -201,9 +201,9 @@
 				<li>entry(priority=1,kind==Raider,quest==ShuttleCrash_Rescue)     ->[PAWN][AndOthers] from [PAWN_factionName] attacked the crashed shuttle site.</li>
 				
 				<li>entry(priority=1,kind==Joiner,quest==ThreatReward_Raid_Joiner)->[PAWN] joined [PlayerSettlement] in exchange for safety while being pursued.</li>
+				<!-- <li>entry(priority=1,kind==Raider,quest==ThreatReward_Raid_Joiner) -> handled in PH_Raid since it spawns an incident -->
 				<li>entry(priority=1,kind==Guest, quest==BestowingCeremony)       ->[PAWN] arrived at [PlayerSettlement] to perform a bestowing ceremony, granting [Recipient] the title of [NewTitle].</li>
 				<li>entry(priority=1,kind==Helper,quest==BestowingCeremony)       ->[PAWN] along with [Count] others accompanied the bestower to [PlayerSettlement] for [Recipient]'s bestowing ceremony, where [Recipient_pronoun] received the title of [NewTitle].</li>
-				<!-- <li>entry(priority=1,kind==Raider,quest==ThreatReward_Raid_Joiner) -> handled in PH_Raid since it spawns an incident -->
 				<li>entry(priority=1,kind==Joiner,quest==Intro_Deserter)          ->[PAWN] joined [PlayerSettlement] after deserting [Faction], while being hunted by a loyalty squad.</li>
 				<li>entry(priority=1,kind==Joiner,quest==TradeRequest)            ->[PAWN] joined [PlayerSettlement] as a reward for fulfilling a trade request from [Faction].</li>
 
