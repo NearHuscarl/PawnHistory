@@ -3,7 +3,6 @@ using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
-using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -64,12 +63,15 @@ public class SkillLevelChangedRecorder : RecorderBase<SkillLevelChangedEvent>
         if (SkillRecords.TryGetValue(e.Def, out var recordsToUpdate))
         {
             recordsToUpdate = recordsToUpdate.Where(r => r != null).ToArray();
-            var dominant = historyComp.DominantDelta(e.Def, recordsToUpdate);
-            if (dominant is { } d && d.Delta > 0)
-                builder.AddRule("RecordCount", e.Pawn.records.GetAsInt(d.Def))
-                    .AddConstant("record", d.Def.defName);
+            var skillLevelChangedState = historyComp.SkillLevelChangedState;
+            var dominant = skillLevelChangedState.DominantDelta(e.Pawn, e.Def, recordsToUpdate);
+            if (dominant is { Delta: > 0 })
+            {
+                builder.AddRule("RecordCount", e.Pawn.records.GetAsInt(dominant.Def))
+                    .AddConstant("record", dominant.Def.defName);
+            }
             
-            historyComp.UpdateSnapshot(recordsToUpdate);
+            skillLevelChangedState.UpdateSnapshot(e.Pawn, recordsToUpdate);
         }
 
         AddRecord(recordDef, e.Pawn, builder.Resolve());
