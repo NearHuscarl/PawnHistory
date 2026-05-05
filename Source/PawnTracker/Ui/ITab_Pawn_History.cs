@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -25,6 +26,7 @@ public class ITab_Pawn_History : ITab
     }
 
     public override bool IsVisible => HistoryTableController.GetVisibleRecords(PawnToShowInfo).Any();
+    private Rect ContentRect => new(0f, 0f, size.x, size.y);
 
     public ITab_Pawn_History()
     {
@@ -36,7 +38,6 @@ public class ITab_Pawn_History : ITab
     protected override void FillTab()
     {
         var pawn = PawnToShowInfo;
-        var tabRect = new Rect(0, 0, size.x, size.y);
-        historyCardPage.Draw(tabRect, pawn);
+        historyCardPage.Draw(ContentRect, pawn);
     }
 }

@@ -1,10 +1,15 @@
-﻿using PawnHistory.Source.Helper;
+﻿using System;
+using PawnHistory.Source.Helper;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Verse;
 
 namespace PawnHistory.Source.DebugTools;
+
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+public sealed class DebugIgnoreAttribute : Attribute;
 
 public static class DebugUtility
 {
@@ -30,12 +35,18 @@ public static class DebugUtility
 
         foreach (var prop in props)
         {
+            if (prop.HasAttribute<DebugIgnoreAttribute>())
+                continue;
+
             var value = prop.GetValue(obj);
             parts.Add($"{prop.Name}={FormatValue(value)}");
         }
 
         foreach (var field in fields)
         {
+            if (field.HasAttribute<DebugIgnoreAttribute>())
+                continue;
+
             var value = field.GetValue(obj);
             parts.Add($"{field.Name}={FormatValue(value)}");
         }

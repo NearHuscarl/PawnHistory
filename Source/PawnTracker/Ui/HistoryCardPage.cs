@@ -5,6 +5,8 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Ui;
 
+public record HistoryCardPageContext(Rect PageRect);
+
 public sealed class HistoryCardPage
 {
     private static float containerPadding;
@@ -16,8 +18,10 @@ public sealed class HistoryCardPage
 
     private readonly HistoryTableState tableState = new();
     private readonly PaginationState paginationState = new();
+    private readonly List<Command> commands = [];
     private readonly HistoryTableController tableController = new();
     private Vector2 scrollPosition;
+    public static HistoryCardPageContext Context;
 
     static HistoryCardPage() => ReloadHistoryCardPageLayout();
 
@@ -32,6 +36,7 @@ public sealed class HistoryCardPage
 
     public void Draw(Rect tabRect, Pawn pawn)
     {
+        Context = new HistoryCardPageContext(tabRect);
         var color = GUI.color;
         var font = Text.Font;
         var anchor = Text.Anchor;
@@ -44,12 +49,12 @@ public sealed class HistoryCardPage
         {
             var filterRect = new Rect(0f, 0f, inRect.width, filterHeight);
             var groupRect = new Rect(0f, filterHeight, inRect.width, inRect.height - filterHeight);
-            var commands = new List<PaginationCommand>();
             
-            tableController.SyncExternalState(pawn, tableState, paginationState);
-            PaginationView.Draw(filterRect, paginationState, commands);
-            HistoryTableView.Draw(groupRect, tableState, paginationState, ref scrollPosition, layout);
-            tableController.HandleCommands(pawn, tableState, paginationState, commands);
+            tableController.SyncExternalState(pawn, tableState, paginationState, commands);
+            PaginationView.Draw(filterRect, paginationState, tableState, commands);
+            HistoryTableView.Draw(groupRect, tableState, paginationState, ref scrollPosition, layout, commands);
+            HistoryTableDebugView.Draw(inRect, tableState, paginationState);
+            tableController.Handle(tableState, paginationState, commands);
         }
         finally
         {

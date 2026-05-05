@@ -34,9 +34,11 @@ public static class PaginationView
         PageSize = 12;
     }
 
-    public static void Draw(Rect filterRect, PaginationState state, List<PaginationCommand> commands)
+    public static void Draw(Rect filterRect, PaginationState state, HistoryTableState tableState, List<Command> commands)
     {
         var current = Event.current;
+        var blockInput = tableState.HasActiveEditSession;
+
         var shouldSubmit = GUI.GetNameOfFocusedControl() == ControlName
             && current.type == EventType.KeyDown
             && current.keyCode is KeyCode.Return or KeyCode.KeypadEnter;
@@ -55,32 +57,34 @@ public static class PaginationView
         var lastButtonRect = new Rect(nextButtonRect.xMax + controlGap, controlY, buttonWidth, controlHeight);
 
         var wasEnabled = GUI.enabled;
+        var paginationEnabled = wasEnabled && !blockInput;
+        GUI.enabled = paginationEnabled;
 
-        GUI.enabled = wasEnabled && CanGoToPreviousPage(state);
+        GUI.enabled = paginationEnabled && CanGoToPreviousPage(state);
         if (Widgets.ButtonText(firstButtonRect, FirstPageIcon))
             commands.Add(new FirstPageClicked());
 
-        GUI.enabled = wasEnabled && CanGoToPreviousPage(state);
+        GUI.enabled = paginationEnabled && CanGoToPreviousPage(state);
         if (Widgets.ButtonText(previousButtonRect, PreviousPageIcon))
             commands.Add(new PreviousPageClicked());
 
-        GUI.enabled = wasEnabled;
+        GUI.enabled = paginationEnabled;
         GUI.SetNextControlName(ControlName);
         var edited = Widgets.TextField(inputRect, state.PageText);
-        if (edited != state.PageText && InputValidators.DigitsOnly(edited))
+        if (paginationEnabled && edited != state.PageText && InputValidators.DigitsOnly(edited))
         {
             state.PageText = edited;
             state.Error = null;
         }
 
-        if (shouldSubmit)
+        if (paginationEnabled && shouldSubmit)
             commands.Add(new PageInputSubmitted());
 
-        GUI.enabled = wasEnabled && CanGoToNextPage(state);
+        GUI.enabled = paginationEnabled && CanGoToNextPage(state);
         if (Widgets.ButtonText(nextButtonRect, NextPageIcon))
             commands.Add(new NextPageClicked());
 
-        GUI.enabled = wasEnabled && CanGoToNextPage(state);
+        GUI.enabled = paginationEnabled && CanGoToNextPage(state);
         if (Widgets.ButtonText(lastButtonRect, LastPageIcon))
             commands.Add(new LastPageClicked());
 

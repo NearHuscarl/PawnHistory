@@ -107,4 +107,5 @@ internal class NearDebugSettings
     public static bool ForceMarriageProposalRejected = false;
     public static bool ShipEscapeSpawnNearby = false;
     public static bool LogDebug = false;
+    public static bool DrawHistoryCardState = false;
 }

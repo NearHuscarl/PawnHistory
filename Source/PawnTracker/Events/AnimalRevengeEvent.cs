@@ -41,6 +41,8 @@ internal static class Pawn_MindState_StartManhunterBecauseOfPawnAction_Patch
     {
         if (!AnimalRevengeContext.PendingRevenge)
             return;
+        if (!AnimalRevengeContext.Manhunters.Any()) // mental break failed
+            return;
 
         var reason = causedByDamage ? RevengeReason.Hunt : RevengeReason.Tame;
         GameEventBus.Publish(new AnimalRevengeEvent(AnimalRevengeContext.Manhunters, instigator, reason));

@@ -1,6 +1,6 @@
 namespace PawnHistory.Source.PawnTracker.Ui;
 
-public abstract record PaginationCommand;
+public abstract record PaginationCommand : Command;
 
 public sealed record FirstPageClicked : PaginationCommand;
 public sealed record PreviousPageClicked : PaginationCommand;

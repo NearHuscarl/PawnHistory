@@ -2,6 +2,7 @@ using PawnHistory.Source.DebugTools;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
 using Verse;
@@ -13,6 +14,7 @@ public readonly record struct HistoryTableLayout(float Gap);
 public static class HistoryTableView
 {
     private const float PinnedBorderWidth = 2f;
+    private const string EditControlNamePrefix = "HistoryDescriptionEdit";
     private static readonly Color PinnedBorderColor = NeedsCardUtility.MoodColorNegative;
 
     private static float headerHeight;
@@ -47,15 +49,17 @@ public static class HistoryTableView
         drawDebuggingBox = false;
     }
 
-    private static List<HistoryRecord> GetVisibleRecords(HistoryTableState tableState, PaginationState paginationState)
+    private static List<HistoryRecord> GetCurrentPageRecords(HistoryTableState tableState, PaginationState paginationState)
     {
         var visibleRecords = HistoryTableController.GetVisibleRecords(tableState.LastPawnShown);
         var startIndex = (paginationState.CurrentPage - 1) * PaginationView.PageSize;
         return visibleRecords.Skip(startIndex).Take(PaginationView.PageSize).ToList();
     }
 
-    public static void Draw(Rect inRect, HistoryTableState tableState, PaginationState paginationState, ref Vector2 scrollPosition, HistoryTableLayout layout)
+    public static void Draw(Rect inRect, HistoryTableState tableState, PaginationState paginationState, ref Vector2 scrollPosition, HistoryTableLayout layout, List<Command> commands)
     {
+        GUI.BeginGroup(inRect);
+        
         Text.Font = GameFont.Small;
         GUI.color = Color.gray;
         Text.Anchor = TextAnchor.MiddleLeft;
@@ -70,17 +74,17 @@ public static class HistoryTableView
 
         var tableY = layout.Gap + headerHeight;
         var outRect = new Rect(0f, tableY, inRect.width, inRect.height - tableY);
-        var visibleRecords = GetVisibleRecords(tableState, paginationState);
-        var totalHeight = visibleRecords.Sum(r => GetRowHeight(r, descWidth, tableState));
+        var records = GetCurrentPageRecords(tableState, paginationState);
+        var totalHeight = records.Sum(r => GetRowHeight(r, descWidth, tableState));
         var viewRect = new Rect(0f, 0f, inRect.width - scrollWidth, totalHeight);
 
         ApplyScrollState(tableState, ref scrollPosition, totalHeight, outRect.height);
 
         Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
         var curY = 0f;
-        for (var i = 0; i < visibleRecords.Count; i++)
+        for (var i = 0; i < records.Count; i++)
         {
-            var record = visibleRecords[i];
+            var record = records[i];
             var rowHeight = GetRowHeight(record, descWidth, tableState);
             var row = new Rect(0f, curY, viewRect.width, rowHeight);
             if (i % 2 == 0)
@@ -105,7 +109,10 @@ public static class HistoryTableView
             Text.Font = GameFont.Tiny;
             Text.Anchor = TextAnchor.MiddleLeft;
             var descCell = new Rect(iconCell.xMax + colGap, row.y, descWidth, row.height);
-            Widgets.Label(descCell, record.description);
+            if (tableState.IsEditing(record))
+                DrawEditingDescriptionCell(descCell, record, tableState, commands);
+            else
+                Widgets.Label(descCell, record.description);
             if (drawDebuggingBox) Widgets.DrawBox(descCell);
 
             var questCell = new Rect(descCell.xMax + colGap, row.y + (row.height - colWidthQuest) / 2, colWidthQuest, colWidthQuest);
@@ -121,7 +128,8 @@ public static class HistoryTableView
                 TooltipHandler.TipRegion(questCell, record.quest.name);
             }
 
-            TooltipHandler.TipRegion(descCell, GetTooltipOf(record));
+            if (!tableState.IsEditing(record))
+                TooltipHandler.TipRegion(descCell, GetTooltipOf(record));
 
             if (Mouse.IsOver(row))
             {
@@ -129,12 +137,12 @@ public static class HistoryTableView
                     TargetHighlighter.Highlight(target);
             }
 
-            if (Mouse.IsOver(row) && Event.current.type == EventType.MouseDown && (Event.current.button == 0 || Event.current.button == 1))
+            if (!tableState.HasActiveEditSession && Mouse.IsOver(row) && Event.current.type == EventType.MouseDown)
             {
                 if (Event.current.button == 0)
                     CameraJumper.TryJumpAndSelect(record.GetThingToJumpTo());
                 else if (Event.current.button == 1)
-                    Find.WindowStack.Add(new FloatMenu(HistoryCardMenuOptions.GetActionMenuOptions(record)));
+                    Find.WindowStack.Add(new FloatMenu(HistoryCardMenuOptions.GetActionMenuOptions(record, commands.Add)));
 
                 Event.current.Use();
             }
@@ -143,6 +151,7 @@ public static class HistoryTableView
         }
 
         Widgets.EndScrollView();
+        GUI.EndGroup();
     }
 
     private static void ApplyScrollState(HistoryTableState tableState, ref Vector2 scrollPosition, float totalHeight, float viewportHeight)
@@ -163,13 +172,60 @@ public static class HistoryTableView
     {
         Text.Font = GameFont.Tiny;
 
+        if (state.IsEditing(record))
+            return Mathf.Max(Text.CurTextAreaStyle.CalcHeight(new GUIContent(state.EditingText), descWidth), minRowHeight);
+
         if (state.CachedHeights.TryGetValue(record, out var height))
             return height;
-        
+
         var textHeight = Text.CalcHeight(record.description, descWidth);
         height = Mathf.Max(textHeight, minRowHeight);
         state.CachedHeights[record] = height;
         return height;
+    }
+
+    private static void DrawEditingDescriptionCell(Rect descCell, HistoryRecord record, HistoryTableState tableState, List<Command> commands)
+    {
+        var controlName = GetEditControlName(record);
+        var current = Event.current;
+        var hasFocus = GUI.GetNameOfFocusedControl() == controlName;
+
+        if (hasFocus && current.type == EventType.KeyDown)
+        {
+            switch (current.keyCode)
+            {
+                case KeyCode.Escape:
+                    commands.Add(new CancelEditedRecord());
+                    UI.UnfocusCurrentControl();
+                    current.Use();
+                    return;
+                case KeyCode.Return or KeyCode.KeypadEnter when !current.shift:
+                    commands.Add(new SaveEditedRecord());
+                    UI.UnfocusCurrentControl();
+                    current.Use();
+                    return;
+            }
+        }
+
+        if (hasFocus && Event.current.type == EventType.MouseDown && !Mouse.IsOver(descCell))
+        {
+            commands.Add(new CancelEditedRecord());
+            UI.UnfocusCurrentControl();
+            current.Use();
+            return;
+        }
+
+        GUI.SetNextControlName(controlName);
+        // must place after custom event handling
+        tableState.EditingText = Widgets.TextArea(descCell, tableState.EditingText);
+
+        if (!hasFocus && tableState.HasActiveEditSession)
+        {
+            UI.FocusControl(controlName, Find.WindowStack.currentlyDrawnWindow);
+            var editor = (TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
+            editor.OnFocus();
+            editor.MoveTextEnd();
+        }
     }
 
     private static void DrawPinnedBorder(Rect row)
@@ -196,4 +252,6 @@ public static class HistoryTableView
 
         return sb.ToString();
     }
+
+    private static string GetEditControlName(HistoryRecord record) => $"{EditControlNamePrefix}_{RuntimeHelpers.GetHashCode(record)}";
 }

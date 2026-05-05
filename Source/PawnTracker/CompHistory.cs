@@ -89,6 +89,8 @@ public class CompHistory : ThingComp
         PawnGeneratedRecord = null;
     }
 
+    public bool RemoveRecord(HistoryRecord record) => records.Remove(record);
+
     private void EnsureInitialized()
     {
         records ??= [];
