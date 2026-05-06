@@ -15,7 +15,7 @@ Use this split for UI that has input, validation, or stateful interactions:
 
 - Host/page/window:
   - owns UI state
-  - reconciles state from current render context
+  - sync external state from the outside
   - calls view draw helpers
   - wires presenter callbacks
 - View:

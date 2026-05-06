@@ -152,31 +152,33 @@ public static class HistoryRecordExtensions
         return Find.WorldGrid[tileId].tile;
     }
 
-    extension(HistoryRecord record)
+    public static string GetShortDate(int date, int tileId)
     {
-        public string GetShortDate()
+        var position = Find.WorldGrid.LongLatOf(Tile(tileId));
+        var hourInt = GenDate.HourInteger(date, position.x);
+        var hour = $"{hourInt}h";
+
+        if (Prefs.TwelveHourClockMode)
         {
-            var position = Find.WorldGrid.LongLatOf(Tile(record.tileId));
-            var hourInt = GenDate.HourInteger(record.date, position.x);
-            var hour = $"{hourInt}h";
-
-            if (Prefs.TwelveHourClockMode)
-            {
-                var ampm = hourInt >= 12 ? "PM" : "AM";
-                hourInt %= 12;
-                if (hourInt == 0) hourInt = 12;
-                hour = $"{hourInt} {ampm}";
-            }
-
-            var day = GenDate.DayOfYear(record.date, position.x) + 1;
-            var year = GenDate.Year(record.date, position.x);
-            return $"Y{year} D{day} {hour}";
+            var ampm = hourInt >= 12 ? "PM" : "AM";
+            hourInt %= 12;
+            if (hourInt == 0) hourInt = 12;
+            hour = $"{hourInt} {ampm}";
         }
 
-        public string GetTipDate()
-        {
-            var position = Find.WorldGrid.LongLatOf(Tile(record.tileId));
-            return GenDate.DateFullStringWithHourAt(record.date, position);
-        }
+        var day = GenDate.DayOfYear(date, position.x) + 1;
+        var year = GenDate.Year(date, position.x);
+        return $"Y{year} D{day} {hour}";
+    }
+
+    public static string GetShortDate(this HistoryRecord record)
+    {
+        return GetShortDate(record.date, record.tileId);
+    }
+
+    public static string GetTipDate(this HistoryRecord record)
+    {
+        var position = Find.WorldGrid.LongLatOf(Tile(record.tileId));
+        return GenDate.DateFullStringWithHourAt(record.date, position);
     }
 }

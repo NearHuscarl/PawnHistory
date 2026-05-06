@@ -18,16 +18,17 @@ public enum MentalBreakCause
 
 public record MentalBreakReason(MentalBreakCause Cause, string InGameReason, Hediff Hediff = null, string Trait = null);
 
-public record MentalBreakStartedEvent(Pawn Pawn, MentalBreakReason Reason, MentalBreakDef MentalBreak, MentalStateDef MentalState = null, Pawn Target = null, Quest Quest = null) : GameEventBase;
+public record MentalBreakStartedEvent(Pawn Pawn, MentalBreakReason Reason, MentalBreakDef MentalBreak, MentalState MentalState = null, Pawn Target = null, Quest Quest = null) : GameEventBase;
 
 internal static class MentalBreakContext
 {
-    public static readonly Dictionary<Pawn, (MentalStateDef mentalState, string reason, bool causedByMood, bool hasRecord)> OnGoingMentalStates = [];
+    public static readonly Dictionary<Pawn, (MentalState mentalState, string reason, bool causedByMood, bool hasRecord)> OnGoingMentalStates = [];
     public static Hediff CurrentTickingHediff;
     public static TraitDegreeData CurrentTickingTraitData;
     public static readonly HashSet<string> IgnoredMentalBreaks = [
         "PanicFleeFire", // Happens too frequently
         "SocialFighting", // Handled by SocialFightStartedEvent
+        "IdeoChange", // Handled separately because MentalStateHandler.CurState is set to SadWander immediately in the nested call (MentalState_IdeoChange.PostStart)
     ];
 
     public static MentalBreakReason CreateReason(bool causedByMood, string inGameReason, bool issueDecree = false)
@@ -69,7 +70,7 @@ internal static class MentalBreakContext
 [HarmonyPatch(typeof(MentalStateHandler), nameof(MentalStateHandler.TryStartMentalState))]
 internal static class MentalStateHandler_TryStartMentalState_Patch_2
 {
-    public static void Postfix(bool __result, MentalStateHandler __instance, string reason, bool causedByMood, bool transitionSilently)
+    public static void Postfix(bool __result, MentalStateDef stateDef, MentalStateHandler __instance, string reason, bool causedByMood, bool transitionSilently)
     {
         if (!__result)
             return;
@@ -78,9 +79,9 @@ internal static class MentalStateHandler_TryStartMentalState_Patch_2
             return;
 
         var pawn = Accessor.MentalStateHandler.Pawn(__instance);
-        var mentalState = __instance.CurStateDef;
+        var mentalState = __instance.CurState;
 
-        if (MentalBreakContext.IgnoredMentalBreaks.Contains(mentalState.defName))
+        if (MentalBreakContext.IgnoredMentalBreaks.Contains(stateDef.defName))
             return;
 
         if (pawn.MentalState is MentalState_Slaughterer or MentalState_Jailbreaker)
@@ -176,7 +177,7 @@ internal static class Pawn_RoyaltyTracker_IssueDecree_Patch
 internal static class Hediff_TickInterval_Patch
 {
     private static void Prefix(Hediff __instance) => MentalBreakContext.CurrentTickingHediff = __instance;
-    private static void Finalizer() => MentalBreakContext.CurrentTickingHediff = null;
+    private static void Postfix() => MentalBreakContext.CurrentTickingHediff = null;
 }
 
 // Call order:
@@ -188,5 +189,17 @@ internal static class Hediff_TickInterval_Patch
 internal static class TraitMentalStateGiver_CheckGive_Patch
 {
     private static void Prefix(TraitMentalStateGiver __instance) => MentalBreakContext.CurrentTickingTraitData = __instance.traitDegreeData;
-    private static void Finalizer() => MentalBreakContext.CurrentTickingTraitData = null;
+    private static void Postfix() => MentalBreakContext.CurrentTickingTraitData = null;
+}
+
+// Edge case: IdeoChange mental break
+
+[HarmonyPatch(typeof(MentalState_IdeoChange), nameof(MentalState_IdeoChange.PostStart))]
+internal static class MentalState_IdeoChange_PostStart_Patch
+{
+    private static void Postfix(MentalState_IdeoChange __instance, string reason)
+    {
+        var mentalBreakReason = MentalBreakContext.CreateReason(__instance.causedByMood, reason);
+        GameEventBus.Publish(new MentalBreakStartedEvent(__instance.pawn, mentalBreakReason, Extra.MentalBreakDefOf.IdeoChange, __instance));
+    }
 }

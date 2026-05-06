@@ -8,7 +8,7 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public abstract class MentalBreakComp : RecordComp<MentalBreakRecorder>
 {
-    public record BuildInput(Pawn Pawn, MentalBreakReason Reason, MentalBreakDef MentalBreak, MentalStateDef MentalStateDef, MentalState MentalState, Pawn Target, Quest Quest);
+    public record BuildInput(Pawn Pawn, MentalBreakReason Reason, MentalBreakDef MentalBreak, MentalState MentalState, Pawn Target, Quest Quest);
 
     public abstract bool Match(BuildInput input);
 

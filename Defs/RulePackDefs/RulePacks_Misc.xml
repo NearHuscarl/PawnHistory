@@ -401,6 +401,13 @@
 				<li>entry(priority=1,name==WildDecree,cause!=Royalty) ->[PAWN] [IssueWildDecree]. [Reason]</li>
 				<li>entry(priority=1,name==WildDecree,cause==Royalty) ->[PAWN], to assert [PAWN_possessive] authority as [Title_indefinite], [IssueWildDecree].</li>
 
+				<li>IdeoCertainty(converted==True)        ->[PAWN] decided that [PAWN_possessive] belief in [OldIdeo] no longer made any sense. [PAWN_pronoun] now believed in [NewIdeo].</li>
+				<li>IdeoCertainty(converted==False)       ->[PAWN] had a crisis of belief, and [PAWN_possessive] certainty in [OldIdeo] fell to [NewCertainty].</li>
+				<li>IdeoBreak(wanderState==Wander_OwnRoom)->[PAWN] hid in [PAWN_possessive] room to come to terms with [PAWN_possessive] beliefs.</li>
+				<li>IdeoBreak(wanderState==Wander_Sad)    ->[PAWN] wandered in shock while grappling with [PAWN_possessive] beliefs.</li>
+				<li>IdeoBreak(wanderState==)              -></li>
+				<li>entry(priority=1,name==IdeoChange)    ->[IdeoCertainty] [IdeoBreak] [Reason]</li>
+
 				<li>entry(priority=0)                           ->[InGameDesc]. [Reason]</li>
 			</rulesStrings>
 		</rulePack>

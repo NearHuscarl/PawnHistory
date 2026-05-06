@@ -585,19 +585,3 @@ internal static class PawnBuilderExtension
         }
     }
 }
-
-internal static class PawnBuilderRoyaltyExtension
-{
-    extension(PawnBuilder builder)
-    {
-        public PawnBuilder SetRoyalTitle(RoyalTitleDef royalTitle)
-        {
-            return builder.Do(p =>
-            {
-                if (p.royalty.GetCurrentTitle(Faction.OfEmpire) == royalTitle)
-                    return;
-                p.royalty.SetTitle(Faction.OfEmpire, royalTitle, grantRewards: false);
-            });
-        }
-    }
-}

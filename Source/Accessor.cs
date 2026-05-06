@@ -206,6 +206,24 @@ public static class Accessor
         public static readonly AccessTools.FieldRef<Verse.AI.MentalStateHandler, Pawn> Pawn = AccessTools.FieldRefAccess<Verse.AI.MentalStateHandler, Pawn>("pawn");
     }
 
+    public class MentalState_IdeoChange
+    {
+        public static readonly AccessTools.FieldRef<Verse.AI.MentalState_IdeoChange, Ideo> OldIdeo =
+            AccessTools.FieldRefAccess<Verse.AI.MentalState_IdeoChange, Ideo>("oldIdeo");
+
+        public static readonly AccessTools.FieldRef<Verse.AI.MentalState_IdeoChange, Ideo> NewIdeo =
+            AccessTools.FieldRefAccess<Verse.AI.MentalState_IdeoChange, Ideo>("newIdeo");
+
+        public static readonly AccessTools.FieldRef<Verse.AI.MentalState_IdeoChange, Precept_Role> OldRole =
+            AccessTools.FieldRefAccess<Verse.AI.MentalState_IdeoChange, Precept_Role>("oldRole");
+
+        public static readonly AccessTools.FieldRef<Verse.AI.MentalState_IdeoChange, bool> ChangedIdeo =
+            AccessTools.FieldRefAccess<Verse.AI.MentalState_IdeoChange, bool>("changedIdeo");
+
+        public static readonly AccessTools.FieldRef<Verse.AI.MentalState_IdeoChange, float> NewCertainty =
+            AccessTools.FieldRefAccess<Verse.AI.MentalState_IdeoChange, float>("newCertainty");
+    }
+
     public class HediffGiver
     {
         public static readonly Action<Verse.HediffGiver, Pawn, Verse.Hediff> SendLetter =

@@ -20,13 +20,13 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
 
     public override void CreateRecord(MentalBreakStartedEvent input)
     {
-        var (pawn, reason, mentalBreak, mentalStateDef, target, quest) = input;
-        var mentalState = pawn.MentalState; // mentalState could be null in some MentalBreak
+        // mentalState could be null in some MentalBreak
+        var (pawn, reason, mentalBreak, mentalState, target, quest) = input;
 
         if (!ShouldRecord(pawn))
             return;
 
-        var defName = mentalBreak?.defName ?? mentalStateDef.defName;
+        var defName = mentalBreak?.defName ?? mentalState.def.defName;
 
         if (reason.Cause == MentalBreakCause.Other)
         {
@@ -45,7 +45,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .AddRule("ReasonMood", ParsePoorMoodReason(reason.InGameReason)?.Colorize(NeedsCardUtility.MoodColorNegative))
             .AddConstant("cause", reason.Cause)
             .AddConstant("name", defName);
-        var buildInput = new MentalBreakComp.BuildInput(pawn, reason, mentalBreak, mentalStateDef, mentalState, target, quest);
+        var buildInput = new MentalBreakComp.BuildInput(pawn, reason, mentalBreak, mentalState, target, quest);
 
         foreach (var comp in Comps.OfType<MentalBreakComp>())
         {
@@ -154,7 +154,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .Execute();
 
         var mentalBreaks = DefDatabase<MentalBreakDef>.AllDefs
-            .Where(d => !mentalBreakTemplateLookup.ContainsKey(d.defName))
+            .Where(d => mentalBreakTemplateLookup.ContainsKey(d.defName))
             .ToList();
 
         var pawns = scenario.Pawn(mentalBreaks.Count)

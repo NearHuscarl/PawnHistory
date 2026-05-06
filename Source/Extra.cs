@@ -81,6 +81,9 @@ public static class Extra
         
         [MayRequireRoyalty]
         public static MentalBreakDef WildDecree;
+        
+        [MayRequireIdeology]
+        public static MentalBreakDef IdeoChange;
         [MayRequireIdeology]
         public static MentalBreakDef Rebellion;
 

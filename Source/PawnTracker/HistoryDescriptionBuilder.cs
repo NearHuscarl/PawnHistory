@@ -127,6 +127,12 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
         return AddRule(keyword, gene.Label.Colorize(ColoredText.GeneColor), addSubsymbols, replaceIfExist);
     }
 
+    public HistoryDescriptionBuilder AddRule(string keyword, Ideo ideo, bool addSubsymbols = false, bool replaceIfExist = false)
+    {
+        if (ideo == null) return this;
+        return AddRule(keyword, ideo.name.ApplyTag(ideo), addSubsymbols, replaceIfExist);
+    }
+
     public HistoryDescriptionBuilder AddRules(IEnumerable<Rule> rules)
     {
         extraRules.AddRange(rules);
@@ -182,12 +188,11 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
 
 public static class HistoryDescriptionBuilderExtensions
 {
-    private static readonly RulePackDef VarRulePack = Extra.RulePackDefOf.PH_Var;
     public static string GetOtherText(string ruleName, int otherCount)
     {
         var request = new GrammarRequest();
 
-        request.Includes.Add(VarRulePack);
+        request.Includes.Add(Extra.RulePackDefOf.PH_Var);
         request.Rules.Add(new Rule_String("OtherCount", otherCount.ToString()));
         request.Constants.Add("OtherCount", otherCount.ToString());
 
@@ -200,7 +205,7 @@ public static class HistoryDescriptionBuilderExtensions
         public HistoryDescriptionBuilder WithOthers(List<Pawn> pawns)
         {
             var otherCount = pawns.Count - 1;
-            var isThreat = pawns[0].InMentalState && (pawns[0]?.HostileTo(Faction.OfPlayer) ?? false);
+            var isThreat = pawns[0]?.HostileTo(Faction.OfPlayer) ?? false;
             var otherTag = isThreat ? TagType.Threat : TagType.ColonistCount;
             var otherText = GetOtherText("Others", otherCount).ApplyTag(otherTag).Resolve();
 
