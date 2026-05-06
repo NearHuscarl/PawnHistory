@@ -138,6 +138,8 @@ public class HistoryRecordDefOf
 
     [MayRequireIdeology]
     public static HistoryRecordDef Enslaved;
+    [MayRequireIdeology]
+    public static HistoryRecordDef SlaveRebellion;
 
     [MayRequireOdyssey]
     public static HistoryRecordDef QuestDiscovered;

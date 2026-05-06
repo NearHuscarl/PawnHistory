@@ -8,7 +8,7 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class MentalBreakComp_WildDecree : MentalBreakComp
 {
-    public override bool Match(BuildInput input) => input.MentalBreak == Extra.MentalBreakDefOf.WildDecree;
+    public override bool Match(BuildInput input) => ModsConfig.RoyaltyActive && input.MentalBreak == Extra.MentalBreakDefOf.WildDecree;
     
     public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {

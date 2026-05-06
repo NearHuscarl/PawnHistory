@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using PawnHistory.Source.Helper;
+using PawnHistory.Source.PawnTracker.Recorders;
 using PawnHistory.Source.PawnTracker.Ui;
 using Verse;
 
@@ -25,6 +26,8 @@ public class TestScenario
     public bool ForcePostHealScar = false;
     public bool AlwaysHaveHelpersInQuest = false;
     public bool RefugeeAlwaysAssaultOnViolation = false;
+    public SlaveRebellionType? ForceSlaveRebellionType;
+    public bool ForceSlaveRebellionViolent;
     public int PartyDuration = 0;
     public readonly int ForcedDebugMapSize = 25;
 

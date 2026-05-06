@@ -81,6 +81,8 @@ public static class Extra
         
         [MayRequireRoyalty]
         public static MentalBreakDef WildDecree;
+        [MayRequireIdeology]
+        public static MentalBreakDef Rebellion;
 
         static MentalBreakDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(MentalBreakDefOf));
     }

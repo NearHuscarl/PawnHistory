@@ -8,7 +8,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record NewLoverEvent(Pawn Initiator, Pawn Recipient, string LogEntryText, List<Pawn> InitiatorExes = null, List<Pawn> RecipientExes = null) : GameEventBase;
 
-internal static class NewLoverContext
+file static class NewLoverContext
 {
     public static readonly Dictionary<Pawn, Pawn> CheatedLover = [];
 }

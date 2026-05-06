@@ -68,23 +68,24 @@ internal class PlayLog_Add_Patch_2
 {
     private static void Postfix(LogEntry entry)
     {
-        if (PrisonBreakStartedContext.Reason == PrisonBreakReason.JailBreaker)
-        {
-            if (entry is not PlayLogEntry_Interaction interactionEntry) return;
+        if (PrisonBreakStartedContext.Reason != PrisonBreakReason.JailBreaker)
+            return;
+        if (entry is not PlayLogEntry_Interaction interactionEntry)
+            return;
 
-            var initiator = Accessor.PlayLogEntry_Interaction.Initiator(interactionEntry);
-            if (initiator == null) return;
+        var initiator = Accessor.PlayLogEntry_Interaction.Initiator(interactionEntry);
+        if (initiator == null)
+            return;
 
-            if (Accessor.PlayLogEntry_Interaction.InteractionDef(interactionEntry) != InteractionDefOf.SparkJailbreak)
-                return;
+        if (Accessor.PlayLogEntry_Interaction.InteractionDef(interactionEntry) != InteractionDefOf.SparkJailbreak)
+            return;
 
-            var logText = entry.ToGameStringFromPOV(initiator);
-            GameEventBus.Publish(new PrisonBreakStartedEvent(
-                initiator,
-                PrisonBreakStartedContext.EscapingPrisoners,
-                PrisonBreakStartedContext.Reason,
-                logText
-            ));
-        }
+        var logText = entry.ToGameStringFromPOV(initiator);
+        GameEventBus.Publish(new PrisonBreakStartedEvent(
+            initiator,
+            PrisonBreakStartedContext.EscapingPrisoners,
+            PrisonBreakStartedContext.Reason,
+            logText
+        ));
     }
 }

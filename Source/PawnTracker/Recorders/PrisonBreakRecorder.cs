@@ -18,38 +18,46 @@ public class PrisonBreakRecorder : RecorderBase<PrisonBreakStartedEvent>
     public override void CreateRecord(PrisonBreakStartedEvent e)
     {
         if (e.Reason == PrisonBreakReason.Rebellion)
-            RecordPrisonBreak(e);
+            CreatePrisonBreakRecord(e);
         else
-            RecordJailbreak(e);
+            CreateJailbreakRecord(e);
     }
 
-    private void RecordPrisonBreak(PrisonBreakStartedEvent e)
+    private void CreatePrisonBreakRecord(PrisonBreakStartedEvent e)
     {
         var recordDef = HistoryRecordDefOf.PrisonBreak;
         var joiners = e.EscapingPrisoners.Where(p => p != e.Initiator).ToList();
-        var concerns = e.EscapingPrisoners.Cast<Thing>().ToList();
+        var concerns = e.EscapingPrisoners.ToList();
 
-        foreach (var pawn in e.EscapingPrisoners)
+        foreach (var pawn in joiners)
         {
             if (!ShouldRecord(pawn)) continue;
 
-            var builder = recordDef.Description(pawn)
-                .AddConstant("initiator", pawn == e.Initiator)
-                .IncludePawnGrammar(pawn == e.Initiator);
+            var desc = recordDef.Description(pawn)
+                .WithOthers(joiners)
+                .AddRule("Initiator", e.Initiator)
+                .AddConstant("initiator", false)
+                .Resolve();
 
-            if (pawn == e.Initiator)
-                builder.WithOthers(e.EscapingPrisoners);
-            else
-                builder.WithOthers(joiners).AddRule("Initiator", e.Initiator);
+            AddRecord(recordDef, pawn, desc, concerns);
+        }
 
-            AddRecord(recordDef, pawn, builder.Resolve(), concerns);
+        if (ShouldRecord(e.Initiator))
+        {
+            var desc = recordDef.Description(e.Initiator)
+                .IncludePawnGrammar()
+                .WithOthers(e.EscapingPrisoners)
+                .AddConstant("initiator", true)
+                .Resolve();
+
+            AddRecord(recordDef, e.Initiator, desc, concerns);
         }
     }
 
-    private void RecordJailbreak(PrisonBreakStartedEvent e)
+    private void CreateJailbreakRecord(PrisonBreakStartedEvent e)
     {
         var recordDef = HistoryRecordDefOf.PrisonBreak;
-        var concerns = e.EscapingPrisoners.Concat(e.Initiator).Cast<Thing>().ToList();
+        var concerns = e.EscapingPrisoners.Concat(e.Initiator).ToList();
 
         foreach (var pawn in e.EscapingPrisoners)
         {
@@ -64,8 +72,11 @@ public class PrisonBreakRecorder : RecorderBase<PrisonBreakStartedEvent>
         }
     }
 
-    public void Test(TestScenario scenario, int prisonerCount)
+    public void Test(TestScenario scenario) => TestWithParam(scenario, 2);
+
+    public void TestWithParam(TestScenario scenario, int prisonerCount)
     {
+        scenario.SpeedUp();
         var prisoners = new List<Pawn>();
 
         scenario.Map()
@@ -84,7 +95,7 @@ public class PrisonBreakRecorder : RecorderBase<PrisonBreakStartedEvent>
             {
                 Def = HistoryRecordDefOf.PrisonBreak,
                 Description = "[PAWN] started a prison break. [PAWN_pronoun] broke the locks open and tried to escape[WithOthers].",
-                Concerns = prisoners.Except(initiator).Cast<Thing>().ToList(),
+                Concerns = [..prisoners.Except(initiator)],
             });
         Expect.That(prisoner)
             .Eventually()
@@ -92,24 +103,24 @@ public class PrisonBreakRecorder : RecorderBase<PrisonBreakStartedEvent>
             {
                 Def = HistoryRecordDefOf.PrisonBreak,
                 Description = "[PAWN][AndOthers] joined [Initiator]'s prison break and tried to escape.",
-                Concerns = prisoners.Except(prisoner).Cast<Thing>().ToList(),
+                Concerns = [..prisoners.Except(prisoner)],
             });
     }
 
-    public void TestJailbreaker(TestScenario scenario, int prisonerCount)
+    public void TestJailbreaker(TestScenario scenario)
     {
+        scenario.SpeedUp();
         var prisoners = new List<Pawn>();
 
         scenario.Map()
             .BuildRoom(8, 8, tag: "Prison")
-            .AsPrison(prisonerCount, prisoners: prisoners)
+            .AsPrison(3, prisoners: prisoners)
             .Execute();
 
-        var jailbreakerBreak = Extra.MentalBreakDefOf.Jailbreaker;
         var pawn = scenario.Pawn()
             .Position(scenario.OutsideOf("Prison"))
-            .ThatMatches(ShouldRecord)
-            .Do(p => p.StartMentalBreakWithMadeUpThought(jailbreakerBreak))
+            .Colonist()
+            .Do(p => p.StartMentalBreakWithMadeUpThought(Extra.MentalBreakDefOf.Jailbreaker))
             .CreateSingle();
 
         Expect.That(prisoners[0])
@@ -118,7 +129,7 @@ public class PrisonBreakRecorder : RecorderBase<PrisonBreakStartedEvent>
             {
                 Def = HistoryRecordDefOf.PrisonBreak,
                 Description = "[Reason] As a result, [PAWN][AndOthers] started a prison break.",
-                Concerns = prisoners.Except(prisoners[0]).Concat([pawn]).Cast<Thing>().ToList(),
+                Concerns = [..prisoners.Except(prisoners[0]), pawn],
             });
     }
 }

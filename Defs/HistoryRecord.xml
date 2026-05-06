@@ -797,6 +797,15 @@
 			<li>Gathering</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>SlaveRebellion</defName>
+		<label>slave escape</label>
+		<descriptionMaker>PH_SlaveRebellion</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Gathering</li>
+		</categories>
+	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>LightningStrike</defName>
 		<label>hit by lightning strike</label>

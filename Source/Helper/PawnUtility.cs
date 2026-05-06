@@ -63,9 +63,9 @@ internal static class PawnUtility
         public void StartMentalBreakWithMadeUpThought(MentalBreakDef def)
         {
             var randomNegativeThought = DefDatabase<ThoughtDef>.AllDefs
-                .Where(t => t.stages != null && t.stages.Any(s => s != null && s.baseMoodEffect < 0) && (!t.label.NullOrEmpty() || !t.stages.First().label.NullOrEmpty()))
+                .Where(t => t.stages != null && t.stages.Any(s => s is { baseMoodEffect: < 0 }) && (!t.label.NullOrEmpty() || !t.stages.First().label.NullOrEmpty()))
                 .RandomElementWithFallback();
-            var reason = "MentalStateReason_Mood".Translate() + "\n\n" + "FinalStraw".Translate((NamedArgument)randomNegativeThought.LabelCap);
+            var reason = "MentalStateReason_Mood".Translate() + "\n\n" + "FinalStraw".Translate(randomNegativeThought.LabelCap);
 
             if (!pawn.mindState.mentalBreaker.TryDoMentalBreak(reason, def))
                 Log.Warning($"[PawnHistory] Failed to force mental break {def.defName} on {pawn.LabelShort}");

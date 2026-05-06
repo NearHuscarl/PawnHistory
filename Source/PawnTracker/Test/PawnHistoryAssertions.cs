@@ -16,6 +16,7 @@ public record ExpectedHistoryRecord
     public Pawn Pawn { get; init; }
     public string Description { get; init; }
     public List<Thing> Concerns { get; init; }
+    public List<Thing> ConcernAtLeast { get; init; }
     public int? TileId { get; init; }
     public RecordLocation Location { get; init; }
     public IntVec3? Position { get; init; }
@@ -31,6 +32,7 @@ public record ExpectedHistoryRecord
             Pawn = other.Pawn ?? Pawn,
             Description = other.Description ?? Description,
             Concerns = other.Concerns ?? Concerns,
+            ConcernAtLeast = other.ConcernAtLeast ?? ConcernAtLeast,
             TileId = other.TileId ?? TileId,
             Location = other.Location ?? Location,
             Position = other.Position ?? Position,
@@ -241,6 +243,8 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             mismatchedFields.Add(nameof(expected.Description));
         if (expected.Concerns != null && !ThingListsEqual(expected.Concerns, actual.concerns))
             mismatchedFields.Add(nameof(expected.Concerns));
+        if (expected.ConcernAtLeast != null && !ThingListsEqual(expected.ConcernAtLeast, actual.concerns.Intersect(expected.ConcernAtLeast).ToList()))
+            mismatchedFields.Add(nameof(expected.ConcernAtLeast));
         if (expected.TileId.HasValue && actual.tileId != expected.TileId.Value)
             mismatchedFields.Add(nameof(expected.TileId));
         if (expected.Location != null && !LocationsEqual(expected.Location, actual.location))
@@ -281,7 +285,7 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             $"  Date: {FormatExpectedValue(expected.Date)}",
             $"  Pawn: {FormatExpectedValue(expected.Pawn)}",
             $"  Description: {FormatExpectedValue(expected.Description)}",
-            $"  Concerns: {FormatExpectedThingList(expected.Concerns)}",
+            $"  Concerns: {FormatExpectedThingList(expected.Concerns ?? expected.ConcernAtLeast)}",
             $"  TileId: {FormatExpectedValue(expected.TileId)}",
             $"  Location: {FormatExpectedLocation(expected.Location)}",
             $"  Position: {FormatExpectedValue(expected.Position)}",

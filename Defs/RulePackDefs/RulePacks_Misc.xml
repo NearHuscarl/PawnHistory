@@ -547,6 +547,31 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+
+	<RulePackDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>PH_SlaveRebellion</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>Escape(escape==True) ->tried to escape slavery</li>
+				<li>Escape(escape==False)->started a slave rebellion</li>
+				<li>EscapeNoun(escape==True) ->slave escape</li>
+				<li>EscapeNoun(escape==False)->slave rebellion</li>
+				
+				<li>entry(initiator==True,rebellionType==SingleRebellion)->[PAWN] [Escape].</li>
+				<li>entry(initiator==True,rebellionType==LocalRebellion) ->[PAWN] [Escape][WithOthers].</li>
+				<li>entry(initiator==True,rebellionType==GrandRebellion) ->[PAWN] started a grand [EscapeNoun][WithOthers].</li>
+
+				<li>entry(initiator==False,rebellionType==LocalRebellion) ->[PAWN][AndOthers] joined a [EscapeNoun] led by [Initiator].</li>
+				<li>entry(initiator==False,rebellionType==GrandRebellion) ->[PAWN][AndOthers] joined a grand [EscapeNoun] led by [Initiator].</li>
+
+				<li>jailbreaker(rebellionType==SingleRebellion)->[Reason] As a result, [PAWN] [Escape].</li>
+				<li>jailbreaker(rebellionType!=SingleRebellion)->[Reason] As a result, [PAWN] and [Others] [Escape].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 	
 	<RulePackDef>
 		<defName>PH_PrisonerReleased</defName>
