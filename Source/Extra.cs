@@ -12,6 +12,17 @@ namespace PawnHistory.Source;
 public static class Extra
 {
     [DefOf]
+    public static class AbilityDefOf
+    {
+        [MayRequireIdeology]
+        public static AbilityDef Convert;
+        [MayRequireIdeology]
+        public static AbilityDef ConversionRitual;
+
+        static AbilityDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(AbilityDefOf));
+    }
+
+    [DefOf]
     public static class RulePackDefOf
     {
         public static RulePackDef PH_Var;
@@ -267,6 +278,8 @@ public static class Extra
     public static class RitualOutcomeEffectDefOf
     {
         public static RitualOutcomeEffectDef AttendedSpeech;
+        [MayRequireIdeology]
+        public static RitualOutcomeEffectDef Conversion;
 
         static RitualOutcomeEffectDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualOutcomeEffectDefOf));
     }
@@ -296,5 +309,12 @@ public static class Extra
         public static GeneDef PsychicBonding;
         [MayRequireBiotech]
         public static GeneDef TotalHealing;
+    }
+
+    [DefOf]
+    public static class PreceptDefOf
+    {
+        [MayRequireIdeology]
+        public static PreceptDef Conversion;
     }
 }

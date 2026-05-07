@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -25,7 +24,7 @@ public class ITab_Pawn_History : ITab
         }
     }
 
-    public override bool IsVisible => HistoryTableController.GetVisibleRecords(PawnToShowInfo).Any();
+    public override bool IsVisible => RecorderManager.ShouldRecord(PawnToShowInfo);
     private Rect ContentRect => new(0f, 0f, size.x, size.y);
 
     public ITab_Pawn_History()

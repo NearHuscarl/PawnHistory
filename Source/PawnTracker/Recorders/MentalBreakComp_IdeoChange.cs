@@ -72,8 +72,7 @@ public class MentalBreakComp_IdeoChange : MentalBreakComp
         var pawn = scenario.Pawn()
             .Colonist()
             .StopMentalState()
-            .SetIdeo()
-            .SetIdeoCertainty(ideoCertainty)
+            .SetIdeo(certainty: ideoCertainty)
             .CreateSingle();
 
         if (ownsRoom)

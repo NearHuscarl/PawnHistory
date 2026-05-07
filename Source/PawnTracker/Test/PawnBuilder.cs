@@ -417,7 +417,6 @@ public class PawnBuilder(int count = 1)
 
         // 3. Optional: Clear DLC restrictions if testing with Royalty/Ideology
         if (ModsConfig.RoyaltyActive) pawn.royalty?.AllTitlesForReading.Clear();
-        if (ModsConfig.IdeologyActive) pawn.ideo?.SetIdeo(null);
 
         // 4. IMPORTANT: Refresh the pawn's internal work-tag cache
         pawn.Notify_DisabledWorkTypesChanged();
@@ -581,6 +580,21 @@ internal static class PawnBuilderExtension
                     if (pawn.health.hediffSet.HasHediff(comp.Props.chemical.addictionHediff))
                         break;
                 }
+            });
+        }
+
+        public PawnBuilder ApplyAbility(AbilityDef abilityDef, LocalTargetInfo target, LocalTargetInfo? dest = null)
+        {
+            return builder.ApplyAbility<CompAbilityEffect>(abilityDef, target, dest);
+        }
+
+        public PawnBuilder ApplyAbility<T>(AbilityDef abilityDef, LocalTargetInfo target, LocalTargetInfo? dest = null) where T : CompAbilityEffect
+        {
+            return builder.Do(pawn =>
+            {
+                var ability = pawn.abilities.GetAbility(abilityDef, true);
+                var convertEffect = ability.EffectComps.OfType<T>().First();
+                convertEffect.Apply(target, dest ?? LocalTargetInfo.Invalid);
             });
         }
     }

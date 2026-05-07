@@ -963,6 +963,15 @@
 			<li>Life</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>IdeoChanged</defName>
+		<label>ideology changed</label>
+		<descriptionMaker>PH_IdeoChanged</descriptionMaker>
+		<icon>UI/Abilities/Convert</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
 
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
 		<defName>TechprintApplied</defName>

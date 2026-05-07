@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using RimWorld.Planet;
 using Verse;
 // ReSharper disable InconsistentNaming
@@ -201,6 +202,12 @@ public static class Accessor
             AccessTools.MethodDelegate<Action<Verse.AI.Pawn_MindState, Pawn, string, bool>>(AccessTools.Method(typeof(Verse.AI.Pawn_MindState), "StartManhunterBecauseOfPawnAction"));
     }
 
+    public class Pawn_IdeoTracker
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Pawn_IdeoTracker, Pawn> Pawn =
+            AccessTools.FieldRefAccess<RimWorld.Pawn_IdeoTracker, Pawn>("pawn");
+    }
+
     public class MentalStateHandler
     {
         public static readonly AccessTools.FieldRef<Verse.AI.MentalStateHandler, Pawn> Pawn = AccessTools.FieldRefAccess<Verse.AI.MentalStateHandler, Pawn>("pawn");
@@ -213,9 +220,6 @@ public static class Accessor
 
         public static readonly AccessTools.FieldRef<Verse.AI.MentalState_IdeoChange, Ideo> NewIdeo =
             AccessTools.FieldRefAccess<Verse.AI.MentalState_IdeoChange, Ideo>("newIdeo");
-
-        public static readonly AccessTools.FieldRef<Verse.AI.MentalState_IdeoChange, Precept_Role> OldRole =
-            AccessTools.FieldRefAccess<Verse.AI.MentalState_IdeoChange, Precept_Role>("oldRole");
 
         public static readonly AccessTools.FieldRef<Verse.AI.MentalState_IdeoChange, bool> ChangedIdeo =
             AccessTools.FieldRefAccess<Verse.AI.MentalState_IdeoChange, bool>("changedIdeo");
@@ -256,6 +260,18 @@ public static class Accessor
     public class GenFilePaths
     {
         public static readonly Func<string, string> FolderUnderSaveData = AccessTools.MethodDelegate<Func<string, string>>(AccessTools.Method(typeof(Verse.GenFilePaths), "FolderUnderSaveData"));
+    }
+
+    public class RitualOutcomeEffectWorker_Speech
+    {
+        private static readonly FieldInfo ConversionChanceFromInspirationalSpeechField =
+            AccessTools.Field(typeof(RimWorld.RitualOutcomeEffectWorker_Speech), "ConversionChanceFromInspirationalSpeech");
+
+        public static float ConversionChanceFromInspirationalSpeech
+        {
+            get => (float)ConversionChanceFromInspirationalSpeechField.GetValue(null);
+            set => ConversionChanceFromInspirationalSpeechField.SetValue(null, value);
+        }
     }
 
     public class CaravanArrivalAction_AttackSettlement

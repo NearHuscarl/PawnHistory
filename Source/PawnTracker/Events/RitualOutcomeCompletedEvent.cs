@@ -9,13 +9,12 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record RitualOutcomeCompletedEvent(Pawn Host, string RitualLabel, string OutcomeLabel, List<Pawn> Participants) : GameEventBase;
 
-internal static class RitualOutcomeContext
+file record RitualOutcomeContextFrame(LordJob_Ritual RitualJob, List<Pawn> Participants, RitualOutcomePossibility Outcome);
+
+file static class RitualOutcomeContext
 {
     public static int CallDepth;
-    public static LordJob_Ritual ActiveJob;
-    public static RitualOutcomePossibility Outcome;
-    public static readonly HashSet<Pawn> Participants = [];
-    public static readonly HashSet<Pawn> SpecialPawns = [];
+    public static RitualOutcomeContextFrame Frame; // RitualOutcomeEffectWorker_RemoveConsumableBuilding
 
     public static void Begin(LordJob_Ritual jobRitual, Dictionary<Pawn, int> totalPresence)
     {
@@ -24,52 +23,40 @@ internal static class RitualOutcomeContext
         if (CallDepth > 1)
             return;
 
-        ActiveJob = jobRitual;
-
-        foreach (var pawn in totalPresence.Keys)
-            Participants.Add(pawn);
-
-        if (jobRitual.selectedTarget.Thing is Corpse { InnerPawn: not null } corpse)
-            SpecialPawns.Add(corpse.InnerPawn);
+        Frame = new RitualOutcomeContextFrame(jobRitual, totalPresence.Keys.ToList(), null);
     }
 
-    public static void End(LordJob_Ritual jobRitual)
-    {
-        if (CallDepth > 1)
-            return;
-        
-        Publish(jobRitual);
-    }
-
-    public static void Finalizer()
+    public static void End()
     {
         CallDepth--;
 
-        if (CallDepth <= 0)
-            Reset();
-    }
-
-    private static void Publish(LordJob_Ritual jobRitual)
-    {
-        var host = jobRitual?.Organizer;
+        if (CallDepth > 0)
+            return;
+        
+        var host = GetOrganizer();
         if (host == null)
             return;
 
         // Ritual_Outcomes.xml
-        var outcome = Outcome.label;
+        var outcome = Frame.Outcome.label;
 
-        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, jobRitual.Ritual.Label, outcome, Participants.ToList()));
+        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, Frame.RitualJob.Ritual.Label, outcome, Frame.Participants));
+        Frame = null;
+        CallDepth = 0;
     }
 
-    private static void Reset()
+    private static Pawn GetOrganizer()
     {
-        CallDepth = 0;
-        ActiveJob = null;
-        Outcome = null;
-        Participants.Clear();
-        SpecialPawns.Clear();
+        if (Frame.RitualJob.Ritual.def == Extra.PreceptDefOf.Conversion)
+            return Frame.RitualJob.PawnWithRole("moralist");
+        return Frame.RitualJob.Organizer;
     }
 }
+
+// Call order:
+// - RitualOutcomeEffectWorker_FromQuality.Apply() prefix
+//  - RitualOutcomeEffectWorker_FromQuality.GetOutcome()
+// - RitualOutcomeEffectWorker_FromQuality.Apply() postfix
 
 [HarmonyPatch]
 internal static class RitualOutcomeEffectWorker_Apply_Patch
@@ -77,13 +64,15 @@ internal static class RitualOutcomeEffectWorker_Apply_Patch
     [HarmonyTargetMethods]
     private static IEnumerable<MethodBase> TargetMethods()
     {
-        yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_FromQuality), nameof(RitualOutcomeEffectWorker_FromQuality.Apply));
-        yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Speech), nameof(RitualOutcomeEffectWorker_Speech.Apply));
+        const string methodName = nameof(RitualOutcomeEffectWorker_FromQuality.Apply);
+
+        yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_FromQuality), methodName);
+        yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Speech), methodName);
+        yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Conversion), methodName);
     }
 
     private static void Prefix(Dictionary<Pawn, int> totalPresence, LordJob_Ritual jobRitual) => RitualOutcomeContext.Begin(jobRitual, totalPresence);
-    private static void Postfix(LordJob_Ritual jobRitual) => RitualOutcomeContext.End(jobRitual);
-    private static void Finalizer() => RitualOutcomeContext.Finalizer();
+    private static void Finalizer() => RitualOutcomeContext.End();
 }
 
 [HarmonyPatch(typeof(RitualOutcomeEffectWorker_FromQuality), nameof(RitualOutcomeEffectWorker_FromQuality.GetOutcome))]
@@ -91,9 +80,9 @@ internal static class RitualOutcomeEffectWorker_FromQuality_GetOutcome_Patch
 {
     private static void Postfix(LordJob_Ritual ritual, RitualOutcomePossibility __result)
     {
-        if (RitualOutcomeContext.ActiveJob != ritual)
+        if (RitualOutcomeContext.Frame.RitualJob != ritual)
             return;
 
-        RitualOutcomeContext.Outcome = __result;
+        RitualOutcomeContext.Frame = RitualOutcomeContext.Frame with { Outcome = __result };
     }
 }

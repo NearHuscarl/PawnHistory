@@ -255,6 +255,17 @@ public class MapBuilder
         return this;
     }
 
+    public MapBuilder AsShrine()
+    {
+        actions.Add(() =>
+        {
+            var rect = TestManager.Scenario.LastRoomRect.ContractedBy(1);
+            new ThingBuilder(ThingDefOf.Ideogram).At(rect.CenterCell).Faction(Faction.OfPlayer).CreateSingle();
+        });
+
+        return this;
+    }
+
     public MapBuilder WithThing(ThingDef thingDef, int totalCount = 10, Faction faction = null)
     {
         actions.Add(() =>

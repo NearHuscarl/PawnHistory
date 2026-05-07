@@ -42,6 +42,24 @@ public class RitualBuilder
         return this;
     }
 
+    public RitualBuilder ConversionRitual(Pawn convertee)
+    {
+        processors.Add(() =>
+        {
+            var ritualAbility = organizer.Ideo.GetRole(organizer).AbilitiesFor(organizer).First(a => a.def == Extra.AbilityDefOf.ConversionRitual);
+            var ritualEffectComp = ritualAbility.EffectComps.OfType<CompAbilityEffect_StartConversion>().First();
+            var dialog = (Dialog_BeginRitual)ritualEffectComp.ConfirmationDialog((LocalTargetInfo)convertee, null);
+
+            dialog.PostOpen();
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            var ritual = organizer.GetLord().LordJob as LordJob_Ritual;
+            var totalPresence = new[] { organizer, convertee }.Distinct().ToDictionary(p => p, _ => 0);
+            ritualEffectComp.Ritual.outcomeEffect.Apply(1f, totalPresence, ritual);
+        });
+
+        return this;
+    }
+
     public void Execute()
     {
         processors.ForEach(processor => processor());
