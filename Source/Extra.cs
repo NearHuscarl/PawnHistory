@@ -319,6 +319,10 @@ public static class Extra
     public static class PreceptDefOf
     {
         [MayRequireIdeology]
+        public static PreceptDef SpouseCount_Female_Unlimited;
+        [MayRequireIdeology]
+        public static PreceptDef Bonding_Disapproved;
+        [MayRequireIdeology]
         public static PreceptDef Conversion;
     }
 }

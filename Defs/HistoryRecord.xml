@@ -752,6 +752,15 @@
 			<li>Relationship</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>BondRemovedByIdeo</defName>
+		<label>bonded animal removed by ideology</label>
+		<descriptionMaker>PH_BondRemovedByIdeo</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/Breakup</icon>
+		<categories>
+			<li>Relationship</li>
+		</categories>
+	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>MarriageProposal</defName>
 		<label>marriage proposal</label>

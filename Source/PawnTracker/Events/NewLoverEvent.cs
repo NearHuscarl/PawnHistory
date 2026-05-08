@@ -54,8 +54,8 @@ internal class PlayLog_Add_Patch_4
         var logEntryText = interactionEntry.ToGameStringFromPOV(recipient);
         
         // TODO: test affair condition in ideology
-        var initiatorVictims = initiator.IsHavingAffairBasedOnIdeo() ? initiator.GetCurrentSpouses() : [];
-        var recipientVictims = recipient.IsHavingAffairBasedOnIdeo() ? recipient.GetCurrentSpouses() : [];
+        var initiatorVictims = initiator.IsHavingAffairBasedOnIdeo() ? initiator.GetPawnsWithRelation(PawnRelationDefOf.Spouse) : [];
+        var recipientVictims = recipient.IsHavingAffairBasedOnIdeo() ? recipient.GetPawnsWithRelation(PawnRelationDefOf.Spouse) : [];
         
         if (NewLoverContext.CheatedLover.TryGetValue(initiator, out var initiatorEx)) initiatorVictims.Add(initiatorEx);
         if (NewLoverContext.CheatedLover.TryGetValue(recipient, out var recipientEx)) recipientVictims.Add(recipientEx);

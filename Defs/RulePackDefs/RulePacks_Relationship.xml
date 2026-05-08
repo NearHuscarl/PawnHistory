@@ -94,6 +94,16 @@
 		</rulePack>
 	</RulePackDef>
 
+	<RulePackDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>PH_BondRemovedByIdeo</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(pov==Human)       ->[Human] gave up [Human_possessive] bond with [BondedAnimals] after [Human_possessive] new ideoligion disapproved of bonding with animals.</li>
+				<li>entry(pov==BondedAnimal)->[Human] gave up [Human_possessive] bond with [PAWN] after [Human_possessive] new ideoligion disapproved of bonding with animals.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
 	<RulePackDef MayRequire="Ludeon.RimWorld.Biotech">
 		<defName>PH_PsychicBonded</defName>
 		<rulePack>

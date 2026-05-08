@@ -10,21 +10,22 @@ public record DivorceByIdeoEvent(Pawn DivorcingPawn, List<Pawn> FormerSpouses) :
 
 internal record DivorceByIdeoState(List<Pawn> SpousesBefore);
 
-[HarmonyPatch(typeof(SpouseRelationUtility), nameof(SpouseRelationUtility.RemoveSpousesAsForbiddenByIdeo))]
-internal static class SpouseRelationUtility_RemoveSpousesAsForbiddenByIdeo_DivorceByIdeo_Patch
+[HarmonyPatch(typeof(Pawn_IdeoTracker), nameof(Pawn_IdeoTracker.SetIdeo))]
+internal static class Pawn_IdeoTracker_SetIdeo_Patch_3
 {
-    private static void Prefix(Pawn pawn, out DivorceByIdeoState __state)
+    private static void Prefix(Pawn_IdeoTracker __instance, out DivorceByIdeoState __state)
     {
-        var spouses = pawn.GetCurrentSpouses();
-
-        __state = new DivorceByIdeoState(spouses);
+        var pawn = Accessor.Pawn_IdeoTracker.Pawn(__instance);
+        __state = new DivorceByIdeoState(pawn.GetPawnsWithRelation(PawnRelationDefOf.Spouse));
     }
-    private static void Postfix(Pawn pawn, DivorceByIdeoState __state)
+
+    private static void Postfix(Pawn_IdeoTracker __instance, DivorceByIdeoState __state)
     {
-        var formerSpouses = __state.SpousesBefore.ExceptList(pawn.GetCurrentSpouses());
+        var pawn = Accessor.Pawn_IdeoTracker.Pawn(__instance);
+        var formerSpouses = __state.SpousesBefore.ExceptList(pawn.GetPawnsWithRelation(PawnRelationDefOf.Spouse));
         if (formerSpouses.Count == 0)
             return;
-        
+
         GameEventBus.Publish(new DivorceByIdeoEvent(pawn, formerSpouses));
     }
 }

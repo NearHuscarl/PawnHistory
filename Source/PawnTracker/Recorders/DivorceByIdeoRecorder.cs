@@ -1,3 +1,4 @@
+using System.Linq;
 using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
@@ -43,9 +44,12 @@ public class DivorceByIdeoRecorder : RecorderBase<DivorceByIdeoEvent>
     [RequiresIdeology]
     public void Test(TestScenario scenario)
     {
+        var haremIdeo = scenario.Ideo().AddPrecept(Extra.PreceptDefOf.SpouseCount_Female_Unlimited).Execute();
+        var farcistIdeo = Faction.OfPlayer.ideos.PrimaryIdeo;
         var divorcingPawn = scenario.Pawn()
             .Colonist()
             .SetGender(Gender.Male)
+            .SetIdeo(haremIdeo)
             .CreateSingle();
         var formerSpouses = scenario.Pawn(2)
             .Colonist()
@@ -62,8 +66,8 @@ public class DivorceByIdeoRecorder : RecorderBase<DivorceByIdeoEvent>
             .Colonist()
             .SetRelation(divorcingPawn, PawnRelationDefOf.Lover)
             .CreateSingle();
-
-        SpouseRelationUtility.RemoveSpousesAsForbiddenByIdeo(divorcingPawn);
+        
+        scenario.Pawn(divorcingPawn).SetIdeo(farcistIdeo).CreateSingle();
 
         Expect.That(divorcingPawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
@@ -77,6 +81,7 @@ public class DivorceByIdeoRecorder : RecorderBase<DivorceByIdeoEvent>
             Description = "[Divorcer] divorced [PAWN] after [His] new ideoligion forbade having too many spouses.",
             Concerns = [divorcingPawn],
         });
+        Expect.That(divorcingPawn.HistoryRecords.TakeLast(2).Select(r => r.def)).SequenceEqual([HistoryRecordDefOf.IdeoChanged, HistoryRecordDefOf.DivorceByIdeo]);
         Expect.That(otherSpouse).Not().ToHaveHistoryRecordOf(HistoryRecordDefOf.DivorceByIdeo);
         Expect.That(otherLover).Not().ToHaveHistoryRecordOf(HistoryRecordDefOf.DivorceByIdeo);
         Expect.That(divorcingPawn).Not().ToHaveHistoryRecordOf(HistoryRecordDefOf.Breakup);

@@ -29,7 +29,8 @@ file static class IdeoChangedContext
 }
 
 [HarmonyPatch(typeof(Pawn_IdeoTracker), nameof(Pawn_IdeoTracker.SetIdeo))]
-internal static class Pawn_IdeoTracker_SetIdeo_IdeoChanged_Patch
+[HarmonyPriority(Priority.First)]
+internal static class Pawn_IdeoTracker_SetIdeo_Patch
 {
     private static void Prefix(Pawn_IdeoTracker __instance, out Ideo __state) => __state = __instance.Ideo;
 

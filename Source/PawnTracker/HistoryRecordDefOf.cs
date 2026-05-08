@@ -143,6 +143,8 @@ public class HistoryRecordDefOf
     [MayRequireIdeology]
     public static HistoryRecordDef DivorceByIdeo;
     [MayRequireIdeology]
+    public static HistoryRecordDef BondRemovedByIdeo;
+    [MayRequireIdeology]
     public static HistoryRecordDef SlaveRebellion;
 
     [MayRequireOdyssey]

@@ -52,10 +52,10 @@ internal static class PawnUtility
             return !new HistoryEvent(pawn.GetHistoryEventLoveRelationCount(), pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo();
         }
 
-        public List<Pawn> GetCurrentSpouses()
+        public List<Pawn> GetPawnsWithRelation(PawnRelationDef relation)
         {
             return pawn.relations.DirectRelations
-                .Where(r =>  r.def == PawnRelationDefOf.Spouse &&  r.otherPawn is { Dead: false })
+                .Where(r =>  r.def == relation &&  r.otherPawn is { Dead: false })
                 .Select(r => r.otherPawn)
                 .ToList();
         }
