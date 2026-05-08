@@ -1,11 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
 using PawnHistory.Source.Helper;
 using Verse;
-using Verse.Grammar;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -19,36 +18,42 @@ public class RaidRecorder : RecorderBase<RaidStartedEvent>
     public override void CreateRecord(RaidStartedEvent input)
     {
         var (pawns, faction, raidStrategy, raidArrivalMode, isFriendly, quest) = input;
-        
-        pawns = pawns.Where(ShouldRecord).ToList();
-        
-        if (isFriendly)
-            RecordRaidFriendlyStarted(pawns, faction);
-        else
-            RecordRaidEnemyStarted(pawns, faction, raidStrategy, raidArrivalMode, quest);
-    }
 
-    private void RecordRaidFriendlyStarted(List<Pawn> pawns, Faction faction)
-    {
-        var recordDef = HistoryRecordDefOf.RaidFriendly;
-        var hostileFaction = pawns[0].MapHeld.lordManager.lords
-            .FirstOrDefault(l => l.faction != null && l.faction.HostileTo(faction))
-            ?.faction;
+        if (isFriendly)
+            return;
+        
+        var recordDef = HistoryRecordDefOf.Raid;
+        var asker = QuestHelper.GetAsker(quest);
 
         foreach (var pawn in pawns)
         {
-            var desc = recordDef.Description(pawn)
-                .AddRule("Faction", faction)
-                .AddRule("HostileFaction", hostileFaction)
-                .WithOthers(pawns)
-                .AddConstant("enemyHasFaction", hostileFaction != null) // not manhunter/insect
-                .Resolve();
+            if (!ShouldRecord(pawn))
+                continue;
 
-            AddRecord(recordDef, pawn, desc);
+            var concerns = new List<Thing> { asker };
+            var builder = recordDef.Description(pawn)
+                .IncludePawnGrammar()
+                .WithOthers(pawns)
+                .AddRule("Faction", faction)
+                .AddRule("QuestAsker", asker)
+                .AddConstant("raidProperty", GetRaidProperty(raidStrategy, raidArrivalMode))
+                .AddConstant("quest", quest?.root.defName);
+            
+            var buildInput = new RaidComp.BuildInput(pawn, faction, quest);
+            foreach (var comp in Comps.OfType<RaidComp>())
+            {
+                if (!comp.Match(buildInput))
+                    continue;
+
+                builder = comp.BuildGrammarRequest(builder, buildInput);
+                concerns.AddRange(comp.GetConcerns(buildInput));
+            }
+            
+            AddRecord(recordDef, pawn, builder.Resolve(), concerns, quest: quest);
         }
     }
 
-    enum RaidProperty
+    private enum RaidProperty
     {
         None,
         Siege,
@@ -57,7 +62,7 @@ public class RaidRecorder : RecorderBase<RaidStartedEvent>
         CenterDrop,
     }
 
-    private void RecordRaidEnemyStarted(List<Pawn> pawns, Faction faction, RaidStrategyDef raidStrategy, PawnsArrivalModeDef raidArrivalMode, Quest quest)
+    private static RaidProperty GetRaidProperty(RaidStrategyDef raidStrategy, PawnsArrivalModeDef raidArrivalMode)
     {
         var raidProperty = RaidProperty.None;
 
@@ -70,47 +75,30 @@ public class RaidRecorder : RecorderBase<RaidStartedEvent>
         else if (raidStrategy.defName.StartsWith("Siege"))
             raidProperty = RaidProperty.Siege;
 
-        var recordDef = HistoryRecordDefOf.Raid;
-        var asker = QuestHelper.GetAsker(quest);
-
-        foreach (var pawn in pawns)
-        {
-            var desc = recordDef.Description(pawn)
-                .IncludePawnGrammar()
-                .WithOthers(pawns)
-                .AddRule("Faction", faction)
-                .AddRule("QuestAsker", asker)
-                .AddConstant("raidProperty", raidProperty)
-                .AddConstant("quest", quest?.root.defName)
-                .Resolve();
-            AddRecord(recordDef, pawn, desc, [asker], quest: quest);
-        }
+        return raidProperty;
     }
-
+    
     [DebugValues(70, 100, 140, 500)]
-    public void Test(TestScenario scenario, int point)
+    public void TestWithParams(TestScenario scenario, int point)
     {
         scenario.Incident(IncidentDefOf.RaidEnemy).Point(point).Execute();
+    }
+
+    public void Test(TestScenario scenario)
+    {
+        var pawns = scenario.Incident(IncidentDefOf.RaidEnemy).Point(180).Execute();
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.Raid, "[PAWN] and [Others] from [Faction] raided the colony.");
     }
 
     public void TestSiege(TestScenario scenario)
     {
         var pawns = scenario.Incident(IncidentDefOf.RaidEnemy).RaidStrategy(Extra.RaidStrategyDefOf.Siege).Point(500).Execute();
-        
         Expect.ThatAll(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.Raid, "[PAWN] and [n] others from [FACTION] besieged the colony.");
     }
 
-    [SkipTest]
     public void TestCenterDrop(TestScenario scenario)
     {
-        scenario.Incident(IncidentDefOf.RaidEnemy).Point(500).RaidArrivalMode(PawnsArrivalModeDefOf.CenterDrop).Execute();
-    }
-
-    [DebugValues(70, 100, 140, 500)]
-    public void TestFriendly(TestScenario scenario, int point)
-    {
-        scenario.RaidFriendly()
-            .Point(point)
-            .Execute();
+        var pawns = scenario.Incident(IncidentDefOf.RaidEnemy).Point(200).RaidArrivalMode(PawnsArrivalModeDefOf.CenterDrop).Execute();
+        Expect.ThatAll(pawns).ToHaveHistoryRecord(HistoryRecordDefOf.Raid, "[PAWN] and [Others] from [Faction] raided the colony by dropping directly into it.");
     }
 }

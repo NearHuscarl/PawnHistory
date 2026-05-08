@@ -34,9 +34,10 @@ public class VisitorLeftGiftRecorder : RecorderBase<VisitorLeftGiftEvent>
     {
         var visitors = scenario.Incident(IncidentDefOf.VisitorGroup).Point(200).Execute();
         var faction = visitors[0].Faction;
+        var gift = scenario.Thing(ThingDefOf.Silver).Stack(50).CreateSingle(false);
         var giver = Accessor.VisitorGiftForPlayerUtility.GetGiftGiver(visitors, faction);
-        var gift = scenario.Thing(ThingDefOf.Silver).Stack(50).CreateAndPutInto(giver).FirstOrDefault();
         
+        giver.inventory.innerContainer.TryAdd(gift);
         GameUtility.ClearUpMap(); // leave some space so the visitor can drop the loot
         VisitorGiftForPlayerUtility.GiveGift(visitors, faction, [gift]);
 

@@ -537,6 +537,18 @@ internal static class PawnBuilderExtension
             });
         }
 
+        public PawnBuilder Armed()
+        {
+            return builder.Do(pawn =>
+            {
+                var armor1 = new ThingBuilder(Extra.ThingDefOf.Apparel_PowerArmor).Quality(QualityCategory.Legendary).CreateSingle<Apparel>(false);
+                var armor2 = new ThingBuilder(Extra.ThingDefOf.Apparel_PowerArmorHelmet).Quality(QualityCategory.Legendary).CreateSingle<Apparel>(false);
+
+                pawn.apparel.Wear(armor1);
+                pawn.apparel.Wear(armor2);
+            });
+        }
+
         public PawnBuilder SetRelation(Pawn other, PawnRelationDef relationDef)
         {
             return builder.Do(pawn => pawn.relations.AddDirectRelation(relationDef, other));

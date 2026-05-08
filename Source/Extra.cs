@@ -208,6 +208,8 @@ public static class Extra
 
         [MayRequireIdeology]
         public static QuestScriptDef Beggars;
+        [MayRequireIdeology]
+        public static QuestScriptDef OpportunitySite_WorkSite;
 
         static QuestScriptDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(QuestScriptDefOf));
     }
@@ -248,6 +250,8 @@ public static class Extra
     [DefOf]
     public static class ThingDefOf
     {
+        public static ThingDef Apparel_PowerArmorHelmet;
+        public static ThingDef Apparel_PowerArmor;
         public static ThingDef PodLauncher;
         public static ThingDef HorseshoesPin;
         public static ThingDef HoopstoneRing;
@@ -264,13 +268,13 @@ public static class Extra
         public static ThingDef Kidney;
         public static ThingDef Joywire;
         public static ThingDef VanometricPowerCell;
-
-        [MayRequireOdyssey]
-        public static ThingDef AncientUplink;
         
         [MayRequireRoyalty]
         public static ThingDef MeleeWeapon_MonoSwordBladelink;
 
+        [MayRequireOdyssey]
+        public static ThingDef AncientUplink;
+        
         static ThingDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(ThingDefOf));
     }
 

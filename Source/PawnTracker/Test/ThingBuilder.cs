@@ -101,35 +101,28 @@ public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
 
         return result;
     }
-    
-    public List<T> CreateAndPutInto<T>(Pawn pawn) where T : Thing
-    {
-        var things = CreateInternal<T>();
-        
-        foreach (var thing in things)
-            pawn.inventory.innerContainer.TryAdd(thing);
-
-        return things;
-    }
-    public List<Thing> CreateAndPutInto(Pawn pawn) => CreateAndPutInto<Thing>(pawn);
 
     /// <summary>
     /// Creates and spawns the thing.
     /// </summary>
-    public List<T> Create<T>() where T : Thing
+    public List<T> Create<T>(bool spawn = true) where T : Thing
     {
         var things = CreateInternal<T>();
-        var cell = position ?? map.Center;
-        
-        foreach (var thing in things)
-            GenPlace.TryPlaceThing(thing, cell, map, placeMode);
+
+        if (spawn)
+        {
+            var cell = position ?? map.Center;
+            
+            foreach (var thing in things)
+                GenPlace.TryPlaceThing(thing, cell, map, placeMode);
+        }
 
         return things;
     }
-    public List<Thing> Create() => Create<Thing>();
+    public List<Thing> Create(bool spawn = true) => Create<Thing>(spawn);
     
-    public Thing CreateSingle() => Create<Thing>().FirstOrDefault();
-    public T CreateSingle<T>() where T : Thing => Create<T>().FirstOrDefault();
+    public Thing CreateSingle(bool spawn = true) => Create<Thing>(spawn).FirstOrDefault();
+    public T CreateSingle<T>(bool spawn = true) where T : Thing => Create<T>(spawn).FirstOrDefault();
 }
 
 public static class ThingBuilderExtensions
