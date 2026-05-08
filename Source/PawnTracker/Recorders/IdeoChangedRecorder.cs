@@ -17,7 +17,7 @@ public class IdeoChangedRecorder : RecorderBase<IdeoChangedEvent>
 
     public override void CreateRecord(IdeoChangedEvent e)
     {
-        // handle by MentalBreakComp_IdeoChange
+        // handled by MentalBreakComp_IdeoChange
         if (e.Reason is IdeoChangeReason.MentalBreak)
             return;
 

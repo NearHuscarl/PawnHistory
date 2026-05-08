@@ -241,6 +241,21 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         });
     }
 
+    [RequiresIdeology]
+    public void TestRebellion(TestScenario scenario)
+    {
+        var slaves = scenario.Pawn(3)
+            .Enemy()
+            .Do(p => p.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave))
+            .Execute();
+        var pawn = scenario.Pawn(slaves[0])
+            .StopMentalState()
+            .Do(p => p.StartMentalBreakWithMadeUpThought(Extra.MentalBreakDefOf.Rebellion))
+            .CreateSingle();
+
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.MentalBreak, $"[PAWN] reached a psychological limit and was going to induce other slaves to rebel. {MoodReasonTemplate}");
+    }
+
     public void TestHediff(TestScenario scenario)
     {
         // <mentalBreakMtbDays>
