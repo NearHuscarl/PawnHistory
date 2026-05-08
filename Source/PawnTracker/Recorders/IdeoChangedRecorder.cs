@@ -159,6 +159,20 @@ public class IdeoChangedRecorder : RecorderBase<IdeoChangedEvent>
         return () => Accessor.RitualOutcomeEffectWorker_Speech.ConversionChanceFromInspirationalSpeech = previousChance;
     }
 
+    [RequiresBiotech]
+    [RequiresIdeology]
+    public void TestExposure(TestScenario scenario)
+    {
+        var pawn = scenario.Pawn()
+            .RemoveIdeo() // exposure only works for first ideology
+            .Colonist()
+            .SetAge(1)
+            .ForceBirthday(10)
+            .CreateSingle();
+        
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.IdeoChanged, "[PAWN] grew up around [NewIdeo] and eventually adopted it as [His] own ideoligion.");
+    }
+
     [RequiresIdeology]
     public void TestUnknown(TestScenario scenario)
     {

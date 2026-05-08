@@ -12,6 +12,7 @@ public enum IdeoChangeReason
     SocialInteraction,
     ConversionRitual,
     SpeechRitual,
+    Exposure,
     MentalBreak,
 }
 
@@ -83,6 +84,17 @@ internal static class RitualOutcomeEffectWorker_Speech_Apply_IdeoChanged_Patch
     private static void Prefix(LordJob_Ritual jobRitual)
     {
         IdeoChangedContext.Frame = new IdeoChangedContextFrame(IdeoChangeReason.SpeechRitual, jobRitual.Organizer);
+    }
+
+    private static void Finalizer() => IdeoChangedContext.Clear();
+}
+
+[HarmonyPatch(typeof(Pawn_IdeoTracker), nameof(Pawn_IdeoTracker.TryJoinIdeoFromExposures))]
+internal static class Pawn_IdeoTracker_TryJoinIdeoFromExposures_Patch
+{
+    private static void Prefix()
+    {
+        IdeoChangedContext.Frame = new IdeoChangedContextFrame(IdeoChangeReason.Exposure);
     }
 
     private static void Finalizer() => IdeoChangedContext.Clear();

@@ -544,6 +544,7 @@
 				<li>entry(priority=1,reason==SocialInteraction)->[Converter] tried to convert [PAWN] to [Converter_possessive] own ideoligion. [Outcome].</li>
 				<li>entry(priority=1,reason==ConversionRitual) ->[Outcome] after a conversion ritual led by [Converter].</li>
 				<li>entry(priority=1,reason==SpeechRitual)     ->[Outcome] after hearing [Converter]'s speech.</li>
+				<li>entry(priority=1,reason==Exposure)         ->[PAWN] grew up around [NewIdeo] and eventually adopted it as [PAWN_possessive] own ideoligion.</li>
 				<li>entry(priority=0,reason==Unknown,hasOldIdeo==False)->[PAWN] adopted [NewIdeo].</li>
 				<li>entry(priority=0,reason==Unknown,hasOldIdeo==True) ->[Outcome].</li>
 			</rulesStrings>

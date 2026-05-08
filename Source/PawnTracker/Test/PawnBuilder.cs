@@ -449,11 +449,11 @@ internal static class PawnBuilderExtension
         
         public PawnBuilder SetGender(Gender gender) => builder.Do(p => p.gender = gender);
 
-        public PawnBuilder ForceBirthday()
+        public PawnBuilder ForceBirthday(int ageOffset = 1)
         {
             return builder.Do(p =>
             {
-                p.ageTracker.AgeBiologicalTicks = (p.ageTracker.AgeBiologicalYears + 1) * 3_600_000 + 1;
+                p.ageTracker.AgeBiologicalTicks = (p.ageTracker.AgeBiologicalYears + ageOffset) * 3_600_000 + 1;
                 p.ageTracker.DebugForceBirthdayBiological();
             });
         }
@@ -463,15 +463,6 @@ internal static class PawnBuilderExtension
             return builder.Do(p =>
             {
                 p.ageTracker.AgeBiologicalTicks = age * GenDate.TicksPerYear;
-            });
-        }
-
-        public PawnBuilder SetGrowthTier(int tier)
-        {
-            return builder.Do(p =>
-            {
-                p.ageTracker.growthPoints = GrowthUtility.GrowthTiers[tier].pointsRequirement;
-                p.ageTracker.canGainGrowthPoints = true;
             });
         }
 
