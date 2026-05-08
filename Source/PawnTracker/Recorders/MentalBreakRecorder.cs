@@ -245,8 +245,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
     public void TestRebellion(TestScenario scenario)
     {
         var slaves = scenario.Pawn(3)
-            .Enemy()
-            .Do(p => p.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave))
+            .AsSlave()
             .Execute();
         var pawn = scenario.Pawn(slaves[0])
             .StopMentalState()

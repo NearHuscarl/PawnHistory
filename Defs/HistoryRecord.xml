@@ -982,6 +982,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>SlaveEmancipated</defName>
+		<label>emancipated</label>
+		<descriptionMaker>PH_SlaveEmancipated</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Ideology">
 		<defName>IdeoChanged</defName>
 		<label>ideology changed</label>
 		<descriptionMaker>PH_IdeoChanged</descriptionMaker>

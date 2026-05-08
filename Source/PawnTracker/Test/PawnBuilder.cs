@@ -107,7 +107,13 @@ public class PawnBuilder(int count = 1)
     public PawnBuilder AsPrisoner()
     {
         guestStatus = GuestStatus.Prisoner;
-        return WithFaction(Faction.OfPirates);
+        return WithFaction(Faction.OfHostile);
+    }
+
+    public PawnBuilder AsSlave()
+    {
+        guestStatus = GuestStatus.Slave;
+        return WithFaction(Faction.OfHostile);
     }
 
     public PawnBuilder DoOnce(Action<Pawn> processor)

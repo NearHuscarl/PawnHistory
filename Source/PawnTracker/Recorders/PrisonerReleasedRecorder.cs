@@ -20,9 +20,8 @@ public class PrisonerReleasedRecorder : RecorderBase<PrisonerReleasedEvent>
 
         var recordDef = HistoryRecordDefOf.PrisonerReleased;
         var desc = recordDef.Description(e.Prisoner, "Prisoner")
-            .IncludePawnGrammar()
             .WithPlayerSettlement(e.Releaser.Map.Parent)
-            .AddRule("Releaser", e.Releaser, addSubsymbols: true)
+            .AddRule("Releaser", e.Releaser)
             .Resolve();
 
         AddRecord(recordDef, e.Prisoner, desc, [e.Releaser]);

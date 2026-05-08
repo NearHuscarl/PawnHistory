@@ -49,25 +49,26 @@ internal static class ChoiceLetter_BabyToChild_Choices_Patch
 {
     private static void Postfix(ChoiceLetter_BabyToChild __instance, ref IEnumerable<DiaOption> __result)
     {
-        var options = __result.ToList();
-        var enslaveText = "Enslave".Translate().CapitalizeFirst();
-        var option = options.FirstOrDefault(option => Accessor.DiaOption.Text(option) == enslaveText);
+        var optionText = "Enslave".Translate().CapitalizeFirst();
 
-        if (option == null)
-            return;
-        
-        var originalAction = option.action;
-        option.action = () =>
+        __result = __result.Select(option =>
         {
-            originalAction();
+            if (Accessor.DiaOption.Text(option) != optionText)
+                return option;
+            
+            var originalAction = option.action;
+            option.action = () =>
+            {
+                originalAction();
 
-            var pawn = Accessor.ChoiceLetter_BabyToChild.Pawn(__instance);
-            if (!pawn.IsSlave)
-                return;
+                var pawn = Accessor.ChoiceLetter_BabyToChild.Pawn(__instance);
+                if (!pawn.IsSlave)
+                    return;
 
-            GameEventBus.Publish(new EnslavedEvent(pawn, null, EnslavedCause.BabyToChild));
-        };
+                GameEventBus.Publish(new EnslavedEvent(pawn, null, EnslavedCause.BabyToChild));
+            };
 
-        __result = options;
+            return option;
+        });
     }
 }

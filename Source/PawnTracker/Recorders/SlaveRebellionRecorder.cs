@@ -147,14 +147,12 @@ public class SlaveRebellionRecorder : RecorderBase<SlaveRebellionEvent>
         var bottomRight = new IntVec3(Find.CurrentMap.Size.x - 1, 0, 0);
                 
         var slaveFarAway = scenario.Pawn()
-            .Enemy()
             .Position(bottomRight)
-            .Do(p => p.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave))
+            .AsSlave()
             .CreateSingle();
         var slaves = scenario.Pawn(3)
-            .Enemy()
             .Position(topLeft)
-            .Do(p => p.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave))
+            .AsSlave()
             .Execute();
 
         SlaveRebellionUtility.StartSlaveRebellion(slaves[0]);
@@ -224,14 +222,12 @@ public class SlaveRebellionRecorder : RecorderBase<SlaveRebellionEvent>
         var bottomRight = new IntVec3(Find.CurrentMap.Size.x - 1, 0, 0);
         
         var slaveFarAway = scenario.Pawn()
-            .Enemy()
             .Position(bottomRight)
-            .Do(p => p.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave))
+            .AsSlave()
             .CreateSingle();
         var slaves = scenario.Pawn(3)
-            .Enemy()
             .Position(topLeft)
-            .Do(p => p.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave))
+            .AsSlave()
             .Execute();
         var pawn = scenario.Pawn(slaves[0])
             .Do(p => p.StartMentalBreakWithMadeUpThought(Extra.MentalBreakDefOf.Rebellion))

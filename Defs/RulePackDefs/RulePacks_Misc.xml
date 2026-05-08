@@ -564,6 +564,19 @@
 		</rulePack>
 	</RulePackDef>
 
+	<RulePackDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>PH_SlaveEmancipated</defName>
+		<include>
+			<li>PH_Faction</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(cause==SocialInteraction)->[Slave], a slave of [PlayerSettlement], was released by [Warden].</li>
+				<li>entry(cause==BabyToChild)      ->[Slave], a slave of [PlayerSettlement], was released upon becoming a child.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
 	<RulePackDef>
 		<defName>PH_PrisonBreak</defName>
 		<include>
