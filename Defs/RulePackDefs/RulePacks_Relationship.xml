@@ -84,6 +84,16 @@
 		</rulePack>
 	</RulePackDef>
 
+	<RulePackDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>PH_DivorceByIdeo</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(pov==Divorcer)    ->[Divorcer] divorced [Spouses] after [Divorcer_possessive] new ideoligion forbade having too many spouses.</li>
+				<li>entry(pov==FormerSpouse)->[Divorcer] divorced [PAWN] after [Divorcer_possessive] new ideoligion forbade having too many spouses.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
 	<RulePackDef MayRequire="Ludeon.RimWorld.Biotech">
 		<defName>PH_PsychicBonded</defName>
 		<rulePack>

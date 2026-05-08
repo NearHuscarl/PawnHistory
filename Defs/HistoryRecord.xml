@@ -743,6 +743,15 @@
 			<li>Relationship</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>DivorceByIdeo</defName>
+		<label>divorce by ideology</label>
+		<descriptionMaker>PH_DivorceByIdeo</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/Breakup</icon>
+		<categories>
+			<li>Relationship</li>
+		</categories>
+	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>MarriageProposal</defName>
 		<label>marriage proposal</label>
