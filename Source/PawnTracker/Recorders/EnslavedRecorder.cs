@@ -17,11 +17,13 @@ public class EnslavedRecorder : RecorderBase<EnslavedEvent>
     public override void CreateRecord(EnslavedEvent e)
     {
         var recordDef = HistoryRecordDefOf.Enslaved;
-        var interactionLog = e.LogEntryText.Split('.').Select(p => p.Trim()).FirstOrDefault(p => !p.NullOrEmpty());
+        var interactionLog = e.LogEntryText?.Split('.').Select(p => p.Trim()).FirstOrDefault(p => !p.NullOrEmpty());
         var desc = recordDef.Description(e.Slave, "Slave")
             .IncludePawnGrammar()
+            .WithPlayerFaction()
             .AddRule("InteractionLog", interactionLog)
             .AddRule("Enslaver", e.Enslaver, addSubsymbols: true)
+            .AddConstant("cause", e.Cause)
             .Resolve();
 
         if (ShouldRecord(e.Enslaver))
@@ -57,5 +59,19 @@ public class EnslavedRecorder : RecorderBase<EnslavedEvent>
         };
         Expect.That(enslaver).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [prisoner] }));
         Expect.That(prisoner).Eventually().ToHaveHistoryRecord(expected.With(new ExpectedHistoryRecord { Concerns = [enslaver] }));
+    }
+
+    [RequiresBiotech]
+    [RequiresIdeology]
+    public void TestBabyToChild(TestScenario scenario)
+    {
+        var child = scenario.Pawn()
+            .Colonist()
+            .SetAge(1)
+            .ForceBirthday(10)
+            .CreateSingle();
+
+        scenario.LetterBabyToChild().PickSlave().Execute();
+        Expect.That(child).ToHaveHistoryRecord(HistoryRecordDefOf.Enslaved, "[Slave] was enslaved by the colony upon becoming a child.");
     }
 }

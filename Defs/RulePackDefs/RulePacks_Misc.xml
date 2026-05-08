@@ -553,9 +553,13 @@
 
 	<RulePackDef MayRequire="Ludeon.RimWorld.Ideology">
 		<defName>PH_Enslaved</defName>
+		<include>
+			<li>PH_Faction</li>
+		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry->[InteractionLog]. [Slave] accepted [Slave_possessive] fate and became enslaved by [Enslaver].</li>
+				<li>entry(cause==SocialInteraction)->[InteractionLog]. [Slave] accepted [Slave_possessive] fate and became enslaved by [Enslaver].</li>
+				<li>entry(cause==BabyToChild)      ->[Slave] was enslaved by [PlayerFaction] upon becoming a child.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

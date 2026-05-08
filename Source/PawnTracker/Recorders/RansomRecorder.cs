@@ -1,8 +1,7 @@
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
-using System.Linq;
-using Verse;
+using PawnHistory.Source.Helper;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -36,7 +35,7 @@ public class RansomRecorder : RecorderBase<RansomEvent>
         var hostage = scenario.Pawn().Colonist().CreateSingle();
         var enemy = scenario.Pawn().Enemy().CreateSingle(false);
         
-        Faction.OfPirates.kidnapped.Kidnap(hostage, enemy);
+        Faction.OfHostile.kidnapped.Kidnap(hostage, enemy);
         scenario.Incident(Extra.IncidentDefOf.RansomDemand).Execute();
         scenario.Letter<ChoiceLetter_RansomDemand>().Reject().Execute();
 
@@ -48,7 +47,7 @@ public class RansomRecorder : RecorderBase<RansomEvent>
         var hostage = scenario.Pawn().Colonist().CreateSingle();
         var enemy = scenario.Pawn().Enemy().CreateSingle(false);
         
-        Faction.OfPirates.kidnapped.Kidnap(hostage, enemy);
+        Faction.OfHostile.kidnapped.Kidnap(hostage, enemy);
         scenario.Incident(Extra.IncidentDefOf.RansomDemand).Execute();
         scenario.Map().BuildRoom(8, 8).AsBank().Execute();
         scenario.Letter<ChoiceLetter_RansomDemand>().Accept().Execute();

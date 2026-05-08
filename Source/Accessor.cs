@@ -363,4 +363,9 @@ public static class Accessor
         public static readonly AccessTools.FieldRef<RimWorld.TransportersArrivalAction_TransportShip, MapParent> MapParent =
             AccessTools.FieldRefAccess<RimWorld.TransportersArrivalAction_TransportShip, MapParent>("mapParent");
     }
+
+    public class ChoiceLetter_BabyToChild
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.ChoiceLetter_BabyToChild, Pawn> Pawn = AccessTools.FieldRefAccess<RimWorld.ChoiceLetter_BabyToChild, Pawn>("pawn");
+    }
 }

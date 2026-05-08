@@ -50,7 +50,8 @@ public class TestScenario
     public IdeoBuilder Ideo() => new();
     public RitualBuilder Ritual(Pawn organizer) => new(organizer);
     public LetterActionSimple<T> Letter<T>() where T : ChoiceLetter => new();
-    public LetterActionGrowthMoment GrowthMomentLetter() => new();
+    public LetterActionBabyToChild LetterBabyToChild() => new();
+    public LetterActionGrowthMoment LetterGrowthMoment() => new();
 
     public void OpenHistoryRecordTab(Pawn pawn)
     {

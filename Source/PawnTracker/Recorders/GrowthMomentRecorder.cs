@@ -40,7 +40,7 @@ public class GrowthMomentRecorder : RecorderBase<GrowthMomentEvent>
     {
         var child = CreateGrowthMomentPawn(scenario, growthTier: 0, age: 6);
 
-        scenario.GrowthMomentLetter().TraitIndex(0).Execute();
+        scenario.LetterGrowthMoment().TraitIndex(0).Execute();
 
         Expect.That(child).ToHaveHistoryRecord(HistoryRecordDefOf.GrowthMoment, "At biological age [PAWN_age], [PAWN] experienced a growth moment and gained the [Trait] trait.");
     }
@@ -50,7 +50,7 @@ public class GrowthMomentRecorder : RecorderBase<GrowthMomentEvent>
     {
         var child = CreateGrowthMomentPawn(scenario, growthTier: 4, age: 6);
 
-        scenario.GrowthMomentLetter().PassionIndices([0]).Execute();
+        scenario.LetterGrowthMoment().PassionIndices([0]).Execute();
 
         Expect.That(child).ToHaveHistoryRecord(HistoryRecordDefOf.GrowthMoment, "At biological age [PAWN_age], [PAWN] experienced a growth moment and developed a passion for [SkillList].");
     }
@@ -60,7 +60,7 @@ public class GrowthMomentRecorder : RecorderBase<GrowthMomentEvent>
     {
         var child = CreateGrowthMomentPawn(scenario, growthTier: 4, age: 6);
 
-        scenario.GrowthMomentLetter().TraitIndex(0).PassionIndices([0]).Execute();
+        scenario.LetterGrowthMoment().TraitIndex(0).PassionIndices([0]).Execute();
 
         Expect.That(child).ToHaveHistoryRecord(HistoryRecordDefOf.GrowthMoment, "At biological age [PAWN_age], [PAWN] experienced a growth moment, gaining the [Trait] trait and developing a passion for [SkillList]");
     }
@@ -70,7 +70,7 @@ public class GrowthMomentRecorder : RecorderBase<GrowthMomentEvent>
     {
         var child = CreateGrowthMomentPawn(scenario, growthTier: 7, age: 9);
 
-        scenario.GrowthMomentLetter().TraitIndex(0).PassionIndices([0, 1]).Execute();
+        scenario.LetterGrowthMoment().TraitIndex(0).PassionIndices([0, 1]).Execute();
 
         Expect.That(child).ToHaveHistoryRecord(HistoryRecordDefOf.GrowthMoment, "At biological age [PAWN_age], [PAWN] experienced a growth moment, gaining the [Trait] trait and developing passions for [SkillList]");
     }

@@ -5,10 +5,12 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Test;
 
-internal enum LetterChoiceKind
+public enum LetterChoiceKind
 {
     Accept,
-    Reject
+    Reject,
+    Option1,
+    Option2,
 }
 
 public abstract class LetterAction<TLetter> where TLetter : Letter

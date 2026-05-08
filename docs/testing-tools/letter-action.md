@@ -21,10 +21,12 @@ Accepts or rejects a live choice letter after a real game action creates it.
 - `ChoiceLetter_AcceptJoiner`
 - `ChoiceLetter_RansomDemand`
 - `ChoiceLetter_AcceptVisitors`
+- `ChoiceLetter_BabyToChild`
 - `ChoiceLetter_GrowthMoment`
 
 ## Notes
 
 - Choice resolution is currently keyed by the visible option text for the supported letters above.
+- `ChoiceLetter_BabyToChild` uses a dedicated action class and supports `scenario.Letter<ChoiceLetter_BabyToChild>().Enslave().Execute()`.
 - Growth-moment completion primes the private choice lists through reflected access instead of driving the UI dialog.
 - If a different letter type needs support, it belongs here rather than in test bodies.
