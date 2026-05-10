@@ -4,6 +4,7 @@ using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PawnHistory.Source.Helper;
 using UnityEngine;
 using Verse;
 
@@ -47,12 +48,7 @@ public class HistoryRecord : IExposable
         this.description = desc.Resolve();
         this.concerns = (concerns ?? []).Where(p => p != null && p != pawn).Distinct().ToList();
         this.date = GenTicks.TicksAbs;
-        this.tileId = tileId
-            ?? location?.map?.Tile.tileId
-            ?? pawn.MapHeld?.Tile.tileId
-            ?? pawn.GetCaravan()?.Tile.tileId
-            ?? Find.AnyPlayerHomeMap?.Tile.tileId
-            ?? -1;
+        this.tileId = tileId ?? location?.map?.Tile.tileId ?? pawn.GetTileId();
         
         if (quest is { hidden: false })
             this.quest = quest;
@@ -145,40 +141,14 @@ public class HistoryRecord : IExposable
 
 public static class HistoryRecordExtensions
 {
-    public static PlanetTile Tile(int tileId)
-    {
-        if (tileId < 0)
-            return Find.AnyPlayerHomeMap?.Tile ?? PlanetTile.Invalid;
-        return Find.WorldGrid[tileId].tile;
-    }
-
-    public static string GetShortDate(int date, int tileId)
-    {
-        var position = Find.WorldGrid.LongLatOf(Tile(tileId));
-        var hourInt = GenDate.HourInteger(date, position.x);
-        var hour = $"{hourInt}h";
-
-        if (Prefs.TwelveHourClockMode)
-        {
-            var ampm = hourInt >= 12 ? "PM" : "AM";
-            hourInt %= 12;
-            if (hourInt == 0) hourInt = 12;
-            hour = $"{hourInt} {ampm}";
-        }
-
-        var day = GenDate.DayOfYear(date, position.x) + 1;
-        var year = GenDate.Year(date, position.x);
-        return $"Y{year} D{day} {hour}";
-    }
-
     public static string GetShortDate(this HistoryRecord record)
     {
-        return GetShortDate(record.date, record.tileId);
+        return DateHelper.GetShortDate(record.date, record.tileId);
     }
 
     public static string GetTipDate(this HistoryRecord record)
     {
-        var position = Find.WorldGrid.LongLatOf(Tile(record.tileId));
+        var position = Find.WorldGrid.LongLatOf(WorldGridUtility.Tile(record.tileId));
         return GenDate.DateFullStringWithHourAt(record.date, position);
     }
 }

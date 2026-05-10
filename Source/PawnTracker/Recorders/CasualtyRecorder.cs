@@ -121,7 +121,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
             AddRecord(recordDef, relative, desc, [deceased, initiator, originalTarget]);
         }
 
-        if (!deceased.TryGetBondedHumans(out var bondedHumans))
+        if (!RelationHelper.TryGetBondedHumans(deceased, out var bondedHumans))
             return;
 
         foreach (var human in bondedHumans)

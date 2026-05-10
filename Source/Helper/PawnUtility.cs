@@ -2,6 +2,7 @@
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
+using RimWorld.Planet;
 using Verse;
 
 namespace PawnHistory.Source.Helper;
@@ -17,23 +18,8 @@ internal static class PawnUtility
                 ? Find.ActiveLanguageWorker.WithDefiniteArticlePostProcessed(pawn.Name.ToStringShort, pawn.gender, name: true).ApplyTag(TagType.Name).Resolve()
                 : pawn.KindLabelDefinite().ApplyTag(TagType.Name).Resolve();
 
-        public bool TryGetBondedHumans(out List<Pawn> bondedHumans)
-        {
-            bondedHumans = [];
-
-            if (pawn?.RaceProps is not { Animal: true })
-                return false;
-
-            foreach (var rel in pawn.relations?.DirectRelations ?? [])
-            {
-                if (rel.def == PawnRelationDefOf.Bond)
-                    bondedHumans.Add(rel.otherPawn);
-            }
-
-            return bondedHumans.Count > 0;
-        }
-
         public List<HistoryRecord> HistoryRecords => CompHistoryManager.GetComp(pawn)?.records ?? [];
+        public List<HistoryRecord> VisibleHistoryRecords => pawn.HistoryRecords.Where(r => r.def.importance != RecordImportance.Debug).ToList();
 
         public bool IsFactionLeader(Faction faction = null)
         {
@@ -47,17 +33,17 @@ internal static class PawnUtility
             pawn.health.forceDowned = false;
         }
 
+        public int GetTileId()
+        {
+            return pawn.MapHeld?.Tile.tileId
+                   ?? pawn.GetCaravan()?.Tile.tileId
+                   ?? Find.AnyPlayerHomeMap?.Tile.tileId
+                   ?? -1;
+        }
+
         public bool IsHavingAffairBasedOnIdeo()
         {
             return !new HistoryEvent(pawn.GetHistoryEventLoveRelationCount(), pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo();
-        }
-
-        public List<Pawn> GetPawnsWithRelation(PawnRelationDef relation)
-        {
-            return pawn.relations.DirectRelations
-                .Where(r =>  r.def == relation &&  r.otherPawn is { Dead: false })
-                .Select(r => r.otherPawn)
-                .ToList();
         }
 
         public void StartMentalBreakWithMadeUpThought(MentalBreakDef def)
@@ -68,7 +54,7 @@ internal static class PawnUtility
             var reason = "MentalStateReason_Mood".Translate() + "\n\n" + "FinalStraw".Translate(randomNegativeThought.LabelCap);
 
             if (!pawn.mindState.mentalBreaker.TryDoMentalBreak(reason, def))
-                Log.Warning($"[PawnHistory] Failed to force mental break {def.defName} on {pawn.LabelShort}");
+                L.Warning($"Failed to force mental break {def.defName} on {pawn.LabelShort}");
         }
 
         public Pawn GiveBirth(Pawn parent2)
@@ -90,10 +76,7 @@ internal static class PawnUtility
 
             return null;
         }
-    }
 
-    extension(Pawn pawn)
-    {
         private static float GetDangerScore(Hediff h)
         {
             if (h.def.lethalSeverity <= 0f)

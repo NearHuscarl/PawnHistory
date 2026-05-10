@@ -11,6 +11,7 @@ public static class L
             Log.Message("[PawnHistory] " + message);
     }
     
-    public static void Error(string message) => Log.Error("[PawnHistory] " + message);
     public static void Message(string message) => Log.Message("[PawnHistory] " + message);
+    public static void Warning(string message) => Log.Warning("[PawnHistory] " + message);
+    public static void Error(string message) => Log.Error("[PawnHistory] " + message);
 }

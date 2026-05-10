@@ -23,7 +23,7 @@ public class CasketDropRecorder : RecorderBase<CasketDropEvent>
         if (!ShouldRecord(pawn))
             return;
 
-        var isAwakened = !pawn.HistoryRecords.Any();
+        var isAwakened = !pawn.VisibleHistoryRecords.Any();
         var recordDef = isAwakened ? HistoryRecordDefOf.CasketAwakened : HistoryRecordDefOf.CasketDrop;
         var desc = recordDef.Description(pawn)
             .AddRule("Faction", pawn.Faction)

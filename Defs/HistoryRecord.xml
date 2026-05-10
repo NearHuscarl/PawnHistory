@@ -2,6 +2,14 @@
 
 <Defs>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Custom</defName>
+		<label>custom record</label>
+		<icon>Things/Mote/SpeechSymbols/Speech</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PeaceTalksOutcome</defName>
 		<label>peace talks outcome</label>
 		<descriptionMaker>PH_PeaceTalksOutcome</descriptionMaker>

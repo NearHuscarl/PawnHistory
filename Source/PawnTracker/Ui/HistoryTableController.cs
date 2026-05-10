@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using PawnHistory.Source.Helper;
 using RimWorld;
 using UnityEngine;
@@ -17,10 +16,15 @@ public sealed class HistoryTableController
         tableState.LastPawnShown = pawn;
         tableState.ClearEditingSession();
         tableState.CachedHeights.Clear();
+        RefreshLatestPage(tableState, paginationState);
+        commands.Clear();
+    }
+
+    private void RefreshLatestPage(HistoryTableState tableState, PaginationState paginationState)
+    {
         tableState.PendingScrollToBottom = true;
         RefreshPageCount(paginationState, tableState);
         GoToPage(paginationState, paginationState.TotalPages);
-        commands.Clear();
     }
 
     public void Handle(HistoryTableState tableState, PaginationState paginationState, List<Command> commands)
@@ -49,6 +53,9 @@ public sealed class HistoryTableController
                     break;
                 case PageInputSubmitted:
                     SubmitPageInput(tableState, paginationState);
+                    break;
+                case LatestPageRefreshed:
+                    RefreshLatestPage(tableState, paginationState);
                     break;
             }
         }
@@ -81,7 +88,7 @@ public sealed class HistoryTableController
     private static void HandleDeleteRecordRequested(HistoryTableState tableState, PaginationState paginationState, HistoryRecord record)
     {
         var comp = CompHistoryManager.GetComp(record.pawn);
-        if (comp.RemoveRecord(record))
+        if (comp == null || !comp.RemoveRecord(record))
             return;
 
         tableState.ClearEditingSession();
@@ -124,7 +131,8 @@ public sealed class HistoryTableController
 
     private static void RefreshPageCount(PaginationState paginationState, HistoryTableState tableState)
     {
-        paginationState.TotalPages = TotalPagesFor(GetVisibleRecords(tableState.LastPawnShown).Count());
+        var recordCount = tableState.LastPawnShown.VisibleHistoryRecords.Count;
+        paginationState.TotalPages = Mathf.Max(1, Mathf.CeilToInt(recordCount / (float)PaginationView.PageSize));
     }
     
     private static void GoToPage(PaginationState paginationState, int page)
@@ -134,12 +142,5 @@ public sealed class HistoryTableController
         paginationState.CurrentPage = page;
         paginationState.PageText = page.ToString();
         paginationState.Error = null;
-    }
-
-    private static int TotalPagesFor(int recordCount) => Mathf.Max(1, Mathf.CeilToInt(recordCount / (float)PaginationView.PageSize));
-
-    public static IEnumerable<HistoryRecord> GetVisibleRecords(Pawn pawn)
-    {
-        return pawn.HistoryRecords.Where(record => record.def.importance != RecordImportance.Debug).ToList();
     }
 }

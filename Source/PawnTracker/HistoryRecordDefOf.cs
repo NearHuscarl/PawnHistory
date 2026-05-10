@@ -8,6 +8,7 @@ namespace PawnHistory.Source.PawnTracker;
 [SuppressMessage("ReSharper", "UnassignedField.Global")]
 public class HistoryRecordDefOf
 {
+    public static HistoryRecordDef Custom;
     public static HistoryRecordDef PawnGenerated;
     public static HistoryRecordDef Raid;
     public static HistoryRecordDef SiteAmbush;

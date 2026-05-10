@@ -51,6 +51,7 @@ public sealed class HistoryCardPage
             var groupRect = new Rect(0f, filterHeight, inRect.width, inRect.height - filterHeight);
             
             tableController.SyncExternalState(pawn, tableState, paginationState, commands);
+            HistoryAddRecordButtonView.Draw(filterRect, pawn, tableState, commands);
             PaginationView.Draw(filterRect, paginationState, tableState, commands);
             HistoryTableView.Draw(groupRect, tableState, paginationState, ref scrollPosition, layout, commands);
             HistoryTableDebugView.Draw(inRect, tableState, paginationState);

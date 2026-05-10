@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using PawnHistory.Source.Helper;
 using UnityEngine;
 using Verse;
 
@@ -51,7 +52,7 @@ public static class HistoryTableView
 
     private static List<HistoryRecord> GetCurrentPageRecords(HistoryTableState tableState, PaginationState paginationState)
     {
-        var visibleRecords = HistoryTableController.GetVisibleRecords(tableState.LastPawnShown);
+        var visibleRecords = tableState.LastPawnShown.VisibleHistoryRecords;
         var startIndex = (paginationState.CurrentPage - 1) * PaginationView.PageSize;
         return visibleRecords.Skip(startIndex).Take(PaginationView.PageSize).ToList();
     }
