@@ -2,7 +2,8 @@ using UnityEngine;
 
 namespace PawnHistory.Source.Ui;
 
-public sealed class SizedBox(float? width = null, float? height = null, Widget child = null, string key = null) : Widget(key)
+public sealed class SizedBox(float? width = null, float? height = null, Widget child = null, string key = null)
+    : Widget(WidgetIds.SizedBox, key)
 {
     public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
     {
@@ -16,6 +17,6 @@ public sealed class SizedBox(float? width = null, float? height = null, Widget c
 
     public override void Draw(UiContext ctx, Rect rect)
     {
-        child?.Draw(ctx, rect);
+        WidgetTree.DrawChild(ctx, child, 0, rect);
     }
 }

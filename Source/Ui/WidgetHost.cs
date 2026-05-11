@@ -37,7 +37,8 @@ public sealed class WidgetHost(Theme theme = null)
             if (sizing == RootSizing.HugContent)
                 rect.size = root.Measure(Context, LayoutConstraints.Loose(rect.width, rect.height));
 
-            root.Draw(Context, rect);
+            Context.ResetKeyPath();
+            WidgetTree.DrawChild(Context, root, 0, rect);
             Context.DrawOverlays();
         }
         finally

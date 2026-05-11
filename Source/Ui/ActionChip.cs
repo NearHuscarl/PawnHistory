@@ -4,7 +4,7 @@ using Verse;
 
 namespace PawnHistory.Source.Ui;
 
-public sealed class ActionChip(Thing thing, Action<Thing> onRemove) : Widget
+public sealed class ActionChip(Thing thing, Action<Thing> onRemove, string key = null) : Widget(WidgetIds.ActionChip, key)
 {
     public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
     {

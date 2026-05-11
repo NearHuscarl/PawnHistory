@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -7,35 +7,17 @@ using Verse;
 
 namespace PawnHistory.Source.Ui;
 
-public sealed class Autocomplete<T> : Widget
+public sealed class Autocomplete<T>(
+    AutocompleteController<T> controller,
+    Func<string, IEnumerable<T>> findOptions,
+    Action<T> onSelected,
+    Action<Rect, T> drawOption,
+    float? height = null,
+    float popupRowHeight = 26f,
+    int maxPopupRows = 6,
+    string key = null)
+    : Widget(WidgetIds.Autocomplete, key)
 {
-    private readonly AutocompleteController<T> controller;
-    private readonly Func<string, IEnumerable<T>> findOptions;
-    private readonly Action<T> onSelected;
-    private readonly Action<Rect, T> drawOption;
-    private readonly float? height;
-    private readonly float popupRowHeight;
-    private readonly int maxPopupRows;
-
-    public Autocomplete(
-        string key,
-        AutocompleteController<T> controller,
-        Func<string, IEnumerable<T>> findOptions,
-        Action<T> onSelected,
-        Action<Rect, T> drawOption,
-        float? height = null,
-        float popupRowHeight = 26f,
-        int maxPopupRows = 6) : base(key)
-    {
-        this.controller = controller;
-        this.findOptions = findOptions;
-        this.onSelected = onSelected;
-        this.drawOption = drawOption;
-        this.height = height;
-        this.popupRowHeight = popupRowHeight;
-        this.maxPopupRows = maxPopupRows;
-    }
-
     public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
     {
         return Input(ctx).Measure(ctx, constraints);
@@ -43,8 +25,8 @@ public sealed class Autocomplete<T> : Widget
 
     public override void Draw(UiContext ctx, Rect rect)
     {
-        HandleKeyboard();
-        
+        HandleKeyboard(ctx);
+
         var rootRect = ctx.ToRoot(rect);
         if (HandleMouse(ctx, rootRect))
             return;
@@ -62,8 +44,7 @@ public sealed class Autocomplete<T> : Widget
     private TextArea Input(UiContext ctx)
     {
         var desiredHeight = height ?? ctx.Theme.TextFieldHeight;
-        return new TextArea(
-            key: Key,
+        return W.TextArea(
             value: controller.Query,
             onChange: query => controller.SetQuery(query, findOptions(query)),
             onSubmit: () => Confirm(ctx),
@@ -72,11 +53,12 @@ public sealed class Autocomplete<T> : Widget
             multiline: false);
     }
 
-    private void HandleKeyboard()
+    private void HandleKeyboard(UiContext ctx)
     {
         var current = Event.current;
+        var controlId = ctx.ControlId(StateKey(ctx));
 
-        if (GUI.GetNameOfFocusedControl() != Key || current.type != EventType.KeyDown)
+        if (GUI.GetNameOfFocusedControl() != controlId || current.type != EventType.KeyDown)
             return;
 
         var rowCount = VisibleRowCount();
@@ -104,7 +86,7 @@ public sealed class Autocomplete<T> : Widget
         var current = Event.current;
         var mousePosition = ctx.ToRoot(current.mousePosition);
         var popupRect = PopupRect(ctx, fieldRect, rowCount);
-        
+
         if (!popupRect.Contains(mousePosition))
             return false;
 
@@ -142,7 +124,7 @@ public sealed class Autocomplete<T> : Widget
     {
         onSelected?.Invoke(option);
         controller.Clear();
-        ctx.RequestFocus(Key);
+        ctx.RequestFocus(StateKey(ctx));
     }
 
     private int VisibleRowCount()
@@ -216,7 +198,7 @@ public sealed class AutocompleteController<T>
     {
         var count = VisibleCount(visibleCount);
         var direction = Math.Sign(delta);
-        
+
         if (count == 0)
         {
             HighlightedIndex = -1;
@@ -245,10 +227,10 @@ public sealed class AutocompleteController<T>
         option = Options[HighlightedIndex < 0 ? 0 : Normalize(HighlightedIndex, count)];
         return true;
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private int VisibleCount(int visibleCount) => Math.Clamp(visibleCount, 0, Options.Count);
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int Normalize(int value, int count) => (value % count + count) % count;
 }

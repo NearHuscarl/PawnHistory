@@ -14,7 +14,8 @@ public enum FlexFit
     Loose
 }
 
-public class Flexible(Widget child, int flex = 1, FlexFit fit = FlexFit.Loose, string key = null) : Widget(key)
+public class Flexible(Widget child, int flex = 1, FlexFit fit = FlexFit.Loose, string key = null, int widgetId = WidgetIds.Flexible)
+    : Widget(widgetId, key)
 {
     public Widget Child { get; } = child;
     public int Flex { get; } = Mathf.Max(1, flex);
@@ -27,6 +28,6 @@ public class Flexible(Widget child, int flex = 1, FlexFit fit = FlexFit.Loose, s
 
     public override void Draw(UiContext ctx, Rect rect)
     {
-        Child?.Draw(ctx, rect);
+        WidgetTree.DrawChild(ctx, Child, 0, rect);
     }
 }

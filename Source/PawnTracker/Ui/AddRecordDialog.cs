@@ -6,16 +6,15 @@ using PawnHistory.Source.Ui;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using static PawnHistory.Source.Ui.W;
 
 namespace PawnHistory.Source.PawnTracker.Ui;
 
 public sealed class AddRecordDialog : WidgetWindow
 {
-    private const string ConcernSearchControlName = "HistoryAddRecordConcernSearch";
     private const float LabelWidth = 92f;
     private const float DescriptionMinHeight = 72f;
     private const float FooterHeight = 36f;
-    private static readonly Widget EmptyConcernStrip = new MenuSection(new Label("NH_PH_AddRecord_NoConcerns".Translate()), 4f);
     
     private readonly AddRecordDialogState state;
     private readonly AutocompleteController<Thing> concernAutocomplete = new();
@@ -41,34 +40,31 @@ public sealed class AddRecordDialog : WidgetWindow
     {
         var theme = ctx.Theme;
 
-        return new Column(
+        return Column(
         [
-            new Expanded(new ScrollView(
-                "mainScrollView",
-                new Column([
-                    new LabeledField(
+            Expanded(ScrollView(
+                Column([
+                    LabeledField(
                         "NH_PH_AddRecord_FieldType".Translate(),
-                        new Button(state.SelectedDef.LabelCap, OpenDefMenu),
+                        Button(state.SelectedDef.LabelCap, OpenDefMenu),
                         LabelWidth),
 
-                    new LabeledField(
+                    LabeledField(
                         "NH_PH_AddRecord_FieldDescription".Translate(),
-                        new TextArea(
-                            key: "HistoryAddRecordDescription",
+                        TextArea(
                             value: state.Description,
                             onChange: text => state.Description = text,
                             minHeight: DescriptionMinHeight),
                         LabelWidth),
 
-                    new LabeledField(
+                    LabeledField(
                         "NH_PH_AddRecord_FieldDate".Translate(),
-                        new MenuSection(new Label(state.Date), 6),
+                        MenuSection(Label(state.Date), 6),
                         LabelWidth),
 
-                    new LabeledField(
+                    LabeledField(
                         "NH_PH_AddRecord_FieldConcerns".Translate(),
-                        new Autocomplete<Thing>(
-                            key: ConcernSearchControlName,
+                        Autocomplete(
                             controller: concernAutocomplete,
                             findOptions: FindConcernSuggestions,
                             onSelected: AddConcern,
@@ -76,16 +72,16 @@ public sealed class AddRecordDialog : WidgetWindow
                         LabelWidth),
                     Padding.Left(BuildConcernChipStrip(ctx), LabelWidth + theme.Gap),
 
-                    new LabeledField(
+                    LabeledField(
                         "NH_PH_AddRecord_FieldQuest".Translate(),
-                        new Button(state.SelectedQuest?.name ?? "NH_PH_AddRecord_None".Translate(), OpenQuestMenu),
+                        Button(state.SelectedQuest?.name ?? "NH_PH_AddRecord_None".Translate(), OpenQuestMenu),
                         LabelWidth),
                 ]))),
 
-            new SizedBox(height: FooterHeight, child: new Row(
+            SizedBox(height: FooterHeight, child: Row(
                 [
-                    new Button("NH_PH_AddRecord_Cancel".Translate(), () => Close()),
-                    new Button("NH_PH_AddRecord_Create".Translate(), CreateRecord)
+                    Button("NH_PH_AddRecord_Cancel".Translate(), () => Close()),
+                    Button("NH_PH_AddRecord_Create".Translate(), CreateRecord)
                 ], crossAxis: StackCrossAxis.Center, mainAxis: StackMainAxis.End)
             )
         ]);
@@ -93,9 +89,6 @@ public sealed class AddRecordDialog : WidgetWindow
     
     private IEnumerable<Thing> FindConcernSuggestions(string query)
     {
-        if (string.IsNullOrWhiteSpace(query) || Find.CurrentMap == null)
-            return [];
-
         return AddRecordDialogConcernSearchUtility.FindMatches(Find.CurrentMap, query, state.SelectedConcerns);
     }
     
@@ -135,12 +128,11 @@ public sealed class AddRecordDialog : WidgetWindow
     private Widget BuildConcernChipStrip(UiContext ctx)
     {
         if (state.SelectedConcerns.Count == 0)
-            return EmptyConcernStrip;
+            return MenuSection(Label("NH_PH_AddRecord_NoConcerns".Translate()), 4f);
 
-        return new MenuSection(
-            new Wrap(state.SelectedConcerns.Select(c => new ActionChip(c, RemoveConcern))),
-            ctx.Theme.GapXs
-            );
+        return MenuSection(
+            Wrap(state.SelectedConcerns.Select(c => ActionChip(c, RemoveConcern))),
+            ctx.Theme.GapXs);
     }
 
     private void OpenDefMenu()

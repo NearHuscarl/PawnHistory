@@ -4,7 +4,7 @@ using Verse;
 
 namespace PawnHistory.Source.Ui;
 
-public sealed class ScrollView(string key, Widget child, bool vertical = true) : Widget(key)
+public sealed class ScrollView(Widget child, bool vertical = true, string key = null) : Widget(WidgetIds.ScrollView, key)
 {
     public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
     {
@@ -16,7 +16,9 @@ public sealed class ScrollView(string key, Widget child, bool vertical = true) :
 
     public override void Draw(UiContext ctx, Rect rect)
     {
-        var scrollPosition = ctx.GetScrollPosition(Key);
+        var key = StateKey(ctx);
+        var scrollPosition = ctx.GetScrollPosition(key);
+
         var childConstraints = vertical
             ? LayoutConstraints.Loose(Mathf.Max(0f, rect.width - ctx.Theme.ScrollbarSize), float.PositiveInfinity)
             : LayoutConstraints.Loose(float.PositiveInfinity, rect.height);
@@ -27,24 +29,11 @@ public sealed class ScrollView(string key, Widget child, bool vertical = true) :
 
         Widgets.BeginScrollView(rect, ref scrollPosition, viewRect);
 
-        try
-        {
-            ctx.PushOffset(rect.position - scrollPosition);
+        ctx.PushOffset(rect.position - scrollPosition);
+        WidgetTree.DrawChild(ctx, child, 0, Rect.OfSize(viewRect.width, viewRect.height));
+        ctx.PopOffset();
 
-            try
-            {
-                child?.Draw(ctx, new Rect(0f, 0f, viewRect.width, viewRect.height));
-            }
-            finally
-            {
-                ctx.PopOffset();
-            }
-        }
-        finally
-        {
-            Widgets.EndScrollView();
-        }
-
-        ctx.SetScrollPosition(Key, scrollPosition);
+        Widgets.EndScrollView();
+        ctx.SetScrollPosition(key, scrollPosition);
     }
 }

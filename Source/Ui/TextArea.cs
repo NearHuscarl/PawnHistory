@@ -4,28 +4,19 @@ using Verse;
 
 namespace PawnHistory.Source.Ui;
 
-public sealed class TextArea : Widget
+public sealed class TextArea(
+    string value,
+    Action<string> onChange,
+    Action onSubmit = null,
+    Action onCancel = null,
+    float? width = null,
+    float minHeight = 32f,
+    float? maxHeight = null,
+    bool multiline = true,
+    string key = null)
+    : Widget(WidgetIds.TextArea, key)
 {
-    private readonly string value;
-    private readonly Action<string> onChange;
-    private readonly Action onSubmit;
-    private readonly Action onCancel;
-    private readonly float? width;
-    private readonly float minHeight;
-    private readonly float? maxHeight;
-    private readonly bool multiline;
-
-    public TextArea(string key, string value, Action<string> onChange, Action onSubmit = null, Action onCancel = null, float? width = null, float minHeight = 32f, float? maxHeight = null, bool multiline = true) : base(key)
-    {
-        this.value = value ?? string.Empty;
-        this.onChange = onChange;
-        this.onSubmit = onSubmit;
-        this.onCancel = onCancel;
-        this.width = width;
-        this.minHeight = minHeight;
-        this.maxHeight = maxHeight;
-        this.multiline = multiline;
-    }
+    private readonly string value = value ?? string.Empty;
 
     public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
     {
@@ -42,9 +33,12 @@ public sealed class TextArea : Widget
 
     public override void Draw(UiContext ctx, Rect rect)
     {
-        HandleKeyboard();
+        var key = StateKey(ctx);
+        var controlId = ctx.ControlId(key);
 
-        GUI.SetNextControlName(Key);
+        HandleKeyboard(controlId);
+
+        GUI.SetNextControlName(controlId);
         var edited = multiline
             ? Widgets.TextArea(rect, value)
             : Widgets.TextField(rect, value);
@@ -52,14 +46,14 @@ public sealed class TextArea : Widget
         if (!string.Equals(edited, value, StringComparison.Ordinal))
             onChange?.Invoke(edited);
 
-        if (ctx.ConsumeFocus(Key))
-            UI.FocusControl(Key, Find.WindowStack.currentlyDrawnWindow);
+        if (ctx.ConsumeFocus(key))
+            UI.FocusControl(controlId, Find.WindowStack.currentlyDrawnWindow);
     }
 
-    private void HandleKeyboard()
+    private void HandleKeyboard(string controlId)
     {
         var current = Event.current;
-        if (GUI.GetNameOfFocusedControl() != Key || current.type != EventType.KeyDown)
+        if (GUI.GetNameOfFocusedControl() != controlId || current.type != EventType.KeyDown)
             return;
 
         if (current.keyCode == KeyCode.Escape && onCancel != null)

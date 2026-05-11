@@ -7,40 +7,60 @@ namespace PawnHistory.Source.Ui;
 
 public sealed class UiContext(Theme theme = null)
 {
-    private readonly Dictionary<string, Vector2> scrollPositions = [];
-    private readonly HashSet<string> pendingFocusKeys = [];
+    private readonly Dictionary<int, Vector2> scrollPositions = [];
+    private readonly HashSet<int> pendingFocusKeys = [];
     private readonly List<Action> overlays = [];
     private readonly Stack<Vector2> offsets = new([Vector2.zero]);
+    private readonly Stack<int> keyStack = [];
+    private int currentKey = 1;
 
     public Theme Theme { get; } = theme ?? new Theme();
+    public int CurrentKey => currentKey;
 
-    public Vector2 GetScrollPosition(string key)
+    public Vector2 GetScrollPosition(int key)
     {
-        return key != null && scrollPositions.TryGetValue(key, out var position)
+        return scrollPositions.TryGetValue(key, out var position)
             ? position
             : Vector2.zero;
     }
 
-    public void SetScrollPosition(string key, Vector2 position)
+    public void SetScrollPosition(int key, Vector2 position)
     {
-        if (key != null)
-            scrollPositions[key] = position;
+        scrollPositions[key] = position;
     }
 
-    public void RequestFocus(string key)
+    public void RequestFocus(int key)
     {
-        if (!string.IsNullOrEmpty(key))
-            pendingFocusKeys.Add(key);
+        pendingFocusKeys.Add(key);
     }
 
-    public bool ConsumeFocus(string key)
+    public bool ConsumeFocus(int key)
     {
-        return !string.IsNullOrEmpty(key) && pendingFocusKeys.Remove(key);
+        return pendingFocusKeys.Remove(key);
+    }
+
+    public void ResetKeyPath()
+    {
+        keyStack.Clear();
+        currentKey = 1;
+    }
+
+    public void PushKey(int segment)
+    {
+        keyStack.Push(currentKey);
+        currentKey = HashCode.Combine(currentKey, segment);
+    }
+
+    public void PopKey()
+    {
+        currentKey = keyStack.Pop();
     }
 
     public Rect ToRoot(Rect rect) => rect.OffsetBy(offsets.Peek());
 
     public Vector2 ToRoot(Vector2 position) => offsets.Peek() + position;
+
+    public string ControlId(int key) => key.ToString();
 
     public void PushOffset(Vector2 offset)
     {

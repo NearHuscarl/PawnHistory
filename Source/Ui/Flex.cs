@@ -19,7 +19,15 @@ public enum StackMainAxis
     End
 }
 
-public abstract class Flex(StackAxis axis, IEnumerable<Widget> children, float? gap, StackCrossAxis crossAxis, StackMainAxis mainAxis, string key = null) : Widget(key)
+public abstract class Flex(
+    int widgetId,
+    StackAxis axis,
+    IEnumerable<Widget> children,
+    StackMainAxis mainAxis,
+    StackCrossAxis crossAxis,
+    float? gap,
+    string key = null)
+    : Widget(widgetId, key)
 {
     private readonly Widget[] children = children?.ToArray() ?? [];
 
@@ -36,8 +44,10 @@ public abstract class Flex(StackAxis axis, IEnumerable<Widget> children, float? 
         var sizes = MeasureChildren(ctx, LayoutConstraints.Tight(rect.size), out var contentMain, out _);
         var cursor = MainStart(rect) + Align(Main(rect.size), contentMain, mainAxis);
 
-        foreach (var (child, size) in children.Zip(sizes, (child, size) => (child, size)))
+        for (var i = 0; i < children.Length; i++)
         {
+            var child = children[i];
+            var size = sizes[i];
             var main = Main(size);
             var cross = crossAxis == StackCrossAxis.Stretch
                 ? Cross(rect.size)
@@ -48,7 +58,7 @@ public abstract class Flex(StackAxis axis, IEnumerable<Widget> children, float? 
                 ? new Rect(cursor, crossStart, main, cross)
                 : new Rect(crossStart, cursor, cross, main);
 
-            child.Draw(ctx, childRect);
+            WidgetTree.DrawChild(ctx, child, i, childRect);
             cursor += main + Gap(ctx);
         }
     }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PawnHistory.Source.Ui;
 
-public sealed class Spacer(float width = 0f, float height = 0f, string key = null) : Widget(key)
+public sealed class Spacer(float width = 0f, float height = 0f, string key = null) : Widget(WidgetIds.Spacer, key)
 {
     public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
     {

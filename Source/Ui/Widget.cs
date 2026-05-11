@@ -1,9 +1,32 @@
+using System;
+using UnityEngine;
+
 namespace PawnHistory.Source.Ui;
 
-public abstract class Widget(string key = null)
+public abstract class Widget
 {
-    public string Key { get; } = key;
+    private readonly WidgetKey key;
 
-    public abstract UnityEngine.Vector2 Measure(UiContext ctx, LayoutConstraints constraints);
-    public abstract void Draw(UiContext ctx, UnityEngine.Rect rect);
+    internal int WidgetId { get; }
+
+    private Widget(int widgetId, WidgetKey key = default)
+    {
+        WidgetId = widgetId;
+        this.key = key;
+    }
+
+    protected Widget(int widgetId, string key) : this(
+        widgetId,
+        key is null ? default : WidgetKey.Named(key))
+    {
+    }
+
+    internal int SegmentKey(int index)
+        => key.IsEmpty ? HashCode.Combine(WidgetId, index) : key.Value;
+
+    protected int StateKey(UiContext ctx)
+        => key.IsEmpty ? ctx.CurrentKey : key.Value;
+
+    public abstract Vector2 Measure(UiContext ctx, LayoutConstraints constraints);
+    public abstract void Draw(UiContext ctx, Rect rect);
 }

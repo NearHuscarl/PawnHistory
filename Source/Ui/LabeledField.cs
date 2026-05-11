@@ -4,7 +4,8 @@ using Verse;
 
 namespace PawnHistory.Source.Ui;
 
-public sealed class LabeledField(string label, Widget field, float labelWidth, float? gap = null, float? minHeight = null, string key = null) : Widget(key)
+public sealed class LabeledField(string label, Widget field, float labelWidth, float? gap = null, float? minHeight = null, string key = null)
+    : Widget(WidgetIds.LabeledField, key)
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private float Gap(UiContext ctx) => gap ?? ctx.Theme.Gap;
@@ -37,6 +38,6 @@ public sealed class LabeledField(string label, Widget field, float labelWidth, f
 
         Text.Font = previousFont;
         Text.Anchor = previousAnchor;
-        field.Draw(ctx, fieldRect);
+        WidgetTree.DrawChild(ctx, field, 0, fieldRect);
     }
 }

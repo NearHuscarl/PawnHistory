@@ -3,23 +3,9 @@ using Verse;
 
 namespace PawnHistory.Source.Ui;
 
-public sealed class Label : Widget
+public sealed class Label(string text, GameFont font = GameFont.Small, TextAnchor anchor = TextAnchor.MiddleLeft, float? width = null, float? height = null, string key = null)
+    : Widget(WidgetIds.Label, key)
 {
-    private readonly string text;
-    private readonly GameFont font;
-    private readonly TextAnchor anchor;
-    private readonly float? width;
-    private readonly float? height;
-
-    public Label(string text, GameFont font = GameFont.Small, TextAnchor anchor = TextAnchor.MiddleLeft, float? width = null, float? height = null, string key = null) : base(key)
-    {
-        this.text = text;
-        this.font = font;
-        this.anchor = anchor;
-        this.width = width;
-        this.height = height;
-    }
-
     public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
     {
         using (new TextStyleScope(font, anchor))
