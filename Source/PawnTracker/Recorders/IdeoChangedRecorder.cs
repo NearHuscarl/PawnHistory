@@ -12,7 +12,8 @@ public class IdeoChangedRecorder : RecorderBase<IdeoChangedEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<IdeoChangedEvent>(CreateRecord);
+        if (ModsConfig.IdeologyActive)
+            GameEventBus.Subscribe<IdeoChangedEvent>(CreateRecord);
     }
 
     public override void CreateRecord(IdeoChangedEvent e)

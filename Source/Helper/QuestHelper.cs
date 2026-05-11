@@ -41,7 +41,7 @@ public static class QuestHelper
         
         if (pawn.HostileTo(Faction.OfPlayer) && !pawn.Downed)
             kind = QuestPawnKind.Raider;
-        else if (IsReward(quest, pawn))
+        else if (IsReward(quest, pawn) || pawn.Faction == Faction.OfPlayer && pawn.HostFaction == null && pawn.records.GetValue(RecordDefOf.TimeAsColonistOrColonyAnimal) == 0)
             kind = QuestPawnKind.Joiner;
         else if (CombatKinds.Contains(pawn.kindDef))
             kind = QuestPawnKind.Helper;
