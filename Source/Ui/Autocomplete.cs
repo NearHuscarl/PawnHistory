@@ -18,7 +18,7 @@ public sealed class Autocomplete<T>(
     string key = null)
     : Widget(WidgetIds.Autocomplete, key)
 {
-    public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
+    protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)
     {
         return Input(ctx).Measure(ctx, constraints);
     }
@@ -41,16 +41,15 @@ public sealed class Autocomplete<T>(
             ctx.AddOverlay(() => DrawPopup(ctx, rootRect, visibleOptions));
     }
 
-    private TextArea Input(UiContext ctx)
+    private TextField Input(UiContext ctx)
     {
         var desiredHeight = height ?? ctx.Theme.TextFieldHeight;
-        return W.TextArea(
+        return W.TextField(
             value: controller.Query,
             onChange: query => controller.SetQuery(query, findOptions(query)),
             onSubmit: () => Confirm(ctx),
             minHeight: desiredHeight,
-            maxHeight: desiredHeight,
-            multiline: false);
+            maxHeight: desiredHeight);
     }
 
     private void HandleKeyboard(UiContext ctx)

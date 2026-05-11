@@ -195,7 +195,7 @@
 			<rulesStrings>
 				<!-- Important quests that cover different code paths, full test coverage -->
 				<li>entry(priority=1,kind==Joiner,quest==WandererJoins)           ->A [PAWN_title] named [PAWN] arrived and joined [PlayerSettlement]. [PAWN_pronoun] is willing to contribute, but refuses to leave voluntarily, claiming to have nowhere else to go.</li>
-				<li>entry(priority=1,kind==Joiner,quest==RefugeePodCrash)         ->[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [PAWN_pronoun] survived the impact but was badly wounded.</li>
+				<li>entry(priority=1,kind==Guest, quest==RefugeePodCrash)          ->[PAWN_titleIndef] named [PAWN] was crashed in a nearby transport pod. [PAWN_pronoun] survived the impact but was badly wounded.</li>
 				<li>entry(priority=1,kind==Lodger,quest==Hospitality_Refugee)     ->[PAWN][AndOthers] arrived at [PlayerSettlement] seeking shelter and a place to regroup, with nowhere else to go.</li>
 				
 				<li>entry(priority=1,kind==Lodger,quest==ShuttleCrash_Rescue)     ->[PAWN][AlongWithOthers] made an emergency landing at [PlayerSettlement] after their shuttle was damaged.</li>

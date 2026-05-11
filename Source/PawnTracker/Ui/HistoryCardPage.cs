@@ -1,68 +1,275 @@
+using System;
 using System.Collections.Generic;
-using PawnHistory.Source.DebugTools;
+using PawnHistory.Source.Ui;
+using PawnHistory.Source.Helper;
+using RimWorld;
 using UnityEngine;
 using Verse;
+using static PawnHistory.Source.Ui.W;
 
 namespace PawnHistory.Source.PawnTracker.Ui;
 
-public record HistoryCardPageContext(Rect PageRect);
-
-public sealed class HistoryCardPage
+internal sealed class HistoryCardPage
 {
-    private static float containerPadding;
-    /// <summary>
-    /// default gap between common UI controls
-    /// </summary>
-    private static float gap;
-    private static float filterHeight;
+    private readonly HistoryCardState state = new();
+    private readonly HistoryRecordActions recordActions;
+    private readonly Action goToFirstPageAction;
+    private readonly Action goToPreviousPageAction;
+    private readonly Action<string> updatePageTextAction;
+    private readonly Action submitPageInputAction;
+    private readonly Action goToNextPageAction;
+    private readonly Action goToLastPageAction;
+    private Pawn pawn;
 
-    private readonly HistoryTableState tableState = new();
-    private readonly PaginationState paginationState = new();
-    private readonly List<Command> commands = [];
-    private readonly HistoryTableController tableController = new();
-    private Vector2 scrollPosition;
-    public static HistoryCardPageContext Context;
-
-    static HistoryCardPage() => ReloadHistoryCardPageLayout();
-
-    [Reloadable]
-    [NearDebugAction]
-    private static void ReloadHistoryCardPageLayout()
+    public HistoryCardPage()
     {
-        containerPadding = 8f;
-        gap = 10f;
-        filterHeight = 30f;
+        recordActions = new(
+            JumpToRecord,
+            OpenRecordMenu,
+            HighlightTargets,
+            OpenQuest,
+            UpdateEditingText,
+            SaveEditedDescription,
+            ClearEditingSession);
+        goToFirstPageAction = GoToFirstPage;
+        goToPreviousPageAction = GoToPreviousPage;
+        updatePageTextAction = UpdatePageText;
+        submitPageInputAction = SubmitPageInput;
+        goToNextPageAction = GoToNextPage;
+        goToLastPageAction = GoToLastPage;
     }
 
-    public void Draw(Rect tabRect, Pawn pawn)
+    public Widget Build(UiContext ctx, Pawn shownPawn)
     {
-        Context = new HistoryCardPageContext(tabRect);
-        var color = GUI.color;
-        var font = Text.Font;
-        var anchor = Text.Anchor;
+        this.pawn = shownPawn;
+        SyncPawn(pawn);
 
-        var inRect = tabRect.ContractedBy(containerPadding);
-        var layout = new HistoryTableLayout(gap);
-
-        GUI.BeginGroup(inRect);
-        try
-        {
-            var filterRect = new Rect(0f, 0f, inRect.width, filterHeight);
-            var groupRect = new Rect(0f, filterHeight, inRect.width, inRect.height - filterHeight);
-            
-            tableController.SyncExternalState(pawn, tableState, paginationState, commands);
-            HistoryAddRecordButtonView.Draw(filterRect, pawn, tableState, commands);
-            PaginationView.Draw(filterRect, paginationState, tableState, commands);
-            HistoryTableView.Draw(groupRect, tableState, paginationState, ref scrollPosition, layout, commands);
-            HistoryTableDebugView.Draw(inRect, tableState, paginationState);
-            tableController.Handle(tableState, paginationState, commands);
-        }
-        finally
-        {
-            GUI.EndGroup();
-            GUI.color = color;
-            Text.Font = font;
-            Text.Anchor = anchor;
-        }
+        return new Padding(
+            Stack([
+                Column(
+                [
+                    SizedBox(height: HistoryCardLayout.FilterHeight, child: BuildTopBar(ctx, pawn)),
+                    Expanded(HistoryTable.Build(ctx, state, recordActions)),
+                ], gap: 0f),
+                Align(HistoryCardDebugOverlay.Build(state), Alignment.BottomRight),
+            ]),
+            new EdgeInsets(ctx.Theme.Padding));
     }
+
+    private Widget BuildTopBar(UiContext ctx, Pawn pawn)
+    {
+        return Row(
+        [
+            BuildAddRecordButton(ctx, pawn),
+            Spacer(),
+            HistoryPagination.Build(
+                ctx,
+                state.Pagination,
+                !state.Table.HasActiveEditSession,
+                CanGoToPreviousPage,
+                CanGoToNextPage,
+                goToFirstPageAction,
+                goToPreviousPageAction,
+                updatePageTextAction,
+                submitPageInputAction,
+                goToNextPageAction,
+                goToLastPageAction),
+        ], crossAxis: StackCrossAxis.Center, gap: 0f);
+    }
+
+    private Widget BuildAddRecordButton(UiContext ctx, Pawn pawn)
+    {
+        if (pawn == null || Find.CurrentMap == null)
+            return SizedBox(width: ctx.Theme.ButtonHorizontalPadding + HistoryCardLayout.ControlWidth);
+
+        return Padding.Left(
+            SizedBox(
+                width: HistoryCardLayout.ControlWidth,
+                height: HistoryCardLayout.ControlWidth,
+                child: IconButton(
+                    TexButton.Plus,
+                    OpenAddRecordDialog,
+                    "NH_PH_AddRecord_Title".Translate(),
+                    !state.Table.HasActiveEditSession)),
+            ctx.Theme.ButtonHorizontalPadding);
+    }
+
+    private void SyncPawn(Pawn nextPawn)
+    {
+        var recordCount = nextPawn?.HistoryRecords.Count ?? 0;
+        var pawnChanged = state.Table.LastPawnShown != nextPawn;
+        var recordCountChanged = state.Table.KnownRecordCount != recordCount;
+
+        if (!pawnChanged && !recordCountChanged)
+            return;
+
+        var previousCount = state.Table.KnownRecordCount;
+        state.Table.LastPawnShown = nextPawn;
+        state.Table.KnownRecordCount = recordCount;
+        state.Table.ClearEditingSession();
+
+        if (pawnChanged || recordCount > previousCount)
+            RefreshLatestPage();
+        else
+            RefreshCurrentPage();
+    }
+
+    private void OpenAddRecordDialog()
+    {
+        if (pawn != null)
+            Find.WindowStack.Add(new AddRecordDialog(pawn, RefreshLatestPage));
+    }
+
+    private void RefreshLatestPage()
+    {
+        RefreshPageCount();
+        GoToPage(state.Pagination.TotalPages);
+        state.Table.KnownRecordCount = state.Table.LastPawnShown?.HistoryRecords.Count ?? 0;
+        state.TableScroll.ScrollToBottom();
+    }
+
+    private void RefreshCurrentPage()
+    {
+        RefreshPageCount();
+        GoToPage(state.Pagination.CurrentPage);
+        state.Table.KnownRecordCount = state.Table.LastPawnShown?.HistoryRecords.Count ?? 0;
+    }
+
+    private void RefreshPageCount()
+    {
+        var recordCount = state.Table.LastPawnShown?.VisibleHistoryRecords.Count ?? 0;
+        state.Pagination.TotalPages = Mathf.Max(1, Mathf.CeilToInt(recordCount / (float)HistoryCardLayout.PageSize));
+    }
+
+    private void GoToPage(int page)
+    {
+        var pagination = state.Pagination;
+        page = Mathf.Clamp(page, 1, Mathf.Max(1, pagination.TotalPages));
+
+        pagination.CurrentPage = page;
+        pagination.PageText = page.ToString();
+        pagination.Error = null;
+    }
+
+    private void GoToFirstPage() => GoToPage(1);
+    private void GoToPreviousPage() => GoToPage(state.Pagination.CurrentPage - 1);
+    private void GoToNextPage() => GoToPage(state.Pagination.CurrentPage + 1);
+    private void GoToLastPage() => GoToPage(state.Pagination.TotalPages);
+
+    private void UpdatePageText(string value)
+    {
+        if (!InputValidators.DigitsOnly(value))
+            return;
+
+        state.Pagination.PageText = value;
+        state.Pagination.Error = null;
+    }
+
+    private void SubmitPageInput()
+    {
+        var pagination = state.Pagination;
+        if (!InputValidators.TryPositiveInt(pagination.PageText, out var page, out var error))
+        {
+            pagination.Error = error;
+            pagination.PageText = pagination.CurrentPage.ToString();
+            return;
+        }
+
+        if (page > pagination.TotalPages)
+        {
+            pagination.Error = $"Enter a page from 1 to {pagination.TotalPages}.";
+            pagination.PageText = pagination.CurrentPage.ToString();
+            return;
+        }
+
+        GoToPage(page);
+    }
+
+    public void BeginEditing(HistoryRecord record)
+    {
+        state.Table.BeginEditing(record);
+    }
+
+    public void DeleteRecord(HistoryRecord record)
+    {
+        var comp = CompHistoryManager.GetComp(record.pawn);
+        if (comp == null || !comp.RemoveRecord(record))
+            return;
+
+        state.Table.ClearEditingSession();
+        RefreshCurrentPage();
+    }
+
+    public void SaveEditedDescription()
+    {
+        var trimmed = state.Table.EditingText.Trim();
+        if (trimmed.Length == 0)
+        {
+            Messages.Message("NH_PH_HistoryCard_EditRejectedEmpty".Translate(), MessageTypeDefOf.RejectInput, historical: false);
+            return;
+        }
+
+        state.Table.EditingRecord.description = trimmed;
+        state.Table.ClearEditingSession();
+    }
+
+    public void ClearEditingSession()
+    {
+        state.Table.ClearEditingSession();
+    }
+
+    public void UpdateEditingText(string text)
+    {
+        state.Table.EditingText = text;
+    }
+
+    public void CopyDescriptionToClipboard(HistoryRecord record)
+    {
+        GUIUtility.systemCopyBuffer = LangUtility.StripColorTags(record.description);
+        Messages.Message("NH_PH_HistoryCard_RecordCopied".Translate(), MessageTypeDefOf.NeutralEvent);
+    }
+
+    public void TogglePinned(HistoryRecord record)
+    {
+        record.pinned = !record.pinned;
+    }
+
+    public void JumpToRecord(HistoryRecord record)
+    {
+        CameraJumper.TryJumpAndSelect(record.GetThingToJumpTo());
+    }
+
+    public void OpenRecordMenu(HistoryRecord record)
+    {
+        Find.WindowStack.Add(new FloatMenu(GetActionMenuOptions(record)));
+    }
+
+    private List<FloatMenuOption> GetActionMenuOptions(HistoryRecord record)
+    {
+        return [
+            new FloatMenuOption((record.pinned ? "NH_PH_HistoryCard_MenuUnpin" : "NH_PH_HistoryCard_MenuPin").Translate(), () => TogglePinned(record)),
+            new FloatMenuOption("NH_PH_HistoryCard_MenuEdit".Translate(), () => BeginEditing(record)),
+            new FloatMenuOption("NH_PH_HistoryCard_MenuDelete".Translate(), () => DeleteRecord(record)),
+            new FloatMenuOption("NH_PH_HistoryCard_MenuCopyDescription".Translate(), () => CopyDescriptionToClipboard(record)),
+        ];
+    }
+
+    public void HighlightTargets(HistoryRecord record)
+    {
+        foreach (var target in record.GlobalTargets)
+            TargetHighlighter.Highlight(target);
+    }
+
+    public void OpenQuest(Quest quest)
+    {
+        if (quest == null)
+            return;
+
+        Find.MainTabsRoot.SetCurrentTab(MainButtonDefOf.Quests);
+        ((MainTabWindow_Quests)MainButtonDefOf.Quests.TabWindow).Select(quest);
+    }
+
+    private bool CanGoToPreviousPage => state.Pagination.TotalPages > 0 && state.Pagination.CurrentPage > 1;
+    private bool CanGoToNextPage => state.Pagination.TotalPages > 0 && state.Pagination.CurrentPage < state.Pagination.TotalPages;
+
 }

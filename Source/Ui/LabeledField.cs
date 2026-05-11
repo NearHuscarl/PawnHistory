@@ -13,7 +13,7 @@ public sealed class LabeledField(string label, Widget field, float labelWidth, f
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private float MinHeight(UiContext ctx) => minHeight ?? ctx.Theme.TextFieldHeight;
     
-    public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
+    protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)
     {
         var g = Gap(ctx);
         var fieldWidth = Mathf.Max(0f, constraints.MaxWidth - labelWidth - g);
@@ -21,7 +21,7 @@ public sealed class LabeledField(string label, Widget field, float labelWidth, f
         var width = constraints.HasBoundedWidth
             ? constraints.MaxWidth
             : labelWidth + g + fieldSize.x;
-        return constraints.Constrain(new Vector2(width, Mathf.Max(MinHeight(ctx), fieldSize.y)));
+        return constraints.Constrain(width, Mathf.Max(MinHeight(ctx), fieldSize.y));
     }
 
     public override void Draw(UiContext ctx, Rect rect)

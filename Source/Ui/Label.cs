@@ -3,10 +3,10 @@ using Verse;
 
 namespace PawnHistory.Source.Ui;
 
-public sealed class Label(string text, GameFont font = GameFont.Small, TextAnchor anchor = TextAnchor.MiddleLeft, float? width = null, float? height = null, string key = null)
+public sealed class Label(string text, GameFont font = GameFont.Small, TextAnchor anchor = TextAnchor.MiddleLeft, float? width = null, float? height = null, Color? color = null, string key = null)
     : Widget(WidgetIds.Label, key)
 {
-    public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
+    protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)
     {
         using (new TextStyleScope(font, anchor))
         {
@@ -15,7 +15,7 @@ public sealed class Label(string text, GameFont font = GameFont.Small, TextAncho
             var desiredHeight = height ?? Text.CalcHeight(text, Mathf.Max(1f, measuredWidth));
             var measuredHeight = constraints.ConstrainHeight(desiredHeight);
 
-            return constraints.Constrain(new Vector2(measuredWidth, measuredHeight));
+            return constraints.Constrain(measuredWidth, measuredHeight);
         }
     }
 
@@ -23,7 +23,11 @@ public sealed class Label(string text, GameFont font = GameFont.Small, TextAncho
     {
         using (new TextStyleScope(font, anchor))
         {
+            var oldColor = GUI.color;
+            if (color.HasValue)
+                GUI.color = color.Value;
             Widgets.Label(rect, text);
+            GUI.color = oldColor;
         }
     }
 }

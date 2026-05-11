@@ -1,6 +1,6 @@
 namespace PawnHistory.Source.PawnTracker.Ui;
 
-public sealed class PaginationState
+internal sealed class PaginationState
 {
     public string PageText = "1";
     public int CurrentPage = 1;

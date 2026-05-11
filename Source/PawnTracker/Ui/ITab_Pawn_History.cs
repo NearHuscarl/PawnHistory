@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using PawnHistory.Source.Helper;
-using RimWorld;
+using PawnHistory.Source.Ui;
 using UnityEngine;
 using Verse;
 
 #nullable disable
 namespace PawnHistory.Source.PawnTracker.Ui;
 
-public class ITab_Pawn_History : ITab
+public class ITab_Pawn_History : WidgetTab
 {
     public static readonly float DefaultWidth = 650f;
     public static readonly float DefaultHeight = 510f;
@@ -25,8 +25,7 @@ public class ITab_Pawn_History : ITab
         }
     }
 
-    public override bool IsVisible => RecorderManager.ShouldRecord(PawnToShowInfo) || PawnToShowInfo.HistoryRecords.Any();
-    private Rect ContentRect => new(0f, 0f, size.x, size.y);
+    public override bool IsVisible => RecorderManager.ShouldRecord(PawnToShowInfo) || PawnToShowInfo.VisibleHistoryRecords.Any();
 
     public ITab_Pawn_History()
     {
@@ -35,9 +34,8 @@ public class ITab_Pawn_History : ITab
         this.tutorTag = "History";
     }
 
-    protected override void FillTab()
+    protected override Widget Build(UiContext ctx)
     {
-        var pawn = PawnToShowInfo;
-        historyCardPage.Draw(ContentRect, pawn);
+        return historyCardPage.Build(ctx, PawnToShowInfo);
     }
 }

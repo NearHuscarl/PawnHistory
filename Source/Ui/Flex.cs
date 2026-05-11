@@ -33,7 +33,7 @@ public abstract class Flex(
 
     private float Gap(UiContext ctx) => gap ?? ctx.Theme.Gap;
 
-    public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
+    protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)
     {
         var sizes = MeasureChildren(ctx, constraints, out var main, out var cross);
         return constraints.Constrain(Size(main, cross));

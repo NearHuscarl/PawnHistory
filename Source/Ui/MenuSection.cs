@@ -7,7 +7,7 @@ public sealed class MenuSection(Widget child, float padding = 0f, string key = n
 {
     private readonly Widget paddedChild = new Padding(child, new EdgeInsets(padding));
 
-    public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
+    protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)
     {
         return paddedChild.Measure(ctx, constraints);
     }

@@ -51,10 +51,11 @@ public sealed class AddRecordDialog : WidgetWindow
 
                     LabeledField(
                         "NH_PH_AddRecord_FieldDescription".Translate(),
-                        TextArea(
+                        TextField(
                             value: state.Description,
                             onChange: text => state.Description = text,
-                            minHeight: DescriptionMinHeight),
+                            minHeight: DescriptionMinHeight,
+                            multiline: true),
                         LabelWidth),
 
                     LabeledField(
@@ -68,7 +69,7 @@ public sealed class AddRecordDialog : WidgetWindow
                             controller: concernAutocomplete,
                             findOptions: FindConcernSuggestions,
                             onSelected: AddConcern,
-                            drawOption: (r, c) => DrawConcernSuggestion(r, c, ctx)),
+                            drawOption: (r, c) => ThingTile(c).Draw(ctx, r)),
                         LabelWidth),
                     Padding.Left(BuildConcernChipStrip(ctx), LabelWidth + theme.Gap),
 
@@ -78,7 +79,7 @@ public sealed class AddRecordDialog : WidgetWindow
                         LabelWidth),
                 ]))),
 
-            SizedBox(height: FooterHeight, child: Row(
+            SizedBox(width: float.PositiveInfinity, height: FooterHeight, child: Row(
                 [
                     Button("NH_PH_AddRecord_Cancel".Translate(), () => Close()),
                     Button("NH_PH_AddRecord_Create".Translate(), CreateRecord)
@@ -90,27 +91,6 @@ public sealed class AddRecordDialog : WidgetWindow
     private IEnumerable<Thing> FindConcernSuggestions(string query)
     {
         return AddRecordDialogConcernSearchUtility.FindMatches(Find.CurrentMap, query, state.SelectedConcerns);
-    }
-    
-    private void DrawConcernSuggestion(Rect rowRect, Thing concern, UiContext ctx)
-    {
-        const float padding = 4f;
-        var iconSize = rowRect.height - padding * 2f;
-        
-        var iconRect = new Rect(
-            rowRect.x + padding,
-            rowRect.y + padding,
-            iconSize,
-            iconSize);
-
-        var labelRect = new Rect(
-            iconRect.xMax + ctx.Theme.GapXs,
-            rowRect.y,
-            rowRect.width - iconRect.width - padding,
-            rowRect.height);
-
-        Widgets.ThingIcon(iconRect, concern);
-        Widgets.Label(labelRect, concern.LabelCap);
     }
     
     private void AddConcern(Thing concern)

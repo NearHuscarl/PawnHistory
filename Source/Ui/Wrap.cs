@@ -17,7 +17,7 @@ public sealed class Wrap(IEnumerable<Widget> children, float? gap = null, float?
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private float LineGap(UiContext ctx) => lineGap ?? ctx.Theme.GapXs;
 
-    public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
+    protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)
     {
         return MeasureLayout(ctx, constraints.MaxWidth, constraints).Size;
     }
@@ -68,7 +68,7 @@ public sealed class Wrap(IEnumerable<Widget> children, float? gap = null, float?
         
         var width = canWrap ? availableWidth : maxWidth;
         var height = placed.Count == 0 ? 0f : y + lineHeight;
-        var size = constraints.Constrain(new Vector2(width, height));
+        var size = constraints.Constrain(width, height);
 
         return new WrapLayout(size, placed);
     }

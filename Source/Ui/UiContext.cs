@@ -34,6 +34,11 @@ public sealed class UiContext(Theme theme = null)
         pendingFocusKeys.Add(key);
     }
 
+    public void RequestFocus(string key)
+    {
+        RequestFocus(WidgetKey.Named(key).Value);
+    }
+
     public bool ConsumeFocus(int key)
     {
         return pendingFocusKeys.Remove(key);

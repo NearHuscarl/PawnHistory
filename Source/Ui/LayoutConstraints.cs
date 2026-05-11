@@ -1,3 +1,5 @@
+using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace PawnHistory.Source.Ui;
@@ -6,6 +8,8 @@ public readonly record struct LayoutConstraints(float MinWidth, float MaxWidth, 
 {
     public bool HasBoundedWidth => !float.IsPositiveInfinity(MaxWidth);
     public bool HasBoundedHeight => !float.IsPositiveInfinity(MaxHeight);
+    public bool HasInfiniteWidth => float.IsPositiveInfinity(MaxWidth);
+    public bool HasInfiniteHeight => float.IsPositiveInfinity(MaxHeight);
     
     public static LayoutConstraints Tight(Vector2 size) => new(size.x, size.x, size.y, size.y);
 
@@ -21,14 +25,12 @@ public readonly record struct LayoutConstraints(float MinWidth, float MaxWidth, 
         );
     }
 
-    public Vector2 Constrain(Vector2 size)
-    {
-        var width = Mathf.Clamp(size.x, MinWidth, MaxWidth);
-        var height = Mathf.Clamp(size.y, MinHeight, MaxHeight);
-        return new Vector2(width, height);
-    }
-    
+    public Vector2 Constrain(Vector2 size) => new(ConstrainWidth(size.x), ConstrainHeight(size.y));
+    public Vector2 Constrain(float width, float height) => new(ConstrainWidth(width), ConstrainHeight(height));
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public float ConstrainWidth(float width) => Mathf.Clamp(width, MinWidth, MaxWidth);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public float ConstrainHeight(float height) => Mathf.Clamp(height, MinHeight, MaxHeight);
     
     public LayoutConstraints Deflate(float horizontal, float vertical)
@@ -39,5 +41,18 @@ public readonly record struct LayoutConstraints(float MinWidth, float MaxWidth, 
             Mathf.Max(0f, MinHeight - vertical),
             Mathf.Max(0f, MaxHeight - vertical)
         );
+    }
+
+    public bool Equals(LayoutConstraints other)
+    {
+        return Mathf.Approximately(MinWidth, other.MinWidth)
+               && Mathf.Approximately(MaxWidth, other.MaxWidth)
+               && Mathf.Approximately(MinHeight, other.MinHeight)
+               && Mathf.Approximately(MaxHeight, other.MaxHeight);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(MinWidth, MaxWidth, MinHeight, MaxHeight);
     }
 }

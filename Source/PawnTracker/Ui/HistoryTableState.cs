@@ -1,21 +1,18 @@
-using System.Collections.Generic;
 using PawnHistory.Source.DebugTools;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Ui;
 
-public sealed class HistoryTableState
+internal sealed class HistoryTableState
 {
     public Pawn LastPawnShown;
-    
-    [DebugIgnore]
-    public bool PendingScrollToBottom;
-    
-    [DebugIgnore]
-    public readonly Dictionary<HistoryRecord, float> CachedHeights = [];
+    public int KnownRecordCount;
     public HistoryRecord EditingRecord;
     public string EditingText = string.Empty;
-    
+
+    [DebugIgnore]
+    public bool PendingEditFocus;
+
     public bool HasActiveEditSession => EditingRecord != null;
 
     public bool IsEditing(HistoryRecord record) => EditingRecord == record;
@@ -24,11 +21,13 @@ public sealed class HistoryTableState
     {
         EditingRecord = record;
         EditingText = record.description;
+        PendingEditFocus = true;
     }
 
     public void ClearEditingSession()
     {
         EditingRecord = null;
         EditingText = string.Empty;
+        PendingEditFocus = false;
     }
 }

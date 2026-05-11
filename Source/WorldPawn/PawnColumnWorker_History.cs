@@ -1,4 +1,5 @@
 ﻿using PawnHistory.Source.Helper;
+using PawnHistory.Source.PawnTracker;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -11,7 +12,7 @@ namespace PawnHistory.Source.WorldPawn
         private static readonly Texture2D LogIcon = ContentFinder<Texture2D>.Get("ButtonIcons/History");
         private static readonly Texture2D EmptyLogIcon = ContentFinder<Texture2D>.Get("ButtonIcons/HistoryEmpty");
 
-        protected override Texture2D GetIconFor(Pawn pawn) => pawn.HistoryRecords.Any() ? LogIcon : EmptyLogIcon;
+        protected override Texture2D GetIconFor(Pawn pawn) => RecorderManager.ShouldRecord(pawn) || pawn.VisibleHistoryRecords.Any() ? LogIcon : EmptyLogIcon;
 
         protected override void ClickedIcon(Pawn pawn)
         {

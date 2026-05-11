@@ -23,7 +23,7 @@ public class PaginationRecorder : RecorderBase<ScenarioStartEvent>
         var pawn = scenario.Pawn()
             .Colonist()
             .ThatMatches(ShouldRecord)
-            .CreateSingle();
+            .CreateSingle(reusePawns: false);
         var quest = scenario.Quest(QuestScriptDefOf.OpportunitySite_ItemStash).Execute();
 
         CompHistoryManager.GetComp(pawn).ClearAll();
@@ -59,7 +59,7 @@ public class PaginationRecorder : RecorderBase<ScenarioStartEvent>
         var pawn = scenario.Pawn()
             .Colonist()
             .ThatMatches(ShouldRecord)
-            .CreateSingle();
+            .CreateSingle(reusePawns: false);
         var quest = scenario.Quest(QuestScriptDefOf.OpportunitySite_ItemStash).Execute();
 
         CompHistoryManager.GetComp(pawn).ClearAll();

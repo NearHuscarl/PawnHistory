@@ -4,14 +4,18 @@ using Verse;
 
 namespace PawnHistory.Source.Ui;
 
-public sealed class ScrollView(Widget child, bool vertical = true, string key = null) : Widget(WidgetIds.ScrollView, key)
+public sealed class ScrollView(Widget child, bool vertical = true, string key = null, ScrollController controller = null) : Widget(WidgetIds.ScrollView, key)
 {
-    public override Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
+    protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)
     {
+        if (constraints is { HasBoundedWidth: true, HasBoundedHeight: true })
+            return constraints.Constrain(constraints.MaxWidth, constraints.MaxHeight);
+
         var childSize = child?.Measure(ctx, constraints) ?? Vector2.zero;
         var width = constraints.HasBoundedWidth ? constraints.MaxWidth : childSize.x;
         var height = constraints.HasBoundedHeight ? constraints.MaxHeight : childSize.y;
-        return constraints.Constrain(new Vector2(width, height));
+
+        return constraints.Constrain(width, height);
     }
 
     public override void Draw(UiContext ctx, Rect rect)
@@ -27,6 +31,7 @@ public sealed class ScrollView(Widget child, bool vertical = true, string key = 
             ? Rect.OfSize(Mathf.Max(rect.width - ctx.Theme.ScrollbarSize, childSize.x), childSize.y)
             : Rect.OfSize(childSize.x, Mathf.Max(rect.height, childSize.y));
 
+        scrollPosition = controller?.Apply(scrollPosition, rect.size, viewRect.size, vertical) ?? scrollPosition;
         Widgets.BeginScrollView(rect, ref scrollPosition, viewRect);
 
         ctx.PushOffset(rect.position - scrollPosition);
