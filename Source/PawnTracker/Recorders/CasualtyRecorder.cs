@@ -153,7 +153,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         }
     }
 
-    protected override void AddRecord(
+    protected override HistoryRecord AddRecord(
         HistoryRecordDef def,
         Pawn pawn,
         TaggedString resolvedDesc,
@@ -166,7 +166,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         {
             var lastRecord = pawn.HistoryRecords.LastOrDefault();
             if (lastRecord == null)
-                return;
+                return null;
             if (lastRecord.def == HistoryRecordDefOf.Crushed || lastRecord.def == HistoryRecordDefOf.FriendlyTrapHit)
                 location = lastRecord.location;
         }
@@ -180,7 +180,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
                 location = lastRecord?.location;
         }
 
-        base.AddRecord(def, pawn, resolvedDesc, concerns, location, tileId, quest);
+        return base.AddRecord(def, pawn, resolvedDesc, concerns, location, tileId, quest);
     }
 
     [TestTag("Flaky")]

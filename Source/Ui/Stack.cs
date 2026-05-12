@@ -10,9 +10,6 @@ public sealed class Stack(IEnumerable<Widget> children, string key = null) : Wid
 
     protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)
     {
-        if (constraints is { HasBoundedWidth: true, HasBoundedHeight: true })
-            return constraints.Constrain(constraints.MaxWidth, constraints.MaxHeight);
-
         var width = 0f;
         var height = 0f;
         foreach (var child in children)

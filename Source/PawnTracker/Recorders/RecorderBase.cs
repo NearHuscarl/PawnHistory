@@ -60,7 +60,7 @@ public abstract class RecorderBase
         return GenTicks.TicksAbs - lastRecord.date < GenDate.DaysToTicks(daysToRecordAgainOverride ?? DaysToRecordAgain);
     }
 
-    protected virtual void AddRecord(
+    protected virtual HistoryRecord AddRecord(
         HistoryRecordDef def,
         Pawn pawn,
         TaggedString resolvedDesc,
@@ -69,11 +69,7 @@ public abstract class RecorderBase
         int? tileId = null,
         Quest quest = null)
     {
-        var record = new HistoryRecord(def, pawn, resolvedDesc, concerns, location, tileId, quest);
-        pawn.HistoryRecords.Add(record);
-        
-        if (record.def == HistoryRecordDefOf.PawnGenerated)
-            HistoryTimelineSimulator.ProcessPawnGenerated(pawn, record);
+        return CompHistoryManager.WriteRecord(new HistoryRecordWriteRequest(def, pawn, resolvedDesc, concerns, location, tileId, quest));
     }
 }
 

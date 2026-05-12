@@ -19,7 +19,9 @@ public class PawnGeneratedRecorder : RecorderBase<PawnGeneratedEvent>
         if (!ShouldRecord(e.Pawn))
             return;
 
-        AddRecord(HistoryRecordDefOf.PawnGenerated, e.Pawn, $"{e.Pawn.NameFullColored} was generated.");
+        var record = AddRecord(HistoryRecordDefOf.PawnGenerated, e.Pawn, $"{e.Pawn.NameFullColored} was generated.");
+        if (record != null)
+            HistoryTimelineSimulator.ProcessPawnGenerated(e.Pawn, record);
     }
 
     // Basic test: Arrival stays at anchor and managed records move earlier
@@ -98,6 +100,25 @@ public class PawnGeneratedRecorder : RecorderBase<PawnGeneratedEvent>
 
         Expect.That(bonded.date).LessThan(generated.date);
     }
+
+    public void TestCreateRecordTriggersBackfill(TestScenario scenario)
+    {
+        var pawn = scenario.Pawn().Colonist().CreateSingle();
+        var anchor = GenTicks.TicksAbs;
+        ResetHistory(pawn);
+
+        var scar = MakeRecord(HistoryRecordDefOf.BodyPartScarred, pawn);
+        pawn.HistoryRecords.Add(scar);
+
+        RunWithSeed(12345, () => CreateRecord(new PawnGeneratedEvent(pawn)));
+
+        var generated = CompHistoryManager.GetComp(pawn).PawnGeneratedRecord;
+        Expect.That(generated).NotNull();
+        Expect.That(generated.pinned).True();
+        Expect.That(generated.date).Equal(anchor);
+        Expect.That(scar.date).LessThan(generated.date);
+    }
+
     private static void ResetHistory(Pawn pawn) => CompHistoryManager.GetComp(pawn).ClearAll();
 
     private static void RunWithSeed(int seed, Action action)

@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
 using PawnHistory.Source.PawnTracker.Ui;
+using RimWorld;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker;
@@ -28,6 +29,22 @@ internal static class CompHistoryManager
         if (comp != null)
             CompCache.Add(pawn.thingIDNumber, comp);
         return comp;
+    }
+    
+    public static HistoryRecord WriteRecord(HistoryRecordWriteRequest request)
+    {
+        var comp = GetComp(request.Pawn);
+        var record = new HistoryRecord(
+            request.Def,
+            request.Pawn,
+            request.ResolvedDesc,
+            request.Concerns,
+            request.Location,
+            request.TileId,
+            request.Quest);
+
+        comp.records.Add(record);
+        return record;
     }
 
     public static void ClearAll() => CompCache.Clear();
@@ -59,3 +76,12 @@ internal static class CompHistoryManager
         }
     }
 }
+
+internal readonly record struct HistoryRecordWriteRequest(
+    HistoryRecordDef Def,
+    Pawn Pawn,
+    TaggedString ResolvedDesc,
+    IEnumerable<Thing> Concerns = null,
+    RecordLocation Location = null,
+    int? TileId = null,
+    Quest Quest = null);

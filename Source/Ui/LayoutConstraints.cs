@@ -10,7 +10,7 @@ public readonly record struct LayoutConstraints(float MinWidth, float MaxWidth, 
     public bool HasBoundedHeight => !float.IsPositiveInfinity(MaxHeight);
     public bool HasInfiniteWidth => float.IsPositiveInfinity(MaxWidth);
     public bool HasInfiniteHeight => float.IsPositiveInfinity(MaxHeight);
-    
+
     public static LayoutConstraints Tight(Vector2 size) => new(size.x, size.x, size.y, size.y);
 
     public static LayoutConstraints Loose(float maxWidth, float maxHeight) => new(0f, maxWidth, 0f, maxHeight);
