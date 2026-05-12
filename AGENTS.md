@@ -8,6 +8,7 @@ Read in this order before changing code:
 5. [docs/PRODUCT_SENSE.md](docs/PRODUCT_SENSE.md)
 6. [docs/QUALITY_SCORE.md](docs/QUALITY_SCORE.md)
 7. [docs/exec-plans/active/README.md](docs/exec-plans/active/README.md) and [docs/exec-plans/tech-debt-tracker.md](docs/exec-plans/tech-debt-tracker.md)
+8. Only for widget UI work, start at [docs/widgets/Widgets.md](docs/widgets/Widgets.md).
 
 ## What Lives Where
 

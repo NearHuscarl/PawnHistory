@@ -2,7 +2,7 @@
 
 This folder is the first-read reference for recorder authors using the in-game test API.
 
-If you are writing or updating recorder tests, read the referenced API notes before opening `Source/PawnTracker/Test/*.cs`. Only read the code when the docs do not answer the question.
+If you are writing or updating recorder tests, read the API references below before opening `Source/PawnTracker/Test/*.cs`. Only read the code when the docs do not answer the question.
 
 Read in this order:
 1. [test-scenario.md](test-scenario.md)
