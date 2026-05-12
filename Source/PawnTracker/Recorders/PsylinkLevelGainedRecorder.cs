@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.HistoryBackfill;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using Verse;
@@ -10,6 +12,26 @@ public class PsylinkLevelGainedRecorder : RecorderBase<PsylinkLevelGainedEvent>
     public override void Register()
     {
         GameEventBus.Subscribe<PsylinkLevelGainedEvent>(CreateRecord);
+    }
+
+    internal override IEnumerable<HistoryBackfillDefinition> GetBackfillDefinitions()
+    {
+        if (!ModsConfig.RoyaltyActive)
+            yield break;
+
+        yield return new HistoryBackfillDefinition(HistoryRecordDefOf.PsylinkLevelGained)
+            .AddHard(
+                new MinimumAgeRule(13f),
+                new MaximumCountRule(1),
+                new LogicalGateRule((_, _) => ModsConfig.RoyaltyActive))
+            .AddSoft(new ShiftedAgeCurveSoftRule([
+                new CurvePoint(13f, 0.02f),
+                new CurvePoint(18f, 0.1f),
+                new CurvePoint(25f, 0.4f),
+                new CurvePoint(35f, 1f),
+                new CurvePoint(50f, 1.1f),
+                new CurvePoint(80f, 0.5f)
+            ], 6f));
     }
 
     public override void CreateRecord(PsylinkLevelGainedEvent e)

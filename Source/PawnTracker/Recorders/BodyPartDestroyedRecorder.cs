@@ -1,5 +1,6 @@
 using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.HistoryBackfill;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
@@ -34,6 +35,25 @@ public class BodyPartDestroyedRecorder : RecorderBase<HediffAddedEvent>
                 CreateRecord(e);
             }
         });
+    }
+
+    internal override IEnumerable<HistoryBackfillDefinition> GetBackfillDefinitions()
+    {
+        const string densityGroup = "HealthPrehistory";
+
+        yield return new HistoryBackfillDefinition(HistoryRecordDefOf.BodyPartDestroyed, densityGroup)
+            .AddHard(
+                new MinimumAgeRule(7f),
+                new SiblingSequenceRule(GenDate.DaysToTicks(90f)))
+            .AddSoft(new AgeCurveSoftRule([
+                new CurvePoint(7f, 0.01f),
+                new CurvePoint(16f, 0.08f),
+                new CurvePoint(22f, 0.25f),
+                new CurvePoint(35f, 0.9f),
+                new CurvePoint(55f, 1.2f),
+                new CurvePoint(90f, 0.65f)
+            ]))
+            .AddGlobal(new DensityGlobalRule(densityGroup));
     }
 
     // Must be called in postfix because hediff.label does not exist in prefix.

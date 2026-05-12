@@ -1,6 +1,8 @@
 ﻿using System;
 using PawnHistory.Source.Helper;
+using System.Collections.Generic;
 using PawnHistory.Source.PawnTracker.Events;
+using PawnHistory.Source.PawnTracker.HistoryBackfill;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Linq;
@@ -13,6 +15,25 @@ public class BodyPartScarredRecorder : RecorderBase<BodyPartScarredEvent>
     public override void Register()
     {
         GameEventBus.Subscribe<BodyPartScarredEvent>(CreateRecord);
+    }
+
+    internal override IEnumerable<HistoryBackfillDefinition> GetBackfillDefinitions()
+    {
+        const string densityGroup = "HealthPrehistory";
+
+        yield return new HistoryBackfillDefinition(HistoryRecordDefOf.BodyPartScarred, densityGroup)
+            .AddHard(
+                new MinimumAgeRule(7f),
+                new SiblingSequenceRule(GenDate.DaysToTicks(45f)))
+            .AddSoft(new AgeCurveSoftRule([
+                new CurvePoint(7f, 0.02f),
+                new CurvePoint(13f, 0.12f),
+                new CurvePoint(18f, 0.4f),
+                new CurvePoint(30f, 1f),
+                new CurvePoint(55f, 1.15f),
+                new CurvePoint(90f, 0.6f)
+            ]))
+            .AddGlobal(new DensityGlobalRule(densityGroup));
     }
 
     public override void CreateRecord(BodyPartScarredEvent e)

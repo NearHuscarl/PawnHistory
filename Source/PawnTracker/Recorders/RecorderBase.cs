@@ -2,6 +2,7 @@
 using PawnHistory.Source.Helper;
 using System.Collections.Generic;
 using System.Linq;
+using PawnHistory.Source.PawnTracker.HistoryBackfill;
 using RimWorld;
 using Verse;
 
@@ -28,6 +29,7 @@ public abstract class RecorderBase
 
     protected bool ShouldRecord(Pawn pawn) => RecorderManager.ShouldRecord(pawn);
     public abstract void Register();
+    internal virtual IEnumerable<HistoryBackfillDefinition> GetBackfillDefinitions() => [];
 
     protected IEnumerable<HistoryRecord> GeRecordsOfType(Pawn pawn, HistoryRecordDef def, int limit = 100)
     {

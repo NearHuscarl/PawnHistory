@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using PawnHistory.Source.PawnTracker.HistoryBackfill;
 using PawnHistory.Source.PawnTracker.Recorders;
 using RimWorld;
 using Verse;
@@ -25,6 +26,7 @@ public static class RecorderManager
     public static void Initialize()
     {
         ActiveRecorders.Clear();
+        HistoryBackfillRegistry.Clear();
         
         var compTypes = GenTypes.AllTypes
             .Where(t => !t.IsAbstract && !t.IsInterface && typeof(IRecordComp).IsAssignableFrom(t))
@@ -41,6 +43,7 @@ public static class RecorderManager
                     recorder.AddComp(comp);
             }
             
+            HistoryBackfillRegistry.Register(recorder.GetBackfillDefinitions());
             recorder.Register();
             ActiveRecorders.Add(recorder);
         }
