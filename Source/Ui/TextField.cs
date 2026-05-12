@@ -54,6 +54,7 @@ public sealed class TextField(
                 ? Widgets.TextArea(rect, value)
                 : Widgets.TextField(rect, value);
         }
+        GUI.enabled = wasEnabled;
 
         if (!string.Equals(edited, value, StringComparison.Ordinal))
             onChange?.Invoke(edited);
@@ -64,8 +65,6 @@ public sealed class TextField(
             if (focusCursorToEnd)
                 MoveTextEnd();
         }
-
-        GUI.enabled = wasEnabled;
     }
 
     private float ResolveHeight(UiContext ctx, float desiredWidth)

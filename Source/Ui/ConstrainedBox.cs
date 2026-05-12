@@ -1,3 +1,4 @@
+using PawnHistory.Source.Helper;
 using UnityEngine;
 
 namespace PawnHistory.Source.Ui;
@@ -20,18 +21,20 @@ public sealed class ConstrainedBox(
 
     public override void Draw(UiContext ctx, Rect rect)
     {
-        WidgetTree.DrawChild(ctx, child, 0, rect);
+        var childConstraints = Enforce(LayoutConstraints.Loose(rect.size));
+        var childSize = childConstraints.Constrain(child?.Measure(ctx, childConstraints) ?? Vector2.zero);
+        var childRect = Rect.OfSize(childSize).OffsetBy(rect.position);
+
+        WidgetTree.DrawChild(ctx, child, 0, childRect);
     }
 
     private LayoutConstraints Enforce(LayoutConstraints parent)
     {
-        var enforcedMaxWidth = Mathf.Clamp(maxWidth ?? parent.MaxWidth, parent.MinWidth, parent.MaxWidth);
-        var enforcedMaxHeight = Mathf.Clamp(maxHeight ?? parent.MaxHeight, parent.MinHeight, parent.MaxHeight);
+        var enforcedMaxWidth = parent.ConstrainWidth(maxWidth ?? parent.MaxWidth);
+        var enforcedMaxHeight = parent.ConstrainHeight(maxHeight ?? parent.MaxHeight);
+        var enforcedMinWidth = Mathf.Clamp(minWidth ?? parent.MinWidth, parent.MinWidth, enforcedMaxWidth);
+        var enforcedMinHeight = Mathf.Clamp(minHeight ?? parent.MinHeight, parent.MinHeight, enforcedMaxHeight);
 
-        return new LayoutConstraints(
-            Mathf.Clamp(minWidth ?? parent.MinWidth, parent.MinWidth, enforcedMaxWidth),
-            enforcedMaxWidth,
-            Mathf.Clamp(minHeight ?? parent.MinHeight, parent.MinHeight, enforcedMaxHeight),
-            enforcedMaxHeight);
+        return new LayoutConstraints(enforcedMinWidth, enforcedMaxWidth, enforcedMinHeight, enforcedMaxHeight);
     }
 }

@@ -404,7 +404,7 @@ internal static class HistoryBackfillEngine
         for (var i = 0; i < interiorProbeCount; i++)
         {
             var sliceStart = window.EarliestTick + HistoryBackfillContext.ClampToInt(i * (span + 1L) / Math.Max(1, interiorProbeCount));
-            var sliceExclusiveEnd = window.EarliestTick + HistoryBackfillContext.ClampToInt(((i + 1L) * (span + 1L)) / Math.Max(1, interiorProbeCount));
+            var sliceExclusiveEnd = window.EarliestTick + HistoryBackfillContext.ClampToInt((i + 1L) * (span + 1L) / Math.Max(1, interiorProbeCount));
             var sliceEnd = Math.Min(window.LatestTick, Math.Max(sliceStart, sliceExclusiveEnd - 1));
             var probeTick = randomize && sliceStart < sliceEnd
                 ? Rand.RangeInclusive(sliceStart, sliceEnd)

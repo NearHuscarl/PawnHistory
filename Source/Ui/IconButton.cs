@@ -21,8 +21,10 @@ public sealed class IconButton(Texture2D texture, Action onClick, string tooltip
 
         var wasEnabled = GUI.enabled;
         GUI.enabled = wasEnabled && enabled;
-        if (Widgets.ButtonImage(rect, texture))
-            onClick?.Invoke();
+        var clicked = Widgets.ButtonImage(rect, texture);
         GUI.enabled = wasEnabled;
+
+        if (clicked)
+            onClick?.Invoke();
     }
 }

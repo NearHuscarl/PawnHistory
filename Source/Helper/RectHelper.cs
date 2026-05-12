@@ -17,5 +17,8 @@ public static class RectExtensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Rect OfSize(float width, float height) => new(0, 0, width, height);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Rect OfSize(Vector2 size) => new(0, 0, size.x, size.y);
     }
 }

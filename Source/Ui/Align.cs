@@ -15,7 +15,7 @@ public class Align(Widget child, Alignment alignment = default, string key = nul
         if (child == null)
             return;
 
-        var childSize = child.Measure(ctx, LayoutConstraints.Loose(rect.width, rect.height));
+        var childSize = child.Measure(ctx, LayoutConstraints.Loose(rect.size));
         var childRect = new Rect(
             rect.x + alignment.AlongX(rect.width, childSize.x),
             rect.y + alignment.AlongY(rect.height, childSize.y),

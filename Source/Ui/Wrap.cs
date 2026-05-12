@@ -24,7 +24,7 @@ public sealed class Wrap(IEnumerable<Widget> children, float? gap = null, float?
 
     public override void Draw(UiContext ctx, Rect rect)
     {
-        var layout = MeasureLayout(ctx, rect.width, LayoutConstraints.Loose(rect.width, rect.height));
+        var layout = MeasureLayout(ctx, rect.width, LayoutConstraints.Loose(rect.size));
 
         foreach (var (index, child, childRect) in layout.Children)
         {

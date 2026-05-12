@@ -14,6 +14,7 @@ public readonly record struct LayoutConstraints(float MinWidth, float MaxWidth, 
     public static LayoutConstraints Tight(Vector2 size) => new(size.x, size.x, size.y, size.y);
 
     public static LayoutConstraints Loose(float maxWidth, float maxHeight) => new(0f, maxWidth, 0f, maxHeight);
+    public static LayoutConstraints Loose(Vector2 size) => new(0f, size.x, 0f, size.y);
 
     public LayoutConstraints CopyWith(float? minWidth = null, float? maxWidth = null, float? minHeight = null, float? maxHeight = null)
     {

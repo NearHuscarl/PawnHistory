@@ -18,8 +18,10 @@ public sealed class Button(string label, Action onClick, float? width = null, fl
     {
         var wasEnabled = GUI.enabled;
         GUI.enabled = wasEnabled && enabled;
-        if (Widgets.ButtonText(rect, label))
-            onClick?.Invoke();
+        var clicked = Widgets.ButtonText(rect, label);
         GUI.enabled = wasEnabled;
+
+        if (clicked)
+            onClick?.Invoke();
     }
 }

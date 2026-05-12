@@ -35,7 +35,7 @@ public sealed class WidgetHost(Theme theme = null)
         try
         {
             if (sizing == RootSizing.HugContent)
-                rect.size = root.Measure(Context, LayoutConstraints.Loose(rect.width, rect.height));
+                rect.size = root.Measure(Context, LayoutConstraints.Loose(rect.size));
 
             Context.ResetKeyPath();
             WidgetTree.DrawChild(Context, root, 0, rect);

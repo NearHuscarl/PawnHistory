@@ -10,7 +10,7 @@ internal static class W
     public static Column Column(
         IEnumerable<Widget> children,
         StackMainAxis mainAxis = StackMainAxis.Start,
-        StackCrossAxis crossAxis = StackCrossAxis.Start,
+        StackCrossAxis crossAxis = StackCrossAxis.Center,
         float? gap = null,
         string key = null)
         => new(children, mainAxis, crossAxis, gap, key);
@@ -18,13 +18,14 @@ internal static class W
     public static Row Row(
         IEnumerable<Widget> children,
         StackMainAxis mainAxis = StackMainAxis.Start,
-        StackCrossAxis crossAxis = StackCrossAxis.Start,
+        StackCrossAxis crossAxis = StackCrossAxis.Center,
         float? gap = null,
         string key = null)
         => new(children, mainAxis, crossAxis, gap, key);
 
     public static Wrap Wrap(IEnumerable<Widget> children, float? gap = null, float? lineGap = null, string key = null) => new(children, gap, lineGap, key);
     public static Expanded Expanded(Widget child, int flex = 1, string key = null) => new(child, flex, key);
+    public static Flexible Flexible(Widget child, int flex = 1, FlexFit fit = FlexFit.Loose, string key = null) => new(child, flex, fit, key);
     public static ScrollView ScrollView(Widget child, bool vertical = true, string key = null, ScrollController controller = null) => new(child, vertical, key, controller);
     public static SizedBox SizedBox(float? width = null, float? height = null, Widget child = null, string key = null) => new(width, height, child, key);
     public static Button Button(string label, Action onClick, float? width = null, float? height = null, bool enabled = true, string key = null) => new(label, onClick, width, height, enabled, key);

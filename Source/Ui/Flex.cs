@@ -74,14 +74,14 @@ public abstract class Flex(
 
         for (var i = 0; i < children.Length; i++)
         {
-            if (children[i] is Expanded expanded && bounded)
+            if (children[i] is Flexible flexible && bounded)
             {
-                totalFlex += expanded.Flex;
+                totalFlex += flexible.Flex;
                 continue;
             }
 
-            var child = children[i] is Expanded e ? e.Child : children[i];
-            var maxMain = axis == StackAxis.Horizontal && bounded
+            var child = children[i] is Flexible e ? e.Child : children[i];
+            var maxMain = bounded
                 ? Mathf.Max(0f, MaxMain(constraints) - fixedMain - Gap(ctx) * i)
                 : float.PositiveInfinity;
 
@@ -96,11 +96,13 @@ public abstract class Flex(
 
             for (var i = 0; i < children.Length; i++)
             {
-                if (children[i] is not Expanded expanded)
+                if (children[i] is not Flexible flexible)
                     continue;
 
-                var childMain = remaining * expanded.Flex / totalFlex;
-                sizes[i] = WithMain(expanded.Child.Measure(ctx, TightMain(constraints, childMain)), childMain);
+                var childMain = remaining * flexible.Flex / totalFlex;
+                sizes[i] = flexible.Fit == FlexFit.Tight
+                    ? WithMain(flexible.Child.Measure(ctx, TightMain(constraints, childMain)), childMain)
+                    : flexible.Child.Measure(ctx, Loose(constraints, childMain));
                 cross = Mathf.Max(cross, Cross(sizes[i]));
             }
         }

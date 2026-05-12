@@ -9,8 +9,11 @@ public sealed class ActionChip(Thing thing, Action<Thing> onRemove, string key =
     protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)
     {
         var theme = ctx.Theme;
-        var width = theme.ChipHorizontalPadding * 4f + theme.ChipIconSize * 2 + Text.CalcSize(thing.LabelShortCap).x;
-        return constraints.Constrain(width, theme.ChipsHeight);
+        using (new TextStyleScope(GameFont.Tiny, TextAnchor.MiddleLeft))
+        {
+            var width = theme.ChipHorizontalPadding * 4f + theme.ChipIconSize * 2 + Text.CalcSize(thing.LabelShortCap).x;
+            return constraints.Constrain(width, theme.ChipsHeight);
+        }
     }
 
     public override void Draw(UiContext ctx, Rect rect)
