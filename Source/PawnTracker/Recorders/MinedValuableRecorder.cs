@@ -6,24 +6,16 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class MinedValuableRecorder : HistoryTaleRecorder<MinedValuableRecorder.Input>
+public class MinedValuableRecorder : HistoryTaleRecorder<MinedValuableEvent>
 {
-    public record Input(Pawn Pawn, ThingDef MineableThing);
-
     public override void Register()
     {
-        GameEventBus.Subscribe<TaleRecordedEvent>(e =>
-        {
-            if (e.Tale != TaleDefOf.MinedValuable)
-                return;
-
-            CreateRecord(new Input(e.Pawn, e.Params[0] as ThingDef));
-        });
+        GameEventBus.Subscribe<MinedValuableEvent>(CreateRecord);
     }
 
-    public override void CreateRecord(Input input)
+    public override void CreateRecord(MinedValuableEvent e)
     {
-        var (pawn, mineableThing) = input;
+        var (pawn, mineableThing) = e;
         var recordDef = HistoryRecordDefOf.MinedValuable;
         var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()

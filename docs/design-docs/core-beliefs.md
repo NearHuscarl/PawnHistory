@@ -6,6 +6,7 @@
 - Each recorder and event class must live in its own file.
 - Keep recorder logic small and event-focused.
 - `CreateRecord(...)` input should be domain-specific. Map generic upstream data in `Register()`.
+- For tale-based recorders, put `TaleDef` and `Params` parsing in a typed `TaleDispatcher`.
 - Call `ShouldRecord(...)` inside `CreateRecord(...)` before writing.
 - Prefer rulepacks through `descriptionMaker` and finish with `Resolve()`.
 - Use literal feature naming: `XyzEvent`, `XyzRecorder`, `HistoryRecordDefOf.Xyz`.
@@ -39,6 +40,10 @@ When adding an event or recorder:
 5. Implement `RecorderBase<TEvent>`.
 6. Add recorder-local tests when coverage is needed.
 7. override `RecorderBase.GetBackfillDefinitions()` if event emits during pawn generation.
+
+For tale-based recorders specifically:
+1. Add a typed `XyzEvent` and `XyzDispatcher` under `Source/PawnTracker/Events/`.
+2. Subscribe the recorder directly with `GameEventBus.Subscribe<XyzEvent>(CreateRecord)`.
 
 ## Safety
 

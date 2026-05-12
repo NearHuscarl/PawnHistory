@@ -6,28 +6,18 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class PlayedGameRecorder : HistoryTaleRecorder<PlayedGameRecorder.Input>
+public class PlayedGameRecorder : HistoryTaleRecorder<PlayedGameEvent>
 {
-    public record Input(Pawn Pawn, ThingDef ObjectDef);
-
     protected override float DaysToRecordAgain => 12f;
 
     public override void Register()
     {
-        GameEventBus.Subscribe<TaleRecordedEvent>(e =>
-        {
-            if (e.Tale != Extra.TaleDefOf.PlayedGame)
-                return;
-            if (e.Params[0] is not ThingDef objectDef)
-                return;
-
-            CreateRecord(new Input(e.Pawn, objectDef));
-        });
+        GameEventBus.Subscribe<PlayedGameEvent>(CreateRecord);
     }
 
-    public override void CreateRecord(Input input)
+    public override void CreateRecord(PlayedGameEvent e)
     {
-        var (pawn, objectDef) = input;
+        var (pawn, objectDef) = e;
         var recordDef = HistoryRecordDefOf.PlayedGame;
         var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()

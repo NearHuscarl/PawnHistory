@@ -5,7 +5,7 @@ namespace PawnHistory.Source.Ui;
 public sealed class Column(
     IEnumerable<Widget> children,
     StackMainAxis mainAxis = StackMainAxis.Start,
-    StackCrossAxis crossAxis = StackCrossAxis.Stretch,
+    StackCrossAxis crossAxis = StackCrossAxis.Center,
     float? gap = null,
     string key = null)
     : Flex(WidgetIds.Column, StackAxis.Vertical, children, mainAxis, crossAxis, gap, key);

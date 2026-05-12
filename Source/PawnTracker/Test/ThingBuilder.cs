@@ -10,7 +10,7 @@ namespace PawnHistory.Source.PawnTracker.Test;
 
 public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
 {
-    private readonly ThingDef def = def;
+    private ThingDef def = def;
     private Map map = Find.CurrentMap;
     private readonly List<Action<Thing>> processors = [];
 
@@ -23,6 +23,12 @@ public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
     public ThingBuilder At(IntVec3 pos)
     {
         position = pos;
+        return this;
+    }
+
+    public ThingBuilder Def(ThingDef def2)
+    {
+        this.def = def2;
         return this;
     }
 
@@ -135,6 +141,13 @@ public static class ThingBuilderExtensions
             thing.TryGetComp<CompFoodPoisonable>()?.SetPoisoned(FoodPoisonCause.IncompetentCook);
         });
 
+        return builder;
+    }
+
+    private static readonly List<ThingDef> BookDefs = DefDatabase<ThingDef>.AllDefsListForReading.Where(d => d.HasComp<CompBook>()).ToList();
+    public static ThingBuilder AnyBook(this ThingBuilder builder)
+    {
+        builder.Def(BookDefs.RandomElement());
         return builder;
     }
 }

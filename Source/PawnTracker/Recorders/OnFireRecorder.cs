@@ -5,26 +5,18 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class OnFireRecorder : HistoryTaleRecorder<OnFireRecorder.Input>
+public class OnFireRecorder : HistoryTaleRecorder<OnFireEvent>
 {
-    public record Input(Pawn Pawn);
-
     protected override float DaysToRecordAgain => 3f;
 
     public override void Register()
     {
-        GameEventBus.Subscribe<TaleRecordedEvent>(e =>
-        {
-            if (e.Tale != TaleDefOf.WasOnFire)
-                return;
-
-            CreateRecord(new Input(e.Pawn));
-        });
+        GameEventBus.Subscribe<OnFireEvent>(CreateRecord);
     }
 
-    public override void CreateRecord(Input input)
+    public override void CreateRecord(OnFireEvent e)
     {
-        var pawn = input.Pawn;
+        var pawn = e.Pawn;
         var recordDef = HistoryRecordDefOf.OnFire;
         var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()

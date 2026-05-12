@@ -1,30 +1,21 @@
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
-using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class StripRecorder : HistoryTaleRecorder<StripRecorder.Input>
+public class StripRecorder : HistoryTaleRecorder<StripEvent>
 {
-    public record Input(Pawn Pawn, Pawn StrippedPawn);
-
     protected override float DaysToRecordAgain => 5f;
 
     public override void Register()
     {
-        GameEventBus.Subscribe<TaleRecordedEvent>(e =>
-        {
-            if (e.Tale != Extra.TaleDefOf.Stripped)
-                return;
-
-            CreateRecord(new Input(e.Pawn, e.Params[0] as Pawn));
-        });
+        GameEventBus.Subscribe<StripEvent>(CreateRecord);
     }
 
-    public override void CreateRecord(Input input)
+    public override void CreateRecord(StripEvent e)
     {
-        var (pawn, strippedPawn) = input;
+        var (pawn, strippedPawn) = e;
         var recordDef = HistoryRecordDefOf.Stripped;
         var desc = recordDef.Description(pawn)
             .AddRule("STRIPPED", strippedPawn, addSubsymbols: true)

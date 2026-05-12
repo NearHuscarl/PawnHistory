@@ -1,28 +1,22 @@
-﻿using PawnHistory.Source.PawnTracker.Events;
+﻿using System.Linq;
+using PawnHistory.Source.Helper;
+using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class ReadBookRecorder : HistoryTaleRecorder<ReadBookRecorder.Input>
+public class ReadBookRecorder : HistoryTaleRecorder<ReadBookEvent>
 {
-    public record Input(Pawn pawn, Book book);
-
     public override void Register()
     {
-        GameEventBus.Subscribe<TaleRecordedEvent>(e =>
-        {
-            if (e.Tale != TaleDefOf.ReadBook)
-                return;
-
-            CreateRecord(new Input(e.Pawn, e.Params[0] as Book));
-        });
+        GameEventBus.Subscribe<ReadBookEvent>(CreateRecord);
     }
 
-    public override void CreateRecord(Input input)
+    public override void CreateRecord(ReadBookEvent e)
     {
-        var (pawn, book) = input;
+        var (pawn, book) = e;
         var recordDef = HistoryRecordDefOf.ReadBook;
         var bookTitle = book.Title.Colorize(ColoredText.SubtleGrayColor);
         var desc = recordDef.Description(pawn)
@@ -36,18 +30,23 @@ public class ReadBookRecorder : HistoryTaleRecorder<ReadBookRecorder.Input>
         AddRecord(recordDef, pawn, desc, [book]);
     }
 
-    [SkipTest]
     public void Test(TestScenario scenario)
     {
         var pawns = scenario.Pawn(15).Colonist().Execute();
+        var book = BookUtility.MakeBook(ArtGenerationContext.Colony);
 
         foreach (var pawn in pawns)
         {
-            var book = BookUtility.MakeBook(ArtGenerationContext.Colony);
-            GenPlace.TryPlaceThing(book, pawn.Position, pawn.Map, ThingPlaceMode.Near);
+            TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
+            TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
 
-            TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
-            TaleRecorder.RecordTale(TaleDefOf.ReadBook, pawn, book);
+            scenario.Thing(null).AnyBook().CreateSingle();
+            Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+            {
+                Def = HistoryRecordDefOf.ReadBook,
+                Concerns = [book],
+            });
+            Expect.That(pawn.HistoryRecords.Where(r => r.def == HistoryRecordDefOf.ReadBook).ToList().Count).Equal(1);
         }
     }
 
