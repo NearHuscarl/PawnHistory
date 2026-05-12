@@ -4,11 +4,11 @@ using UnityEngine;
 namespace PawnHistory.Source.Ui;
 
 public sealed class ConstrainedBox(
-    Widget child,
     float? minWidth = null,
     float? maxWidth = null,
     float? minHeight = null,
     float? maxHeight = null,
+    Widget child = null,
     string key = null)
     : Widget(WidgetIds.ConstrainedBox, key)
 {

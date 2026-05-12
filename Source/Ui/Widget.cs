@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PawnHistory.Source.Ui;
@@ -27,27 +28,39 @@ public abstract class Widget
     protected int StateKey(UiContext ctx)
         => key.IsEmpty ? ctx.CurrentKey : key.Value;
 
-    // TODO: Cache the whole layout tree to reuse in multiple frames
-    private LayoutConstraints cachedConstraints;
-    private Vector2? cachedMeasure;
+    
+    private readonly Dictionary<MeasureCacheKey, Vector2> measureCache = [];
     private static int cacheHit = 0;
     private static int cacheMiss = 0;
     public Vector2 Measure(UiContext ctx, LayoutConstraints constraints)
     {
-        if (cachedMeasure.HasValue && cachedConstraints.Equals(constraints))
+        var cacheKey = new MeasureCacheKey(ctx.Theme, constraints);
+
+        if (measureCache.TryGetValue(cacheKey, out var size))
         {
             cacheHit++;
-            return cachedMeasure.Value;
+            return size;
         }
-
-        if (!cachedConstraints.Equals(constraints))
-            cacheMiss++;
-        cachedConstraints = constraints;
-        cachedMeasure = DoMeasure(ctx, constraints);
-        return cachedMeasure.Value;
+        
+        size = DoMeasure(ctx, constraints);
+        measureCache[cacheKey] = size;
+        cacheMiss++;
+        return size;
     }
 
     protected abstract Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints);
 
     public abstract void Draw(UiContext ctx, Rect rect);
+}
+
+internal readonly record struct MeasureCacheKey(Theme Theme, float MinWidth, float MaxWidth, float MinHeight, float MaxHeight)
+{
+    public MeasureCacheKey(Theme theme, LayoutConstraints constraints) : this(
+        theme,
+        constraints.MinWidth,
+        constraints.MaxWidth,
+        constraints.MinHeight,
+        constraints.MaxHeight)
+    {
+    }
 }

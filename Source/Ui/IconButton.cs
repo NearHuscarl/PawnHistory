@@ -4,13 +4,13 @@ using Verse;
 
 namespace PawnHistory.Source.Ui;
 
-public sealed class IconButton(Texture2D texture, Action onClick, string tooltip = null, bool enabled = true, string key = null)
+public sealed class IconButton(Texture2D texture, Action onClick, float? iconSize, string tooltip = null, bool enabled = true, string key = null)
     : Widget(WidgetIds.IconButton, key)
 {
     protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)
     {
-        var width = texture == null ? ctx.Theme.ButtonHeight : texture.width;
-        var height = texture == null ? ctx.Theme.ButtonHeight : texture.height;
+        var width = iconSize ?? ctx.Theme.ButtonIconSize;
+        var height = iconSize ?? ctx.Theme.ButtonIconSize;
         return constraints.Constrain(width, height);
     }
 

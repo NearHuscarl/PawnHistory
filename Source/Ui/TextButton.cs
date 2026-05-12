@@ -4,7 +4,7 @@ using Verse;
 
 namespace PawnHistory.Source.Ui;
 
-public sealed class Button(string label, Action onClick, float? width = null, float? height = null, bool enabled = true, string key = null)
+public sealed class TextButton(string label, Action onClick, float? width = null, float? height = null, bool enabled = true, string key = null)
     : Widget(WidgetIds.Button, key)
 {
     protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)

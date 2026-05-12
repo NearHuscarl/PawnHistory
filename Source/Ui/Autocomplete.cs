@@ -164,7 +164,7 @@ public sealed class Autocomplete<T>(
     {
         return new Rect(
             fieldRect.x,
-            fieldRect.yMax + ctx.Theme.GapXs,
+            fieldRect.yMax + ctx.Theme.GapSm,
             fieldRect.width,
             rowCount * popupRowHeight);
     }

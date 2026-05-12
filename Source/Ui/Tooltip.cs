@@ -7,7 +7,6 @@ public sealed class Tooltip(Widget child, string tip, string key = null) : Widge
 {
     protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)
     {
-        // Layout-transparent: Tooltip contributes exactly the child size and no extra space.
         return child?.Measure(ctx, constraints) ?? Vector2.zero;
     }
 

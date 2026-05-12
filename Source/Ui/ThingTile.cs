@@ -11,11 +11,11 @@ public sealed class ThingTile(Thing thing, float? padding = null, string key = n
             return Vector2.zero;
 
         var labelSize = Text.CalcSize(thing.LabelCap);
-        var p = padding ?? ctx.Theme.PaddingXs;
+        var p = padding ?? ctx.Theme.PaddingSm;
 
         var width = constraints.HasBoundedWidth
             ? constraints.MaxWidth
-            : labelSize.x + ctx.Theme.GapXs + labelSize.y + p * 2f;
+            : labelSize.x + ctx.Theme.GapSm + labelSize.y + p * 2f;
 
         var height = constraints.HasBoundedHeight
             ? constraints.MaxHeight
@@ -30,7 +30,7 @@ public sealed class ThingTile(Thing thing, float? padding = null, string key = n
             return;
 
         var theme = ctx.Theme;
-        var p = padding ?? theme.PaddingXs;
+        var p = padding ?? theme.PaddingSm;
         var iconSize = rect.height - p * 2f;
 
         var iconRect = new Rect(
@@ -40,9 +40,9 @@ public sealed class ThingTile(Thing thing, float? padding = null, string key = n
             iconSize);
 
         var labelRect = new Rect(
-            iconRect.xMax + theme.GapXs,
+            iconRect.xMax + theme.GapSm,
             rect.y,
-            rect.xMax - iconRect.xMax - theme.GapXs - p,
+            rect.xMax - iconRect.xMax - theme.GapSm - p,
             rect.height);
 
         Widgets.ThingIcon(iconRect, thing);

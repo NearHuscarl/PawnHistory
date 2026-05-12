@@ -40,13 +40,12 @@ public sealed class AddRecordDialog : WidgetWindow
     {
         var theme = ctx.Theme;
 
-        return Column(
-        [
+        return Column([
             Expanded(ScrollView(
                 Column([
                     LabeledField(
                         "NH_PH_AddRecord_FieldType".Translate(),
-                        Button(state.SelectedDef.LabelCap, OpenDefMenu),
+                        TextButton(state.SelectedDef.LabelCap, OpenDefMenu),
                         LabelWidth),
 
                     LabeledField(
@@ -75,17 +74,18 @@ public sealed class AddRecordDialog : WidgetWindow
 
                     LabeledField(
                         "NH_PH_AddRecord_FieldQuest".Translate(),
-                        Button(state.SelectedQuest?.name ?? "NH_PH_AddRecord_None".Translate(), OpenQuestMenu),
+                        TextButton(state.SelectedQuest?.name ?? "NH_PH_AddRecord_None".Translate(), OpenQuestMenu),
                         LabelWidth),
-                ]))),
+                ], spacing: theme.Gap))
+            ),
 
             SizedBox(width: float.PositiveInfinity, height: FooterHeight, child: Row(
                 [
-                    Button("NH_PH_AddRecord_Cancel".Translate(), () => Close()),
-                    Button("NH_PH_AddRecord_Create".Translate(), CreateRecord)
-                ], crossAxis: StackCrossAxis.Center, mainAxis: StackMainAxis.End)
+                    TextButton("NH_PH_AddRecord_Cancel".Translate(), () => Close()),
+                    TextButton("NH_PH_AddRecord_Create".Translate(), CreateRecord)
+                ], crossAxis: StackCrossAxis.Center, mainAxis: StackMainAxis.End, spacing: theme.Gap)
             )
-        ]);
+        ], spacing: theme.Gap);
     }
     
     private IEnumerable<Thing> FindConcernSuggestions(string query)
@@ -112,7 +112,7 @@ public sealed class AddRecordDialog : WidgetWindow
 
         return MenuSection(
             Wrap(state.SelectedConcerns.Select(c => ActionChip(c, RemoveConcern))),
-            ctx.Theme.GapXs);
+            ctx.Theme.GapSm);
     }
 
     private void OpenDefMenu()

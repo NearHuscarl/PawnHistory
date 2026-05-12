@@ -12,10 +12,10 @@ public sealed class Wrap(IEnumerable<Widget> children, float? gap = null, float?
     private readonly Widget[] children = children?.ToArray() ?? [];
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private float Gap(UiContext ctx) => gap ?? ctx.Theme.GapXs;
+    private float Gap(UiContext ctx) => gap ?? ctx.Theme.GapSm;
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private float LineGap(UiContext ctx) => lineGap ?? ctx.Theme.GapXs;
+    private float LineGap(UiContext ctx) => lineGap ?? ctx.Theme.GapSm;
 
     protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)
     {

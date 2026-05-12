@@ -25,13 +25,11 @@ public abstract class Flex(
     IEnumerable<Widget> children,
     StackMainAxis mainAxis,
     StackCrossAxis crossAxis,
-    float? gap,
+    float spacing = 0,
     string key = null)
     : Widget(widgetId, key)
 {
     private readonly Widget[] children = children?.ToArray() ?? [];
-
-    private float Gap(UiContext ctx) => gap ?? ctx.Theme.Gap;
 
     protected override Vector2 DoMeasure(UiContext ctx, LayoutConstraints constraints)
     {
@@ -59,7 +57,7 @@ public abstract class Flex(
                 : new Rect(crossStart, cursor, cross, main);
 
             WidgetTree.DrawChild(ctx, child, i, childRect);
-            cursor += main + Gap(ctx);
+            cursor += main + spacing;
         }
     }
 
@@ -67,7 +65,7 @@ public abstract class Flex(
     {
         var sizes = new Vector2[children.Length];
         var bounded = IsBounded(constraints);
-        var gapTotal = children.Length > 1 ? Gap(ctx) * (children.Length - 1) : 0f;
+        var gapTotal = children.Length > 1 ? spacing * (children.Length - 1) : 0f;
         var fixedMain = 0f;
         var totalFlex = 0;
         cross = 0f;
@@ -82,7 +80,7 @@ public abstract class Flex(
 
             var child = children[i] is Flexible e ? e.Child : children[i];
             var maxMain = bounded
-                ? Mathf.Max(0f, MaxMain(constraints) - fixedMain - Gap(ctx) * i)
+                ? Mathf.Max(0f, MaxMain(constraints) - fixedMain - spacing * i)
                 : float.PositiveInfinity;
 
             sizes[i] = child.Measure(ctx, Loose(constraints, maxMain));

@@ -44,23 +44,25 @@ internal sealed class HistoryCardPage
         this.pawn = shownPawn;
         SyncPawn(pawn);
 
-        return new Padding(
+        return Padding.All(
             Stack([
                 Column(
                 [
-                    SizedBox(height: HistoryCardLayout.FilterHeight, child: BuildTopBar(ctx, pawn)),
+                    SizedBox(height: HistoryCardLayout.TopBarHeight, child: BuildTopBar(ctx)),
                     Expanded(HistoryTable.Build(ctx, state, recordActions)),
-                ], gap: 0f),
-                Align(HistoryCardDebugOverlay.Build(state), Alignment.BottomRight),
+                ]),
+                Align(HistoryCardDebugOverlay.Build(ctx, state), Alignment.BottomRight),
             ]),
-            new EdgeInsets(ctx.Theme.Padding));
+            ctx.Theme.Padding);
     }
 
-    private Widget BuildTopBar(UiContext ctx, Pawn pawn)
+    private Widget BuildTopBar(UiContext ctx)
     {
+        var theme = ctx.Theme;
         return Row(
         [
-            BuildAddRecordButton(ctx, pawn),
+            SizedBox(width: theme.PaddingXs),
+            BuildAddRecordButton(),
             Spacer(),
             HistoryPagination.Build(
                 ctx,
@@ -74,24 +76,20 @@ internal sealed class HistoryCardPage
                 submitPageInputAction,
                 goToNextPageAction,
                 goToLastPageAction),
-        ], crossAxis: StackCrossAxis.Center, gap: 0f);
+            SizedBox(width: theme.ScrollWidth),
+        ], crossAxis: StackCrossAxis.Center);
     }
 
-    private Widget BuildAddRecordButton(UiContext ctx, Pawn pawn)
+    private Widget BuildAddRecordButton()
     {
         if (pawn == null || Find.CurrentMap == null)
-            return SizedBox(width: ctx.Theme.ButtonHorizontalPadding + HistoryCardLayout.ControlWidth);
+            return SizedBoxShrink();
 
-        return Padding.Left(
-            SizedBox(
-                width: HistoryCardLayout.ControlWidth,
-                height: HistoryCardLayout.ControlWidth,
-                child: IconButton(
-                    TexButton.Plus,
-                    OpenAddRecordDialog,
-                    "NH_PH_AddRecord_Title".Translate(),
-                    !state.Table.HasActiveEditSession)),
-            ctx.Theme.ButtonHorizontalPadding);
+        return IconButton(
+            TexButton.Plus,
+            OpenAddRecordDialog,
+            tooltip: "NH_PH_AddRecord_Title".Translate(),
+            enabled: !state.Table.HasActiveEditSession);
     }
 
     private void SyncPawn(Pawn nextPawn)

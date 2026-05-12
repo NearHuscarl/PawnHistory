@@ -24,17 +24,14 @@ internal static class HistoryPagination
         Action goToNextPage,
         Action goToLastPage)
     {
-        var height = HistoryCardLayout.ControlWidth;
+        var buttonSize = HistoryCardLayout.ControlWidth;
 
-        return Padding.Right(
-            Row(
-            [
-                Button(FirstPageIcon, goToFirstPage, width: HistoryCardLayout.ControlWidth, height: height, enabled: enabled && canGoToPreviousPage),
-                Button(PreviousPageIcon, goToPreviousPage, width: HistoryCardLayout.ControlWidth, height: height, enabled: enabled && canGoToPreviousPage),
-                TextField(state.PageText, updatePageText, submitPageInput, width: HistoryCardLayout.PageInputWidth, height: height, enabled: enabled, key: "history-page-field"),
-                Button(NextPageIcon, goToNextPage, width: HistoryCardLayout.ControlWidth, height: height, enabled: enabled && canGoToNextPage),
-                Button(LastPageIcon, goToLastPage, width: HistoryCardLayout.ControlWidth, height: height, enabled: enabled && canGoToNextPage),
-            ], crossAxis: StackCrossAxis.Center, gap: ctx.Theme.GapXs),
-            ctx.Theme.ButtonHorizontalPadding);
+        return Row([
+            TextButton(FirstPageIcon, goToFirstPage, buttonSize, buttonSize, enabled: enabled && canGoToPreviousPage),
+            TextButton(PreviousPageIcon, goToPreviousPage, buttonSize, buttonSize, enabled: enabled && canGoToPreviousPage),
+            TextField(state.PageText, updatePageText, submitPageInput, width: HistoryCardLayout.PageInputWidth, height: buttonSize, enabled: enabled, key: "history-page-field"),
+            TextButton(NextPageIcon, goToNextPage, buttonSize, buttonSize, enabled: enabled && canGoToNextPage),
+            TextButton(LastPageIcon, goToLastPage, buttonSize, buttonSize, enabled: enabled && canGoToNextPage),
+        ], crossAxis: StackCrossAxis.Center, spacing: ctx.Theme.GapSm);
     }
 }

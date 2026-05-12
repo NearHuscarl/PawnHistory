@@ -11,25 +11,27 @@ internal static class W
         IEnumerable<Widget> children,
         StackMainAxis mainAxis = StackMainAxis.Start,
         StackCrossAxis crossAxis = StackCrossAxis.Center,
-        float? gap = null,
+        float spacing = 0f,
         string key = null)
-        => new(children, mainAxis, crossAxis, gap, key);
+        => new(children, mainAxis, crossAxis, spacing, key);
 
     public static Row Row(
         IEnumerable<Widget> children,
         StackMainAxis mainAxis = StackMainAxis.Start,
         StackCrossAxis crossAxis = StackCrossAxis.Center,
-        float? gap = null,
+        float spacing = 0f,
         string key = null)
-        => new(children, mainAxis, crossAxis, gap, key);
+        => new(children, mainAxis, crossAxis, spacing, key);
 
     public static Wrap Wrap(IEnumerable<Widget> children, float? gap = null, float? lineGap = null, string key = null) => new(children, gap, lineGap, key);
     public static Expanded Expanded(Widget child, int flex = 1, string key = null) => new(child, flex, key);
     public static Flexible Flexible(Widget child, int flex = 1, FlexFit fit = FlexFit.Loose, string key = null) => new(child, flex, fit, key);
     public static ScrollView ScrollView(Widget child, bool vertical = true, string key = null, ScrollController controller = null) => new(child, vertical, key, controller);
     public static SizedBox SizedBox(float? width = null, float? height = null, Widget child = null, string key = null) => new(width, height, child, key);
-    public static Button Button(string label, Action onClick, float? width = null, float? height = null, bool enabled = true, string key = null) => new(label, onClick, width, height, enabled, key);
-    public static IconButton IconButton(Texture2D texture, Action onClick, string tooltip = null, bool enabled = true, string key = null) => new(texture, onClick, tooltip, enabled, key);
+    public static SizedBox SizedBox(float dimension, Widget child = null, string key = null) => new(dimension, dimension, child, key);
+    public static SizedBox SizedBoxShrink(string key = null) => Ui.SizedBox.Shrink(key);
+    public static TextButton TextButton(string label, Action onClick, float? width = null, float? height = null, bool enabled = true, string key = null) => new(label, onClick, width, height, enabled, key);
+    public static IconButton IconButton(Texture2D texture, Action onClick, float? iconSize = null, string tooltip = null, bool enabled = true, string key = null) => new(texture, onClick, iconSize, tooltip, enabled, key);
     public static Image Image(Texture2D texture, ScaleMode scaleMode = ScaleMode.ScaleToFit, Color? color = null, string key = null) => new(texture, scaleMode, color, key);
     public static Label Label(string text, GameFont font = GameFont.Small, TextAnchor anchor = TextAnchor.MiddleLeft, float? width = null, float? height = null, Color? color = null, string key = null)
         => new(text, font, anchor, width, height, color, key);
@@ -57,8 +59,8 @@ internal static class W
     public static ColoredBox ColoredBox(Color color, Widget child, string key = null) => new(color, child, key);
     public static CustomPaint CustomPaint(Action<Rect> painter, Widget child = null, Action<Rect> foregroundPainter = null, string key = null) => new(painter, child, foregroundPainter, key);
     public static Stack Stack(IEnumerable<Widget> children, string key = null) => new(children, key);
-    public static ConstrainedBox ConstrainedBox(Widget child, float? minWidth = null, float? maxWidth = null, float? minHeight = null, float? maxHeight = null, string key = null)
-        => new(child, minWidth, maxWidth, minHeight, maxHeight, key);
+    public static ConstrainedBox ConstrainedBox(float? minWidth = null, float? maxWidth = null, float? minHeight = null, float? maxHeight = null, Widget child = null, string key = null)
+        => new(minWidth, maxWidth, minHeight, maxHeight, child, key);
     public static Align Align(Widget child, Alignment alignment = default, string key = null) => new(child, alignment, key);
     public static Center Center(Widget child, string key = null) => new(child, key);
     public static GestureDetector GestureDetector(Widget child, Action onTap = null, Action onSecondaryTap = null, Action onHover = null, bool enabled = true, string key = null)

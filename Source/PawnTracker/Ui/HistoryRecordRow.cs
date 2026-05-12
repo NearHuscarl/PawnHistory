@@ -5,7 +5,6 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 using static PawnHistory.Source.Ui.W;
-using UiSizedBox = PawnHistory.Source.Ui.SizedBox;
 
 namespace PawnHistory.Source.PawnTracker.Ui;
 
@@ -28,12 +27,12 @@ internal static class HistoryRecordRow
     {
         var content = GestureDetector(
             ConstrainedBox(
-                Stack([
+                minHeight: HistoryCardLayout.MinRowHeight,
+                child: Stack([
                     BuildRowBackground(index),
                     BuildCells(ctx, state, record, actions),
                     BuildPinnedBorder(record),
-                ]),
-                minHeight: HistoryCardLayout.MinRowHeight),
+                ])),
             onTap: () => actions.JumpToRecord(record),
             onSecondaryTap: () => actions.OpenRecordMenu(record),
             onHover: () => actions.HighlightTargets(record),
@@ -44,18 +43,16 @@ internal static class HistoryRecordRow
 
     private static Widget BuildCells(UiContext ctx, HistoryTableState state, HistoryRecord record, HistoryRecordActions actions)
     {
+        var theme = ctx.Theme;
         return Row(
         [
-            SizedBox(width: HistoryCardLayout.CellPx),
+            SizedBox(width: theme.PaddingXs),
             SizedBox(width: HistoryCardLayout.ColWidthDate, child: Tooltip(Label(record.GetShortDate(), GameFont.Tiny, color: Color.gray), record.GetTipDate())),
-            SizedBox(width: HistoryCardLayout.ColGap),
-            Center(SizedBox(width: HistoryCardLayout.ColWidthIcon, height: HistoryCardLayout.ColWidthIcon, child: Image(record.Icon))),
-            SizedBox(width: HistoryCardLayout.ColGap),
+            SizedBox(dimension: theme.ButtonIconSize, Center(child: Image(record.Icon))),
             Expanded(BuildDescription(ctx, state, record, actions)),
-            SizedBox(width: HistoryCardLayout.ColGap),
-            Center(SizedBox(width: HistoryCardLayout.ColWidthIcon, height: HistoryCardLayout.ColWidthIcon, child: BuildQuestButton(record, actions))),
-            SizedBox(width: HistoryCardLayout.CellPx),
-        ], crossAxis: StackCrossAxis.Stretch, gap: 0f);
+            SizedBox(dimension: theme.ButtonIconSize, Center(child: BuildQuestButton(record, actions))),
+            SizedBox(width: theme.PaddingXs),
+        ], crossAxis: StackCrossAxis.Stretch, spacing: theme.PaddingSm);
     }
 
     private static Widget BuildDescription(UiContext ctx, HistoryTableState state, HistoryRecord record, HistoryRecordActions actions)
@@ -86,18 +83,18 @@ internal static class HistoryRecordRow
     private static Widget BuildQuestButton(HistoryRecord record, HistoryRecordActions actions)
     {
         if (record.quest == null)
-            return UiSizedBox.Shrink();
+            return SizedBoxShrink();
 
         return IconButton(
             TexCommand.OpenLinkedQuestTex,
             () => actions.OpenQuest(record.quest),
-            record.quest.name);
+            tooltip: record.quest.name);
     }
 
     private static Widget BuildRowBackground(int index)
     {
         if (index % 2 != 0)
-            return UiSizedBox.Shrink();
+            return SizedBoxShrink();
 
         return Positioned(
             CustomPaint(Widgets.DrawHighlight),
@@ -110,10 +107,10 @@ internal static class HistoryRecordRow
     private static Widget BuildPinnedBorder(HistoryRecord record)
     {
         if (!record.pinned)
-            return UiSizedBox.Shrink();
+            return SizedBoxShrink();
 
         return Positioned(
-            ColoredBox(PinnedBorderColor, UiSizedBox.Shrink()),
+            ColoredBox(PinnedBorderColor, SizedBoxShrink()),
             top: 0f,
             right: 0f,
             bottom: 0f,

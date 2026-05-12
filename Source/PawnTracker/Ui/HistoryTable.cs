@@ -15,12 +15,12 @@ internal static class HistoryTable
         return Column(
         [
             SizedBox(height: ctx.Theme.Gap),
-            SizedBox(height: HistoryCardLayout.HeaderHeight, child: BuildHeader()),
+            SizedBox(height: HistoryCardLayout.HeaderHeight, child: BuildHeader(ctx)),
             Expanded(ScrollView(
-                Column(CurrentPageRecords(state).Select((record, index) => HistoryRecordRow.Build(ctx, state.Table, record, index, actions)), gap: 0f),
+                Column(CurrentPageRecords(state).Select((record, index) => HistoryRecordRow.Build(ctx, state.Table, record, index, actions))),
                 key: "history-table-scroll",
                 controller: state.TableScroll)),
-        ], gap: 0f);
+        ]);
     }
 
     private static IEnumerable<HistoryRecord> CurrentPageRecords(HistoryCardState state)
@@ -30,15 +30,16 @@ internal static class HistoryTable
         return visibleRecords.Skip(startIndex).Take(HistoryCardLayout.PageSize);
     }
 
-    private static Widget BuildHeader()
+    private static Widget BuildHeader(UiContext ctx)
     {
+        var theme = ctx.Theme;
+        
         return Row(
         [
-            SizedBox(width: HistoryCardLayout.CellPx),
+            SizedBox(width: theme.PaddingXs),
             SizedBox(width: HistoryCardLayout.ColWidthDate, child: Label("NH_PH_HistoryCard_HeaderDate".Translate(), color: Color.gray)),
-            SizedBox(width: HistoryCardLayout.ColGap + HistoryCardLayout.ColWidthIcon + HistoryCardLayout.ColGap),
+            SizedBox(width: theme.ButtonIconSize),
             Expanded(Label("NH_PH_HistoryCard_HeaderDescription".Translate(), color: Color.gray)),
-            SizedBox(width: HistoryCardLayout.ColGap + HistoryCardLayout.ColWidthIcon + HistoryCardLayout.CellPx + HistoryCardLayout.ScrollWidth),
-        ], crossAxis: StackCrossAxis.Stretch, gap: 0f);
+        ], crossAxis: StackCrossAxis.Stretch, spacing: theme.PaddingSm);
     }
 }
