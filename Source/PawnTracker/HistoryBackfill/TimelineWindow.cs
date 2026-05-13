@@ -20,5 +20,11 @@ internal struct TimelineWindow(int earliestTick, int latestTick)
             LatestTick = tick;
     }
     
+    public void Invalidate()
+    {
+        EarliestTick = 1;
+        LatestTick = 0;
+    }
+    
     public TimelineWindow ShrinkTo(int earliestTick, int latestTick) => new(Math.Max(EarliestTick, earliestTick), Math.Min(LatestTick, latestTick));
 }

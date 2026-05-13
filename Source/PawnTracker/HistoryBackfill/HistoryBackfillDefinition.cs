@@ -7,11 +7,11 @@ internal sealed class HistoryBackfillDefinition(HistoryRecordDef def, string den
 {
     public HistoryRecordDef Def { get; } = def;
     public string DensityGroup { get; } = densityGroup;
-    public List<IHardBackfillRule> HardRules { get; } = [];
+    public List<HardBackfillRule> HardRules { get; } = [];
     public List<ISoftBackfillRule> SoftRules { get; } = [];
     public List<IGlobalBackfillRule> GlobalRules { get; } = [];
 
-    public HistoryBackfillDefinition AddHard(params IHardBackfillRule[] rules)
+    public HistoryBackfillDefinition AddHard(params HardBackfillRule[] rules)
     {
         HardRules.AddRange(rules.Where(rule => rule != null));
         return this;
@@ -30,10 +30,16 @@ internal sealed class HistoryBackfillDefinition(HistoryRecordDef def, string den
     }
 }
 
-internal interface IHardBackfillRule
+internal abstract class HardBackfillRule
 {
-    void ApplyWindow(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state, ref TimelineWindow window);
-    bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state);
+    public virtual void ApplyWindow(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state, ref TimelineWindow window)
+    {
+    }
+
+    public virtual bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state)
+    {
+        return true;
+    }
 }
 
 internal interface IDependencyBackfillRule

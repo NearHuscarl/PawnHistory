@@ -7,48 +7,42 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.HistoryBackfill;
 
-internal sealed class MinimumAgeRule(float minimumAgeYears) : IHardBackfillRule
+internal sealed class MinimumAgeRule(float minimumAgeYears) : HardBackfillRule
 {
-    private readonly int minimumAgeTicks = Mathf.RoundToInt(minimumAgeYears * GenDate.TicksPerYear);
-
-    public void ApplyWindow(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state, ref TimelineWindow window)
+    public override void ApplyWindow(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state, ref TimelineWindow window)
     {
-        window.ShrinkStartTo(HistoryBackfillContext.ClampToInt(context.BirthAbsTicks + minimumAgeTicks));
+        window.ShrinkStartTo(context.TickAtBiologicalAge(minimumAgeYears));
     }
 
-    public bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state)
+    public override bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state)
     {
         var tick = state.GetPlacement(candidate) ?? candidate.Record.date;
-        return tick == context.AnchorTick || tick >= HistoryBackfillContext.ClampToInt(context.BirthAbsTicks + minimumAgeTicks);
+        return tick == context.AnchorTick || tick >= context.TickAtBiologicalAge(minimumAgeYears);
     }
 }
 
-internal sealed class MaximumCountRule(int maxCount) : IHardBackfillRule
+internal sealed class MaximumCountRule(int maxCount) : HardBackfillRule
 {
-    public void ApplyWindow(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state, ref TimelineWindow window)
-    {
-    }
-
-    public bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state)
+    public override bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state)
     {
         return state.GetPlacementsForDefinition(candidate.Record.def).Count() <= maxCount;
     }
 }
 
-internal sealed class LogicalGateRule(Func<HistoryBackfillContext, PlacementCandidate, bool> predicate) : IHardBackfillRule
+internal sealed class LogicalGateRule(Func<HistoryBackfillContext, PlacementCandidate, bool> predicate) : HardBackfillRule
 {
-    public void ApplyWindow(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state, ref TimelineWindow window)
+    public override void ApplyWindow(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state, ref TimelineWindow window)
     {
         if (predicate(context, candidate))
             return;
 
-        window.ShrinkStartTo(context.AnchorTick);
+        window.Invalidate();
     }
 
-    public bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state) => predicate(context, candidate);
+    public override bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state) => predicate(context, candidate);
 }
 
-internal sealed class OrderBeforeRule(int minimumGapTicks, params HistoryRecordDef[] laterDefinitions) : IHardBackfillRule, IDependencyBackfillRule
+internal sealed class OrderBeforeRule(int minimumGapTicks, params HistoryRecordDef[] laterDefinitions) : HardBackfillRule, IDependencyBackfillRule
 {
     private readonly HashSet<HistoryRecordDef> laterDefinitions = laterDefinitions.ToHashSet();
 
@@ -57,7 +51,7 @@ internal sealed class OrderBeforeRule(int minimumGapTicks, params HistoryRecordD
         return candidates.Where(other => other != candidate && laterDefinitions.Contains(other.Record.def));
     }
 
-    public void ApplyWindow(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state, ref TimelineWindow window)
+    public override void ApplyWindow(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state, ref TimelineWindow window)
     {
         foreach (var pair in state.Placements)
         {
@@ -68,7 +62,7 @@ internal sealed class OrderBeforeRule(int minimumGapTicks, params HistoryRecordD
         }
     }
 
-    public bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state)
+    public override bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state)
     {
         if (!state.TryGetPlacement(candidate, out var tick))
             return false;
@@ -89,7 +83,7 @@ internal sealed class OrderBeforeRule(int minimumGapTicks, params HistoryRecordD
     }
 }
 
-internal sealed class SiblingSequenceRule(int minimumGapTicks) : IHardBackfillRule, IDependencyBackfillRule
+internal sealed class SiblingSequenceRule(int minimumGapTicks) : HardBackfillRule, IDependencyBackfillRule
 {
     public IEnumerable<PlacementCandidate> GetSuccessors(HistoryBackfillContext context, PlacementCandidate candidate, IReadOnlyList<PlacementCandidate> candidates)
     {
@@ -102,7 +96,7 @@ internal sealed class SiblingSequenceRule(int minimumGapTicks) : IHardBackfillRu
             yield return nextSibling;
     }
 
-    public void ApplyWindow(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state, ref TimelineWindow window)
+    public override void ApplyWindow(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state, ref TimelineWindow window)
     {
         var nextSibling = state.Candidates
             .FirstOrDefault(other => other.Record.def == candidate.Record.def && other.SiblingIndex == candidate.SiblingIndex + 1);
@@ -113,7 +107,7 @@ internal sealed class SiblingSequenceRule(int minimumGapTicks) : IHardBackfillRu
         window.ShrinkEndTo(nextTick - minimumGapTicks);
     }
 
-    public bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state)
+    public override bool Validate(HistoryBackfillContext context, PlacementCandidate candidate, PlacementState state)
     {
         if (!state.TryGetPlacement(candidate, out var tick))
             return false;

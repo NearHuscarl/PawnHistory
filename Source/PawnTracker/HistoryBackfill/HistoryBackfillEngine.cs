@@ -271,62 +271,46 @@ internal static class HistoryBackfillEngine
             return false;
         }
 
-        var weightedWindows = new List<WeightedWindow>(lastDay - firstDay + 1);
+        var windows = new List<TimelineWindow>(lastDay - firstDay + 1);
         for (var day = firstDay; day <= lastDay; day++)
         {
             var startTick = checked(day * GenDate.TicksPerDay);
             var endTick = checked(day * GenDate.TicksPerDay + (GenDate.TicksPerDay - 1));
-            var bucket = window.ShrinkTo(startTick, endTick);
-            weightedWindows.Add(new WeightedWindow(bucket, GetWeight(candidate, state, bucket.RepresentativeTick())));
+            windows.Add(window.ShrinkTo(startTick, endTick));
         }
 
-        if (weightedWindows.Count == 0)
+        if (TrySelectWeighted(windows, randomize, w => GetWeight(candidate, state, w.RepresentativeTick()), t => t.LatestTick, out window))
         {
-            tick = 0;
-            return false;
-        }
-
-        if (randomize && weightedWindows.TryRandomElementByWeight(w => w.Weight, out var weightedWindow))
-        {
-            tick = weightedWindow.Window.SampleTick(randomize: true);
+            tick = window.SampleTick(randomize: true);
             return true;
         }
 
-        var bestWindow = weightedWindows
-            .OrderByDescending(w => w.Weight)
-            .ThenByDescending(w => w.Window.LatestTick)
-            .First();
-
-        var bestBucket = bestWindow.Window;
-        tick = randomize ? bestBucket.SampleTick(randomize: true) : bestBucket.LatestTick;
+        tick = randomize ? window.SampleTick(randomize: true) : window.LatestTick;
         return true;
     }
 
     private static bool TrySelectSampledProbe(PlacementCandidate candidate, PlacementState state, TimelineWindow window, bool randomize, out int selectedTick)
     {
         var probeTicks = BuildProbeTicks(window, randomize);
-        if (probeTicks.Count == 0)
+        return TrySelectWeighted(probeTicks, randomize, probeTick => GetWeight(candidate, state, probeTick), t => t, out selectedTick);
+    }
+    
+    private static bool TrySelectWeighted<T>(List<T> items, bool randomize, Func<T, float> weight, Func<T, int> tieBreak, out T selected)
+    {
+        if (items.Count == 0)
         {
-            selectedTick = 0;
+            selected = default;
             return false;
         }
 
-        var weightedProbes = probeTicks
-            .Select(probeTick => new WeightedProbe(probeTick, GetWeight(candidate, state, probeTick)))
-            .ToList();
-
-        if (randomize && weightedProbes.TryRandomElementByWeight(w => w.Weight, out var weightedProbe))
-        {
-            selectedTick = weightedProbe.Tick;
+        if (randomize && items.TryRandomElementByWeight(weight, out selected))
             return true;
-        }
 
-        var bestProbe = weightedProbes
-            .OrderByDescending(w => w.Weight)
-            .ThenByDescending(w => w.Tick)
-            .FirstOrDefault();
+        selected = items
+            .OrderByDescending(weight)
+            .ThenByDescending(tieBreak)
+            .First();
 
-        selectedTick = bestProbe.Tick;
         return true;
     }
 
@@ -345,12 +329,8 @@ internal static class HistoryBackfillEngine
 
     private static bool ValidatePlacedState(PlacementState state)
     {
-        var placedCandidates = state.Placements.Select(pair => pair.Key).ToList();
-        return Validate(placedCandidates, state);
-    }
-
-    private static bool Validate(IReadOnlyList<PlacementCandidate> candidates, PlacementState state)
-    {
+        var candidates = state.Placements.Select(pair => pair.Key).ToList();
+        
         foreach (var candidate in candidates)
         {
             foreach (var rule in candidate.Definition.HardRules)
@@ -417,7 +397,6 @@ internal static class HistoryBackfillEngine
 
     private static int FloorToDay(int tick) => (int)Math.Floor(tick / (double)GenDate.TicksPerDay);
 
-    private readonly record struct WeightedProbe(int Tick, float Weight);
     private readonly record struct WeightedWindow(TimelineWindow Window, float Weight);
 
     private record DependencyOrder(IReadOnlyList<PlacementCandidate> OrderedCandidates, IReadOnlyList<PlacementCandidate> UnorderedCandidates);

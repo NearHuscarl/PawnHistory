@@ -1,6 +1,7 @@
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.HistoryBackfill;
@@ -15,6 +16,11 @@ internal sealed class HistoryBackfillContext(Pawn pawn, HistoryRecord anchorReco
     public int BirthTick => ClampToInt(BirthAbsTicks);
 
     public float BiologicalAgeAt(int tick) => (float)(tick - BirthAbsTicks) / GenDate.TicksPerYear;
+
+    public int TickAtBiologicalAge(float years)
+    {
+        return ClampToInt(BirthAbsTicks + Mathf.RoundToInt(years * GenDate.TicksPerYear));
+    }
 
     public static int ClampToInt(long ticks)
     {
