@@ -1,27 +1,25 @@
 # DropPodBuilder
 
-Launches transport pods and optionally runs an arrival action afterward.
-
-## Constructor
-
-- `DropPodBuilder(List<Thing> things)`: start a drop-pod builder for the given payload.
+Builds transport pods, launches them, and optionally runs a processor after the payload resolves into a caravan.
 
 ## Setup
 
-- `Position(PlanetTile tile)`: choose the destination tile.
-- `Do(Action<Caravan> action)`: run a processor after arrival.
+- `scenario.DropPod(List<Thing> things)`: start a pod launch from item payload.
+- `scenario.DropPod(List<Pawn> pawns)`: start a pod launch from pawn payload.
+- `Position(PlanetTile tile)`: set the destination tile.
+- `Do(Action<Caravan> action)`: queue a processor to run after landing resolves into a caravan.
 
 ## Arrival Flows
 
-- `Visit(Site site)`: arrive at a site.
-- `Attack(Settlement settlement)`: attack a settlement.
-- `Enter(MapParent mapParent)`: enter a map parent through a landing cell.
-- `Visit(Settlement settlement)`: visit a settlement.
-- `Trade(Settlement settlement)`: trade with a settlement.
-- `ArriveAsGifts(Settlement settlement)`: arrive as gifts.
-- `GiveToCaravan(Caravan caravan)`: transfer items to an existing caravan.
-- `FormCaravan(PlanetTile tileInput)`: form a caravan on the target tile.
+- `Visit(Site site)`: land at a site.
+- `Attack(Settlement settlement)`: land and attack a settlement.
+- `Enter(MapParent mapParent)`: land inside a map parent using its drop spot.
+- `Visit(Settlement settlement)`: land and visit a settlement peacefully.
+- `Trade(Settlement settlement)`: land and perform settlement trade.
+- `ArriveAsGifts(Settlement settlement)`: land as gifts for a settlement.
+- `GiveToCaravan(Caravan caravan)`: transfer the payload to an existing caravan.
+- `FormCaravan(PlanetTile tileInput)`: land and form a caravan on the target tile.
 
 ## Execution
 
-- `Execute(bool launch = true)`: spawn launchers and launch the transport pods.
+- `Execute(bool launch = true)`: spawn launchers and pods, load the payload, and optionally launch immediately.

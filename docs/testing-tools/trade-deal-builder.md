@@ -1,27 +1,24 @@
 # TradeDealBuilder
 
-Sets up a trade session and records what was bought, sold, or gifted.
+Selects a trader, performs one trade action, and returns the result immediately.
 
-## Constructor
+## Setup
 
-- `TradeDealBuilder(Pawn negotiator)`: start a trade session for the given negotiator.
+- `scenario.Trade(Pawn negotiator)`: start a trade builder for the negotiator pawn.
+- `WithCaravanTrader(TraderKindDef traderKindDef)`: find an on-map caravan trader by kind.
+- `WithOrbitalTrader(TraderKindDef traderKindDef)`: find a passing trade ship by kind.
+- `WithSettlementTrader(Settlement settlement)`: trade with a settlement directly.
 
-## Trader Selection
+## Actions
 
-- `WithCaravanTrader(TraderKindDef traderKindDef)`: find a caravan trader pawn.
-- `WithOrbitalTrader(TraderKindDef traderKindDef)`: find an orbital trader ship.
-- `WithSettlementTrader(Settlement settlement)`: trade with a settlement.
-
-## Trade Actions
-
-- `Buy(Func<Tradeable, bool> filter = null, int count = -1)`: buy a tradeable by filter.
-- `Sell(Func<Tradeable, bool> filter = null, int count = -1)`: sell a tradeable by filter.
-- `Gift(Func<Tradeable, bool> filter = null, int count = -1)`: mark the session as gift mode and sell by filter.
-
-## Execution
-
-- `Execute()`: run the trade session and return a `TradeSessionResult`.
+- `Buy(Func<Tradeable, bool> filter = null, int count = -1)`: buy the first matching trader-held tradeable.
+- `Sell(Func<Tradeable, bool> filter = null, int count = -1)`: sell the first matching colony-held tradeable.
+- `Gift(Func<Tradeable, bool> filter = null, int count = -1)`: gift the first matching colony-held tradeable in gift mode.
 
 ## Result
 
-- `TradeSessionResult(Bought, Sold, ActuallyTraded)`: records the transaction outcome.
+- `TradeSessionResult.Bought`: things selected from the trader side.
+- `TradeSessionResult.Sold`: things selected from the colony side.
+- `TradeSessionResult.ActuallyTraded`: whether the underlying trade deal executed successfully.
+
+There is no public `Execute()`. `Buy(...)`, `Sell(...)`, and `Gift(...)` each perform setup and execution.

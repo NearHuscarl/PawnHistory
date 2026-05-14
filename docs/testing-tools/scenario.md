@@ -1,18 +1,10 @@
 # Scenario Builders
 
-This is the index for the scenario-building DSL used by recorder tests.
+Use builders from `TestScenario`. Prefer these references over constructing helpers directly.
 
-Use these references instead of opening the implementation first:
+- Core setup: [PawnBuilder](pawn-builder.md), [ThingBuilder](thing-builder.md), [MapBuilder](map-builder.md), [IdeoBuilder](ideo-builder.md)
+- Incidents and quests: [IncidentBuilder](incident-builder.md), [GatheringBuilder](gathering-builder.md), [QuestBuilder](quest-builder.md), [RitualBuilder](ritual-builder.md)
+- Travel and transport: [CaravanBuilder](caravan-builder.md), [DropPodBuilder](drop-pod-builder.md), [ShuttleBuilder](shuttle-builder.md)
+- Trading and letters: [TradeDealBuilder](trade-deal-builder.md), [LetterAction](letter-action.md)
 
-- [pawn-builder.md](pawn-builder.md)
-- [thing-builder.md](thing-builder.md)
-- [map-builder.md](map-builder.md)
-- [incident-builder.md](incident-builder.md)
-- [quest-builder.md](quest-builder.md)
-- [caravan-builder.md](caravan-builder.md)
-- [drop-pod-builder.md](drop-pod-builder.md)
-- [shuttle-builder.md](shuttle-builder.md)
-- [trade-deal-builder.md](trade-deal-builder.md)
-- [ritual-builder.md](ritual-builder.md)
-- [gathering-builder.md](gathering-builder.md)
-- [letter-action.md](letter-action.md)
+Start from the builder that matches the real game path you want to trigger.

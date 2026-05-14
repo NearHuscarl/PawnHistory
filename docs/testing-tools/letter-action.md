@@ -1,32 +1,31 @@
-# LetterAction<TLetter>
+# Letter Actions
 
-Accepts or rejects a live choice letter after a real game action creates it.
+These helpers resolve a live letter from `Find.LetterStack`, optionally filter it, then choose one supported path.
 
-## Constructor
+## Entry Points
 
-- `LetterAction<TLetter>()`: start a letter action for a `ChoiceLetter` subtype.
+- `scenario.Letter<T>()`: create a generic letter action for supported `ChoiceLetter` types.
+- `scenario.LetterBabyToChild()`: create a baby-to-child letter action.
+- `scenario.LetterGrowthMoment()`: create a growth-moment letter action.
 
-## Configuration
+## Shared Methods
 
-- `Filter(Func<TLetter, bool> predicate)`: narrow the letter search.
+- `Filter(Func<TLetter, bool> predicate)`: keep only active letters that match the predicate.
+- `Execute()`: resolve the most recent matching letter and return it, applying the configured choice in subclasses.
 
-## Execution
+## `LetterActionSimple<TLetter>`
 
-- `Accept().Execute()`: choose the supported accept option.
-- `Reject().Execute()`: choose the supported reject option.
-- `TraitIndex().PassionIndices([]).Execute()`: complete a `ChoiceLetter_GrowthMoment` by selecting passions and a trait or the no-trait option.
+- `Accept()`: choose the supported accept option.
+- `Reject()`: choose the supported reject option.
+- Supported `ChoiceLetter` types: `ChoiceLetter_AcceptJoiner`, `ChoiceLetter_RansomDemand`, `ChoiceLetter_AcceptVisitors`.
 
-## Supported Choice Letters
+## `LetterActionBabyToChild`
 
-- `ChoiceLetter_AcceptJoiner`
-- `ChoiceLetter_RansomDemand`
-- `ChoiceLetter_AcceptVisitors`
-- `ChoiceLetter_BabyToChild`
-- `ChoiceLetter_GrowthMoment`
+- `PickColonist()`: choose the colonist-side option for the baby-to-child letter.
+- `PickSlave()`: choose the slave-side option for the baby-to-child letter.
 
-## Notes
+## `LetterActionGrowthMoment`
 
-- Choice resolution is currently keyed by the visible option text for the supported letters above.
-- `ChoiceLetter_BabyToChild` uses a dedicated action class and supports `scenario.Letter<ChoiceLetter_BabyToChild>().Enslave().Execute()`.
-- Growth-moment completion primes the private choice lists through reflected access instead of driving the UI dialog.
-- If a different letter type needs support, it belongs here rather than in test bodies.
+- `PassionIndices(IEnumerable<int> passionIndexes = null)`: choose which generated passion options to take by index.
+- `TraitIndex(int? traitIndex = null)`: choose a generated trait by index, or `null` for the no-trait option.
+- `Execute()`: populate the growth choices, validate the selected passion count, then submit the letter choices.

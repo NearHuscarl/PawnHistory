@@ -1,30 +1,18 @@
 # Testing Tools
 
-This folder is the first-read reference for recorder authors using the in-game test API.
-
-If you are writing or updating recorder tests, read the API references below before opening `Source/PawnTracker/Test/*.cs`. Only read the code when the docs do not answer the question.
+Start here for recorder tests. Prefer these docs over reading `Source/PawnTracker/Test/*.cs`.
 
 Read in this order:
-1. [test-scenario.md](test-scenario.md)
-2. [scenario.md](scenario.md)
-3. [assertions.md](assertions.md)
-4. [test-attributes.md](test-attributes.md)
-5. [runner-boundaries.md](runner-boundaries.md)
+1. [TestScenario](test-scenario.md): scenario entry points, helper extensions, framework knobs.
+2. [Scenario Builders](scenario.md): builder index for pawns, maps, incidents, quests, letters, and travel flows.
+3. [Assertions](assertions.md): `Expect`, `SimpleAssertions<T>`, `PawnHistoryAssertions`.
+4. [Test Attributes](test-attributes.md): author-facing test attributes.
+5. [Runner Boundaries](runner-boundaries.md): what counts as test DSL vs runner internals.
 
-## Scope
-
-These docs cover the public testing surface you are expected to use when writing recorder tests:
-
+Use the author-facing DSL first:
 - `TestScenario`
 - builder APIs returned by `TestScenario`
-- `Expect`, `SimpleAssertions<T>`, and `PawnHistoryAssertions`
-- test attributes used by recorder methods
+- `Expect(...)` assertions
+- recorder test attributes
 
-## Boundary
-
-Treat `Source/PawnTracker/Test/` as having two layers:
-
-- Author-facing DSL: use this first and prefer it by default.
-- Runner internals: inspect only when the API docs do not explain behavior or when debugging the test framework itself.
-
-Runner internals are summarized in [runner-boundaries.md](runner-boundaries.md) so you can usually avoid source-diving.
+Only inspect runner internals when the docs do not explain behavior or when debugging the test framework itself.

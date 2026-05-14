@@ -1,35 +1,37 @@
 # MapBuilder
 
-Creates rooms, fixtures, and other map structures around the current map.
+Queues room and structure work on a map, then applies it in `Execute()`.
 
-## Constructor And Entry Points
+## Setup
 
-- `MapBuilder(IntVec3? center = null)`: build around a center point.
-- `At(IntVec3 pos)`: create a builder anchored at a position.
-- `AtMouse()`: create a builder anchored at the current mouse cell.
+- `scenario.Map(Map map = null)`: start a map builder for the given map or `Find.CurrentMap`.
+- `GenerateAncientTemple(int width, int height)`: generate an ancient temple layout around map center.
+- `BuildRoom(CellRect rect, string tag = null, ThingDef wallDef = null, ThingDef stuff = null, TerrainDef floorDef = null)`: queue a room at an exact rect and optionally tag it.
+- `BuildRoom(int width, int height, string tag = null, ThingDef wallDef = null, ThingDef stuff = null, TerrainDef floorDef = null)`: queue a centered room of the given size.
+- `Beside(string tag, Rot4 side, int w, int h)`: compute a new room rect beside a tagged room, or around the camera position if the tag is missing.
 
-## Room And Map Setup
+## Room Conversions
 
-- `GenerateAncientTemple(int width, int height)`: generate an ancient temple layout.
-- `BuildRoom(CellRect rect, string tag = null, ThingDef wallDef = null, ThingDef stuff = null, TerrainDef floorDef = null)`: create a generic room.
-- `BuildRoom(int width, int height, string tag = null, ThingDef wallDef = null, ThingDef stuff = null, TerrainDef floorDef = null)`: create a centered generic room.
-- `AsBarrack(List<Pawn> assignedPawns)`: turn the last built room into a barrack and claim beds.
-- `AsBarrack(int bedCount = 3)`: turn the last built room into a barrack with the given bed count.
-- `AsHospital(int bedCount, List<Building_Bed> beds = null)`: build a hospital room and optionally collect beds.
-- `AsPrison(int prisonerCount, int bedCount = 1, List<Pawn> prisoners = null)`: build a prison room and optionally collect prisoners.
-- `AsBank(int silvers = 5000)`: build a trade-room style bank.
-- `AsThroneRoom(Pawn owner)`: build a throne room for the given pawn.
+- `AsBarrack(List<Pawn> assignedPawns)`: add beds and claim them for the given pawns.
+- `AsBarrack(int bedCount = 3)`: add unclaimed player beds to the last room.
+- `AsHospital(int bedCount, List<Building_Bed> beds = null)`: add medical beds and ultratech medicine to the last room.
+- `AsPrison(int prisonerCount, int bedCount = 1, List<Pawn> prisoners = null)`: add prisoner beds and spawn prisoner pawns into the room.
+- `AsBank(int silvers = 5000)`: add silver, trade beacon, comms console, and power to the room.
+- `AsThroneRoom(Pawn owner)`: add throne-room furniture and claim the throne for the owner.
+- `AsShrine()`: place an ideogram in the room interior.
 
-## Contents And Hazards
+## Contents And Ownership
 
-- `WithThing(ThingDef thingDef, int totalCount = 10, Faction faction = null)`: add items to the current room.
-- `WithCasket(ThingDef thingDef, ThingDef stuff = null, bool occupied = true)`: spawn a casket, optionally occupied.
-- `CollapseRoofAndCrush(Pawn pawn)`: drop a roof on the pawn.
+- `WithThing(ThingDef thingDef, int totalCount = 10, Faction faction = null)`: spawn a stack of the given thing in the room interior.
+- `WithCasket(ThingDef thingDef, ThingDef stuff = null, bool occupied = true, Pawn pawn = null)`: place a casket or grave, optionally filling it with a given or generated pawn.
+- `ClaimAllBuildings()`: claim all claimable non-colonist buildings on the map for the player.
 
-## Spatial Helpers
+## Hazards
 
-- `Beside(string tag, Rot4 side, int w, int h)`: place a room beside a tagged room.
+- `CollapseRoofAndCrush(Pawn pawn)`: force a thick-roof collapse on the pawn's current cell.
 
 ## Execution
 
-- `Execute()`: run all queued map actions.
+- `Execute()`: run every queued map action in order.
+
+`BuildRoom(...)` updates `TestManager.Scenario.LastRoomRect`, and tagged rooms are stored in `TestManager.Scenario.TaggedRooms`.

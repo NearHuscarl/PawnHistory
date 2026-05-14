@@ -1,34 +1,28 @@
 # ThingBuilder
 
-Creates and optionally spawns things, then applies processors to each created stack.
+Creates things, optionally spawns them, and runs per-thing processors.
 
-## Constructor
+## Setup
 
-- `ThingBuilder(ThingDef def, ThingDef stuffDef = null)`: start a builder for a thing, optionally made from specific stuff.
-
-## Placement And Composition
-
-- `At(IntVec3 pos)`: choose the placement cell.
-- `Stack(int count)`: set stack count before splitting into stacks.
-- `MadeOf(ThingDef stuffDef)`: override the material.
-- `Map(Map map)`: choose the target map.
-- `Faction(Faction faction)`: assign a faction.
-- `PlaceMode(ThingPlaceMode placeMode)`: choose direct or near placement.
-
-## Mutation
-
-- `Quality(QualityCategory quality)`: set quality when the thing has `CompQuality`.
-- `Do(Action<Thing> action)`: run a processor on each created thing.
+- `scenario.Thing(ThingDef def, ThingDef stuffDef = null)`: start a builder for a thing def and optional stuff.
+- `At(IntVec3 pos)`: set the placement cell used when spawning.
+- `Def(ThingDef def)`: replace the thing def before creation.
+- `Stack(int count)`: set the total stack count before it is split into valid stacks.
+- `MadeOf(ThingDef stuffDef)`: set or replace the stuff def.
+- `Map(Map map)`: choose the target map for spawning.
+- `Faction(Faction faction)`: assign a faction to created things when allowed.
+- `PlaceMode(ThingPlaceMode placeMode)`: choose direct vs near placement behavior.
+- `Quality(QualityCategory quality)`: set quality on things with `CompQuality`.
+- `Do(Action<Thing> action)`: run a processor on each created thing before spawn.
 
 ## Creation
 
-- `Create<T>() where T : Thing`: create and place the things/books.
-- `Create()`: create things as `Thing`.
-- `CreateSingle()`: create one thing.
-- `CreateSingle<T>() where T : Thing`: create one thing as a typed result.
-- `CreateAndPutInto<T>(Pawn pawn) where T : Thing`: create things and put them into a pawn inventory.
-- `CreateAndPutInto(Pawn pawn)`: create things as `Thing` and put them into a pawn inventory.
+- `Create<T>(bool spawn = true)`: create a typed list and optionally spawn it.
+- `Create(bool spawn = true)`: create an untyped list and optionally spawn it.
+- `CreateSingle(bool spawn = true)`: create and return the first thing.
+- `CreateSingle<T>(bool spawn = true)`: create and return the first typed thing.
 
-## Extension
+## Extensions
 
-- `ThingBuilderExtensions.PoisonFood(ThingBuilder builder, Pawn cook)`: mark food as poisoned by the cook.
+- `PoisonFood(Pawn cook)`: mark created food as poisoned by the given cook.
+- `AnyBook()`: replace the thing def with a random book def.

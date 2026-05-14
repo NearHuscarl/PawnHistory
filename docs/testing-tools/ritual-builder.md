@@ -1,16 +1,14 @@
 # RitualBuilder
 
-Sets up ritual-related interactions for recorder tests.
+Queues ritual interactions for an organizer pawn, then runs them through the real ability and ritual path.
 
-## Constructor
+## Setup
 
-- `RitualBuilder(Pawn organizer)`: start a ritual builder for the organizer pawn.
-
-## Configuration
-
-- `Outcome(RitualOutcomePossibility outcome)`: force a ritual outcome.
-- `ThroneSpeech(List<Pawn> spectators)`: drive a throne speech outcome path.
+- `scenario.Ritual(Pawn organizer)`: start a ritual builder for the organizer pawn.
+- `Outcome(RitualOutcomePossibility outcome)`: force the ritual outcome stored on `TestScenario`.
+- `ThroneSpeech(List<Pawn> spectators)`: run a throne-speech ritual and apply its outcome using the given spectators.
+- `ConversionRitual(Pawn convertee)`: run a conversion ritual on the target pawn.
 
 ## Execution
 
-- `Execute()`: run queued ritual processors.
+- `Execute()`: run every queued ritual action in order.
