@@ -7,7 +7,7 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public abstract class QuestPawnArrivedComp : RecordComp<QuestPawnArrivedRecorder>
 {
-    public record BuildInput(List<Pawn> Pawns, Quest Quest, QuestPawnArrivedMode ArrivalMode, Pawn Pawn, List<Pawn> QuestPawns);
+    public record BuildInput(List<Pawn> Pawns, Quest Quest, QuestPawnArrivedMode ArrivalMode, Pawn Pawn, List<Pawn> QuestPawns, Pawn QuestAsker);
     
     public abstract bool Match(Quest quest);
     

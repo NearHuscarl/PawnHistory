@@ -41,6 +41,7 @@
 				<li>questClause(priority=1,quest==ThreatReward_Raid_Joiner)-> [PAWN_pronoun] came to take [QuestAsker].</li>
 				<li>questClause(priority=1,quest==Intro_Deserter)          -> [PAWN_pronoun] came to hunt down [QuestAsker].</li>
 				<li>questClause(priority=1,quest==OpportunitySite_WorkSite)-> [PAWN_pronoun] moved in to help [PAWN_possessive] [pawnsPlural], who were under attack.</li>
+				<li>questClause(priority=1,quest==EndGame_RoyalAscent)     -> [PAWN_pronoun] came to assassinate [QuestAsker], the [QuestAskerTitle] of [EmpireFaction].</li>
 				<li>questClause(priority=0)                                -></li>
 			</rulesStrings>
         </rulePack>
@@ -214,9 +215,11 @@
 				<li>entry(priority=1,kind==Joiner,quest==OpportunitySite_BanditCamp)  ->[BanditCampReward].</li>
 				<li>entry(priority=1,kind==Joiner,quest==Mission_BanditCamp)          ->[BanditCampReward].</li>
 				<li>entry(priority=1,kind==Joiner,quest==PawnLend)                    ->[PAWN] joined [PlayerSettlement] as a reward after [PlayerSettlement] lent [RequiredCount] colonists to [Faction] for [DaysLent] days.</li>
+				<li>entry(priority=1,kind==Helper,quest==EndGame_RoyalAscent)         ->[PAWN] accompanied [Asker], the [AskerTitle] of [EmpireFaction], as a personal guard during [Asker_possessive] visit to [PlayerSettlement].</li>
+				<li>entry(priority=1,kind==Lodger,quest==EndGame_RoyalAscent)         ->[PAWN] arrived at [PlayerSettlement] for a customary royal visit, offering passage to the Imperial flotilla if [PAWN_pronoun] was properly hosted.</li>
 				<li>entry(priority=1,kind==Joiner,quest==ThreatReward_Raid_MiscReward)->[PAWN] joined [PlayerSettlement] as a reward for defeating a raid from [HostileFaction].</li>
 				<li>entry(priority=1,kind==Helper,quest==ThreatReward_Raid_MiscReward)->[PAWN][AlongWithOthers] arrived at [PlayerSettlement] to help fight off a raid from [HostileFaction].</li>
-				<li>entry(priority=1,hasDeadParent==True,quest==RefugeePodCrash_Baby) ->A baby named [PAWN] from [BabyFaction] crashed nearby in a transport pod. [PAWN_possessive] [Relation]'s body was in the pod as well.</li>
+				<li>entry(priority=1,hasDeadParent==True, quest==RefugeePodCrash_Baby)->A baby named [PAWN] from [BabyFaction] crashed nearby in a transport pod. [PAWN_possessive] [Relation]'s body was in the pod as well.</li>
 				<li>entry(priority=1,hasDeadParent==False,quest==RefugeePodCrash_Baby)->A baby named [PAWN] from [BabyFaction] crashed nearby in a transport pod.</li>
 				
 				<!-- TODO: not tested, needs polishment -->

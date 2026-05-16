@@ -18,9 +18,9 @@ public enum QuestPawnKind
 
 public static class QuestHelper
 {
-    // from Util_ChooseRandomQuestHelperKind
     private static readonly HashSet<PawnKindDef> CombatKinds = new List<PawnKindDef>
     {
+        // from Util_ChooseRandomQuestHelperKind
         PawnKindDefOf.Empire_Fighter_Trooper,
         PawnKindDefOf.Empire_Fighter_Janissary,
         Extra.PawnKindDefOf.Empire_Fighter_Champion,
@@ -32,7 +32,10 @@ public static class QuestHelper
         Extra.PawnKindDefOf.Mercenary_Elite_Acidifier,
         Extra.PawnKindDefOf.Mercenary_Slasher_Acidifier,
         Extra.PawnKindDefOf.Mercenary_Gunner_Acidifier,
-        Extra.PawnKindDefOf.Mercenary_Sniper_Acidifier
+        Extra.PawnKindDefOf.Mercenary_Sniper_Acidifier,
+        // EndGame_RoyalAscent quest
+        Extra.PawnKindDefOf.Empire_Fighter_StellicGuardRanged,
+        Extra.PawnKindDefOf.Empire_Fighter_StellicGuardMelee,
     }.Where(k => k != null).ToHashSet();
 
     public static QuestPawnKind GetQuestPawnKind(Quest quest, Pawn pawn)
@@ -41,11 +44,11 @@ public static class QuestHelper
         
         if (pawn.HostileTo(Faction.OfPlayer) && !pawn.Downed)
             kind = QuestPawnKind.Raider;
-        else if (IsReward(quest, pawn) || pawn.Faction == Faction.OfPlayer && pawn.HostFaction == null && pawn.records.GetValue(RecordDefOf.TimeAsColonistOrColonyAnimal) == 0)
+        else if (IsReward(quest, pawn) || pawn.HomeFaction == Faction.OfPlayer && pawn.records.GetValue(RecordDefOf.TimeAsColonistOrColonyAnimal) == 0)
             kind = QuestPawnKind.Joiner;
         else if (CombatKinds.Contains(pawn.kindDef))
             kind = QuestPawnKind.Helper;
-        else if (pawn.HostFaction == Faction.OfPlayer)
+        else if (pawn.HomeFaction != Faction.OfPlayer && pawn.guest?.GuestStatus == GuestStatus.Guest)
             kind = QuestPawnKind.Lodger;
 
         return kind;
@@ -71,20 +74,20 @@ public static class QuestHelper
         return GetArrivalPawns(quest, true);
     }
 
-    public static List<Pawn> GetArrivalPawns(Quest quest = null, bool includingWorldPawns = false)
+    public static List<Pawn> GetArrivalPawns(Quest quest = null, bool includesWorldPawns = false)
     {
         quest ??= Find.QuestManager.QuestsListForReading.Last();
         
         var source1 = quest.PartsListForReading.OfType<QuestPart_PawnsArrive>().SelectMany(part => part.pawns);
         var source2 = quest.PartsListForReading.OfType<QuestPart_DropPods>().SelectMany(part => part.Things).OfType<Pawn>();
         var source3 = quest.PartsListForReading.OfType<QuestPart_GiveToCaravan>()
-            .Where(part => includingWorldPawns || part.caravan.Spawned)
+            .Where(part => includesWorldPawns || part.caravan.Spawned)
             .SelectMany(part => part.Things).OfType<Pawn>();
         var source4 = quest.PartsListForReading.OfType<QuestPart_SetupTransportShip>()
-            .Where(part => includingWorldPawns || part.transportShip.ShipExistsAndIsSpawned)
+            .Where(part => includesWorldPawns || part.transportShip.ShipExistsAndIsSpawned)
             .SelectMany(part => part.transportShip.TransporterComp.innerContainer.OfType<Pawn>());
         
-        return source1.Concat(source2).Where(p => includingWorldPawns || p.MapHeld != null).Concat(source3).Concat(source4).ToList();
+        return source1.Concat(source2).Where(p => includesWorldPawns || p.MapHeld != null).Concat(source3).Concat(source4).ToList();
     }
     
     public static T GetWorldObject<T>(Quest quest) where T : WorldObject
@@ -150,25 +153,6 @@ public static class QuestHelper
     
     public static Pawn GetAsker(Quest quest)
     {
-        foreach (var part in quest?.PartsListForReading ?? [])
-        {
-            switch (part)
-            {
-                case QuestPart_PawnsArrive pawnsArrive:
-                {
-                    var asker = pawnsArrive.pawns.FirstOrDefault(IsAskerCandidate);
-                    if (asker != null)
-                        return asker;
-                    break;
-                }
-            }
-        }
-
-        return null;
-    }
-    
-    private static bool IsAskerCandidate(Pawn pawn)
-    {
-        return pawn != null && pawn.RaceProps.Humanlike;
+        return quest?.GetFirstPartOfType<QuestPart_PawnHistory>()?.Asker;
     }
 }

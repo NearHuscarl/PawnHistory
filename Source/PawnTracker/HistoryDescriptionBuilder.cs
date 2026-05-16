@@ -115,6 +115,12 @@ public class HistoryDescriptionBuilder(HistoryRecordDef recordDef, Pawn pawn, st
         return AddRule(keyword, part.Label, addSubsymbols, replaceIfExist);
     }
 
+    public HistoryDescriptionBuilder AddRule(string keyword, Quest quest, bool addSubsymbols = false, bool replaceIfExist = false)
+    {
+        if (quest == null) return this;
+        return AddRule(keyword, quest.name.Colorize(ColoredText.GeneColor), addSubsymbols, replaceIfExist);
+    }
+
     public HistoryDescriptionBuilder AddRule(string keyword, RoyalTitleDef royalTitle, bool addSubsymbols = false, bool replaceIfExist = false)
     {
         if (royalTitle == null) return this;

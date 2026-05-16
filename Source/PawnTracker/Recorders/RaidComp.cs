@@ -6,7 +6,7 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public abstract class RaidComp : RecordComp<RaidRecorder>
 {
-    public record BuildInput(Pawn Pawn, Faction Faction, Quest Quest);
+    public record BuildInput(Pawn Pawn, Faction Faction, Quest Quest, Pawn QuestAsker);
 
     public abstract bool Match(BuildInput input);
 
@@ -19,4 +19,6 @@ public abstract class RaidComp : RecordComp<RaidRecorder>
     {
         yield break;
     }
+
+    public static string GenericRaidDescription = "[PAWN][AndOthers] from [Faction] raided the colony";
 }

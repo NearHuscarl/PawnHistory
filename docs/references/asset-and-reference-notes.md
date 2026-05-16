@@ -24,6 +24,7 @@ Use these as the starting point to track down potential event for a new history 
 - `Core\Languages\English\Keyed\Messages.xml`
 - searches over `<IncidentDef>`
 - `QuestScriptDefs/**.xml`
+  - `QuestNode_Letter`
 - Tale-based signals worth mapping from `TaleRecorder.RecordTale()`.
 - PrisonerInteractionModeDefOf -> tale events?
 - Review `HistoryEventDefOf.cs` and `.RecordEvent(` call sites for upstream signals worth converting into typed events.

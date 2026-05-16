@@ -1,4 +1,5 @@
-﻿using PawnHistory.Source.DebugTools;
+﻿using System;
+using PawnHistory.Source.DebugTools;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ public class IncidentBuilder
     private readonly IncidentDef def;
     private readonly IncidentParms parms;
     private readonly Map map;
+    private bool isIntervalIncident = false;
+    private Func<FiringIncident, bool> incidentFilter;
 
     public IncidentBuilder(IncidentDef def) : this(def, Find.CurrentMap) { }
 
@@ -58,6 +61,37 @@ public class IncidentBuilder
         return this;
     }
 
+    public IncidentBuilder CreateIntervalIncident(Func<FiringIncident, bool> filter)
+    {
+        isIntervalIncident = true;
+        incidentFilter = filter;
+        return this;
+    }
+
+    private bool FireIncident()
+    {
+        if (isIntervalIncident)
+        {
+            FiringIncident incident = null;
+            while (incident == null)
+            {
+                TestManager.Scenario.ForwardTicks(1000);
+                incident = Find.Storyteller.MakeIncidentsForInterval().Where(i => i.def == def).FirstOrDefault(incidentFilter);
+            }
+            return Find.Storyteller.TryFire(incident);
+        }
+        else
+        {
+            if (!def.Worker.TryExecute(parms))
+            {
+                Log.Warning($"Incident {def.defName} failed to execute. {DebugUtility.Format(parms)}");
+                return false;
+            }
+
+            return true;
+        }
+    }
+
     /// <summary>
     /// Executes the incident and returns the list of pawns it spawned.
     /// </summary>
@@ -66,11 +100,8 @@ public class IncidentBuilder
         var oldLords = map.lordManager.lords.ToList();
         var oldPawns = map.mapPawns.AllPawnsSpawned.ToList();
 
-        if (!def.Worker.TryExecute(parms))
-        {
-            Log.Warning($"Incident {def.defName} failed to execute. {DebugUtility.Format(parms)}");
+        if (!FireIncident())
             return [];
-        }
 
         var newLord = map.lordManager.lords.Except(oldLords).FirstOrDefault();
         if (newLord != null)

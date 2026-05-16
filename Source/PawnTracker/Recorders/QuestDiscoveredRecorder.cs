@@ -24,7 +24,7 @@ public class QuestDiscoveredRecorder : RecorderBase<QuestDiscoveredEvent>
         var recordDef = HistoryRecordDefOf.QuestDiscovered;
         var builder = recordDef.Description(discoverer)
             .IncludePawnGrammar()
-            .AddRule("Quest", quest.name.Colorize(ColoredText.GeneColor))
+            .AddRule("Quest", quest)
             .AddRule("SourcePawn", sourcePawn)
             .AddConstant("source", source);
 

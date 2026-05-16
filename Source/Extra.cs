@@ -138,11 +138,18 @@ public static class Extra
         public static PawnKindDef Husky;
         public static PawnKindDef Cougar;
         public static PawnKindDef Bear_Grizzly;
-        [MayRequireRoyalty]
-        public static PawnKindDef Empire_Fighter_Champion;
         public static PawnKindDef Tribal_Archer;
         public static PawnKindDef Tribal_Berserker;
         public static PawnKindDef Tribal_HeavyArcher;
+
+        [MayRequireRoyalty]
+        public static PawnKindDef Empire_Fighter_Champion;
+        [MayRequireRoyalty]
+        public static PawnKindDef Empire_Fighter_StellicGuardRanged;
+        [MayRequireRoyalty]
+        public static PawnKindDef Empire_Fighter_StellicGuardMelee;
+        [MayRequireRoyalty]
+        public static PawnKindDef Empire_Royal_Stellarch;
 
         static PawnKindDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(PawnKindDefOf));
     }

@@ -32,16 +32,18 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
                 continue;
 
             var questKind = QuestHelper.GetQuestPawnKind(e.Quest, pawn);
+            var asker = QuestHelper.GetAsker(e.Quest);
             var builder = recordDef.Description(pawn)
                 .IncludePawnGrammar()
-                .AddRule("Quest", e.Quest.name.Colorize(ColoredText.GeneColor))
+                .AddRule("Quest", e.Quest)
+                .AddRule("Asker", asker, addSubsymbols: true)
                 .AddRule("Faction", involvedFactions.Count > 0 ? involvedFactions[0] : null)
                 .WithPlayerSettlement(pawn.MapHeld?.Parent)
                 .WithOthers(e.Pawns)
                 .AddConstant("quest", questScriptDef)
                 .AddConstant("kind", questKind);
             var concerns = e.Pawns.Cast<Thing>();
-            var input = new QuestPawnArrivedComp.BuildInput(e.Pawns, e.Quest, e.ArrivalMode, pawn, questPawns);
+            var input = new QuestPawnArrivedComp.BuildInput(e.Pawns, e.Quest, e.ArrivalMode, pawn, questPawns, asker);
 
             foreach (var comp in Comps.OfType<QuestPawnArrivedComp>())
             {

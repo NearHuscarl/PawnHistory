@@ -22,7 +22,7 @@ public class LodgerJoinOfferRecorder : RecorderBase<LodgerJoinOfferAcceptedEvent
         var desc = recordDef.Description(e.Pawn)
             .IncludePawnGrammar()
             .WithPlayerSettlement(e.Pawn.MapHeld.Parent)
-            .AddRule("Quest", e.Quest.name.Colorize(ColoredText.GeneColor))
+            .AddRule("Quest", e.Quest)
             .Resolve();
 
         AddRecord(recordDef, e.Pawn, desc, quest: e.Quest);

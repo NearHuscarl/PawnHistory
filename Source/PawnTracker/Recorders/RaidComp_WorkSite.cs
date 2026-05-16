@@ -38,6 +38,6 @@ public class RaidComp_WorkSite : RaidComp
 
         scenario.RunOnceOn<RaidStartedEvent>(e => Expect.ThatAll(e.Pawns).ToHaveHistoryRecord(
             HistoryRecordDefOf.Raid, 
-            "[PAWN][AndOthers] from [Faction] raided the colony. [He] moved in to help [His] [pawnsPlural], who were under attack."));
+            $"{GenericRaidDescription}. [He] moved in to help [His] [People], who were under attack."));
     }
 }

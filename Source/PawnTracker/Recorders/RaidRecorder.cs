@@ -39,7 +39,7 @@ public class RaidRecorder : RecorderBase<RaidStartedEvent>
                 .AddConstant("raidProperty", GetRaidProperty(raidStrategy, raidArrivalMode))
                 .AddConstant("quest", quest?.root.defName);
             
-            var buildInput = new RaidComp.BuildInput(pawn, faction, quest);
+            var buildInput = new RaidComp.BuildInput(pawn, faction, quest, asker);
             foreach (var comp in Comps.OfType<RaidComp>())
             {
                 if (!comp.Match(buildInput))

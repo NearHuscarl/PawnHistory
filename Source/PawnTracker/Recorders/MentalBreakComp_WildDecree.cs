@@ -14,7 +14,7 @@ public class MentalBreakComp_WildDecree : MentalBreakComp
     {
         return builder
             .AddRule("Title", input.Pawn.royalty.MainTitle(), addSubsymbols: true)
-            .AddRule("Quest", input.Quest.name.Colorize(ColoredText.GeneColor));
+            .AddRule("Quest", input.Quest);
     }
 
     [RequiresRoyalty]

@@ -26,7 +26,7 @@ internal static class Pawn_MindState_JoinColonyBecauseRescuedBy_Patch
         if (refugee.Faction != Faction.OfPlayer)
             return;
 
-        // OfferHelp is only used in the OpportunitySite_DownedRefugee quest atm
+        // OfferHelp is only used in the OpportunitySite_DownedRefugee/OpportunitySite_PrisonerWillingToJoin quests
         var quest = Find.QuestManager.QuestsListForReading.LastOrDefault(q => !q.hidden && QuestHelper.IsReward(q, refugee));
         GameEventBus.Publish(new OfferHelpEvent(by, refugee, quest));
     }

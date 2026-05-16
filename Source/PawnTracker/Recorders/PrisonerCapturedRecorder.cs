@@ -1,5 +1,4 @@
-﻿using PawnHistory.Source.DebugTools;
-using PawnHistory.Source.Helper;
+﻿using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
