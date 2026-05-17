@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
+using System.Linq;
+using PawnHistory.Source.PawnTracker.Recorders;
 using PawnHistory.Source.PawnTracker.Ui;
 using RimWorld;
 using Verse;
@@ -16,6 +18,8 @@ internal static class CompHistoryManager
 {
     public static readonly Dictionary<int, CompHistory> CompCache = [];
     public static readonly HashSet<int> TrackingDefHash = [];
+    private static readonly Dictionary<int, List<PendingPriorityRecordWrite>> PendingPriorityRecords = [];
+    private static int nextPrioritySequence;
 
     public static CompHistory GetComp(Pawn pawn)
     {
@@ -31,13 +35,50 @@ internal static class CompHistoryManager
         return comp;
     }
     
-    public static HistoryRecord WriteRecord(HistoryRecordWriteRequest request)
+    public static HistoryRecord WriteRecord(HistoryRecordWriteRequest request, RecorderBase recorder = null)
+    {
+        if (!HistoryRecordPriority.TryGetPriority(request.Def, out var priority))
+            return WriteRecordNow(request);
+
+        var tick = GenTicks.TicksAbs;
+        if (!PendingPriorityRecords.TryGetValue(tick, out var pending))
+        {
+            pending = [];
+            PendingPriorityRecords.Add(tick, pending);
+            TickDelayManager.Delay(0, () => FlushPriorityRecords(tick));
+        }
+
+        pending.Add(new PendingPriorityRecordWrite(request, recorder, priority, nextPrioritySequence++));
+        return null;
+
+    }
+
+    private static void FlushPriorityRecords(int tick)
+    {
+        if (!PendingPriorityRecords.Remove(tick, out var pending) || pending.Count == 0)
+            return;
+
+        foreach (var pawnGroup in pending.GroupBy(p => p.Request.Pawn))
+        {
+            foreach (var entry in pawnGroup.OrderBy(e => e.Priority).ThenBy(e => e.Sequence))
+                WriteRecordNow(entry.Recorder.FinalizePriorityWriteRequest(entry.Request));
+        }
+    }
+
+    public static void ClearAll()
+    {
+        CompCache.Clear();
+        PendingPriorityRecords.Clear();
+        nextPrioritySequence = 0;
+    }
+
+    private static HistoryRecord WriteRecordNow(HistoryRecordWriteRequest request)
     {
         var comp = GetComp(request.Pawn);
         var record = new HistoryRecord(
             request.Def,
             request.Pawn,
-            request.ResolvedDesc,
+            request.Desc,
             request.Concerns,
             request.Location,
             request.TileId,
@@ -46,8 +87,6 @@ internal static class CompHistoryManager
         comp.records.Add(record);
         return record;
     }
-
-    public static void ClearAll() => CompCache.Clear();
 
     public static void AttachHistoryComp()
     {
@@ -77,10 +116,12 @@ internal static class CompHistoryManager
     }
 }
 
-internal readonly record struct HistoryRecordWriteRequest(
+internal readonly record struct PendingPriorityRecordWrite(HistoryRecordWriteRequest Request, RecorderBase Recorder, int Priority, int Sequence);
+
+internal record struct HistoryRecordWriteRequest(
     HistoryRecordDef Def,
     Pawn Pawn,
-    TaggedString ResolvedDesc,
+    string Desc,
     IEnumerable<Thing> Concerns = null,
     RecordLocation Location = null,
     int? TileId = null,

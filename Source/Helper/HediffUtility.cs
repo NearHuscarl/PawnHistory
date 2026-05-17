@@ -90,7 +90,7 @@ public static class HediffHelper
 
         string sourceLabel;
 
-        if (dinfo.Instigator is Pawn instigator && instigator.IsMutant && dinfo.Weapon == ThingDefOf.Human)
+        if (dinfo.Instigator is Pawn { IsMutant: true } instigator && dinfo.Weapon == ThingDefOf.Human)
             sourceLabel = instigator.mutant.Def.label;
         else
             sourceLabel = dinfo.Weapon?.label ?? "";

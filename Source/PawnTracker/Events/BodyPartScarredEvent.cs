@@ -45,7 +45,7 @@ public class HediffComp_History : HediffComp
 [HarmonyPatch(typeof(DamageWorker_AddInjury), "FinalizeAndAddInjury", [typeof(Pawn), typeof(Hediff_Injury), typeof(DamageInfo), typeof(DamageWorker.DamageResult)])]
 internal class DamageWorker_AddInjury_FinalizeAndAddInjury_Patch
 {
-    static void Postfix(Pawn pawn, Hediff_Injury injury, DamageInfo dinfo)
+    private static void Postfix(Pawn pawn, Hediff_Injury injury, DamageInfo dinfo)
     {
         if (!injury.IsPermanent())
         {
@@ -70,7 +70,7 @@ internal class DamageWorker_AddInjury_FinalizeAndAddInjury_Patch
 [HarmonyPatch(typeof(HediffComp_GetsPermanent), nameof(HediffComp_GetsPermanent.CompPostInjuryHeal))]
 internal class HediffComp_GetsPermanent_CompPostInjuryHeal_Patch
 {
-    static void Postfix(HediffComp_GetsPermanent __instance)
+    private static void Postfix(HediffComp_GetsPermanent __instance)
     {
         if (!__instance.IsPermanent) return;
 
@@ -87,7 +87,7 @@ internal class HediffComp_GetsPermanent_CompPostInjuryHeal_Patch
 [HarmonyPatch(typeof(JobDriver_Scarify), nameof(JobDriver_Scarify.Scarify))]
 internal class JobDriver_Scarify_Scarify_Patch
 {
-    static void Postfix(Pawn pawn, BodyPartRecord part)
+    private static void Postfix(Pawn pawn, BodyPartRecord part)
     {
         var hediff = pawn.health.hediffSet.hediffs.FirstOrDefault(h => h.ageTicks == 0 && h.def == HediffDefOf.Scarification);
         if (hediff == null) return;

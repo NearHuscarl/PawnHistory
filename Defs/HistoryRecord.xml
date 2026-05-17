@@ -1037,6 +1037,16 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>DeathrestOrComa</defName>
+		<label>deathrest or coma</label>
+		<descriptionMaker>PH_DeathrestOrComa</descriptionMaker>
+		<icon>EventIcons/Sleep</icon>
+		<categories>
+			<li>Health</li>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">
 		<defName>BabyAdopted</defName>
 		<label>baby adopted</label>
 		<descriptionMaker>PH_BabyAdopted</descriptionMaker>

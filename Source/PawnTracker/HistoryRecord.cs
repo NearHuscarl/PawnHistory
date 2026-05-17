@@ -37,7 +37,7 @@ public class HistoryRecord : IExposable
     public HistoryRecord(
         HistoryRecordDef def,
         Pawn pawn,
-        TaggedString desc,
+        string desc,
         IEnumerable<Thing> concerns = null,
         RecordLocation location = null,
         int? tileId = null,
@@ -45,7 +45,7 @@ public class HistoryRecord : IExposable
     {
         this.def = def;
         this.pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
-        this.description = desc.Resolve();
+        this.description = desc;
         this.concerns = (concerns ?? []).Where(p => p != null && p != pawn).Distinct().ToList();
         this.date = GenTicks.TicksAbs;
         this.tileId = tileId ?? location?.map?.Tile.tileId ?? pawn.GetTileId();

@@ -16,7 +16,7 @@ public record SurgeryEvent(Pawn Patient, Pawn Doctor, BodyPartRecord Part, List<
 internal class SurgeryContext<T> where T : SurgeryEvent
 {
     public T e;
-    public List<Hediff> injurySnapshot;
+    public List<Hediff> InjurySnapshot;
 
     public static readonly Dictionary<string, SurgeryContext<T>> PendingSurgeries = [];
 
@@ -27,21 +27,20 @@ internal class SurgeryContext<T> where T : SurgeryEvent
         PendingSurgeries[GetSurgeryId(patient)] = new SurgeryContext<T>()
         {
             e = eventFactory(),
-            injurySnapshot = GetInjurySnapshot(patient),
+            InjurySnapshot = GetInjurySnapshot(patient),
         };
     }
 
     public static void SurgeryRecipe_PostApplyOnPawn(Pawn patient)
     {
         var surgeryId = GetSurgeryId(patient);
-        if (!PendingSurgeries.TryGetValue(surgeryId, out var ctx))
+        if (!PendingSurgeries.Remove(surgeryId, out var ctx))
             return;
-        PendingSurgeries.Remove(surgeryId);
 
         // Injury hediffs are those added to the part during the failed surgery
         // (e.g. surgical cut, etc.) - compare snapshot to current state
         var newInjuries = GetInjurySnapshot(patient)
-            .Except(ctx.injurySnapshot)
+            .Except(ctx.InjurySnapshot)
             .OrderByDescending(h => h.Severity)
             .ToList();
         ctx.e = ctx.e with { NewInjuries = newInjuries };

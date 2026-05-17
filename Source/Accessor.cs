@@ -13,6 +13,12 @@ namespace PawnHistory.Source;
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public static class Accessor
 {
+    public static class LogEntry_DamageResult
+    {
+        public static readonly AccessTools.FieldRef<Verse.LogEntry_DamageResult, List<bool>> DamagedPartsDestroyed =
+            AccessTools.FieldRefAccess<Verse.LogEntry_DamageResult, List<bool>>("damagedPartsDestroyed");
+    }
+    
     public static class BattleLogEntry_StateTransition
     {
         public static readonly AccessTools.FieldRef<Verse.BattleLogEntry_StateTransition, Pawn> SubjectPawn =

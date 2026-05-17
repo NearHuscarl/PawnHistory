@@ -317,6 +317,8 @@ public static class Extra
     public static class GeneDefOf
     {
         [MayRequireBiotech]
+        public static GeneDef Deathrest;
+        [MayRequireBiotech]
         public static GeneDef PsychicBonding;
         [MayRequireBiotech]
         public static GeneDef TotalHealing;

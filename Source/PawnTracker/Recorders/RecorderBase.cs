@@ -30,6 +30,7 @@ public abstract class RecorderBase
     protected bool ShouldRecord(Pawn pawn) => RecorderManager.ShouldRecord(pawn);
     public abstract void Register();
     internal virtual IEnumerable<HistoryBackfillDefinition> GetBackfillDefinitions() => [];
+    internal virtual HistoryRecordWriteRequest FinalizePriorityWriteRequest(HistoryRecordWriteRequest request) => request;
 
     protected IEnumerable<HistoryRecord> GeRecordsOfType(Pawn pawn, HistoryRecordDef def, int limit = 100)
     {
@@ -60,16 +61,16 @@ public abstract class RecorderBase
         return GenTicks.TicksAbs - lastRecord.date < GenDate.DaysToTicks(daysToRecordAgainOverride ?? DaysToRecordAgain);
     }
 
-    protected virtual HistoryRecord AddRecord(
+    protected HistoryRecord AddRecord(
         HistoryRecordDef def,
         Pawn pawn,
-        TaggedString resolvedDesc,
+        string desc,
         IEnumerable<Thing> concerns = null,
         RecordLocation location = null,
         int? tileId = null,
         Quest quest = null)
     {
-        return CompHistoryManager.WriteRecord(new HistoryRecordWriteRequest(def, pawn, resolvedDesc, concerns, location, tileId, quest));
+        return CompHistoryManager.WriteRecord(new HistoryRecordWriteRequest(def, pawn, desc, concerns, location, tileId, quest), this);
     }
 }
 

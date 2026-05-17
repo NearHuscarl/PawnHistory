@@ -228,7 +228,20 @@ public class PawnBuilder(int count = 1)
             var skill = pawn.skills.GetSkill(skillDef);
             skill.Level = level;
             skill.xpSinceLastLevel = 0f;
-            skill.passion = Passion.Minor;
+            skill.passion = Passion.None;
+        });
+    }
+
+    public PawnBuilder ResetSkillLevel(int level, int xpSinceLastLevel = 0)
+    {
+        return Do(pawn =>
+        {
+            foreach (var skill in pawn.skills.skills)
+            {
+                skill.Level = level;
+                skill.xpSinceLastLevel = xpSinceLastLevel;
+                skill.passion = Passion.None;
+            }
         });
     }
 
@@ -431,6 +444,15 @@ public class PawnBuilder(int count = 1)
     public PawnBuilder SetFaction(Faction faction2)
     {
         return Do(p => p.SetFaction(faction2));
+    }
+
+    public PawnBuilder TakeDamage(float amount, BodyPartDef bodyPart = null)
+    {
+        return Do(p => p.TakeDamage(new DamageInfo(
+            DamageDefOf.Cut,
+            amount,
+            hitPart: p.RaceProps.body.AllParts.FirstOrDefault(p2 => bodyPart == null || p2.def == bodyPart))
+        ));
     }
 }
 

@@ -55,7 +55,7 @@ internal static class CasualtyLogAddedContext
         if (!parts.NullOrEmpty())
         {
             list = parts.Distinct().ToList();
-            recipientPartsDestroyed = list.Select((BodyPartRecord part) => pawn.health.hediffSet.GetPartHealth(part) <= 0f).ToList();
+            recipientPartsDestroyed = list.Select(part => pawn.health.hediffSet.GetPartHealth(part) <= 0f).ToList();
         }
         
         log.FillTargets(list, recipientPartsDestroyed, false);

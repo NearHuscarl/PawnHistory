@@ -15,6 +15,12 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
     public record KillInput(Pawn Subject, Pawn Initiator, string CombatLogText, string TransitionText, Pawn OriginalTargetPawn);
     public record KilledOrDownedInput(Pawn Subject, Pawn Initiator, CasualtyType Casualty, HediffDef CulpritHediff, string CombatLogText, string TransitionText, Pawn OriginalTargetPawn, bool IsLeader);
 
+    private static readonly HashSet<HediffDef> CulpritHediffBlacklist = new List<HediffDef>
+    {
+        HediffDefOf.Anesthetic,
+        HediffDefOf.RegenerationComa, // handled in DeathrestOrComaRecorder
+    }.Where(h => h != null).ToHashSet();
+
     public override void Register()
     {
         GameEventBus.Subscribe<CasualtyLogAddedEvent>(e =>
@@ -40,7 +46,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
                     var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Initiator);
                     CreateRecord(new KillInput(e.Subject, e.Initiator, combatLogText, transitionText, originalTargetPawn));
                 }
-                if (e.CulpritHediff != HediffDefOf.Anesthetic)
+                if (CulpritHediffBlacklist.Contains(e.CulpritHediff))
                 {
                     var combatLogText = lastDamageEntry?.ToGameStringFromPOV(e.Subject);
                     var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Subject);
@@ -68,22 +74,13 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
 
         var isKillLog = casualty == CasualtyType.Killed;
         var recordDef = isKillLog ? HistoryRecordDefOf.Death : HistoryRecordDefOf.Downed;
-        var historyRecords = subject.HistoryRecords;
-        var lastRecord = historyRecords.LastOrDefault();
-
-        if (isKillLog && lastRecord?.def == HistoryRecordDefOf.Downed && lastRecord?.date == GenTicks.TicksAbs)
-        {
-            Log.Message($"[PawnHistory] Received death & downed transitions from {subject.NameShortColored} in the same tick. Skipping down transition..");
-            historyRecords.Pop();
-        }
 
         string desc;
         // combatLogText is null when:
         // - Log entry is not associated with any active battle. Non-combat dead needs to be handled manually (e.g. BloodLoss, ToxicBuildup...)
         if (combatLogText == null)
         {
-            var hediffInt = subject.health.hediffSet.hediffs.LastOrDefault(h => h.def == culpritHediff && h.ageTicks == 0);
-            hediffInt ??= subject.health.hediffSet.hediffs.LastOrDefault(h => h.ageTicks == 0 && h.def.isBad); // sometimes IF it does not find anything, use bruteforce
+            var hediffInt = subject.health.hediffSet.hediffs.LastOrDefault(h => h.def == culpritHediff);
             var rootKeyword = isKillLog ? "killedEntry" : "downedEntry";
             desc = recordDef.Description(subject)
                 .IncludePawnGrammar()
@@ -153,35 +150,38 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         }
     }
 
-    protected override HistoryRecord AddRecord(
-        HistoryRecordDef def,
-        Pawn pawn,
-        TaggedString resolvedDesc,
-        IEnumerable<Thing> concerns = null,
-        RecordLocation location = null,
-        int? tileId = null,
-        Quest quest = null)
+    internal override HistoryRecordWriteRequest FinalizePriorityWriteRequest(HistoryRecordWriteRequest request)
     {
-        if (def == HistoryRecordDefOf.Death)
+        if (request.Location != null)
+            return request;
+
+        if (request.Def == HistoryRecordDefOf.Death)
         {
-            var lastRecord = pawn.HistoryRecords.LastOrDefault();
-            if (lastRecord == null)
-                return null;
-            if (lastRecord.def == HistoryRecordDefOf.Crushed || lastRecord.def == HistoryRecordDefOf.FriendlyTrapHit)
-                location = lastRecord.location;
-        }
-        if (def == HistoryRecordDefOf.RelativeDeath)
-        {
-            var deathRelative = concerns.FirstOrDefault() as Pawn;
-            var lastTwoRecords = deathRelative.HistoryRecords.TakeLast(2).ToList();
-            var secondLastRecord = lastTwoRecords.FirstOrDefault();
-            var lastRecord = lastTwoRecords.LastOrDefault();
-            if (lastTwoRecords.Count == 2 && (secondLastRecord.def == HistoryRecordDefOf.Crushed || secondLastRecord.def == HistoryRecordDefOf.FriendlyTrapHit) && lastRecord.def == HistoryRecordDefOf.Death)
-                location = lastRecord?.location;
+            var lastRecord = request.Pawn.HistoryRecords.LastOrDefault();
+            if (lastRecord != null && IsDeathLocationSource(lastRecord.def))
+                return request with { Location = lastRecord.location };
+
+            if (lastRecord?.def == HistoryRecordDefOf.Downed && GenTicks.TicksAbs - lastRecord?.date <= 1)
+            {
+                Log.Message($"[PawnHistory] Received death & downed transitions from {request.Pawn.NameShortColored} in the same tick. Skipping down transition..");
+                request.Pawn.HistoryRecords.Pop();
+            }
         }
 
-        return base.AddRecord(def, pawn, resolvedDesc, concerns, location, tileId, quest);
+        if (request.Def == HistoryRecordDefOf.RelativeDeath)
+        {
+            var deceased = request.Concerns?.OfType<Pawn>().FirstOrDefault();
+            var lastRecord = deceased?.HistoryRecords.LastOrDefault();
+            if (lastRecord?.def == HistoryRecordDefOf.Death)
+                return request with { Location = lastRecord.location };
+        }
+
+        return request;
     }
+
+    private static bool IsDeathLocationSource(HistoryRecordDef def) =>
+        def == HistoryRecordDefOf.Crushed ||
+        def == HistoryRecordDefOf.FriendlyTrapHit;
 
     [TestTag("Flaky")]
     public Action TestDeadInCombat(TestScenario scenario)
