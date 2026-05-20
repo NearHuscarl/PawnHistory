@@ -9,11 +9,23 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
+public class CasualtyContext(Battle battle, BattleLogEntry_StateTransition transitionEntry, Pawn subject)
+{
+    private LogEntry_DamageResult AssociatedDamageEntry
+        => field ??= battle.Entries.FirstOrDefault(l => l.Tick == transitionEntry.Tick && l is LogEntry_DamageResult && l.Concerns(subject)) as LogEntry_DamageResult;
+
+    public Pawn OriginalTargetPawn
+        => field ??= AssociatedDamageEntry is BattleLogEntry_RangedImpact r ? Accessor.BattleLogEntry_RangedImpact.OriginalTargetPawn(r) : null;
+
+    public string CombatLogText(Pawn pov) => AssociatedDamageEntry?.ToGameStringFromPOV(pov);
+    public string TransitionText(Pawn pov) => transitionEntry.ToGameStringFromPOV(pov);
+}
+
 public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecord<CasualtyRecorder.KilledOrDownedInput>
 {
-    // TODO: add instigator from combat log in cause transition log misses it. 
-    public record KillInput(Pawn Subject, Pawn Initiator, string CombatLogText, string TransitionText, Pawn OriginalTargetPawn);
-    public record KilledOrDownedInput(Pawn Subject, Pawn Initiator, CasualtyType Casualty, HediffDef CulpritHediff, string CombatLogText, string TransitionText, Pawn OriginalTargetPawn, bool IsLeader);
+    // TODO: add instigator from combat log in case transition log misses it. 
+    public record KillInput(Pawn Subject, Pawn Initiator, CasualtyContext Context);
+    public record KilledOrDownedInput(Pawn Subject, Pawn Initiator, CasualtyType Casualty, HediffDef CulpritHediff, CasualtyContext Context, bool IsLeader);
 
     private static readonly HashSet<HediffDef> CulpritHediffBlacklist = new List<HediffDef>
     {
@@ -25,81 +37,77 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
     {
         GameEventBus.Subscribe<CasualtyLogAddedEvent>(e =>
         {
-            var isLeader = e.Subject.IsFactionLeader(); // cache leader before it is reassigned next tick
+            var isLeader = e.Subject.IsFactionLeader();
+            var context = new CasualtyContext(e.Battle, e.TransitionEntry, e.Subject);
 
-            // TODO: add context class to intercept DamageWorker.AssociateWithLog, remove the delay(0) hack, and test the order of death > royal title inheritance to if it's fixed. 
-            // We intercept BattleLog.Add() but it runs before DamageWorker.AssociateWithLog() which is required to populate bodyPart data so we can get the
-            // exact in-game combat log. But since DamageWorker.AssociateWithLog() is not always used we need to pick BattleLog.Add and fallback.
-            TickDelayManager.Delay(0, () =>
-            {
-                Pawn originalTargetPawn = null;
-                // Note: Do not rely on the order. Most of the time, transitionEntry is inserted before the damageResultEntry, but occasionally the opposite happens.
-                // Luckily they happen on the same tick if the damage cause state transition.
-                var lastDamageEntry = e.Battle.Entries.FirstOrDefault(l => l.Tick == e.TransitionEntry.Tick && l is LogEntry_DamageResult && l.Concerns(e.Subject)) as LogEntry_DamageResult;
+            if (e.Casualty == CasualtyType.Killed)
+                CreateRecord(new KillInput(e.Subject, e.Initiator, context));
 
-                if (lastDamageEntry is BattleLogEntry_RangedImpact rangedEntry)
-                    originalTargetPawn = Accessor.BattleLogEntry_RangedImpact.OriginalTargetPawn(rangedEntry);
-
-                if (e.Casualty == CasualtyType.Killed)
-                {
-                    var combatLogText = lastDamageEntry?.ToGameStringFromPOV(e.Initiator);
-                    var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Initiator);
-                    CreateRecord(new KillInput(e.Subject, e.Initiator, combatLogText, transitionText, originalTargetPawn));
-                }
-                if (CulpritHediffBlacklist.Contains(e.CulpritHediff))
-                {
-                    var combatLogText = lastDamageEntry?.ToGameStringFromPOV(e.Subject);
-                    var transitionText = e.TransitionEntry.ToGameStringFromPOV(e.Subject);
-                    CreateRecord(new KilledOrDownedInput(e.Subject, e.Initiator, e.Casualty, e.CulpritHediff, combatLogText, transitionText, originalTargetPawn, isLeader));
-                }
-            });
+            if (!CulpritHediffBlacklist.Contains(e.CulpritHediff))
+                CreateRecord(new KilledOrDownedInput(e.Subject, e.Initiator, e.Casualty, e.CulpritHediff, context, isLeader));
         });
     }
 
     public override void CreateRecord(KillInput input)
     {
-        var (subject, initiator, combatLogText, transitionText, originalTarget) = input;
+        var (subject, initiator, context) = input;
         if (!ShouldRecord(initiator))
             return;
 
-        var desc = $"{combatLogText} {transitionText}";
-        AddRecord(HistoryRecordDefOf.Kill, initiator, desc, [subject, originalTarget]);
+        // Use callback to delay until after DamageWorker.AssociateWithLog() runs, since it populates the body part data required to retrieve the exact in-game combat log.
+        AddRecord(HistoryRecordDefOf.Kill, initiator, () =>
+        {
+            var combatLogText = context.CombatLogText(initiator);
+            var transitionText = context.TransitionText(initiator);
+            var desc = $"{combatLogText} {transitionText}";
+            return new HistoryRecordWriteRequest(HistoryRecordDefOf.Kill, initiator, desc, [subject, context.OriginalTargetPawn]);
+        });
     }
 
     public void CreateRecord(KilledOrDownedInput input)
     {
-        var (subject, initiator, casualty, culpritHediff, combatLogText, transitionText, originalTarget, isLeader) = input;
+        var (subject, initiator, casualty, culpritHediff, context, isLeader) = input;
         if (!ShouldRecord(subject))
             return;
 
         var isKillLog = casualty == CasualtyType.Killed;
         var recordDef = isKillLog ? HistoryRecordDefOf.Death : HistoryRecordDefOf.Downed;
 
-        string desc;
-        // combatLogText is null when:
-        // - Log entry is not associated with any active battle. Non-combat dead needs to be handled manually (e.g. BloodLoss, ToxicBuildup...)
-        if (combatLogText == null)
+        AddRecord(recordDef, subject, () =>
         {
-            var hediffInt = subject.health.hediffSet.hediffs.LastOrDefault(h => h.def == culpritHediff);
-            var rootKeyword = isKillLog ? "killedEntry" : "downedEntry";
-            desc = recordDef.Description(subject)
-                .IncludePawnGrammar()
-                .AddConstant("factionLeader", isLeader)
-                .AddRule("HediffInPart", hediffInt?.LabelNounPretty())
-                .AddConstant("hasReason", hediffInt != null)
-                .Resolve(rootKeyword);
-        }
-        else
-            desc = $"{combatLogText} {transitionText}";
+            var combatLogText = context.CombatLogText(subject);
+            var transitionText = context.TransitionText(subject);
+            // combatLogText is null when:
+            // - Log entry is not associated with any active battle. Non-combat dead needs to be handled manually (e.g. BloodLoss, ToxicBuildup...)
+            var desc = combatLogText != null
+                ? $"{combatLogText} {transitionText}"
+                : GetFallbackDeathDescription(input);
 
-        AddRecord(recordDef, subject, desc, [initiator, originalTarget]);
+            RecordLocation location = null;
+            if (isKillLog)
+            {
+                var lastRecord = subject.HistoryRecords.LastOrDefault();
+                if (lastRecord != null && IsDeathLocationSource(lastRecord.def))
+                    location = lastRecord.location;
+
+                if (lastRecord?.def == HistoryRecordDefOf.Downed && GenTicks.TicksAbs - lastRecord?.date <= 1)
+                {
+                    Log.Message($"[PawnHistory] Received death & downed transitions from {subject.NameShortColored} in the same tick. Skipping down transition..");
+                    subject.HistoryRecords.Pop();
+                }
+            }
+
+            return new HistoryRecordWriteRequest(recordDef, subject, desc, [initiator, context.OriginalTargetPawn], location);
+        });
 
         if (isKillLog)
-            CreatePovDeathRecord(subject, initiator, originalTarget, combatLogText, transitionText, desc);
+            CreatePovDeathRecord(input);
     }
 
-    private void CreatePovDeathRecord(Pawn deceased, Pawn initiator, Pawn originalTarget, string combatLogText, string transitionText, string deathDesc)
+    private void CreatePovDeathRecord(KilledOrDownedInput input)
     {
+        var (deceased, initiator, _, _, context, _) = input;
+        var originalTarget = context.OriginalTargetPawn;
         foreach (var relative in deceased.relations.PotentiallyRelatedPawns)
         {
             if (!ShouldRecord(relative))
@@ -108,14 +116,22 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
             var relationDef = relative.GetMostImportantRelation(deceased);
             if (relationDef == null || (relative.relations?.DirectRelationExists(PawnRelationDefOf.Bond, deceased) ?? false)) continue;
 
-            var recordDef = HistoryRecordDefOf.RelativeDeath;
-            var pov = recordDef.Description(relative)
-                .AddRule("Relation", relationDef.GetGenderSpecificLabel(deceased))
-                .AddRule("Subject", deceased)
-                .Resolve("povRelative");
-            var desc = CreatePovDescription(deceased, pov);
+            AddRecord(HistoryRecordDefOf.RelativeDeath, relative, () =>
+            {
+                var recordDef = HistoryRecordDefOf.RelativeDeath;
+                var pov = recordDef.Description(relative)
+                    .AddRule("Relation", relationDef.GetGenderSpecificLabel(deceased))
+                    .AddRule("Subject", deceased)
+                    .Resolve("povRelative");
+                var desc = CreatePovDescription(pov);
 
-            AddRecord(recordDef, relative, desc, [deceased, initiator, originalTarget]);
+                RecordLocation location = null;
+                var lastRecord = deceased.HistoryRecords.LastOrDefault();
+                if (lastRecord?.def == HistoryRecordDefOf.Death)
+                    location = lastRecord.location;
+
+                return new HistoryRecordWriteRequest(recordDef, relative, desc, [deceased, initiator, originalTarget], location);
+            });
         }
 
         if (!RelationHelper.TryGetBondedHumans(deceased, out var bondedHumans))
@@ -127,22 +143,28 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
                 continue;
 
             var recordDef = HistoryRecordDefOf.BondedAnimalDeath;
-            var pov = recordDef.Description(human)
-                .AddRule("AnimalKind", deceased.kindDef)
-                .AddRule("Subject", deceased)
-                .AddConstant("hasName", deceased.Name != null)
-                .Resolve("povBondedAnimal");
-            var desc = CreatePovDescription(deceased, pov);
+            AddRecord(recordDef, human, () =>
+            {
+                var pov = recordDef.Description(human)
+                    .AddRule("AnimalKind", deceased.kindDef)
+                    .AddRule("Subject", deceased)
+                    .AddConstant("hasName", deceased.Name != null)
+                    .Resolve("povBondedAnimal");
+                var desc = CreatePovDescription(pov);
 
-            AddRecord(recordDef, human, desc, [deceased, initiator, originalTarget]);
+                return new HistoryRecordWriteRequest(recordDef, human, desc, [deceased, initiator, originalTarget]);
+            });
         }
 
         return;
 
-        string CreatePovDescription(Pawn deadPawn, string pov)
+        string CreatePovDescription(string pov)
         {
+            var combatLogText = context.CombatLogText(deceased);
+            var transitionText = context.TransitionText(deceased);
+            var deathDesc = GetFallbackDeathDescription(input);
             const StringComparison comparisonType = StringComparison.OrdinalIgnoreCase; // 'the elephant' is capitalized as the first word 
-            var name = deadPawn.NameDef;
+            var name = deceased.NameDef;
             // "A died" -> "C's brother, A, died"
             return combatLogText != null
                 ? transitionText.ReplaceFirstMatch(name, pov, comparisonType) + " " + combatLogText
@@ -150,33 +172,19 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         }
     }
 
-    internal override HistoryRecordWriteRequest FinalizePriorityWriteRequest(HistoryRecordWriteRequest request)
+    private static string GetFallbackDeathDescription(KilledOrDownedInput input)
     {
-        if (request.Location != null)
-            return request;
-
-        if (request.Def == HistoryRecordDefOf.Death)
-        {
-            var lastRecord = request.Pawn.HistoryRecords.LastOrDefault();
-            if (lastRecord != null && IsDeathLocationSource(lastRecord.def))
-                return request with { Location = lastRecord.location };
-
-            if (lastRecord?.def == HistoryRecordDefOf.Downed && GenTicks.TicksAbs - lastRecord?.date <= 1)
-            {
-                Log.Message($"[PawnHistory] Received death & downed transitions from {request.Pawn.NameShortColored} in the same tick. Skipping down transition..");
-                request.Pawn.HistoryRecords.Pop();
-            }
-        }
-
-        if (request.Def == HistoryRecordDefOf.RelativeDeath)
-        {
-            var deceased = request.Concerns?.OfType<Pawn>().FirstOrDefault();
-            var lastRecord = deceased?.HistoryRecords.LastOrDefault();
-            if (lastRecord?.def == HistoryRecordDefOf.Death)
-                return request with { Location = lastRecord.location };
-        }
-
-        return request;
+        var (subject, _, casualty, culpritHediff, _, isLeader) = input;
+        var isKillLog = casualty == CasualtyType.Killed;
+        var recordDef = isKillLog ? HistoryRecordDefOf.Death : HistoryRecordDefOf.Downed;
+        var hediffInt = subject.health.hediffSet.hediffs.LastOrDefault(h => h.def == culpritHediff);
+        var rootKeyword = isKillLog ? "killedEntry" : "downedEntry";
+        return recordDef.Description(subject)
+            .IncludePawnGrammar()
+            .AddConstant("factionLeader", isLeader)
+            .AddRule("HediffInPart", hediffInt?.LabelNounPretty())
+            .AddConstant("hasReason", hediffInt != null)
+            .Resolve(rootKeyword);
     }
 
     private static bool IsDeathLocationSource(HistoryRecordDef def) =>

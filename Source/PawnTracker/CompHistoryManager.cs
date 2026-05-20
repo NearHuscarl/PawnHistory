@@ -1,7 +1,7 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
-using PawnHistory.Source.PawnTracker.Recorders;
 using PawnHistory.Source.PawnTracker.Ui;
 using RimWorld;
 using Verse;
@@ -35,10 +35,15 @@ internal static class CompHistoryManager
         return comp;
     }
     
-    public static HistoryRecord WriteRecord(HistoryRecordWriteRequest request, RecorderBase recorder = null)
+    public static HistoryRecord WriteRecord(HistoryRecordWriteRequest request)
     {
-        if (!HistoryRecordPriority.TryGetPriority(request.Def, out var priority))
-            return WriteRecordNow(request);
+        return WriteRecord(request.Def, request.Pawn, () => request);
+    }
+
+    public static HistoryRecord WriteRecord(HistoryRecordDef def, Pawn pawn, Func<HistoryRecordWriteRequest> resolveRequest)
+    {
+        if (!HistoryRecordPriority.TryGetPriority(def, out var priority))
+            return WriteRecordNow(resolveRequest());
 
         var tick = GenTicks.TicksAbs;
         if (!PendingPriorityRecords.TryGetValue(tick, out var pending))
@@ -48,9 +53,8 @@ internal static class CompHistoryManager
             TickDelayManager.Delay(0, () => FlushPriorityRecords(tick));
         }
 
-        pending.Add(new PendingPriorityRecordWrite(request, recorder, priority, nextPrioritySequence++));
+        pending.Add(new PendingPriorityRecordWrite(pawn, priority, nextPrioritySequence++, resolveRequest));
         return null;
-
     }
 
     private static void FlushPriorityRecords(int tick)
@@ -58,10 +62,10 @@ internal static class CompHistoryManager
         if (!PendingPriorityRecords.Remove(tick, out var pending) || pending.Count == 0)
             return;
 
-        foreach (var pawnGroup in pending.GroupBy(p => p.Request.Pawn))
+        foreach (var pawnGroup in pending.GroupBy(p => p.Pawn))
         {
             foreach (var entry in pawnGroup.OrderBy(e => e.Priority).ThenBy(e => e.Sequence))
-                WriteRecordNow(entry.Recorder.FinalizePriorityWriteRequest(entry.Request));
+                WriteRecordNow(entry.ResolveRequest());
         }
     }
 
@@ -116,7 +120,11 @@ internal static class CompHistoryManager
     }
 }
 
-internal readonly record struct PendingPriorityRecordWrite(HistoryRecordWriteRequest Request, RecorderBase Recorder, int Priority, int Sequence);
+internal readonly record struct PendingPriorityRecordWrite(
+    Pawn Pawn,
+    int Priority,
+    int Sequence,
+    Func<HistoryRecordWriteRequest> ResolveRequest);
 
 internal record struct HistoryRecordWriteRequest(
     HistoryRecordDef Def,

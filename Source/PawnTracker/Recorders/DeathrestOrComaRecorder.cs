@@ -16,30 +16,30 @@ public class DeathrestOrComaRecorder : RecorderBase<DeathrestOrComaEvent>
 
     public override void CreateRecord(DeathrestOrComaEvent e)
     {
-        if (!ShouldRecord(e.Pawn))
+        var pawn = e.Pawn;
+        if (!ShouldRecord(pawn))
+            return;
+
+        if (e.Reason != DeathrestStartReason.LethalDamage)
             return;
 
         var recordDef = HistoryRecordDefOf.DeathrestOrComa;
-        var desc = recordDef.Description(e.Pawn)
-            .AddConstant("reason", e.Reason)
-            .AddConstant("isDeathRest", e.IsDeathRest)
-            .Resolve();
 
-        AddRecord(recordDef, e.Pawn, desc);
-    }
-
-    internal override HistoryRecordWriteRequest FinalizePriorityWriteRequest(HistoryRecordWriteRequest request)
-    {
-        var pawn = request.Pawn;
-        var logEntry = Find.BattleLog.Battles.Where(b => b.Concerns(pawn)).SelectMany(b => b.Entries).FirstOrDefault(entry => IsRelatedCombatEntry(entry, pawn)) as LogEntry_DamageResult;
-        var concerns = logEntry?.GetConcerns() ?? [];
-        var combatLog = logEntry?.ToGameStringFromPOV(null); // at this point, DamageWorker.AssociateWithLog() was finished.
-        
-        if (!string.IsNullOrEmpty(combatLog))
-            request.Desc = $"{combatLog} {request.Desc}";
-        request.Concerns = [..request.Concerns ?? [], ..concerns];
-        
-        return request;
+        AddRecord(recordDef, pawn, () =>
+        {
+            var desc = recordDef.Description(pawn)
+                .AddConstant("reason", e.Reason)
+                .AddConstant("isDeathRest", e.IsDeathRest)
+                .Resolve();
+            var logEntry = Find.BattleLog.Battles.Where(b => b.Concerns(pawn)).SelectMany(b => b.Entries).FirstOrDefault(entry => IsRelatedCombatEntry(entry, pawn)) as LogEntry_DamageResult;
+            var concerns = logEntry?.GetConcerns() ?? [];
+            var combatLog = logEntry?.ToGameStringFromPOV(null); // at this point, DamageWorker.AssociateWithLog() was finished.
+            
+            if (!string.IsNullOrEmpty(combatLog))
+                desc = $"{combatLog} {desc}";
+            
+            return new HistoryRecordWriteRequest(recordDef, pawn, desc, concerns);
+        });
     }
 
     private static bool IsRelatedCombatEntry(LogEntry entry, Pawn pawn)
@@ -80,7 +80,7 @@ public class DeathrestOrComaRecorder : RecorderBase<DeathrestOrComaEvent>
         Expect.That(deathrestPawn.HistoryRecords.TakeLast(3).Select(r => r.def))
             .SequenceEqual([HistoryRecordDefOf.BodyPartDestroyed, HistoryRecordDefOf.DeathrestOrComa, HistoryRecordDefOf.SkillLeveledDown]);
         Expect.That(comaPawn).ToHaveHistoryRecord(HistoryRecordDefOf.DeathrestOrComa, "[PAWN] entered a regenerative coma after suffering lethal damage.");
-        Expect.That(deathrestPawn.HistoryRecords.TakeLast(3).Select(r => r.def))
+        Expect.That(comaPawn.HistoryRecords.TakeLast(3).Select(r => r.def))
             .SequenceEqual([HistoryRecordDefOf.BodyPartDestroyed, HistoryRecordDefOf.DeathrestOrComa, HistoryRecordDefOf.SkillLeveledDown]);
         Expect.That(deathrestPawn.HistoryRecords.Select(r => r.def)).Not().Contain(HistoryRecordDefOf.Downed);
     }

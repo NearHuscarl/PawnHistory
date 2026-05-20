@@ -10,7 +10,7 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class RaidComp_WorkSite : RaidComp
 {
-    public override bool Match(BuildInput input) => ModsConfig.IdeologyActive && input.Quest.root == Extra.QuestScriptDefOf.OpportunitySite_WorkSite;
+    public override bool Match(BuildInput input) => ModsConfig.IdeologyActive && input.Quest?.root == Extra.QuestScriptDefOf.OpportunitySite_WorkSite;
 
     public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {

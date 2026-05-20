@@ -1,3 +1,5 @@
+using System.Linq;
+using PawnHistory.Source.Helper;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
@@ -52,6 +54,7 @@ public class TitleInheritedRecorder : RecorderBase<TitleInheritanceEvent>
             Description = "[PAWN] was set to inherit the Praetor title from [Deceased] according to the succession laws of [Faction] upon completion of a bestowing ceremony.",
             Concerns = [deceased]
         });
+        Expect.That(heir.HistoryRecords.TakeLast(2).Select(r => r.def)).SequenceEqual([HistoryRecordDefOf.RelativeDeath, HistoryRecordDefOf.TitleInherited]);
     }
 
     [RequiresRoyalty]
@@ -65,5 +68,6 @@ public class TitleInheritedRecorder : RecorderBase<TitleInheritanceEvent>
             Description = "[PAWN] was set to inherit the Archon title from [Deceased] according to the succession laws of [Faction], replacing [His] Praetor title upon completion of a bestowing ceremony.",
             Concerns = [deceased]
         });
+        Expect.That(heir.HistoryRecords.TakeLast(2).Select(r => r.def)).SequenceEqual([HistoryRecordDefOf.RelativeDeath, HistoryRecordDefOf.TitleInherited]);
     }
 }

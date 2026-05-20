@@ -30,7 +30,6 @@ public abstract class RecorderBase
     protected bool ShouldRecord(Pawn pawn) => RecorderManager.ShouldRecord(pawn);
     public abstract void Register();
     internal virtual IEnumerable<HistoryBackfillDefinition> GetBackfillDefinitions() => [];
-    internal virtual HistoryRecordWriteRequest FinalizePriorityWriteRequest(HistoryRecordWriteRequest request) => request;
 
     protected IEnumerable<HistoryRecord> GeRecordsOfType(Pawn pawn, HistoryRecordDef def, int limit = 100)
     {
@@ -70,7 +69,13 @@ public abstract class RecorderBase
         int? tileId = null,
         Quest quest = null)
     {
-        return CompHistoryManager.WriteRecord(new HistoryRecordWriteRequest(def, pawn, desc, concerns, location, tileId, quest), this);
+        var request = new HistoryRecordWriteRequest(def, pawn, desc, concerns, location, tileId, quest);
+        return CompHistoryManager.WriteRecord(request);
+    }
+
+    private protected HistoryRecord AddRecord(HistoryRecordDef def, Pawn pawn, Func<HistoryRecordWriteRequest> resolveRequest)
+    {
+        return CompHistoryManager.WriteRecord(def, pawn, resolveRequest);
     }
 }
 

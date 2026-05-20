@@ -6,7 +6,7 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class RaidComp_RoyalAscent : RaidComp
 {
-    public override bool Match(BuildInput input) => ModsConfig.RoyaltyActive && input.Quest.root == Extra.QuestScriptDefOf.EndGame_RoyalAscent;
+    public override bool Match(BuildInput input) => ModsConfig.RoyaltyActive && input.Quest?.root == Extra.QuestScriptDefOf.EndGame_RoyalAscent;
 
     public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
