@@ -25,7 +25,6 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
         var involvedFactions = e.Quest.InvolvedFactions.ToList();
         var questPawns = QuestHelper.GetQuestPawns(e.Quest).ToList();
 
-        // TODO: handle helper from Util_MaybeGenerateHelpers
         foreach (var pawn in e.Pawns)
         {
             if (!ShouldRecord(pawn))
@@ -138,7 +137,7 @@ public class QuestPawnArrivedRecorder : RecorderBase<QuestPawnArrivedEvent>
             Expect.ThatAll(raiders).ToHaveHistoryRecord(new ExpectedHistoryRecord
             {
                 Def = HistoryRecordDefOf.QuestPawnArrived,
-                Description = "[PAWN] and [n] others from [Faction] attacked the crashed shuttle site.",
+                Description = "[PAWN] and [n] others from [Faction] attacked the shuttle crash site.",
                 Quest = quest,
             });
         });

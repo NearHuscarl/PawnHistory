@@ -43,6 +43,7 @@
 - `ForceInjuryScar`: forces injury healing to leave a scar.
 - `ForcePostHealScar`: forces post-heal scar behavior.
 - `AlwaysHaveHelpersInQuest`: forces helper-pawn presence in quest flows that support it.
+- `DisableNamePlayerFactionDialog`: disable faction naming popup to avoid interrupting long-running tests.
 - `RefugeeAlwaysAssaultOnViolation`: forces the refugee violation path into assault.
 - `ForceSlaveRebellionType`: forces a specific slave rebellion type.
 - `ForceSlaveRebellionViolent`: forces the violent rebellion branch when relevant.

@@ -18,26 +18,6 @@ public enum QuestPawnKind
 
 public static class QuestHelper
 {
-    private static readonly HashSet<PawnKindDef> CombatKinds = new List<PawnKindDef>
-    {
-        // from Util_ChooseRandomQuestHelperKind
-        PawnKindDefOf.Empire_Fighter_Trooper,
-        PawnKindDefOf.Empire_Fighter_Janissary,
-        Extra.PawnKindDefOf.Empire_Fighter_Champion,
-        PawnKindDefOf.Empire_Fighter_Cataphract,
-        Extra.PawnKindDefOf.Tribal_Archer,
-        Extra.PawnKindDefOf.Tribal_Berserker,
-        Extra.PawnKindDefOf.Tribal_HeavyArcher,
-        Extra.PawnKindDefOf.Tribal_Warrior,
-        Extra.PawnKindDefOf.Mercenary_Elite_Acidifier,
-        Extra.PawnKindDefOf.Mercenary_Slasher_Acidifier,
-        Extra.PawnKindDefOf.Mercenary_Gunner_Acidifier,
-        Extra.PawnKindDefOf.Mercenary_Sniper_Acidifier,
-        // EndGame_RoyalAscent quest
-        Extra.PawnKindDefOf.Empire_Fighter_StellicGuardRanged,
-        Extra.PawnKindDefOf.Empire_Fighter_StellicGuardMelee,
-    }.Where(k => k != null).ToHashSet();
-
     public static QuestPawnKind GetQuestPawnKind(Quest quest, Pawn pawn)
     {
         var kind = QuestPawnKind.Guest;
@@ -46,9 +26,9 @@ public static class QuestHelper
             kind = QuestPawnKind.Raider;
         else if (IsReward(quest, pawn) || pawn.HomeFaction == Faction.OfPlayer && pawn.records.GetValue(RecordDefOf.TimeAsColonistOrColonyAnimal) == 0)
             kind = QuestPawnKind.Joiner;
-        else if (CombatKinds.Contains(pawn.kindDef))
+        else if (IsHelper(quest, pawn))
             kind = QuestPawnKind.Helper;
-        else if (pawn.HomeFaction != Faction.OfPlayer && pawn.guest?.GuestStatus == GuestStatus.Guest)
+        else if (pawn.IsQuestLodger())
             kind = QuestPawnKind.Lodger;
 
         return kind;
@@ -153,6 +133,43 @@ public static class QuestHelper
     
     public static Pawn GetAsker(Quest quest)
     {
-        return quest?.GetFirstPartOfType<QuestPart_PawnHistory>()?.Asker;
+        if (quest == null)
+            return null;
+
+        var questPart_PawnHistory = quest.GetFirstPartOfType<QuestPart_PawnHistory>();
+        
+        if (quest.root == Extra.QuestScriptDefOf.ThreatReward_Raid_Joiner)
+            return questPart_PawnHistory?.Joiner;
+
+        return questPart_PawnHistory?.Asker;
+    }
+
+    private static readonly HashSet<PawnKindDef> CombatKinds = new List<PawnKindDef>
+    {
+        // from Util_ChooseRandomQuestHelperKind
+        PawnKindDefOf.Empire_Fighter_Trooper,
+        PawnKindDefOf.Empire_Fighter_Janissary,
+        Extra.PawnKindDefOf.Empire_Fighter_Champion,
+        PawnKindDefOf.Empire_Fighter_Cataphract,
+        Extra.PawnKindDefOf.Tribal_Archer,
+        Extra.PawnKindDefOf.Tribal_Berserker,
+        Extra.PawnKindDefOf.Tribal_HeavyArcher,
+        Extra.PawnKindDefOf.Tribal_Warrior,
+        Extra.PawnKindDefOf.Mercenary_Elite_Acidifier,
+        Extra.PawnKindDefOf.Mercenary_Slasher_Acidifier,
+        Extra.PawnKindDefOf.Mercenary_Gunner_Acidifier,
+        Extra.PawnKindDefOf.Mercenary_Sniper_Acidifier,
+        // EndGame_RoyalAscent quest
+        Extra.PawnKindDefOf.Empire_Fighter_StellicGuardRanged,
+        Extra.PawnKindDefOf.Empire_Fighter_StellicGuardMelee,
+    }.Where(k => k != null).ToHashSet();
+
+    public static bool IsHelper(Quest quest, Pawn pawn)
+    {
+        if (quest == null)
+            return false;
+        
+        var isDesignatedHelper = quest.GetFirstPartOfType<QuestPart_PawnHistory>()?.Helpers.Contains(pawn) ?? false;
+        return isDesignatedHelper || CombatKinds.Contains(pawn.kindDef) && !pawn.HostileTo(Faction.OfPlayer);
     }
 }

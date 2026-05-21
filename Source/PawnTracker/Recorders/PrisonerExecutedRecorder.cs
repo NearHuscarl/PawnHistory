@@ -88,6 +88,7 @@ public class PrisonerExecutedRecorder : RecorderBase<PrisonerExecutedEvent>
         Expect.That(prisoner).Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.Death, -1);
     }
 
+    [TestTag("Flaky")]
     public void TestGuiltyColonist(TestScenario scenario)
     {
         scenario.SpeedUp();

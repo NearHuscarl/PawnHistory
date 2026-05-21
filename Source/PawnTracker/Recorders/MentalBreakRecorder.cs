@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
-using Verse.AI;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -39,7 +38,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         var builder = recordDef.Description(pawn)
             .IncludePawnGrammar()
             .AddRule("Target", target, addSubsymbols: true)
-            .AddRule("InGameDesc", mentalState?.GetBeginLetterText().Resolve().Replace("\r", " ").Replace("\n", " ").Trim('.'))
+            .AddRule("InGameDesc", mentalState?.GetBeginLetterText().Resolve()?.Replace("\r", " ").Replace("\n", " ").Trim('.'))
             .AddRule("ReasonHediff", reason.Hediff?.LabelNounInBracket())
             .AddRule("ReasonTrait", reason.Trait?.Colorize(NeedsCardUtility.MoodColorNegative))
             .AddRule("ReasonMood", ParsePoorMoodReason(reason.InGameReason)?.Colorize(NeedsCardUtility.MoodColorNegative))
@@ -183,6 +182,8 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
 
     public void TestAnimalSlaughterer(TestScenario scenario)
     {
+        scenario.SpeedUp();
+
         var animal = scenario.Pawn()
             .Animal()
             .WithFaction(Faction.OfPlayer)

@@ -12,6 +12,7 @@ public static class TestManager
     public static int Timeout = DefaultTimeout;
     internal static TestContext Ctx;
     internal static TestScenario Scenario = new();
+    public static bool IsRunningTest => Scenario != TestScenario.Empty;
     private static readonly Queue<Action> Queue = new();
     private static bool isRunningTestCollection;
     public static bool EnableDebugMap = false;

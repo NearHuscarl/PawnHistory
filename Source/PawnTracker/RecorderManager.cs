@@ -96,15 +96,17 @@ public static class RecorderManager
     {
         var actionNodes = new List<DebugActionNode>();
         var testMethodInfos = ScanTestMethods();
-        var allDeclaredTags = testMethodInfos.SelectMany(t => t.Attributes.Tags)
+        var userDefinedTags = testMethodInfos.SelectMany(t => t.Attributes.Tags)
             .Where(t => !string.IsNullOrEmpty(t))
             .Distinct()
             .OrderBy(t => t);
+        var dlcTags = testMethodInfos.SelectMany(t => t.Attributes.ModActiveById.Keys).Distinct();
+        List<string> allTags = [..userDefinedTags, ..dlcTags];
 
-        foreach (var tag in allDeclaredTags)
+        foreach (var tag in allTags)
         {
             var taggedMethodInfos = testMethodInfos
-                .Where(t => t.Attributes.DebugValues == null && !t.Attributes.SkipTest && t.Attributes.Tags.Contains(tag))
+                .Where(t => t.Attributes.DebugValues == null && !t.Attributes.SkipTest && (t.Attributes.Tags.Contains(tag) || t.Attributes.ModActiveById.GetValueOrDefault(tag)))
                 .ToList();
             actionNodes.Add(new DebugActionNode($"{tag} ({taggedMethodInfos.Count})", DebugActionType.Action, () =>
             {

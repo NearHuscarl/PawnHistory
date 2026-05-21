@@ -44,6 +44,7 @@ public class TitleInheritedRecorder : RecorderBase<TitleInheritanceEvent>
     }
 
     [RequiresRoyalty]
+    [TestTag("Flaky")]
     public void TestWasInherited(TestScenario scenario)
     {
         var (heir, deceased) = SetupInheritance(scenario, Extra.RoyalTitleDefOf.Praetor);
@@ -58,6 +59,7 @@ public class TitleInheritedRecorder : RecorderBase<TitleInheritanceEvent>
     }
 
     [RequiresRoyalty]
+    [TestTag("Flaky")]
     public void TestAsReplacement(TestScenario scenario)
     {
         var (heir, deceased) = SetupInheritance(scenario, RoyalTitleDefOf.Count, Extra.RoyalTitleDefOf.Praetor);

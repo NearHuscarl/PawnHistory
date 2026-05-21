@@ -38,7 +38,7 @@ public class MentalBreakComp_TargetedTantrum : MentalBreakComp
         var mentalState = (MentalState_TargetedTantrum)pawn.MentalState;
         Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
-            Def = HistoryRecordDefOf.MentalBreak,
+            Def = HistoryRecordDefOf.MentalBreakViolent,
             Description = $"[PAWN] had a tantrum. [He] was going to destroy [Thing]. {MentalBreakRecorder.MoodReasonTemplate}",
             Concerns = [mentalState.target],
         });
