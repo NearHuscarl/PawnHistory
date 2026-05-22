@@ -24,19 +24,23 @@ public class GaveBirthRecorder : RecorderBase<GaveBirthEvent>
         var recordDef = HistoryRecordDefOf.GaveBirth;
         
         if (ShouldRecord(e.Baby))
-            AddRecord(recordDef, e.Baby, CreateDescription(e, BabyPov), [e.Carrier, e.GeneticMother, e.Father]);
+            AddRecord(recordDef, e.Baby, CreateDescription(e, e.Baby, BabyPov), [e.Carrier, e.GeneticMother, e.Father]);
 
         if (ShouldRecord(e.Carrier))
-            AddRecord(recordDef, e.Carrier, CreateDescription(e, CarrierPov), [e.Baby, e.GeneticMother, e.Father]);
+            AddRecord(recordDef, e.Carrier, CreateDescription(e, e.Carrier, CarrierPov), [e.Baby, e.GeneticMother, e.Father]);
         
         if (e.IsVatBirth && ShouldRecord(e.GeneticMother))
-            AddRecord(recordDef, e.GeneticMother, CreateDescription(e, CarrierPov), [e.Baby, e.Father]);
+            AddRecord(recordDef, e.GeneticMother, CreateDescription(e, e.GeneticMother, CarrierPov), [e.Baby, e.Father]);
     }
 
-    private static string CreateDescription(GaveBirthEvent e, string pov)
+    private static string CreateDescription(GaveBirthEvent e, Pawn pawn, string pov)
     {
-        return HistoryRecordDefOf.GaveBirth.Description(e.Baby, "Baby")
+        var relation = pawn.GetMostImportantRelation(e.Baby)?.GetGenderSpecificLabel(e.Baby);
+        
+        return HistoryRecordDefOf.GaveBirth.Description(pawn)
             .IncludePawnGrammar()
+            .AddRule("Baby", e.Baby, addSubsymbols: true)
+            .AddRule("Relation", relation)
             .AddRule("Carrier", e.Carrier)
             .AddRule("GeneticMother", e.GeneticMother)
             .AddRule("Father", e.Father)
@@ -71,10 +75,11 @@ public class GaveBirthRecorder : RecorderBase<GaveBirthEvent>
     public void TestNaturalMotherDied(TestScenario scenario)
     {
         scenario.ForceMotherDeathDuringBirth = true;
-        AssertNaturalBirthOutcome(scenario, 0, "[Carrier] gave birth to a sick baby.", "[Baby] was born sick to [Carrier].");
+        var mother = AssertNaturalBirthOutcome(scenario, 0, "[Carrier] gave birth to a sick baby.", "[Baby] was born sick to [Carrier].");
+        Expect.That(mother).ToHaveHistoryRecord(HistoryRecordDefOf.Death, "[PAWN] died because of childbirth complications.");
     }
 
-    private static void AssertNaturalBirthOutcome(TestScenario scenario, int positivityIndex, string povCarrierDesc, string povBabyDescription)
+    private static Pawn AssertNaturalBirthOutcome(TestScenario scenario, int positivityIndex, string povCarrierDesc, string povBabyDescription)
     {
         var mother = CreateParent(scenario, Gender.Female);
         var father = CreateParent(scenario, Gender.Male);
@@ -98,6 +103,8 @@ public class GaveBirthRecorder : RecorderBase<GaveBirthEvent>
             Expect.That(baby).ToHaveHistoryRecordOf(HistoryRecordDefOf.Death);
             Expect.That(mother).ToHaveHistoryRecordOf(HistoryRecordDefOf.RelativeDeath);
         }
+
+        return mother;
     }
 
     [RequiresBiotech]
@@ -127,40 +134,52 @@ public class GaveBirthRecorder : RecorderBase<GaveBirthEvent>
     [RequiresBiotech]
     public void TestVatHealthy(TestScenario scenario)
     {
-        AssertVatBirthOutcome(scenario, 1, true, "[Baby] was born healthy from a growth-vat embryo of [GeneticMother] and [Father].");
+        AssertVatBirthOutcome(scenario, 1, true,
+            "[Carrier]'s [daughter], [Baby], was born healthy from a growth-vat embryo of [GeneticMother] and [Father].",
+            "[Baby] was born healthy from a growth-vat embryo of [GeneticMother] and [Father].");
     }
 
     [RequiresBiotech]
     public void TestVatSick(TestScenario scenario)
     {
-        AssertVatBirthOutcome(scenario, 0, true, "[Baby] was born sick from a growth-vat embryo of [GeneticMother] and [Father].");
+        AssertVatBirthOutcome(scenario, 0, true,
+            "[Carrier]'s [daughter], [Baby], was born sick from a growth-vat embryo of [GeneticMother] and [Father].",
+            "[Baby] was born sick from a growth-vat embryo of [GeneticMother] and [Father].");
     }
 
     [RequiresBiotech]
     public void TestVatStillborn(TestScenario scenario)
     {
-        AssertVatBirthOutcome(scenario, -1, true, "[Baby] was born from a growth-vat embryo of [GeneticMother] and [Father].");
+        AssertVatBirthOutcome(scenario, -1, true,
+            "[Carrier]'s [daughter], [Baby] was born from a growth-vat embryo of [GeneticMother] and [Father].",
+            "[Baby] was born from a growth-vat embryo of [GeneticMother] and [Father].");
     }
 
     [RequiresBiotech]
     public void TestVatHealthyNoParents(TestScenario scenario)
     {
-        AssertVatBirthOutcome(scenario, 1, false, "[Baby] was born healthy from a growth-vat embryo.");
+        AssertVatBirthOutcome(scenario, 1, false,
+            "[Carrier]'s [daughter], [Baby] was born healthy from a growth-vat embryo.",
+            "[Baby] was born healthy from a growth-vat embryo.");
     }
 
     [RequiresBiotech]
     public void TestVatSickNoParents(TestScenario scenario)
     {
-        AssertVatBirthOutcome(scenario, 0, false, "[Baby] was born sick from a growth-vat embryo.");
+        AssertVatBirthOutcome(scenario, 0, false,
+            "[Carrier]'s [daughter], [Baby] was born sick from a growth-vat embryo.",
+            "[Baby] was born sick from a growth-vat embryo.");
     }
 
     [RequiresBiotech]
     public void TestVatStillbornNoParents(TestScenario scenario)
     {
-        AssertVatBirthOutcome(scenario, -1, false, "[Baby] was born from a growth-vat embryo.");
+        AssertVatBirthOutcome(scenario, -1, false,
+            "[Carrier]'s [daughter], [Baby] was born from a growth-vat embryo.",
+            "[Baby] was born from a growth-vat embryo.");
     }
 
-    private static void AssertVatBirthOutcome(TestScenario scenario, int positivityIndex, bool hasParents, string expectedDescription)
+    private static void AssertVatBirthOutcome(TestScenario scenario, int positivityIndex, bool hasParents, string povCarrierDesc, string povBabyDescription)
     {
         var geneticMother = CreateParent(scenario, Gender.Female);
         var father = hasParents ? CreateParent(scenario, Gender.Male) : null;
@@ -170,13 +189,13 @@ public class GaveBirthRecorder : RecorderBase<GaveBirthEvent>
         Expect.That(baby).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.GaveBirth,
-            Description = expectedDescription,
+            Description = povBabyDescription,
             Concerns = hasParents ? [geneticMother, father] : [geneticMother]
         });
         Expect.That(geneticMother).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.GaveBirth,
-            Description = expectedDescription,
+            Description = povCarrierDesc,
             Concerns = hasParents ? [baby, father] : [baby]
         });
     }

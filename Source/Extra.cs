@@ -54,6 +54,8 @@ public static class Extra
         public static HediffDef SimpleProstheticHeart;
         public static HediffDef BionicHeart;
         public static HediffDef LuciferiumHigh;
+        [MayRequireBiotech]
+        public static HediffDef ChildbirthComplications;
 
         static HediffDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(HediffDefOf));
     }

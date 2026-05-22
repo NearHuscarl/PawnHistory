@@ -135,9 +135,13 @@
 				
 				<li>OfParents(hasVatParents==True) -> of [GeneticMother] and [Father]</li>
 				<li>OfParents(hasVatParents==False)-></li>
-				<li>IntroVatBirth(outcome==Healthy)->[Baby] was born healthy from a growth-vat embryo[OfParents].</li>
-				<li>IntroVatBirth(outcome==Sick)   ->[Baby] was born sick from a growth-vat embryo[OfParents].</li>
-				<li>IntroVatBirth(outcome==Still)  ->[Baby] was born from a growth-vat embryo[OfParents].</li>
+				
+				<li>IntroVatBirthPov(pov==baby)   ->[Baby]</li>
+				<li>IntroVatBirthPov(pov==carrier)->[PAWN]'s [Relation], [Baby],</li>
+				
+				<li>IntroVatBirth(outcome==Healthy)->[IntroVatBirthPov] was born healthy from a growth-vat embryo[OfParents].</li>
+				<li>IntroVatBirth(outcome==Sick)   ->[IntroVatBirthPov] was born sick from a growth-vat embryo[OfParents].</li>
+				<li>IntroVatBirth(outcome==Still)  ->[IntroVatBirthPov] was born from a growth-vat embryo[OfParents].</li>
 
 				<li>entryVatBirth->[IntroVatBirth][InbredClause]</li>
 

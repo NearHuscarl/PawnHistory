@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <HediffDef MayRequire="Ludeon.RimWorld.Biotech">
+    <defName>ChildbirthComplications</defName>
+    <label>childbirth complications</label>
+    <description>Hidden marker used by PawnHistory to preserve childbirth as a death reason.</description>
+    <initialSeverity>1</initialSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <makesAlert>false</makesAlert>
+    <stages>
+      <li>
+        <becomeVisible>false</becomeVisible>
+      </li>
+    </stages>
+  </HediffDef>
+</Defs>

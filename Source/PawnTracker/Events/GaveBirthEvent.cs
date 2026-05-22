@@ -34,6 +34,8 @@ internal static class PregnancyUtility_ApplyBirthOutcome_Patch
         var carrier = birtherThing as Pawn;
         var isSurrogacy = carrier != null && carrier != geneticMother;
 
+        AddChildbirthComplicationsIfMotherDied(carrier);
+
         GameEventBus.Publish(new GaveBirthEvent(
             baby,
             carrier,
@@ -43,6 +45,14 @@ internal static class PregnancyUtility_ApplyBirthOutcome_Patch
             isVatBirth,
             isSurrogacy,
             baby.genes?.HasActiveGene(GeneDefOf.Inbred) == true));
+    }
+
+    private static void AddChildbirthComplicationsIfMotherDied(Pawn carrier)
+    {
+        if (carrier?.Dead != true || carrier.health.hediffSet.HasHediff(Extra.HediffDefOf.ChildbirthComplications))
+            return;
+
+        carrier.health.AddHediff(Extra.HediffDefOf.ChildbirthComplications);
     }
 
     private static Pawn ResolveBaby(Thing thing)
