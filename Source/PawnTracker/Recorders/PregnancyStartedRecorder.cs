@@ -30,7 +30,7 @@ public class PregnancyStartedRecorder : RecorderBase<PregnancyStartedEvent>
     private static TaggedString CreateDescription(PregnancyStartedEvent e, string pov = null)
     {
         var relation = e.Father?.GetMostImportantRelation(e.Carrier)?.GetGenderSpecificLabel(e.Carrier);
-        var isIvf = e.Mother != null && e.Carrier != e.Mother;
+        var isSurrogacy = e.Mother != null && e.Carrier != e.Mother;
 
         return HistoryRecordDefOf.PregnancyStarted.Description(e.Carrier, "Carrier")
             .AddRule("Father", e.Father)
@@ -39,7 +39,7 @@ public class PregnancyStartedRecorder : RecorderBase<PregnancyStartedEvent>
             .AddConstant("pov", pov)
             .AddConstant("hasFather", e.Father != null)
             .AddConstant("hasRelation", relation != null)
-            .AddConstant("isIvf", isIvf)
+            .AddConstant("isSurrogacy", isSurrogacy)
             .Resolve();
     }
 

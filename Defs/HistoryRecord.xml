@@ -1060,7 +1060,7 @@
 		<defName>GrowthMoment</defName>
 		<label>growth moment</label>
 		<descriptionMaker>PH_GrowthMoment</descriptionMaker>
-		<icon>Things/Mote/SpeechSymbols/Speech</icon>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
 		</categories>
@@ -1072,6 +1072,16 @@
 		<icon>UI/Icons/PregnancyApproaches/TryForBaby</icon>
 		<categories>
 			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>GaveBirth</defName>
+		<label>birth</label>
+		<descriptionMaker>PH_GaveBirth</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Life</li>
+			<li>Health</li>
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">

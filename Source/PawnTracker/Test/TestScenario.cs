@@ -24,6 +24,8 @@ public class TestScenario
     public Pawn ForceRewardPawnInQuest;
     public bool ForceInjuryScar = false;
     public bool ForcePostHealScar = false;
+    public bool ForceMotherDeathDuringBirth = false;
+    public bool ForceInbred = false;
     public bool AlwaysHaveHelpersInQuest = false;
     public bool RefugeeAlwaysAssaultOnViolation = false;
     public SlaveRebellionType? ForceSlaveRebellionType;

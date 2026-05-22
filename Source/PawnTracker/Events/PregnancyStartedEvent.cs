@@ -7,7 +7,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 /// <summary>
 /// </summary>
 /// <param name="Carrier"></param>
-/// <param name="Mother">is null if the pawn containing the hediff is the mother. not null if they are only the carrier, not the biological mother</param>
+/// <param name="Mother">is null if the pawn containing the hediff is the mother, not null when they are only the carrier, not the biological mother</param>
 /// <param name="Father">can be null if trigger via debug action</param>
 /// <param name="Pregnancy"></param>
 public record PregnancyStartedEvent(Pawn Carrier, Pawn Mother, Pawn Father) : GameEventBase;

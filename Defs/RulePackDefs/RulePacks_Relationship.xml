@@ -117,11 +117,40 @@
 		<defName>PH_PregnancyStarted</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(isIvf==True,hasFather==False)             ->[Carrier] became pregnant through embryo implantation. The baby had the genetic makeup of [Mother].</li>
-				<li>entry(isIvf==True,hasFather==True)              ->[Carrier] became pregnant through embryo implantation. The baby had the genetic makeup of [Father] and [Mother].</li>
-				<li>entry(isIvf==False,hasFather==False,pov!=Father)->[Carrier] became pregnant.</li>
-				<li>entry(isIvf==False,hasFather==True,pov!=Father) ->[Carrier] became pregnant with [Father]'s child.</li>
+				<li>entry(isSurrogacy==True, hasFather==False)            ->[Carrier] became pregnant through embryo implantation. The baby had the genetic makeup of [Mother].</li>
+				<li>entry(isSurrogacy==True, hasFather==True)             ->[Carrier] became pregnant through embryo implantation. The baby had the genetic makeup of [Father] and [Mother].</li>
+				<li>entry(isSurrogacy==False,hasFather==False,pov!=Father)->[Carrier] became pregnant.</li>
+				<li>entry(isSurrogacy==False,hasFather==True, pov!=Father)->[Carrier] became pregnant with [Father]'s child.</li>
 				<li>entry(hasRelation==True,pov==Father)            ->[Father]'s [Relation], [Carrier], became pregnant.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>PH_GaveBirth</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>InbredClause(isInbred==True) -> [Baby] showed genetic abnormalities caused by inbreeding.</li>
+				<li>InbredClause(isInbred==False)-></li>
+				
+				<li>OfParents(hasVatParents==True) -> of [GeneticMother] and [Father]</li>
+				<li>OfParents(hasVatParents==False)-></li>
+				<li>IntroVatBirth(outcome==Healthy)->[Baby] was born healthy from a growth-vat embryo[OfParents].</li>
+				<li>IntroVatBirth(outcome==Sick)   ->[Baby] was born sick from a growth-vat embryo[OfParents].</li>
+				<li>IntroVatBirth(outcome==Still)  ->[Baby] was born from a growth-vat embryo[OfParents].</li>
+
+				<li>entryVatBirth->[IntroVatBirth][InbredClause]</li>
+
+				<li>Surrogacy(isSurrogacy==True) -> [Baby_pronoun] was conceived through in vitro fertilization, with [GeneticMother] and [Father] as genetic parents.</li>
+				<li>Surrogacy(isSurrogacy==False)-></li>
+				
+				<li>Intro(pov==carrier,outcome==Healthy)->[Carrier] gave birth to a healthy baby!</li>
+				<li>Intro(pov==carrier,outcome==Sick)   ->[Carrier] gave birth to a sick baby.</li>
+				<li>Intro(pov==carrier,outcome==Still)  ->[Carrier] gave birth to [Baby].</li> <!-- stillborn information is displayed in the RelativeDeath record -->
+				<li>Intro(pov==baby,   outcome==Healthy)->[Baby] was born healthy to [Carrier].</li>
+				<li>Intro(pov==baby,   outcome==Sick)   ->[Baby] was born sick to [Carrier].</li>
+				<li>Intro(pov==baby,   outcome==Still)  ->[Baby] was born to [Carrier].</li> <!-- stillborn information is displayed in the Death record -->
+				<li>entry        ->[Intro][Surrogacy][InbredClause]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

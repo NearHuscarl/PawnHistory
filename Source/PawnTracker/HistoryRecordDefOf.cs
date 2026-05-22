@@ -135,6 +135,8 @@ public class HistoryRecordDefOf
     [MayRequireBiotech]
     public static HistoryRecordDef PregnancyStarted;
     [MayRequireBiotech]
+    public static HistoryRecordDef GaveBirth;
+    [MayRequireBiotech]
     public static HistoryRecordDef Miscarried;
     [MayRequireBiotech]
     public static HistoryRecordDef PsychicBonded;

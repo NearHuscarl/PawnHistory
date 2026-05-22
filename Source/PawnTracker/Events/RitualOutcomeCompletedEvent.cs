@@ -69,6 +69,7 @@ internal static class RitualOutcomeEffectWorker_Apply_Patch
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_FromQuality), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Speech), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Conversion), methodName);
+        // yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_ChildBirth), methodName); ----> handled by GaveBirthRecorder as it's triggered outside of ritual as well.
     }
 
     private static void Prefix(Dictionary<Pawn, int> totalPresence, LordJob_Ritual jobRitual) => RitualOutcomeContext.Begin(jobRitual, totalPresence);
