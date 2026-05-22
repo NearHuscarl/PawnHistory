@@ -150,4 +150,18 @@ public static class ThingBuilderExtensions
         builder.Def(BookDefs.RandomElement());
         return builder;
     }
+
+    public static Xenogerm MakeXenogerm(this ThingBuilder builder, string xenotypeName, XenotypeIconDef iconDef, List<GeneDef> genes)
+    {
+        var genepacks = genes.Select(gene =>
+        {
+            var genepack = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack);
+            genepack.Initialize([gene]);
+            return genepack;
+        }).ToList();
+
+        var xenogerm = (Xenogerm)ThingMaker.MakeThing(ThingDefOf.Xenogerm);
+        xenogerm.Initialize(genepacks, xenotypeName, iconDef);
+        return xenogerm;
+    }
 }

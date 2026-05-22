@@ -127,6 +127,8 @@ public class HistoryRecordDefOf
     [MayRequireBiotech]
     public static HistoryRecordDef MechlinkInstalled;
     [MayRequireBiotech]
+    public static HistoryRecordDef XenogermImplanted;
+    [MayRequireBiotech]
     public static HistoryRecordDef DeathrestOrComa;
     [MayRequireBiotech]
     public static HistoryRecordDef BabyAdopted;

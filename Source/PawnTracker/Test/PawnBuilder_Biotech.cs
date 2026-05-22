@@ -23,4 +23,25 @@ internal static class PawnBuilderBiotechExtension
                 p.genes?.AddGene(gene, xenogene: true);
         });
     }
+
+    public static PawnBuilder SetXenotype(this PawnBuilder builder, XenotypeDef xenotype)
+    {
+        return builder.Do(p => p.genes?.SetXenotype(xenotype));
+    }
+
+    public static PawnBuilder SetXenotype(this PawnBuilder builder, string xenotypeName, XenotypeIconDef iconDef, List<GeneDef> genes)
+    {
+        return builder.Do(p =>
+        {
+            if (p.genes == null)
+                return;
+
+            p.genes.SetXenotype(XenotypeDefOf.Baseliner);
+            p.genes.xenotypeName = xenotypeName;
+            p.genes.iconDef = iconDef;
+
+            foreach (var gene in genes)
+                p.genes.AddGene(gene, xenogene: true);
+        });
+    }
 }

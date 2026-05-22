@@ -39,6 +39,7 @@
 	<NH_PH_List_Many>{0}, {1} and {2} {3}</NH_PH_List_Many>
 	<NH_PH_Other>other</NH_PH_Other>
 	<NH_PH_OtherPart>other part</NH_PH_OtherPart>
+	<NH_PH_OtherGene>other gene</NH_PH_OtherGene>
 
 	<NH_TheSettlement>the colony</NH_TheSettlement>
 </LanguageData>

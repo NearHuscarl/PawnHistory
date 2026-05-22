@@ -1037,6 +1037,16 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>XenogermImplanted</defName>
+		<label>xenogerm implanted</label>
+		<descriptionMaker>PH_XenogermImplanted</descriptionMaker>
+		<icon>Things/Item/Special/Xenogerm</icon>
+		<categories>
+			<li>Life</li>
+			<li>Health</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">
 		<defName>DeathrestOrComa</defName>
 		<label>deathrest or coma</label>
 		<descriptionMaker>PH_DeathrestOrComa</descriptionMaker>

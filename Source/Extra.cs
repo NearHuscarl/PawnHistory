@@ -327,6 +327,20 @@ public static class Extra
     }
 
     [DefOf]
+    public static class XenotypeDefOf
+    {
+        [MayRequireBiotech]
+        public static XenotypeDef Dirtmole;
+    }
+
+    [DefOf]
+    public static class XenotypeIconDefOf
+    {
+        [MayRequireBiotech]
+        public static XenotypeIconDef Crown;
+    }
+
+    [DefOf]
     public static class PreceptDefOf
     {
         [MayRequireIdeology]
