@@ -9,6 +9,9 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
+// Reason this is its own record rather than a comp of SurgeryRecorder:
+// - ImplantXenogerm's surgeryOutcomeEffect is inconsequential and only affect recovering time -> not worth reporting
+// - Does not interact with hediffs hence do not need to integrate with SurgeryContext
 public class XenogermImplantedRecorder : RecorderBase<XenogermImplantedEvent>
 {
     public override void Register()

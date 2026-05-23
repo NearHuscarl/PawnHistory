@@ -276,7 +276,6 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BotchedSurgery</defName>
 		<label>botched surgery</label>
-		<descriptionMaker>PH_BotchedSurgery</descriptionMaker>
 		<icon>EventIcons/BotchedSurgery</icon>
 		<categories>
 			<li>Health</li>

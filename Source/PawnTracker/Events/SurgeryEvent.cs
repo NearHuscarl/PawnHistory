@@ -24,7 +24,7 @@ internal class SurgeryContext<T> where T : SurgeryEvent
 
     public static void SurgeryRecipe_PreApplyOnPawn(Pawn patient, Func<T> eventFactory)
     {
-        PendingSurgeries[GetSurgeryId(patient)] = new SurgeryContext<T>()
+        PendingSurgeries[GetSurgeryId(patient)] = new SurgeryContext<T>
         {
             e = eventFactory(),
             InjurySnapshot = GetInjurySnapshot(patient),

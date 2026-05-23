@@ -21,6 +21,7 @@ public class TestScenario
     internal readonly HashSet<Pawn> DeathOnNextHitPawns = [];
     public bool AlwaysHaveCancerOnBirthday = false;
     public RitualOutcomePossibility ForcedRitualOutcome;
+    public SurgeryOutcome SurgeryForcedOutcome;
     public Pawn ForceRewardPawnInQuest;
     public bool ForceInjuryScar = false;
     public bool ForcePostHealScar = false;

@@ -1,62 +1,72 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
 	<RulePackDef>
-		<defName>PH_BotchedSurgery</defName>
+		<defName>PH_BotchedSurgeryCommon</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>NewInjuries(injuryCount==0)->no injuries (a bug)</li>
-				<li>NewInjuries(injuryCount==1)->a wound on [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
-				<li>NewInjuries(injuryCount>=2)->multiple wounds on [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
+				<li>CausingNewInjuries(injuryCount==0)-></li>
+				<li>CausingNewInjuries(injuryCount==1)->, causing a wound on [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
+				<li>CausingNewInjuries(injuryCount>=2)->, causing multiple wounds on [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
 
-				<li>Severity(outcomeType==Minor)->slightly</li>
-				<li>Severity(outcomeType==Major)->catastrophically</li>
-				<li>Severity(outcomeType==Death)->fatally</li>
+				<li>Severity(outcomeType==Minor)     ->slightly</li>
+				<li>Severity(outcomeType==Major)     ->catastrophically</li>
+				<li>Severity(outcomeType==Death)     ->fatally</li>
 				<li>Severity(outcomeType==Sterilized)->hilariously</li>
-
-				<li>entry->[Doctor] [Severity] [BotchedSurgery], causing [NewInjuries].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
 
 	<RulePackDef>
 		<defName>PH_BodyPartRemoved</defName>
+		<include>
+			<li>PH_BotchedSurgeryCommon</li>
+		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(intent==Harvest)   ->[PAWN]'s [Part] was harvested by [Doctor].</li>
-				<li>entry(intent==Amputate)  ->[PAWN]'s [Part] was amputated by [Doctor] due to [BadHediff].</li>
+				<li>entry(intent==Harvest) ->[PAWN]'s [Part] was harvested by [Doctor].</li>
+				<li>entry(intent==Amputate)->[PAWN]'s [Part] was amputated by [Doctor] due to [BadHediff].</li>
 
-				<li>BotchedSurgery(intent==Amputate)->botched an amputation on [PAWN]'s [Part]</li>
-				<li>BotchedSurgery(intent==Harvest) ->botched a harvest on [PAWN]'s [Part]</li>
+				<li>entryBotched(intent==Amputate)->[Doctor] [Severity] botched an amputation on [PAWN]'s [Part][CausingNewInjuries].</li>
+				<li>entryBotched(intent==Harvest) ->[Doctor] [Severity] botched a harvest on [PAWN]'s [Part][CausingNewInjuries].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
 
 	<RulePackDef>
 		<defName>PH_BodyPartImplanted</defName>
+		<include>
+			<li>PH_BotchedSurgeryCommon</li>
+		</include>
 		<rulePack>
 			<rulesStrings>
 				<li>entry->[Doctor] installed [ImplantHediff_indefinite] in [PAWN]'s [EnhancedPart].</li>
-				
-				<li>BotchedSurgery->botched the implantation of [ImplantHediff_indefinite] on [PAWN]</li>
+
+				<li>entryBotched->[Doctor] [Severity] botched the implantation of [ImplantHediff_indefinite] on [PAWN][CausingNewInjuries].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
 
 	<RulePackDef>
 		<defName>PH_BodyPartInstalled</defName>
+		<include>
+			<li>PH_BotchedSurgeryCommon</li>
+		</include>
 		<rulePack>
 			<rulesStrings>
 				<li>entry(type==Install)->[Doctor] installed [AddedPart_indefinite] on [PAWN].</li>
 				<li>entry(type==Replace)->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedPart_indefinite].</li>
 				<li>entry(type==Fix)    ->[Doctor] installed a healthy [AddedPart] on [PAWN] to treat [BadHediff].</li>
 
-				<li>BotchedSurgery->botched the installation of [AddedPart_indefinite] on [PAWN]</li>
+				<li>entryBotched->[Doctor] [Severity] botched the installation of [AddedPart_indefinite] on [PAWN][CausingNewInjuries].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
 
 	<RulePackDef>
 		<defName>PH_BodyPartModded</defName>
+		<include>
+			<li>PH_BotchedSurgeryCommon</li>
+		</include>
 		<rulePack>
 			<rulesStrings>
 				<li>ViolationNote(isViolation==True) ->, violating [PAWN_possessive] body</li>
@@ -66,7 +76,7 @@
 				<li>entry(type==Replace)->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedHediff_indefinite][ViolationNote].</li>
 				<li>entry(type==Fix)    ->[Doctor] installed a [AddedHediff] on [PAWN] to treat [BadHediff][ViolationNote].</li>
 
-				<li>BotchedSurgery->botched the installation of [AddedHediff_indefinite] on [PAWN]</li>
+				<li>entryBotched->[Doctor] [Severity] botched the installation of [AddedHediff_indefinite] on [PAWN][CausingNewInjuries].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

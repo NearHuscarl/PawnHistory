@@ -7,7 +7,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record SurgeryRemoveBodyPartEvent(Pawn Patient, Pawn Doctor, BodyPartRecord Part, BodyPartRemovalIntent Intent, Hediff BadHediff) : SurgeryEvent(Patient, Doctor, Part);
 
-internal class RemoveContext : SurgeryContext<SurgeryRemoveBodyPartEvent>;
+file class RemoveContext : SurgeryContext<SurgeryRemoveBodyPartEvent>;
 
 [HarmonyPatch(typeof(Recipe_RemoveBodyPart), nameof(Recipe_RemoveBodyPart.ApplyOnPawn))]
 internal class Recipe_RemoveBodyPart_ApplyOnPawn_Patch
