@@ -12,6 +12,8 @@ public readonly record struct EdgeInsets(float Left, float Top, float Right, flo
         right ?? 0,
         bottom ?? 0);
 
+    public static EdgeInsets Symmetric(float? vertical = null, float? horizontal = null) => Only(horizontal, vertical, horizontal, vertical);
+    
     public float Horizontal => Left + Right;
     public float Vertical => Top + Bottom;
 }

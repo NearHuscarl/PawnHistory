@@ -47,8 +47,9 @@ internal static class HistoryRecordRow
         return Row(
         [
             SizedBox(width: theme.PaddingXs),
-            SizedBox(width: HistoryCardLayout.ColWidthDate, child: Tooltip(Label(record.GetShortDate(), GameFont.Tiny, color: Color.gray), record.GetTipDate())),
-            SizedBox(dimension: theme.ButtonIconSize, Center(child: Image(record.Icon))),
+            SizedBox(width: HistoryCardLayout.ColWidthDate, child: Tooltip(Label(record.GetShortDate(), GameFont.Tiny, TextAnchor.MiddleRight, color: Color.gray), record.GetTipDate())),
+            Padding.Symmetric(horizontal: theme.PaddingXs, child:
+                SizedBox(dimension: theme.ButtonIconSize, Center(child: Image(record.Icon)))),
             Expanded(BuildDescription(ctx, state, record, actions)),
             SizedBox(dimension: theme.ButtonIconSize, Center(child: BuildQuestButton(record, actions))),
             SizedBox(width: theme.PaddingXs),

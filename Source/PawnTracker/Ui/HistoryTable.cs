@@ -37,7 +37,7 @@ internal static class HistoryTable
         return Row(
         [
             SizedBox(width: theme.PaddingXs),
-            SizedBox(width: HistoryCardLayout.ColWidthDate, child: Label("NH_PH_HistoryCard_HeaderDate".Translate(), color: Color.gray)),
+            SizedBox(width: HistoryCardLayout.ColWidthDate, child: Label("NH_PH_HistoryCard_HeaderDate".Translate(), anchor: TextAnchor.MiddleRight, color: Color.gray)),
             SizedBox(width: theme.ButtonIconSize),
             Expanded(Label("NH_PH_HistoryCard_HeaderDescription".Translate(), color: Color.gray)),
         ], crossAxis: StackCrossAxis.Stretch, spacing: theme.PaddingSm);

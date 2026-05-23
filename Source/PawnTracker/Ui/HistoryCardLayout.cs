@@ -12,17 +12,17 @@ internal static class HistoryCardLayout
     public static float PageInputWidth;
     public static int PageSize;
 
-    static HistoryCardLayout() => Reload();
+    static HistoryCardLayout() => ReloadHistoryCardLayout();
 
     [Reloadable]
     [NearDebugAction]
-    private static void Reload()
+    private static void ReloadHistoryCardLayout()
     {
         TopBarHeight = 30f;
 
         HeaderHeight = 25f;
         MinRowHeight = 32f;
-        ColWidthDate = 90f;
+        ColWidthDate = 88f;
 
         ControlWidth = 24f;
         PageInputWidth = 42f;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using UnityEngine;
+using Verse;
 
 namespace PawnHistory.Source.Ui;
 
@@ -14,7 +15,7 @@ public enum FlexFit
     Loose
 }
 
-public class Flexible(Widget child, int flex = 1, FlexFit fit = FlexFit.Loose, string key = null, int widgetId = WidgetIds.Flexible)
+public class Flexible(Widget child, int flex = 1, FlexFit fit = FlexFit.Loose, string key = null, int widgetId = WidgetIds.Flexible, bool debug = false)
     : Widget(widgetId, key)
 {
     public Widget Child { get; } = child;
@@ -29,5 +30,8 @@ public class Flexible(Widget child, int flex = 1, FlexFit fit = FlexFit.Loose, s
     public override void Draw(UiContext ctx, Rect rect)
     {
         WidgetTree.DrawChild(ctx, Child, 0, rect);
+
+        if (debug)
+            Widgets.DrawBox(rect);
     }
 }

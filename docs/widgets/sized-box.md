@@ -8,4 +8,5 @@ Fixed-size box or empty space.
 | `height` | `null` | Fixed height; when omitted, height comes from the child. |
 | `child` | `null` | Optional child. |
 | `key` | `null` | Explicit identity for this box. |
+| `debug` | `false` | Draws a Verse border around the final rect for layout debugging. |
 | `Shrink(key)` | none | Returns a zero-size box. |

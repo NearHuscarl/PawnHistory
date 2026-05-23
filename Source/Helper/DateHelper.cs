@@ -9,18 +9,18 @@ public static class DateHelper
     {
         var position = Find.WorldGrid.LongLatOf(WorldGridUtility.Tile(tileId));
         var hourInt = GenDate.HourInteger(date, position.x);
-        var hour = $"{hourInt}h";
+        var hour = $"{hourInt:D2}h";
 
         if (Prefs.TwelveHourClockMode)
         {
             var ampm = hourInt >= 12 ? "PM" : "AM";
             hourInt %= 12;
             if (hourInt == 0) hourInt = 12;
-            hour = $"{hourInt} {ampm}";
+            hour = $"{hourInt:D2} {ampm}";
         }
 
         var day = GenDate.DayOfYear(date, position.x) + 1;
         var year = GenDate.Year(date, position.x);
-        return $"Y{year} D{day} {hour}";
+        return $"Y{year} D{day:D2} {hour}";
     }
 }

@@ -5,6 +5,7 @@ namespace PawnHistory.Source.Ui;
 public sealed class Padding(Widget child, EdgeInsets insets, string key = null) : Widget(WidgetIds.Padding, key)
 {
     public static Padding All(Widget child, float value) => new(child, new EdgeInsets(value));
+    public static Padding Symmetric(Widget child, float? vertical = null, float? horizontal = null) => new(child, EdgeInsets.Symmetric(vertical, horizontal));
     public static Padding Left(Widget child, float value) => new(child, EdgeInsets.Only(left: value));
     public static Padding Right(Widget child, float value) => new(child, EdgeInsets.Only(right: value));
     public static Padding Top(Widget child, float value) => new(child, EdgeInsets.Only(top: value));

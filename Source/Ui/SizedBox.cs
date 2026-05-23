@@ -1,8 +1,9 @@
 using UnityEngine;
+using Verse;
 
 namespace PawnHistory.Source.Ui;
 
-public sealed class SizedBox(float? width = null, float? height = null, Widget child = null, string key = null)
+public sealed class SizedBox(float? width = null, float? height = null, Widget child = null, string key = null, bool debug = false)
     : Widget(WidgetIds.SizedBox, key)
 {
     public static SizedBox Shrink(string key = null) => new(0f, 0f, key: key);
@@ -20,5 +21,8 @@ public sealed class SizedBox(float? width = null, float? height = null, Widget c
     public override void Draw(UiContext ctx, Rect rect)
     {
         WidgetTree.DrawChild(ctx, child, 0, rect);
+
+        if (debug)
+            Widgets.DrawBox(rect);
     }
 }

@@ -24,11 +24,11 @@ internal static class W
         => new(children, mainAxis, crossAxis, spacing, key);
 
     public static Wrap Wrap(IEnumerable<Widget> children, float? gap = null, float? lineGap = null, string key = null) => new(children, gap, lineGap, key);
-    public static Expanded Expanded(Widget child, int flex = 1, string key = null) => new(child, flex, key);
-    public static Flexible Flexible(Widget child, int flex = 1, FlexFit fit = FlexFit.Loose, string key = null) => new(child, flex, fit, key);
+    public static Expanded Expanded(Widget child, int flex = 1, string key = null, bool debug = false) => new(child, flex, key, debug: debug);
+    public static Flexible Flexible(Widget child, int flex = 1, FlexFit fit = FlexFit.Loose, string key = null, bool debug = false) => new(child, flex, fit, key, debug: debug);
     public static ScrollView ScrollView(Widget child, bool vertical = true, string key = null, ScrollController controller = null) => new(child, vertical, key, controller);
-    public static SizedBox SizedBox(float? width = null, float? height = null, Widget child = null, string key = null) => new(width, height, child, key);
-    public static SizedBox SizedBox(float dimension, Widget child = null, string key = null) => new(dimension, dimension, child, key);
+    public static SizedBox SizedBox(float? width = null, float? height = null, Widget child = null, string key = null, bool debug = false) => new(width, height, child, key, debug);
+    public static SizedBox SizedBox(float dimension, Widget child = null, string key = null, bool debug = false) => new(dimension, dimension, child, key, debug);
     public static SizedBox SizedBoxShrink(string key = null) => Ui.SizedBox.Shrink(key);
     public static TextButton TextButton(string label, Action onClick, float? width = null, float? height = null, bool enabled = true, string key = null) => new(label, onClick, width, height, enabled, key);
     public static IconButton IconButton(Texture2D texture, Action onClick, float? iconSize = null, string tooltip = null, bool enabled = true, string key = null) => new(texture, onClick, iconSize, tooltip, enabled, key);
