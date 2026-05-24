@@ -128,7 +128,7 @@
 				<li>InBodyPart(hasInstigator==False,hasDmgSource==True) ->in [PAWN_possessive] [Part] by [DmgSource]</li>
 				<li>InBodyPart(hasInstigator==False,hasDmgSource==False)->in [PAWN_possessive] [Part]</li>
 
-				<li>entry(reason==InstantDamage)->[PAWN] had [Hediff_indefinite] [InBodyPart].</li>
+				<li>entry(reason==InstantDamage)->[PAWN] had [Hediffs] [InBodyPart].</li>
 				<li>entry(reason==PostHeal)     ->[PAWN] recovered with [Hediff_indefinite] [InBodyPart].</li>
 			</rulesStrings>
 		</rulePack>

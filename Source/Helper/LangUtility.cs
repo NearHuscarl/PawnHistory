@@ -24,7 +24,9 @@ internal static class LangUtility
 
         var n2 = toString(items[1]);
         if (count == 2) return "NH_PH_List_Two".Translate(n1, n2);
-        if (count == 3) return "NH_PH_List_Three".Translate(n1, n2, otherText);
+
+        var n3 = toString(items[2]);
+        if (count == 3) return "NH_PH_List_Three".Translate(n1, n2, n3);
 
         return "NH_PH_List_Many".Translate(n1, n2, count - 2, Find.ActiveLanguageWorker.Pluralize(otherText));
     }

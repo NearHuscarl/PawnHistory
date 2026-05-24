@@ -35,11 +35,12 @@
 	<NH_PH_AddRecord_Cancel>Cancel</NH_PH_AddRecord_Cancel>
 
 	<NH_PH_List_Two>{0} and {1}</NH_PH_List_Two>
-	<NH_PH_List_Three>{0}, {1} and 1 {2}</NH_PH_List_Three>
+	<NH_PH_List_Three>{0}, {1} and {2}</NH_PH_List_Three>
 	<NH_PH_List_Many>{0}, {1} and {2} {3}</NH_PH_List_Many>
 	<NH_PH_Other>other</NH_PH_Other>
 	<NH_PH_OtherPart>other part</NH_PH_OtherPart>
 	<NH_PH_OtherGene>other gene</NH_PH_OtherGene>
+	<NH_PH_OtherScar>other scar</NH_PH_OtherScar>
 
 	<NH_TheSettlement>the colony</NH_TheSettlement>
 </LanguageData>

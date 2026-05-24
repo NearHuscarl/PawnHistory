@@ -10,8 +10,11 @@ internal static class HistoryRecordPriority
     {
         var priorityByDef = new Dictionary<HistoryRecordDef, int>();
         
+        Add(HistoryRecordDefOf.BodyPartScarred, 500);
         Add(HistoryRecordDefOf.BodyPartDestroyed, 500);
         Add(HistoryRecordDefOf.BodyPartRemoved, 500);
+
+        Add(HistoryRecordDefOf.BotchedSurgery, 600);
         
         Add(HistoryRecordDefOf.Crushed, 1000);
         Add(HistoryRecordDefOf.FriendlyTrapHit, 1000);

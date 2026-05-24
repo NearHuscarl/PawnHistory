@@ -41,28 +41,36 @@ public class BodyPartScarredRecorder : RecorderBase<BodyPartScarredEvent>
         if (!ShouldRecord(e.Pawn))
             return;
 
-        var (pawn, hediff, part, instigatorThing, reason) = e;
-        var instigator = instigatorThing as Pawn; // TODO: handle thing
-        var dmgSource = hediff.GetDamageSource();
-        var recordDef = HistoryRecordDefOf.BodyPartScarred;
-        var desc = recordDef.Description(pawn)
-            .IncludePawnGrammar()
-            .AddRule("Part", part.Label.Colorize(hediff.LabelColor))
-            .AddRule("Hediff", hediff, addSubsymbols: true) // <permanentLabel>
-            .AddRule("Instigator", instigator)
-            .AddConstant("hasInstigator", instigator != null)
-            .AddRule("DmgSource", dmgSource)
-            .AddConstant("hasDmgSource", !dmgSource.NullOrEmpty())
-            .AddConstant("reason", reason)
-            .Resolve();
+        AddRecord(HistoryRecordDefOf.BodyPartScarred, e.Pawn, e, inputs =>
+        {
+            var e2 = inputs[0];
+            var (pawn, hediff, part, instigatorThing, reason) = e2;
+            var instigator = instigatorThing as Pawn; // TODO: handle thing
+            var dmgSource = hediff.GetDamageSource();
+            var recordDef = HistoryRecordDefOf.BodyPartScarred;
+            var hediffs = inputs.Select(h => h.Hediff.LabelBase).Distinct().ToList();
+            var scarList = LangUtility.FormatList(hediffs, h => Find.ActiveLanguageWorker.WithIndefiniteArticlePostProcessed(h).Colorize(hediff.LabelColor),
+                otherText: "NH_PH_OtherScar".TranslateSimple());
+            var desc = recordDef.Description(pawn)
+                .IncludePawnGrammar()
+                .AddRule("Part", part.Label.Colorize(hediff.LabelColor))
+                .AddRule("Hediff", hediff, addSubsymbols: true) // <permanentLabel>
+                .AddRule("Hediffs", scarList)
+                .AddRule("Instigator", instigator)
+                .AddConstant("hasInstigator", instigator != null)
+                .AddRule("DmgSource", dmgSource)
+                .AddConstant("hasDmgSource", !dmgSource.NullOrEmpty())
+                .AddConstant("reason", reason)
+                .Resolve();
 
-        AddRecord(recordDef, pawn, desc, [instigator]);
+            return new HistoryRecordWriteRequest(recordDef, pawn, desc, [instigator]);
+        });
     }
 
     [SkipTest]
     public Action TestInjury(TestScenario scenario)
     {
-        TestManager.Scenario.ForceInjuryScar = true;
+        scenario.ForceInjuryScar = true;
         var friends = scenario.RaidFriendly()
             .Point(600)
             .Execute();
@@ -84,7 +92,7 @@ public class BodyPartScarredRecorder : RecorderBase<BodyPartScarredEvent>
     [SkipTest]
     public Action TestPostHeal(TestScenario scenario)
     {
-        TestManager.Scenario.ForcePostHealScar = true;
+        scenario.ForcePostHealScar = true;
         var friends = scenario.RaidFriendly()
             .Point(600)
             .Execute();
@@ -100,5 +108,20 @@ public class BodyPartScarredRecorder : RecorderBase<BodyPartScarredEvent>
         scenario.SpeedUp();
 
         return () => scenario.SlowDown();
+    }
+
+    public void TestMultiple(TestScenario scenario)
+    {
+        scenario.ForceInjuryScar = true;
+
+        // could happen in a catastrophic botched surgery
+        var victim = scenario.Pawn().Colonist()
+            .TakeDamage(1f, Extra.BodyPartDefOf.Brain)
+            .TakeDamage(1f, Extra.BodyPartDefOf.Brain)
+            .TakeDamage(1f, Extra.BodyPartDefOf.Brain)
+            .TakeDamage(1f, Extra.BodyPartDefOf.Brain)
+            .CreateSingle();
+        
+        Expect.That(victim).ToHaveTheLastHistoryRecordsOf([HistoryRecordDefOf.NewArrival, HistoryRecordDefOf.BodyPartScarred]);
     }
 }

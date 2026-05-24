@@ -77,12 +77,10 @@ public class DeathrestOrComaRecorder : RecorderBase<DeathrestOrComaEvent>
             .CreateSingle();
 
         Expect.That(deathrestPawn).ToHaveHistoryRecord(HistoryRecordDefOf.DeathrestOrComa, "[PAWN] entered deathrest after suffering lethal damage.");
-        Expect.That(deathrestPawn.HistoryRecords.TakeLast(3).Select(r => r.def))
-            .SequenceEqual([HistoryRecordDefOf.BodyPartDestroyed, HistoryRecordDefOf.DeathrestOrComa, HistoryRecordDefOf.SkillLeveledDown]);
-        Expect.That(comaPawn).ToHaveHistoryRecord(HistoryRecordDefOf.DeathrestOrComa, "[PAWN] entered a regenerative coma after suffering lethal damage.");
-        Expect.That(comaPawn.HistoryRecords.TakeLast(3).Select(r => r.def))
-            .SequenceEqual([HistoryRecordDefOf.BodyPartDestroyed, HistoryRecordDefOf.DeathrestOrComa, HistoryRecordDefOf.SkillLeveledDown]);
+        Expect.That(deathrestPawn).ToHaveTheLastHistoryRecordsOf([HistoryRecordDefOf.BodyPartDestroyed, HistoryRecordDefOf.DeathrestOrComa, HistoryRecordDefOf.SkillLeveledDown]);
         Expect.That(deathrestPawn.HistoryRecords.Select(r => r.def)).Not().Contain(HistoryRecordDefOf.Downed);
+        Expect.That(comaPawn).ToHaveHistoryRecord(HistoryRecordDefOf.DeathrestOrComa, "[PAWN] entered a regenerative coma after suffering lethal damage.");
+        Expect.That(comaPawn).ToHaveTheLastHistoryRecordsOf([HistoryRecordDefOf.BodyPartDestroyed, HistoryRecordDefOf.DeathrestOrComa, HistoryRecordDefOf.SkillLeveledDown]);
     }
 
     [RequiresBiotech]

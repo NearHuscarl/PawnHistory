@@ -4,7 +4,7 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public abstract class HistoryTaleRecorder<TInput> : RecorderBase<TInput>
+public abstract class HistoryTaleRecorder<TInput> : RecorderBase<TInput> where TInput : class
 {
     protected bool SkipDateCheck = false;
     protected bool SkipOverlapCheck = false;

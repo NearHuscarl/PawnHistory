@@ -59,6 +59,12 @@ public abstract class RecorderBase
 
         return GenTicks.TicksAbs - lastRecord.date < GenDate.DaysToTicks(daysToRecordAgainOverride ?? DaysToRecordAgain);
     }
+}
+
+public abstract class RecorderBase<TInput> : RecorderBase, IRecord<TInput> where TInput : class
+{
+    public abstract override void Register();
+    public abstract void CreateRecord(TInput input);
 
     protected HistoryRecord AddRecord(
         HistoryRecordDef def,
@@ -73,14 +79,17 @@ public abstract class RecorderBase
         return CompHistoryManager.WriteRecord(request);
     }
 
+    private protected HistoryRecord AddRecord(
+        HistoryRecordDef def,
+        Pawn pawn,
+        TInput input,
+        Func<List<TInput>, HistoryRecordWriteRequest> resolveRequest)
+    {
+        return CompHistoryManager.WriteRecord(def, pawn, input, resolveRequest);
+    }
+
     private protected HistoryRecord AddRecord(HistoryRecordDef def, Pawn pawn, Func<HistoryRecordWriteRequest> resolveRequest)
     {
         return CompHistoryManager.WriteRecord(def, pawn, resolveRequest);
     }
-}
-
-public abstract class RecorderBase<TInput> : RecorderBase, IRecord<TInput>
-{
-    public abstract override void Register();
-    public abstract void CreateRecord(TInput input);
 }

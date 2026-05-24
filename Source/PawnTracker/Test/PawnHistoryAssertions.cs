@@ -162,6 +162,25 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
             );
         });
     }
+
+    public void ToHaveTheLastHistoryRecordsOf(List<HistoryRecordDef> expected)
+    {
+        RunAssertion(() =>
+        {
+            AssertCollection(
+                pawn =>
+                {
+                    var actual = pawn.HistoryRecords.TakeLast(expected.Count).Select(r => r.def).ToList();
+                    return new AssertionResult(
+                        actual.SequenceEqual(expected),
+                        $"Expect the last {expected.Count} history records to match for {pawn}.",
+                        $"Expect the last {expected.Count} history records NOT to match for {pawn}.",
+                        DebugUtility.FormatSequence(expected),
+                        DebugUtility.FormatSequence(actual)
+                    );
+                });
+        });
+    }
     
     public void ToHaveHistoryRecord(HistoryRecordDef recordDef, string descriptionTemplate, bool exactMatch = false, int? index = null)
     {

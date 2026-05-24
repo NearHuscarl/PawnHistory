@@ -42,8 +42,13 @@ internal static class CompHistoryManager
 
     public static HistoryRecord WriteRecord(HistoryRecordDef def, Pawn pawn, Func<HistoryRecordWriteRequest> resolveRequest)
     {
+        return WriteRecord<object>(def, pawn, null, _ => resolveRequest());
+    }
+
+    public static HistoryRecord WriteRecord<T>(HistoryRecordDef def, Pawn pawn, T input, Func<List<T>, HistoryRecordWriteRequest> resolveRequest) where T : class
+    {
         if (!HistoryRecordPriority.TryGetPriority(def, out var priority))
-            return WriteRecordNow(resolveRequest());
+            return WriteRecordNow(resolveRequest(input == null ? [] : [input]));
 
         var tick = GenTicks.TicksAbs;
         if (!PendingPriorityRecords.TryGetValue(tick, out var pending))
@@ -53,7 +58,7 @@ internal static class CompHistoryManager
             TickDelayManager.Delay(0, () => FlushPriorityRecords(tick));
         }
 
-        pending.Add(new PendingPriorityRecordWrite(pawn, priority, nextPrioritySequence++, resolveRequest));
+        pending.Add(new PendingPriorityRecordWrite(def, pawn, priority, nextPrioritySequence++, input, inputs => resolveRequest(inputs.Cast<T>().ToList())));
         return null;
     }
 
@@ -64,8 +69,26 @@ internal static class CompHistoryManager
 
         foreach (var pawnGroup in pending.GroupBy(p => p.Pawn))
         {
-            foreach (var entry in pawnGroup.OrderBy(e => e.Priority).ThenBy(e => e.Sequence))
-                WriteRecordNow(entry.ResolveRequest());
+            var orderedEntries = pawnGroup.OrderBy(e => e.Priority).ThenBy(e => e.Sequence).ToList();
+            var handledAggregateDefs = new HashSet<HistoryRecordDef>();
+
+            foreach (var entry in orderedEntries)
+            {
+                if (entry.Input == null)
+                {
+                    WriteRecordNow(entry.ResolveRequest([]));
+                    continue;
+                }
+
+                if (!handledAggregateDefs.Add(entry.Def))
+                    continue;
+
+                var inputs = orderedEntries
+                    .Where(e => e.Input != null && e.Def == entry.Def)
+                    .Select(e => e.Input)
+                    .ToList();
+                WriteRecordNow(entry.ResolveRequest(inputs));
+            }
         }
     }
 
@@ -121,10 +144,12 @@ internal static class CompHistoryManager
 }
 
 internal readonly record struct PendingPriorityRecordWrite(
+    HistoryRecordDef Def,
     Pawn Pawn,
     int Priority,
     int Sequence,
-    Func<HistoryRecordWriteRequest> ResolveRequest);
+    object Input,
+    Func<List<object>, HistoryRecordWriteRequest> ResolveRequest);
 
 internal record struct HistoryRecordWriteRequest(
     HistoryRecordDef Def,
