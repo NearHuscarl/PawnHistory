@@ -49,7 +49,9 @@ public class SurgeryRecorder : RecorderBase<SurgeryEvent>
         var recordDef = comp.RecordDef(input);
         var builder = recordDef.Description(e.Patient)
             .IncludePawnGrammar()
-            .AddRule("Doctor", e.Doctor);
+            .AddRule("Doctor", e.Doctor)
+            .AddRule("Part", e.Part)
+            .AddConstant("hasPartPosition", e.Part.IsOneOfMultipleParts);
 
         builder = comp.BuildGrammarRequest(builder, input);
         AddRecord(recordDef, e.Patient, builder.Resolve(), [e.Doctor]);
@@ -64,6 +66,7 @@ public class SurgeryRecorder : RecorderBase<SurgeryEvent>
         var builder = recordDef.Description(e.Patient)
             .IncludePawnGrammar()
             .AddRule("Doctor", e.Doctor)
+            .AddRule("Part", e.Part)
             .AddRule("InjuredParts", LangUtility.FormatList(injuredParts, p => p.Label, "NH_PH_OtherPart".Translate()))
             .AddRule("Bloodloss", e.Patient.Dead ? "" : e.Patient.GetBloodLossText())
             .AddConstant("outcomeType", outcomeType)

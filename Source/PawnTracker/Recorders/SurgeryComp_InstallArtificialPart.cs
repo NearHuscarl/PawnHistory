@@ -53,25 +53,47 @@ public class SurgeryComp_InstallArtificialPart : SurgeryComp
             scenario,
             Extra.RecipeDefOf.InstallBionicArm,
             BodyPartDefOf.Shoulder,
-            patient => patient.AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Shoulder));
+            p => p.AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Shoulder));
+        var (patient2, doctor2) = SurgeryRecorder.DoSurgery(
+            scenario,
+            Extra.RecipeDefOf.InstallDenture,
+            Extra.BodyPartDefOf.Jaw,
+            p => p.AddHediff(HediffDefOf.MissingBodyPart, Extra.BodyPartDefOf.Jaw));
         
         Expect.That(patient).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.BodyPartModded,
-            Description = "[Doctor] installed a bionic arm on [PAWN].",
+            Description = "[Doctor] installed a bionic arm on [PAWN]'s left shoulder.",
             Concerns = [doctor],
+        });
+        Expect.That(patient2).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.BodyPartModded,
+            Description = "[Doctor] installed a denture on [PAWN].",
+            Concerns = [doctor2],
         });
     }
 
     public void TestReplace(TestScenario scenario)
     {
-        var (patient, doctor) = SurgeryRecorder.DoSurgery(scenario, Extra.RecipeDefOf.InstallBionicHeart, BodyPartDefOf.Heart);
+        var (patient, doctor) = SurgeryRecorder.DoSurgery(
+            scenario,
+            Extra.RecipeDefOf.InstallArchotechArm,
+            BodyPartDefOf.Shoulder);
+        var (patient2, doctor2) = SurgeryRecorder.DoSurgery(scenario, Extra.RecipeDefOf.InstallBionicHeart, BodyPartDefOf.Heart,
+            p => p.AddHediff(Extra.HediffDefOf.SimpleProstheticHeart, BodyPartDefOf.Heart));
         
         Expect.That(patient).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.BodyPartModded,
-            Description = "[Doctor] replaced [PAWN]'s heart with a bionic heart.",
+            Description = "[Doctor] replaced [PAWN]'s left shoulder with an archotech arm.", // replace [Part] with [Hediff]
             Concerns = [doctor],
+        });
+        Expect.That(patient2).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.BodyPartModded,
+            Description = "[Doctor] replaced [PAWN]'s prosthetic heart with a bionic heart.", // replace [Hediff] with [Hediff]
+            Concerns = [doctor2],
         });
     }
 

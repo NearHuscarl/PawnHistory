@@ -101,12 +101,12 @@ public class SurgeryComp_InstallNaturalPart : SurgeryComp
             Extra.RecipeDefOf.InstallNaturalKidney,
             Extra.BodyPartDefOf.Kidney,
             patient => patient.AddHediff(Extra.HediffDefOf.HeartArteryBlockage, BodyPartDefOf.Heart),
-            SurgeryOutcomes.CatastrophicFailure);
+            SurgeryOutcomes.MinorFailure);
 
         Expect.That(patient).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.BotchedSurgery,
-            Description = "[Doctor] catastrophically botched the installation of a left kidney on [PAWN], causing [NewInjuries].",
+            Description = "[Doctor] slightly botched the installation of a left kidney on [PAWN], causing [NewInjuries].",
             Concerns = [doctor],
         });
     }

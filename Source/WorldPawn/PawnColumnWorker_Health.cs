@@ -15,7 +15,7 @@ namespace PawnHistory.Source.WorldPawn
 
         protected override Color GetIconColor(Pawn pawn)
         {
-            return HediffHelper.VisibleHediffs(pawn).Any(h => h.def.isBad) ? Color.red : Color.grey;
+            return HediffHelper.GetVisibleHediffs(pawn).Any(h => h.def.isBad) ? Color.red : Color.grey;
         }
 
         protected override void ClickedIcon(Pawn pawn)
@@ -29,6 +29,6 @@ namespace PawnHistory.Source.WorldPawn
         }
 
         public override int Compare(Pawn a, Pawn b)
-            => HediffHelper.VisibleHediffs(a).Count().CompareTo(HediffHelper.VisibleHediffs(b).Count());
+            => HediffHelper.GetVisibleHediffs(a).Count().CompareTo(HediffHelper.GetVisibleHediffs(b).Count());
     }
 }

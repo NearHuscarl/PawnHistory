@@ -87,7 +87,7 @@ internal static class PawnUtility
         
         public Hediff GetMostDangerousHediff(BodyPartRecord part)
         {
-            return pawn.health.hediffSet.hediffs.Where(h => h.Visible && h.Part == part && h.def.isBad).OrderByDescending(GetDangerScore).FirstOrDefault();
+            return HediffHelper.GetVisibleHediffs(pawn).Where(h => h.Visible && h.Part == part && h.def.isBad).OrderByDescending(GetDangerScore).FirstOrDefault();
         }
 
         /// <summary>

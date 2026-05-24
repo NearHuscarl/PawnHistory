@@ -52,7 +52,7 @@ public class BodyPartScarredRecorder : RecorderBase<BodyPartScarredEvent>
             .AddRule("Instigator", instigator)
             .AddConstant("hasInstigator", instigator != null)
             .AddRule("DmgSource", dmgSource)
-            .AddConstant("hasDmgSource", dmgSource != null)
+            .AddConstant("hasDmgSource", !dmgSource.NullOrEmpty())
             .AddConstant("reason", reason)
             .Resolve();
 

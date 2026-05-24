@@ -177,7 +177,8 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
         var (subject, _, casualty, culpritHediff, _, isLeader) = input;
         var isKillLog = casualty == CasualtyType.Killed;
         var recordDef = isKillLog ? HistoryRecordDefOf.Death : HistoryRecordDefOf.Downed;
-        var hediffInt = subject.health.hediffSet.hediffs.LastOrDefault(h => h.def == culpritHediff) ?? subject.health.hediffSet.hediffs.LastOrDefault(h => h.def.isBad && h.ageTicks <= 1);
+        var visibleHediffs = HediffHelper.GetVisibleHediffs(subject).ToList();
+        var hediffInt = visibleHediffs.LastOrDefault(h => h.def == culpritHediff) ?? visibleHediffs.LastOrDefault(h => h.def.isBad && h.ageTicks <= 1);
         var rootKeyword = isKillLog ? "killedEntry" : "downedEntry";
         return recordDef.Description(subject)
             .IncludePawnGrammar()

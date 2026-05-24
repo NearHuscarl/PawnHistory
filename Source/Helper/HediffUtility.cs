@@ -98,7 +98,7 @@ public static class HediffHelper
         return FormatDamageSource(sourceDef, sourceBodyPartGroup, sourceToolLabel, sourceLabel);
     }
 
-    public static IEnumerable<Hediff> VisibleHediffs(Pawn pawn)
+    public static IEnumerable<Hediff> GetVisibleHediffs(Pawn pawn)
     {
         var mpca = pawn.health.hediffSet.GetMissingPartsCommonAncestors();
         foreach (var t in mpca)
@@ -116,7 +116,7 @@ public static class HediffHelper
             : (int)rec.height * 10000 + rec.coverageAbsWithChildren;
 
     private static IEnumerable<IGrouping<BodyPartRecord, Hediff>> VisibleHediffGroupsInOrder(Pawn pawn)
-        => VisibleHediffs(pawn)
+        => GetVisibleHediffs(pawn)
             .GroupBy(x => x.Part)
             .OrderByDescending(x => GetListPriority(x.First().Part));
 

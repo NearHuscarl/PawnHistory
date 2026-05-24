@@ -4,7 +4,6 @@ using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using PawnHistory.Source.PawnTracker.Test.Mocks;
 using RimWorld;
-using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
@@ -18,7 +17,6 @@ public class SurgeryComp_RemovePart : SurgeryComp
     {
         var e = (SurgeryRemoveBodyPartEvent)input.Event;
         return builder
-            .AddRule("Part", e.Part.Label.Colorize(HediffDefOf.MissingBodyPart.defaultLabelColor))
             .AddRule("BadHediff", e.BadHediff?.LabelNounInBracket())
             .AddConstant("intent", e.Intent);
     }
@@ -26,9 +24,7 @@ public class SurgeryComp_RemovePart : SurgeryComp
     public override HistoryDescriptionBuilder BuildBotchedGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
         var e = (SurgeryRemoveBodyPartEvent)input.Event;
-        return builder
-            .AddRule("Part", e.Part)
-            .AddConstant("intent", e.Intent);
+        return builder.AddConstant("intent", e.Intent);
     }
 
     public void TestHarvest(TestScenario scenario)

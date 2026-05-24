@@ -13,9 +13,7 @@ public class SurgeryComp_InstallImplant : SurgeryComp
     public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
         var e = (SurgeryInstallImplantEvent)input.Event;
-        return builder
-            .AddRule("ImplantHediff", e.HediffToAdd, addSubsymbols: true)
-            .AddRule("EnhancedPart", e.Part);
+        return builder.AddRule("ImplantHediff", e.HediffToAdd, addSubsymbols: true);
     }
 
     public override HistoryDescriptionBuilder BuildBotchedGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
@@ -38,12 +36,12 @@ public class SurgeryComp_InstallImplant : SurgeryComp
 
     public void TestFail(TestScenario scenario)
     {
-        var (patient, doctor) = SurgeryRecorder.DoSurgery(scenario, Extra.RecipeDefOf.InstallJoywire, Extra.BodyPartDefOf.Brain, surgeryOutcome: SurgeryOutcomes.MinorFailure);
+        var (patient, doctor) = SurgeryRecorder.DoSurgery(scenario, Extra.RecipeDefOf.InstallJoywire, Extra.BodyPartDefOf.Brain, surgeryOutcome: SurgeryOutcomes.CatastrophicFailure);
 
         Expect.That(patient).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.BotchedSurgery,
-            Description = "[Doctor] slightly botched the implantation of a joywire on [PAWN], causing [NewInjuries].",
+            Description = "[Doctor] catastrophically botched the implantation of a joywire on [PAWN], causing [NewInjuries].",
             Concerns = [doctor],
         });
     }

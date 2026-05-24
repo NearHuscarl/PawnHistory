@@ -39,7 +39,7 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry->[Doctor] installed [ImplantHediff_indefinite] in [PAWN]'s [EnhancedPart].</li>
+				<li>entry->[Doctor] installed [ImplantHediff_indefinite] in [PAWN]'s [Part].</li>
 
 				<li>entryBotched->[Doctor] [Severity] botched the implantation of [ImplantHediff_indefinite] on [PAWN][CausingNewInjuries].</li>
 			</rulesStrings>
@@ -71,10 +71,12 @@
 			<rulesStrings>
 				<li>ViolationNote(isViolation==True) ->, violating [PAWN_possessive] body</li>
 				<li>ViolationNote(isViolation==False)-></li>
-				
-				<li>entry(type==Install)->[Doctor] installed [AddedHediff_indefinite] on [PAWN][ViolationNote].</li>
-				<li>entry(type==Replace)->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedHediff_indefinite][ViolationNote].</li>
-				<li>entry(type==Fix)    ->[Doctor] installed a [AddedHediff] on [PAWN] to treat [BadHediff][ViolationNote].</li>
+
+				<li>entry(type==Install,hasPartPosition==True) ->[Doctor] installed [AddedHediff_indefinite] on [PAWN]'s [Part][ViolationNote].</li>
+				<li>entry(type==Install,hasPartPosition==False)->[Doctor] installed [AddedHediff_indefinite] on [PAWN][ViolationNote].</li>
+				<li>entry(type==Replace)                       ->[Doctor] replaced [PAWN]'s [RemovedPart] with [AddedHediff_indefinite][ViolationNote].</li>
+				<li>entry(type==Fix,hasPartPosition==True)     ->[Doctor] installed [AddedHediff_indefinite] on [PAWN]'s [Part] to treat [BadHediff][ViolationNote].</li>
+				<li>entry(type==Fix,hasPartPosition==False)    ->[Doctor] installed [AddedHediff_indefinite] on [PAWN] to treat [BadHediff][ViolationNote].</li>
 
 				<li>entryBotched->[Doctor] [Severity] botched the installation of [AddedHediff_indefinite] on [PAWN][CausingNewInjuries].</li>
 			</rulesStrings>

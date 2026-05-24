@@ -69,6 +69,7 @@ public static class Extra
         public static BodyPartDef Nose;
         public static BodyPartDef Foot;
         public static BodyPartDef Kidney;
+        public static BodyPartDef Jaw;
 
         static BodyPartDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(BodyPartDefOf));
     }
@@ -252,6 +253,8 @@ public static class Extra
         public static RecipeDef InstallBionicArm;
         public static RecipeDef InstallBionicHeart;
         public static RecipeDef InstallSimpleProstheticHeart;
+        public static RecipeDef InstallArchotechArm;
+        public static RecipeDef InstallDenture;
 
         static RecipeDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RecipeDefOf));
     }
