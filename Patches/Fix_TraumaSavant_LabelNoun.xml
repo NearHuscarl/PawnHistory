@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+    <Operation Class="PatchOperationReplace">
+        <xpath>/Defs/HediffDef[defName="TraumaSavant"]/labelNoun</xpath>
+        <value>
+            <!-- rename 'trauma' to:-->
+            <labelNoun>trauma savant</labelNoun>
+        </value>
+    </Operation>
+</Patch>

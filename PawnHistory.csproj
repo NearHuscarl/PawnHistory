@@ -51,6 +51,7 @@
     <Content Include="docs\**\*.md" />
     <Content Include=".agents\**\*.md" />
     <Compile Include="Source\**\*.cs" />
+    <Content Include="Patches\**\*.xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />

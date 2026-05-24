@@ -14,6 +14,8 @@ internal static class HistoryRecordPriority
         Add(HistoryRecordDefOf.BodyPartDestroyed, 500);
         Add(HistoryRecordDefOf.BodyPartRemoved, 500);
 
+        Add(HistoryRecordDefOf.HealthComplication, 501); // hediff given must be after any hediff giver
+        
         Add(HistoryRecordDefOf.BotchedSurgery, 600);
         
         Add(HistoryRecordDefOf.Crushed, 1000);

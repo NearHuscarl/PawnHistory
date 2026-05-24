@@ -23,13 +23,16 @@ public class HealthComplicationRecorder : RecorderBase<HealthComplicationEvent>
             return;
         var recordDef = HistoryRecordDefOf.HealthComplication;
         var part = pawn.health.hediffSet.hediffs.LastOrDefault(h => h.def == condition && h.ageTicks == 0)?.Part;
+        var causePart = pawn.health.hediffSet.hediffs.LastOrDefault(h => h == cause)?.Part;
         var desc = recordDef.Description(pawn)
             .IncludePawnGrammar()
             .AddRule("Condition", condition.LabelNounColored())
-            .AddRule("Cause", cause?.LabelNounInBracket())
+            .AddRule("CauseHediff", cause?.LabelNounInBracket())
             .AddRule("Part", part)
+            .AddRule("CausePart", causePart)
             .AddConstant("hediff", condition.defName)
             .AddConstant("hasCause", cause != null)
+            .AddConstant("hasCausePart", causePart != null)
             .Resolve();
 
         AddRecord(recordDef, pawn, desc);
@@ -86,5 +89,24 @@ public class HealthComplicationRecorder : RecorderBase<HealthComplicationEvent>
             Accessor.HediffGiver.SendLetter(giver, pawn, null);
 
         Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.HealthComplication, "[PAWN] developed a heart attack.", exactMatch: true);
+    }
+
+    public void TestTraumaSavant(TestScenario scenario)
+    {
+        var pawn = scenario.Pawn().Colonist().CreateSingle();
+        var giver = pawn.def.race.hediffGiverSets.SelectMany(set => set.hediffGivers).OfType<HediffGiver_BrainInjury>().First();
+        var chancePerDamagePct = giver.chancePerDamagePct;
+
+        try
+        {
+            giver.chancePerDamagePct = 100f;
+            scenario.Pawn(pawn).TakeDamage(1f, Extra.BodyPartDefOf.Brain).Execute();
+        }
+        finally
+        {
+            giver.chancePerDamagePct = chancePerDamagePct;
+        }
+
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.HealthComplication, "[PAWN] developed trauma savant. It was caused by [Hediff] in [His] brain.");
     }
 }

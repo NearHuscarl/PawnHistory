@@ -188,6 +188,9 @@
 				<li>InHisPart(priority=1,hediff==ChemicalDamageModerate) -> in [PAWN_possessive] [Part]</li>
 				<li>InHisPart(priority=1,hediff==ChemicalDamageSevere)   -> in [PAWN_possessive] [Part]</li>
 				<li>InHisPart(priority=0)                                -></li>
+
+				<li>Cause(hasCausePart==True) ->[CauseHediff] in [PAWN_possessive] [CausePart]</li>
+				<li>Cause(hasCausePart==False)->[CauseHediff]</li>
 				
 				<li>entry(hasCause==False)->[PAWN] developed [Condition][InHisPart].</li>
 				<li>entry(hasCause==True) ->[PAWN] developed [Condition][InHisPart]. It was caused by [Cause].</li>
