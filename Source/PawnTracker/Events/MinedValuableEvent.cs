@@ -6,7 +6,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record MinedValuableEvent(Pawn Pawn, ThingDef MineableThing) : GameEventBase;
 
-file class MinedValuableDispatcher() : TaleDispatcher
+file class MinedValuableDispatcher : TaleDispatcher
 {
     public override TaleDef TaleDef => TaleDefOf.MinedValuable;
 

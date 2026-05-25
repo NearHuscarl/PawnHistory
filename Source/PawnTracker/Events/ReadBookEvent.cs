@@ -6,7 +6,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record ReadBookEvent(Pawn Pawn, Book Book) : GameEventBase;
 
-file class ReadBookDispatcher() : TaleDispatcher
+file class ReadBookDispatcher : TaleDispatcher
 {
     public override TaleDef TaleDef => TaleDefOf.ReadBook;
 

@@ -6,7 +6,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record StripEvent(Pawn Pawn, Pawn StrippedPawn) : GameEventBase;
 
-file class StripDispatcher() : TaleDispatcher
+file class StripDispatcher : TaleDispatcher
 {
     public override TaleDef TaleDef => Extra.TaleDefOf.Stripped;
 

@@ -21,10 +21,7 @@ public class SurgeryRecorder : RecorderBase<SurgeryEvent>
 
     public override void Register()
     {
-        GameEventBus.Subscribe<SurgeryInstallImplantEvent>(CreateRecord);
-        GameEventBus.Subscribe<SurgeryInstallNaturalPartEvent>(CreateRecord);
-        GameEventBus.Subscribe<SurgeryInstallArtificialPartEvent>(CreateRecord);
-        GameEventBus.Subscribe<SurgeryRemoveBodyPartEvent>(CreateRecord);
+        GameEventBus.Subscribe<SurgeryEvent>(CreateRecord);
     }
 
     public override void CreateRecord(SurgeryEvent e)
@@ -36,7 +33,7 @@ public class SurgeryRecorder : RecorderBase<SurgeryEvent>
         var comp = Comps.OfType<SurgeryComp>().FirstOrDefault(c => c.Match(input));
         if (comp == null)
         {
-            Log.Warning($"[PawnHistory] Unsupported surgery event {e.GetType().Name}.");
+            Log.Warning($"[PawnHistory] Unsupported surgery recipe {e.Recipe?.defName}.");
             return;
         }
 

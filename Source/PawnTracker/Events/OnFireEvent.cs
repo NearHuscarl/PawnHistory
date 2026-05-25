@@ -5,7 +5,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record OnFireEvent(Pawn Pawn) : GameEventBase;
 
-file class OnFireDispatcher() : TaleDispatcher
+file class OnFireDispatcher : TaleDispatcher
 {
     public override TaleDef TaleDef => TaleDefOf.WasOnFire;
 

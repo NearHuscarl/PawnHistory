@@ -9,24 +9,25 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class SurgeryComp_InstallNaturalPart : SurgeryComp
 {
-    public override bool Match(BuildInput input) => input.Event is SurgeryInstallNaturalPartEvent;
+    public override bool Match(BuildInput input) => input.Event.Data is SurgeryInstallNaturalPartData;
 
     public override HistoryRecordDef RecordDef(BuildInput input) => HistoryRecordDefOf.BodyPartInstalled;
 
     public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
-        var e = (SurgeryInstallNaturalPartEvent)input.Event;
+        var e = input.Event;
+        var data = (SurgeryInstallNaturalPartData)e.Data;
         return builder
             .AddRule("RemovedPart", e.Part)
-            .AddRule("RemovedPart", e.HediffToRemove, replaceIfExist: true)
-            .AddRule("BadHediff", e.BadHediff?.LabelNounInBracket())
-            .AddConstant("type", GetSurgeryType(e))
+            .AddRule("RemovedPart", data.HediffToRemove, replaceIfExist: true)
+            .AddRule("BadHediff", data.BadHediff?.LabelNounInBracket())
+            .AddConstant("type", GetSurgeryType(data))
             .AddRule("AddedPart", e.Part, addSubsymbols: true);
     }
 
     public override HistoryDescriptionBuilder BuildBotchedGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
-        var e = (SurgeryInstallNaturalPartEvent)input.Event;
+        var e = input.Event;
         return builder.AddRule("AddedPart", e.Part, addSubsymbols: true);
     }
     
@@ -37,11 +38,11 @@ public class SurgeryComp_InstallNaturalPart : SurgeryComp
         Fix,
     }
 
-    private static SurgeryType GetSurgeryType(SurgeryInstallNaturalPartEvent e)
+    private static SurgeryType GetSurgeryType(SurgeryInstallNaturalPartData data)
     {
-        if (e.HediffToRemove is Hediff_MissingPart)
+        if (data.HediffToRemove is Hediff_MissingPart)
             return SurgeryType.Install;
-        if (e.BadHediff != null)
+        if (data.BadHediff != null)
             return SurgeryType.Fix;
         return SurgeryType.Replace;
     }
@@ -100,8 +101,7 @@ public class SurgeryComp_InstallNaturalPart : SurgeryComp
             scenario,
             Extra.RecipeDefOf.InstallNaturalKidney,
             Extra.BodyPartDefOf.Kidney,
-            patient => patient.AddHediff(Extra.HediffDefOf.HeartArteryBlockage, BodyPartDefOf.Heart),
-            SurgeryOutcomes.MinorFailure);
+            surgeryOutcome: SurgeryOutcomes.MinorFailure);
 
         Expect.That(patient).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {

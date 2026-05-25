@@ -1,64 +1,116 @@
-﻿using RimWorld;
+using HarmonyLib;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public record SurgeryEvent(Pawn Patient, Pawn Doctor, BodyPartRecord Part, List<Hediff> NewInjuries = null, SurgeryOutcome Outcome = null) : GameEventBase;
+public abstract record SurgeryEventData;
+
+public record SurgeryEvent(RecipeDef Recipe, Pawn Patient, Pawn Doctor, BodyPartRecord Part, SurgeryEventData Data) : GameEventBase
+{
+    public List<Hediff> NewInjuries { get; set; }
+    public SurgeryOutcome Outcome { get; set; }
+}
+
+internal abstract class SurgeryEventDataSource
+{
+    private static readonly Lazy<Dictionary<string, SurgeryEventDataSource>> SourceLookup = new(BuildSources);
+
+    protected abstract Type GetWorkClass();
+    protected abstract SurgeryEventData Create(RecipeDef recipe, Pawn patient, Pawn doctor, BodyPartRecord part);
+
+    public static SurgeryEvent CreateEvent(RecipeDef recipe, Pawn patient, Pawn doctor, BodyPartRecord part)
+    {
+        if (!SourceLookup.Value.TryGetValue(recipe.workerClass.Name, out var source))
+            return null;
+
+        var data = source.Create(recipe, patient, doctor, part);
+        return new SurgeryEvent(recipe, patient, doctor, part, data);
+    }
+
+    private static Dictionary<string, SurgeryEventDataSource> BuildSources()
+    {
+        return typeof(SurgeryEventDataSource)
+            .AllSubclassesNonAbstract()
+            .Select(t => (SurgeryEventDataSource)Activator.CreateInstance(t))
+            .ToDictionary(d => d.GetWorkClass().Name, d => d);
+    }
+}
+
+file class SurgeryContext(SurgeryEvent e)
+{
+    public static SurgeryContext Frame;
+
+    public SurgeryEvent Event { get; } = e;
+    private List<Hediff> InjurySnapshot { get; } = GetInjuries(e.Patient);
+
+    public List<Hediff> NewInjuries()
+    {
+        // Injury hediffs are those added during the failed surgery (e.g. surgical cut).
+        return GetInjuries(Event.Patient)
+            .Except(InjurySnapshot)
+            .OrderByDescending(h => h.Severity)
+            .ToList();
+    }
+
+    private static List<Hediff> GetInjuries(Pawn pawn)
+    {
+        return pawn.health.hediffSet.hediffs.Where(h => h is Hediff_Injury).ToList();
+    }
+}
 
 // Call order:
 // Recipe_Surgery.ApplyOnPawn() prefix
 // SurgeryOutcomeEffectDef.GetOutcome()
 // Recipe_Surgery.ApplyOnPawn() postfix
-
-internal class SurgeryContext<T> where T : SurgeryEvent
+[HarmonyPatch]
+internal class Recipe_Surgery_ApplyOnPawn_Patch
 {
-    public T e;
-    public List<Hediff> InjurySnapshot;
-
-    public static readonly Dictionary<string, SurgeryContext<T>> PendingSurgeries = [];
-
-    public static List<Hediff> GetInjurySnapshot(Pawn pawn) => pawn.health.hediffSet.hediffs.Where(h => h is Hediff_Injury).ToList();
-
-    public static void SurgeryRecipe_PreApplyOnPawn(Pawn patient, Func<T> eventFactory)
+    private static IEnumerable<MethodBase> TargetMethods()
     {
-        PendingSurgeries[GetSurgeryId(patient)] = new SurgeryContext<T>
-        {
-            e = eventFactory(),
-            InjurySnapshot = GetInjurySnapshot(patient),
-        };
+        yield return AccessTools.Method(typeof(Recipe_InstallImplant), nameof(Recipe_Surgery.ApplyOnPawn));
+        yield return AccessTools.Method(typeof(Recipe_InstallNaturalBodyPart), nameof(Recipe_Surgery.ApplyOnPawn));
+        yield return AccessTools.Method(typeof(Recipe_InstallArtificialBodyPart), nameof(Recipe_Surgery.ApplyOnPawn));
+        yield return AccessTools.Method(typeof(Recipe_RemoveBodyPart), nameof(Recipe_Surgery.ApplyOnPawn));
     }
 
-    public static void SurgeryRecipe_PostApplyOnPawn(Pawn patient)
+    private static void Prefix(Recipe_Surgery __instance, Pawn pawn, BodyPartRecord part, Pawn billDoer)
     {
-        var surgeryId = GetSurgeryId(patient);
-        if (!PendingSurgeries.Remove(surgeryId, out var ctx))
+        if (billDoer == null) // not surgery related
             return;
 
-        // Injury hediffs are those added to the part during the failed surgery
-        // (e.g. surgical cut, etc.) - compare snapshot to current state
-        var newInjuries = GetInjurySnapshot(patient)
-            .Except(ctx.InjurySnapshot)
-            .OrderByDescending(h => h.Severity)
-            .ToList();
-        ctx.e = ctx.e with { NewInjuries = newInjuries };
-
-        GameEventBus.Publish(ctx.e);
-    }
-
-    public static void SurgeryOutcomeEffectDef_PostGetOutcome(Pawn patient, SurgeryOutcome __result)
-    {
-        if (!PendingSurgeries.TryGetValue(GetSurgeryId(patient), out var ctx))
+        var e = SurgeryEventDataSource.CreateEvent(__instance.recipe, pawn, billDoer, part);
+        if (e == null)
             return;
-        ctx.e = ctx.e with { Outcome = __result };
+
+        SurgeryContext.Frame = new SurgeryContext(e);
     }
 
-    public static string GetSurgeryId(Pawn pawn)
+    private static void Postfix()
     {
-        var surgeryEventType = typeof(T);
-        var surgeryId = $"{pawn.GetUniqueLoadID()}_{surgeryEventType.Name}";
-        return surgeryId;
+        if (SurgeryContext.Frame == null)
+            return;
+
+        SurgeryContext.Frame.Event.NewInjuries = SurgeryContext.Frame.NewInjuries();
+        GameEventBus.Publish(SurgeryContext.Frame.Event);
+    }
+
+    private static void Finalizer()
+    {
+        SurgeryContext.Frame = null;
+    }
+}
+
+[HarmonyPatch(typeof(SurgeryOutcomeEffectDef), nameof(SurgeryOutcomeEffectDef.GetOutcome))]
+internal class SurgeryOutcomeEffectDef_GetOutcome_Patch
+{
+    private static void Postfix(Pawn patient, SurgeryOutcome __result)
+    {
+        if (SurgeryContext.Frame?.Event.Patient == patient)
+            SurgeryContext.Frame?.Event.Outcome = __result;
     }
 }

@@ -6,7 +6,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record AnimalHuntedEvent(Pawn Hunter, Pawn Prey) : GameEventBase;
 
-file class AnimalHuntedDispatcher() : TaleDispatcher
+file class AnimalHuntedDispatcher : TaleDispatcher
 {
     public override TaleDef TaleDef => TaleDefOf.Hunted;
 

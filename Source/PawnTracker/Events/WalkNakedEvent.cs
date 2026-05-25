@@ -5,7 +5,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record WalkNakedEvent(Pawn Pawn) : GameEventBase;
 
-file class WalkNakedDispatcher() : TaleDispatcher
+file class WalkNakedDispatcher : TaleDispatcher
 {
     public override TaleDef TaleDef => TaleDefOf.WalkedNaked;
 

@@ -5,7 +5,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record ExhaustedEvent(Pawn Pawn) : GameEventBase;
 
-file class ExhaustedDispatcher() : TaleDispatcher
+file class ExhaustedDispatcher : TaleDispatcher
 {
     public override TaleDef TaleDef => TaleDefOf.Exhausted;
 

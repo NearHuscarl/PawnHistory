@@ -6,7 +6,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record PlayedGameEvent(Pawn Pawn, ThingDef ObjectDef) : GameEventBase;
 
-file class PlayedGameDispatcher() : TaleDispatcher
+file class PlayedGameDispatcher : TaleDispatcher
 {
     public override TaleDef TaleDef => Extra.TaleDefOf.PlayedGame;
 

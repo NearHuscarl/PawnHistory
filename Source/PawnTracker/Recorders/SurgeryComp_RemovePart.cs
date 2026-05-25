@@ -9,22 +9,22 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class SurgeryComp_RemovePart : SurgeryComp
 {
-    public override bool Match(BuildInput input) => input.Event is SurgeryRemoveBodyPartEvent;
+    public override bool Match(BuildInput input) => input.Event.Data is SurgeryRemoveBodyPartData;
 
     public override HistoryRecordDef RecordDef(BuildInput input) => HistoryRecordDefOf.BodyPartRemoved;
 
     public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
-        var e = (SurgeryRemoveBodyPartEvent)input.Event;
+        var data = (SurgeryRemoveBodyPartData)input.Event.Data;
         return builder
-            .AddRule("BadHediff", e.BadHediff?.LabelNounInBracket())
-            .AddConstant("intent", e.Intent);
+            .AddRule("BadHediff", data.BadHediff?.LabelNounInBracket())
+            .AddConstant("intent", data.Intent);
     }
 
     public override HistoryDescriptionBuilder BuildBotchedGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
-        var e = (SurgeryRemoveBodyPartEvent)input.Event;
-        return builder.AddConstant("intent", e.Intent);
+        var data = (SurgeryRemoveBodyPartData)input.Event.Data;
+        return builder.AddConstant("intent", data.Intent);
     }
 
     public void TestHarvest(TestScenario scenario)

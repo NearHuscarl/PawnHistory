@@ -6,20 +6,20 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class SurgeryComp_InstallImplant : SurgeryComp
 {
-    public override bool Match(BuildInput input) => input.Event is SurgeryInstallImplantEvent;
+    public override bool Match(BuildInput input) => input.Event.Data is SurgeryInstallImplantData;
 
     public override HistoryRecordDef RecordDef(BuildInput input) => HistoryRecordDefOf.BodyPartImplanted;
 
     public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
-        var e = (SurgeryInstallImplantEvent)input.Event;
-        return builder.AddRule("ImplantHediff", e.HediffToAdd, addSubsymbols: true);
+        var data = (SurgeryInstallImplantData)input.Event.Data;
+        return builder.AddRule("ImplantHediff", data.HediffToAdd, addSubsymbols: true);
     }
 
     public override HistoryDescriptionBuilder BuildBotchedGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
-        var e = (SurgeryInstallImplantEvent)input.Event;
-        return builder.AddRule("ImplantHediff", e.HediffToAdd, addSubsymbols: true);
+        var data = (SurgeryInstallImplantData)input.Event.Data;
+        return builder.AddRule("ImplantHediff", data.HediffToAdd, addSubsymbols: true);
     }
 
     public void Test(TestScenario scenario)

@@ -9,26 +9,27 @@ namespace PawnHistory.Source.PawnTracker.Recorders;
 
 public class SurgeryComp_InstallArtificialPart : SurgeryComp
 {
-    public override bool Match(BuildInput input) => input.Event is SurgeryInstallArtificialPartEvent;
+    public override bool Match(BuildInput input) => input.Event.Data is SurgeryInstallArtificialPartData;
 
     public override HistoryRecordDef RecordDef(BuildInput input) => HistoryRecordDefOf.BodyPartModded;
 
     public override HistoryDescriptionBuilder BuildGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
-        var e = (SurgeryInstallArtificialPartEvent)input.Event;
+        var e = input.Event;
+        var data = (SurgeryInstallArtificialPartData)e.Data;
         return builder
             .AddRule("RemovedPart", e.Part)
-            .AddRule("RemovedPart", e.HediffToRemove, replaceIfExist: true)
-            .AddRule("BadHediff", e.BadHediff?.LabelNounInBracket())
-            .AddRule("AddedHediff", e.HediffToAdd, addSubsymbols: true)
-            .AddConstant("type", GetSurgeryType(e))
-            .AddConstant("isViolation", e.IsViolation);
+            .AddRule("RemovedPart", data.HediffToRemove, replaceIfExist: true)
+            .AddRule("BadHediff", data.BadHediff?.LabelNounInBracket())
+            .AddRule("AddedHediff", data.HediffToAdd, addSubsymbols: true)
+            .AddConstant("type", GetSurgeryType(data))
+            .AddConstant("isViolation", data.IsViolation);
     }
 
     public override HistoryDescriptionBuilder BuildBotchedGrammarRequest(HistoryDescriptionBuilder builder, BuildInput input)
     {
-        var e = (SurgeryInstallArtificialPartEvent)input.Event;
-        return builder.AddRule("AddedHediff", e.HediffToAdd, addSubsymbols: true);
+        var data = (SurgeryInstallArtificialPartData)input.Event.Data;
+        return builder.AddRule("AddedHediff", data.HediffToAdd, addSubsymbols: true);
     }
 
     private enum SurgeryType
@@ -38,11 +39,11 @@ public class SurgeryComp_InstallArtificialPart : SurgeryComp
         Fix,
     }
 
-    private static SurgeryType GetSurgeryType(SurgeryInstallArtificialPartEvent e)
+    private static SurgeryType GetSurgeryType(SurgeryInstallArtificialPartData data)
     {
-        if (e.HediffToRemove is Hediff_MissingPart)
+        if (data.HediffToRemove is Hediff_MissingPart)
             return SurgeryType.Install;
-        if (e.BadHediff != null)
+        if (data.BadHediff != null)
             return SurgeryType.Fix;
         return SurgeryType.Replace;
     }
