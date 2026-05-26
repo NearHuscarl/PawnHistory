@@ -4,9 +4,10 @@
 		<defName>PH_BotchedSurgeryCommon</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>CausingNewInjuries(injuryCount==0)-></li>
-				<li>CausingNewInjuries(injuryCount==1)->, causing a wound on [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
-				<li>CausingNewInjuries(injuryCount>=2)->, causing multiple wounds on [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
+				<li>CausingNewInjuries(priority=1,outcomeType==Sterilized)->, leaving [PAWN_objective] permanently sterile</li>
+				<li>CausingNewInjuries(priority=0,injuryCount==0)-></li>
+				<li>CausingNewInjuries(priority=0,injuryCount==1)->, causing a wound on [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
+				<li>CausingNewInjuries(priority=0,injuryCount>=2)->, causing multiple wounds on [PAWN_possessive] [InjuredParts] [Bloodloss]</li>
 
 				<li>Severity(outcomeType==Minor)     ->slightly</li>
 				<li>Severity(outcomeType==Major)     ->catastrophically</li>
@@ -40,6 +41,48 @@
 				<li>entry->[PAWN]'s [RemovedHediff] was reversed by [Doctor].</li>
 
 				<li>entryBotched->[Doctor] [Severity] botched [RemovedHediff_indefinite] reversal on [PAWN][CausingNewInjuries].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_IudImplanted</defName>
+		<include>
+			<li>PH_BotchedSurgeryCommon</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] had an IUD implanted by [Doctor].</li>
+
+				<li>entryBotched->[Doctor] [Severity] botched an IUD implantation on [PAWN][CausingNewInjuries].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_IudRemoved</defName>
+		<include>
+			<li>PH_BotchedSurgeryCommon</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN]'s IUD was removed by [Doctor].</li>
+
+				<li>entryBotched->[Doctor] [Severity] botched an IUD removal on [PAWN][CausingNewInjuries].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_PregnancyTerminated</defName>
+		<include>
+			<li>PH_BotchedSurgeryCommon</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN]'s pregnancy was terminated by [Doctor].</li>
+
+				<li>entryBotched->[Doctor] [Severity] botched a pregnancy termination on [PAWN][CausingNewInjuries].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

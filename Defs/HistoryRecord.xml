@@ -255,6 +255,24 @@
 			<li>Health</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>IudImplanted</defName>
+		<label>IUD implanted</label>
+		<descriptionMaker>PH_IudImplanted</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Health</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>IudRemoved</defName>
+		<label>IUD removed</label>
+		<descriptionMaker>PH_IudRemoved</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Health</li>
+		</categories>
+	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BodyPartRemoved</defName>
 		<label>body part removed</label>
@@ -1099,6 +1117,16 @@
 		<icon>UI/Icons/PregnancyApproaches/TryForBaby</icon>
 		<categories>
 			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">
+		<defName>PregnancyTerminated</defName>
+		<label>pregnancy terminated</label>
+		<descriptionMaker>PH_PregnancyTerminated</descriptionMaker>
+		<icon>UI/Icons/PregnancyApproaches/AvoidPregnancy</icon>
+		<categories>
+			<li>Life</li>
+			<li>Health</li>
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Biotech">

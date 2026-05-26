@@ -33,7 +33,7 @@ public class SurgeryRecorder : RecorderBase<SurgeryEvent>
         var comp = Comps.OfType<SurgeryComp>().FirstOrDefault(c => c.Match(input));
         if (comp == null)
         {
-            Log.Warning($"[PawnHistory] Unsupported surgery recipe {e.Recipe?.defName}.");
+            L.Warning($"Unsupported surgery recipe {e.Recipe?.defName}.");
             return;
         }
 
@@ -86,7 +86,7 @@ public class SurgeryRecorder : RecorderBase<SurgeryEvent>
         return SurgeryOutcomeType.Minor;
     }
 
-    public static (Pawn patient, Pawn doctor) DoSurgery(TestScenario scenario, RecipeDef recipeDef, BodyPartDef bodyPart, Action<PawnBuilder> buildPatient = null, SurgeryOutcome surgeryOutcome = null)
+    public static (Pawn patient, Pawn doctor) DoSurgery(TestScenario scenario, RecipeDef recipeDef, BodyPartDef bodyPart = null, Action<PawnBuilder> buildPatient = null, SurgeryOutcome surgeryOutcome = null)
     {
         scenario.SurgeryForcedOutcome = surgeryOutcome ?? SurgeryOutcomes.Success;
         scenario.Map()

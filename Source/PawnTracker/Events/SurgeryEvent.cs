@@ -25,10 +25,11 @@ internal abstract class SurgeryEventDataSource
 
     public static SurgeryEvent CreateEvent(RecipeDef recipe, Pawn patient, Pawn doctor, BodyPartRecord part)
     {
-        if (!SourceLookup.Value.TryGetValue(recipe.workerClass.Name, out var source))
-            return null;
+        SurgeryEventData data = null;
+        
+        if (SourceLookup.Value.TryGetValue(recipe.workerClass.Name, out var source))
+            data = source.Create(recipe, patient, doctor, part);
 
-        var data = source.Create(recipe, patient, doctor, part);
         return new SurgeryEvent(recipe, patient, doctor, part, data);
     }
 
@@ -77,7 +78,9 @@ internal class Recipe_Surgery_ApplyOnPawn_Patch
         yield return AccessTools.Method(typeof(Recipe_InstallArtificialBodyPart), nameof(Recipe_Surgery.ApplyOnPawn));
         yield return AccessTools.Method(typeof(Recipe_RemoveBodyPart), nameof(Recipe_Surgery.ApplyOnPawn));
         yield return AccessTools.Method(typeof(Recipe_AddHediff), nameof(Recipe_Surgery.ApplyOnPawn));
+        yield return AccessTools.Method(typeof(Recipe_ImplantIUD), nameof(Recipe_Surgery.ApplyOnPawn));
         yield return AccessTools.Method(typeof(Recipe_RemoveHediff), nameof(Recipe_Surgery.ApplyOnPawn));
+        yield return AccessTools.Method(typeof(Recipe_TerminatePregnancy), nameof(Recipe_Surgery.ApplyOnPawn));
     }
 
     private static void Prefix(Recipe_Surgery __instance, Pawn pawn, BodyPartRecord part, Pawn billDoer)
@@ -86,9 +89,6 @@ internal class Recipe_Surgery_ApplyOnPawn_Patch
             return;
 
         var e = SurgeryEventDataSource.CreateEvent(__instance.recipe, pawn, billDoer, part);
-        if (e == null)
-            return;
-
         SurgeryContext.Frame = new SurgeryContext(e);
     }
 

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using PawnHistory.Source.PawnTracker.Test.Mocks;
-using RimWorld;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 

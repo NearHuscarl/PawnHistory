@@ -33,8 +33,6 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef BodyPartDestroyed;
     public static HistoryRecordDef BodyPartScarred;
     public static HistoryRecordDef ScarHealed;
-    public static HistoryRecordDef Sterilized;
-    public static HistoryRecordDef ReverseVasectomy;
     public static HistoryRecordDef BodyPartRemoved;
     public static HistoryRecordDef BodyPartImplanted;
     public static HistoryRecordDef BodyPartInstalled;
@@ -138,6 +136,16 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef GrowthMoment;
     [MayRequireBiotech]
     public static HistoryRecordDef PregnancyStarted;
+    [MayRequireBiotech]
+    public static HistoryRecordDef PregnancyTerminated;
+    [MayRequireBiotech]
+    public static HistoryRecordDef Sterilized;
+    [MayRequireBiotech]
+    public static HistoryRecordDef ReverseVasectomy;
+    [MayRequireBiotech]
+    public static HistoryRecordDef IudImplanted;
+    [MayRequireBiotech]
+    public static HistoryRecordDef IudRemoved;
     [MayRequireBiotech]
     public static HistoryRecordDef GaveBirth;
     [MayRequireBiotech]

@@ -257,6 +257,12 @@ public static class Extra
         public static RecipeDef InstallDenture;
 
         [MayRequireBiotech]
+        public static RecipeDef TerminatePregnancy;
+        [MayRequireBiotech]
+        public static RecipeDef ImplantIUD;
+        [MayRequireBiotech]
+        public static RecipeDef RemoveIUD;
+        [MayRequireBiotech]
         public static RecipeDef TubalLigation;
         [MayRequireBiotech]
         public static RecipeDef Vasectomy;
