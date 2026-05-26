@@ -6,7 +6,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 
 public record VisitedGraveEvent(Pawn Pawn, Pawn DeadPawn) : GameEventBase;
 
-file class VisitedGraveDispatcher() : TaleDispatcher
+file class VisitedGraveDispatcher : TaleDispatcher
 {
     public override TaleDef TaleDef => Extra.TaleDefOf.VisitedGrave;
 

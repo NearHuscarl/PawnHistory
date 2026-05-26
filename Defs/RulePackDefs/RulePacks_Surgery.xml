@@ -11,7 +11,35 @@
 				<li>Severity(outcomeType==Minor)     ->slightly</li>
 				<li>Severity(outcomeType==Major)     ->catastrophically</li>
 				<li>Severity(outcomeType==Death)     ->fatally</li>
-				<li>Severity(outcomeType==Sterilized)->hilariously</li>
+				<li>Severity(outcomeType==Sterilized)-></li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_Sterilized</defName>
+		<include>
+			<li>PH_BotchedSurgeryCommon</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] received [AddedHediff_indefinite] from [Doctor].</li>
+
+				<li>entryBotched->[Doctor] [Severity] botched [AddedHediff_indefinite] procedure on [PAWN][CausingNewInjuries].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_ReverseVasectomy</defName>
+		<include>
+			<li>PH_BotchedSurgeryCommon</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN]'s [RemovedHediff] was reversed by [Doctor].</li>
+
+				<li>entryBotched->[Doctor] [Severity] botched [RemovedHediff_indefinite] reversal on [PAWN][CausingNewInjuries].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

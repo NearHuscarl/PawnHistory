@@ -48,7 +48,7 @@ public class SurgeryRecorder : RecorderBase<SurgeryEvent>
             .IncludePawnGrammar()
             .AddRule("Doctor", e.Doctor)
             .AddRule("Part", e.Part)
-            .AddConstant("hasPartPosition", e.Part.IsOneOfMultipleParts);
+            .AddConstant("hasPartPosition", e.Part?.IsOneOfMultipleParts);
 
         builder = comp.BuildGrammarRequest(builder, input);
         AddRecord(recordDef, e.Patient, builder.Resolve(), [e.Doctor]);

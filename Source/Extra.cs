@@ -256,6 +256,13 @@ public static class Extra
         public static RecipeDef InstallArchotechArm;
         public static RecipeDef InstallDenture;
 
+        [MayRequireBiotech]
+        public static RecipeDef TubalLigation;
+        [MayRequireBiotech]
+        public static RecipeDef Vasectomy;
+        [MayRequireBiotech]
+        public static RecipeDef ReverseVasectomy;
+
         static RecipeDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RecipeDefOf));
     }
 

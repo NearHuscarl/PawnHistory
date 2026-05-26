@@ -104,5 +104,13 @@ internal static class PawnUtility
                 return "(" + "WontBleedOutSoon".Translate() + ")";
             return "(" + "TimeToDeath".Translate((NamedArgument)bloodLoss.ToStringTicksToPeriod()) + ")";
         }
+        
+        public BodyPartRecord GetBodyPart(BodyPartDef bodyPartDef, int index = 0)
+        {
+            var parts = pawn.RaceProps.body.GetPartsWithDef(bodyPartDef).ToList();
+            var part = parts[index];
+
+            return part;
+        }
     }
 }

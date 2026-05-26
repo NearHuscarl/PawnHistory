@@ -238,6 +238,24 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Sterilized</defName>
+		<label>sterilized</label>
+		<descriptionMaker>PH_Sterilized</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Health</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>ReverseVasectomy</defName>
+		<label>vasectomy reversed</label>
+		<descriptionMaker>PH_ReverseVasectomy</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Health</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>BodyPartRemoved</defName>
 		<label>body part removed</label>
 		<descriptionMaker>PH_BodyPartRemoved</descriptionMaker>

@@ -150,8 +150,7 @@ public class PawnBuilder(int count = 1)
     {
         return Do(pawn =>
         {
-            var parts = partDef != null ? pawn.RaceProps.body.GetPartsWithDef(partDef).ToList() : null;
-            var part = parts?[partIndex];
+            var part = partDef != null ? pawn.GetBodyPart(partDef, partIndex) : null;
             var hediff = HediffMaker.MakeHediff(def, pawn, part);
 
             hediff.SetVisible();
@@ -285,12 +284,11 @@ public class PawnBuilder(int count = 1)
         });
     }
 
-    public PawnBuilder DoSurgery(Pawn patient, RecipeDef recipe, BodyPartDef partDef, bool instant = false, int partIndex = 0)
+    public PawnBuilder DoSurgery(Pawn patient, RecipeDef recipe, BodyPartDef partDef = null, bool instant = false, int partIndex = 0)
     {
         return DoOnce(doctor =>
         {
-            var parts = patient.RaceProps.body.GetPartsWithDef(partDef).ToList();
-            var part = parts[partIndex];
+            var part = recipe.targetsBodyPart ? patient.GetBodyPart(partDef, partIndex) : null;
             var bill = new Bill_Medical(recipe, []);
             patient.BillStack.AddBill(bill);
             bill.Part = part;
@@ -301,7 +299,6 @@ public class PawnBuilder(int count = 1)
                 return;
             }
 
-            // Surgery is slooow
             Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
 
             var bed = RestUtility.FindPatientBedFor(patient);

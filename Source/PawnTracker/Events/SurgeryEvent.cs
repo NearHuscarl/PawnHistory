@@ -76,6 +76,8 @@ internal class Recipe_Surgery_ApplyOnPawn_Patch
         yield return AccessTools.Method(typeof(Recipe_InstallNaturalBodyPart), nameof(Recipe_Surgery.ApplyOnPawn));
         yield return AccessTools.Method(typeof(Recipe_InstallArtificialBodyPart), nameof(Recipe_Surgery.ApplyOnPawn));
         yield return AccessTools.Method(typeof(Recipe_RemoveBodyPart), nameof(Recipe_Surgery.ApplyOnPawn));
+        yield return AccessTools.Method(typeof(Recipe_AddHediff), nameof(Recipe_Surgery.ApplyOnPawn));
+        yield return AccessTools.Method(typeof(Recipe_RemoveHediff), nameof(Recipe_Surgery.ApplyOnPawn));
     }
 
     private static void Prefix(Recipe_Surgery __instance, Pawn pawn, BodyPartRecord part, Pawn billDoer)

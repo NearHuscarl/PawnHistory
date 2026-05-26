@@ -33,6 +33,8 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef BodyPartDestroyed;
     public static HistoryRecordDef BodyPartScarred;
     public static HistoryRecordDef ScarHealed;
+    public static HistoryRecordDef Sterilized;
+    public static HistoryRecordDef ReverseVasectomy;
     public static HistoryRecordDef BodyPartRemoved;
     public static HistoryRecordDef BodyPartImplanted;
     public static HistoryRecordDef BodyPartInstalled;
