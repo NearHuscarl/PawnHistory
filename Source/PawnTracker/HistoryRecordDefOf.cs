@@ -158,6 +158,8 @@ public class HistoryRecordDefOf
     [MayRequireIdeology]
     public static HistoryRecordDef SlaveEmancipated;
     [MayRequireIdeology]
+    public static HistoryRecordDef SlaveExecuted;
+    [MayRequireIdeology]
     public static HistoryRecordDef IdeoChanged;
     [MayRequireIdeology]
     public static HistoryRecordDef DivorceByIdeo;

@@ -28,4 +28,4 @@ Backlog for future event and recorder coverage.
 - Ideology conversion and belief reduction.
 - Pawn transition to world-only state through `Pawn.Notify_PassedToWorld()`.
 - Guest transitions such as prisoner, slave, and guest changes.
-
+- DoExecutionByCut

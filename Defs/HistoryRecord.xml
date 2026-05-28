@@ -825,7 +825,16 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonerExecuted</defName>
 		<label>prisoner executed</label>
-		<descriptionMaker>PH_PrisonerExecuted</descriptionMaker>
+		<descriptionMaker>PH_Executed</descriptionMaker>
+		<icon>Ui/Buttons/Execute</icon>
+		<categories>
+			<li>Banished</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>SlaveExecuted</defName>
+		<label>slave executed</label>
+		<descriptionMaker>PH_Executed</descriptionMaker>
 		<icon>Ui/Buttons/Execute</icon>
 		<categories>
 			<li>Banished</li>

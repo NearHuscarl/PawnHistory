@@ -420,13 +420,14 @@ public class PawnBuilder(int count = 1)
         if (!pawn.RaceProps.Humanlike)
             return;
 
-        // Ensure systems exist
-        pawn.workSettings?.EnableAndInitialize();
-
         // 1. Remove work-disabling backstories
         // Setting these to null removes the primary source of "Incapable of"
         pawn.story.Childhood = Childhood;
         pawn.story.Adulthood = Adulthood;
+        pawn.Notify_DisabledWorkTypesChanged();
+
+        // Make sure no work is disabled
+        pawn.workSettings?.EnableAndInitialize();
 
         // 2. Remove work-disabling traits (e.g., Lazy, Brawler, etc.)
         pawn.story.traits.allTraits.Clear();

@@ -29,4 +29,5 @@ Use these as the starting point to track down potential event for a new history 
 - PrisonerInteractionModeDefOf -> tale events?
 - Review `HistoryEventDefOf.cs` and `.RecordEvent(` call sites for upstream signals worth converting into typed events.
 - Review `JobDefOf.cs` and similar hidden entrypoint for story-worthy behaviors such as OfferHelp.
+- Execution: `DoExecutionByCut`
 - `.PassToWorld(`

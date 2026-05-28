@@ -654,24 +654,27 @@
 	</RulePackDef>
 
 	<RulePackDef>
-		<defName>PH_PrisonerExecuted</defName>
+		<defName>PH_Executed</defName>
 		<include>
 			<li>PH_Common</li>
 			<li>PH_Faction</li>
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>tale_noun(route==GuiltyColonist,guilty==True) ->[Prisoner], a colonist of [PlayerSettlement], was executed after being found guilty.</li>
-				<li>tale_noun(route==Prisoner,      guilty==True) ->[Prisoner], a prisoner of [PlayerSettlement], was executed after being found guilty.</li>
-				<li>tale_noun(route==Prisoner,      guilty==False)->[Prisoner], a prisoner of [PlayerSettlement], was executed.</li>
-
-				<li>image                 ->[Executioner] cut [Prisoner_objective] [circumstance_phrase]</li>
-				<li>image                 ->[Executioner] put [Prisoner_objective] to death [circumstance_phrase]</li>
-				<li>image(route==Prisoner)->[Executioner] entered a prison cell to murder [Prisoner_objective] [circumstance_phrase]</li>
+				<li>AfterBeingFoundGuilty(guilty==True) -> after being found guilty</li>
+				<li>AfterBeingFoundGuilty(guilty==False)-></li>
 				
-				<li>circumstance_phrase->as [Prisoner_pronoun] writhed on the ground</li>
-				<li>circumstance_phrase->as [Prisoner_pronoun] twisted in pain</li>
-				<li>circumstance_phrase->as [Prisoner_pronoun] cried out in terror</li>
+				<li>tale_noun(route==GuiltyColonist)->[PAWN], a colonist of [PlayerSettlement], was executed[AfterBeingFoundGuilty].</li>
+				<li>tale_noun(route==Prisoner)      ->[PAWN], a prisoner of [PlayerSettlement], was executed[AfterBeingFoundGuilty].</li>
+				<li>tale_noun(route==Slave)         ->[PAWN], a slave of [PlayerSettlement], was executed[AfterBeingFoundGuilty].</li>
+
+				<li>image                 ->[Executioner] cut [PAWN_objective] [circumstance_phrase]</li>
+				<li>image                 ->[Executioner] put [PAWN_objective] to death [circumstance_phrase]</li>
+				<li>image(route==Prisoner)->[Executioner] entered a prison cell to murder [PAWN_objective] [circumstance_phrase]</li>
+				
+				<li>circumstance_phrase->as [PAWN_pronoun] writhed on the ground</li>
+				<li>circumstance_phrase->as [PAWN_pronoun] twisted in pain</li>
+				<li>circumstance_phrase->as [PAWN_pronoun] cried out in terror</li>
 				<li>circumstance_phrase->with professional efficiency</li>
 				<li>circumstance_phrase->roughly and amateurishly</li>
 				<li>circumstance_phrase->with obviously excessive force</li>
@@ -686,10 +689,10 @@
 				<li>desc_sentence->[Executioner_pronoun] was sweating profusely.</li>
 				<li>desc_sentence->[Executioner_pronoun] was drooling a little bit.</li>
 				<li>desc_sentence->[Executioner_pronoun] had blood smeared on [Executioner_possessive] face.</li>
-				<li>desc_sentence->[Prisoner] was shaking and writhing.</li>
-				<li>desc_sentence->[Prisoner] seemed to have given up entirely.</li>
-				<li>desc_sentence->[Prisoner] had closed [Prisoner_possessive] eyes, seeming to pray to a higher power.</li>
-				<li>desc_sentence->[Prisoner] looked defiant.</li>
+				<li>desc_sentence->[PAWN] was shaking and writhing.</li>
+				<li>desc_sentence->[PAWN] seemed to have given up entirely.</li>
+				<li>desc_sentence->[PAWN] had closed [PAWN_possessive] eyes, seeming to pray to a higher power.</li>
+				<li>desc_sentence->[PAWN] looked defiant.</li>
 
 				<li>entry->[tale_noun] [image]. [desc_sentence]</li>
 			</rulesStrings>
