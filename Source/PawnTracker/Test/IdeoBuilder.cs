@@ -13,7 +13,8 @@ public class IdeoBuilder
     {
         processors.Add(ideo =>
         {
-            ideo.AddPrecept(PreceptMaker.MakePrecept(preceptDef), init: true);
+            var precept = PreceptMaker.MakePrecept(preceptDef);
+            ideo.AddPrecept(precept, init: true, fillWith: preceptDef.ritualPatternBase);
         });
         return this;
     }

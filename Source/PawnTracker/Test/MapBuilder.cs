@@ -255,15 +255,37 @@ public class MapBuilder
         return this;
     }
 
-    public MapBuilder AsShrine()
+    public MapBuilder AsShrine(Ideo ideo = null)
     {
         actions.Add(() =>
         {
+            ideo ??= Faction.OfPlayer.ideos.PrimaryIdeo;
+
+            var buildingPrecept = EnsureIdeogramPrecept(ideo);
             var rect = TestManager.Scenario.LastRoomRect.ContractedBy(1);
-            new ThingBuilder(ThingDefOf.Ideogram).At(rect.CenterCell).Faction(Faction.OfPlayer).CreateSingle();
+            var ideogram = new ThingBuilder(ThingDefOf.Ideogram).At(rect.CenterCell).Faction(Faction.OfPlayer).CreateSingle();
+            
+            ideogram.SetStyleSourcePrecept(buildingPrecept);
+            ideogram.SetStyleDef(ideo.GetStyleFor(ThingDefOf.Ideogram));
         });
 
         return this;
+    }
+
+    private static Precept_Building EnsureIdeogramPrecept(Ideo ideo)
+    {
+        var ideogramPrecept = ideo.PreceptsListForReading
+            .OfType<Precept_Building>()
+            .FirstOrDefault(precept => precept.ThingDef == ThingDefOf.Ideogram);
+
+        if (ideogramPrecept != null)
+            return ideogramPrecept;
+
+        ideogramPrecept = (Precept_Building)PreceptMaker.MakePrecept(PreceptDefOf.IdeoBuilding);
+        ideo.AddPrecept(ideogramPrecept, init: true);
+        ideogramPrecept.ThingDef = ThingDefOf.Ideogram;
+        ideogramPrecept.Regenerate(ideo);
+        return ideogramPrecept;
     }
 
     public MapBuilder WithThing(ThingDef thingDef, int totalCount = 10, Faction faction = null)

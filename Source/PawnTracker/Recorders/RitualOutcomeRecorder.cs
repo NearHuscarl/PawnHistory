@@ -53,4 +53,34 @@ public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
 
         Expect.That(organizer).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] delivered an inspirational throne speech to 4 others.");
     }
+
+    [RequiresIdeology]
+    public void TestExecution(TestScenario scenario)
+    {
+        var executionIdeo = scenario.Ideo().AddPrecept(Extra.PreceptDefOf.Execution).Execute();
+        var organizer = scenario.Pawn()
+            .Colonist()
+            .SetIdeo(executionIdeo)
+            .CreateSingle();
+        var spectators = scenario.Pawn(2).Colonist().Execute();
+        var prisoners = new List<Pawn>();
+
+        scenario.Map()
+            .BuildRoom(8, 8, "prison")
+            .AsPrison(1, prisoners: prisoners)
+            .Execute();
+
+        scenario.Map()
+            .BuildRoom(MapBuilder.Beside("prison", Rot4.East, 8, 8), "shrine", floorDef: TerrainDefOf.MetalTile)
+            .AsShrine(executionIdeo)
+            .Execute();
+
+        scenario
+            .Ritual(organizer)
+            .Outcome(Extra.RitualOutcomeEffectDefOf.Execution.BestOutcome)
+            .Execution(prisoners[0], spectators)
+            .Execute();
+        
+        Expect.That(organizer).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] delivered a spectacular public execution to 2 others.");
+    }
 }

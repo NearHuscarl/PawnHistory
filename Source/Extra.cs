@@ -309,6 +309,8 @@ public static class Extra
         public static RitualOutcomeEffectDef AttendedSpeech;
         [MayRequireIdeology]
         public static RitualOutcomeEffectDef Conversion;
+        [MayRequireIdeology]
+        public static RitualOutcomeEffectDef Execution;
 
         static RitualOutcomeEffectDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualOutcomeEffectDefOf));
     }
@@ -365,5 +367,7 @@ public static class Extra
         public static PreceptDef Bonding_Disapproved;
         [MayRequireIdeology]
         public static PreceptDef Conversion;
+        [MayRequireIdeology]
+        public static PreceptDef Execution;
     }
 }

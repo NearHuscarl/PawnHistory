@@ -102,7 +102,7 @@ public class IdeoChangedRecorder : RecorderBase<IdeoChangedEvent>
             .CreateSingle();
         scenario.Map()
             .BuildRoom(8, 8)
-            .AsShrine()
+            .AsShrine(organizer.Ideo)
             .Execute();
 
         scenario

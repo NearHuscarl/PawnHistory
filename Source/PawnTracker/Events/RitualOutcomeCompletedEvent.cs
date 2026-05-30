@@ -32,24 +32,28 @@ file static class RitualOutcomeContext
 
         if (CallDepth > 0)
             return;
-        
-        var host = GetOrganizer();
+
+        var frame = Frame;
+        Frame = null;
+        CallDepth = 0;
+
+        var host = GetOrganizer(frame);
         if (host == null)
             return;
 
         // Ritual_Outcomes.xml
-        var outcome = Frame.Outcome.label;
+        var outcome = frame.Outcome.label;
 
-        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, Frame.RitualJob.Ritual.Label, outcome, Frame.Participants));
-        Frame = null;
-        CallDepth = 0;
+        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, frame.RitualJob.Ritual.Label, outcome, frame.Participants));
     }
 
-    private static Pawn GetOrganizer()
+    private static Pawn GetOrganizer(RitualOutcomeContextFrame frame)
     {
-        if (Frame.RitualJob.Ritual.def == Extra.PreceptDefOf.Conversion)
-            return Frame.RitualJob.PawnWithRole("moralist");
-        return Frame.RitualJob.Organizer;
+        if (frame.RitualJob.Ritual.def == Extra.PreceptDefOf.Conversion)
+            return frame.RitualJob.PawnWithRole("moralist");
+        if (frame.RitualJob.Ritual.def == Extra.PreceptDefOf.Execution)
+            return frame.RitualJob.PawnWithRole("executioner");
+        return frame.RitualJob.Organizer;
     }
 }
 
@@ -69,6 +73,7 @@ internal static class RitualOutcomeEffectWorker_Apply_Patch
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_FromQuality), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Speech), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Conversion), methodName);
+        yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Execution), methodName);
         // yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_ChildBirth), methodName); ----> handled by GaveBirthRecorder as it's triggered outside of ritual as well.
     }
 
