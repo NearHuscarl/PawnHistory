@@ -7,13 +7,13 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public record RitualOutcomeCompletedEvent(Pawn Host, string RitualLabel, string OutcomeLabel, List<Pawn> Participants) : GameEventBase;
+public record RitualOutcomeCompletedEvent(Pawn Host, string RitualLabel, string OutcomeLabel, List<Pawn> Participants, Dictionary<string, List<Pawn>> AssignedRoles) : GameEventBase;
 
 file record RitualOutcomeContextFrame(LordJob_Ritual RitualJob, List<Pawn> Participants, RitualOutcomePossibility Outcome);
 
 file static class RitualOutcomeContext
 {
-    public static int CallDepth;
+    public static int CallDepth; // TODO: Necessary (?)
     public static RitualOutcomeContextFrame Frame; // RitualOutcomeEffectWorker_RemoveConsumableBuilding
 
     public static void Begin(LordJob_Ritual jobRitual, Dictionary<Pawn, int> totalPresence)
@@ -43,8 +43,9 @@ file static class RitualOutcomeContext
 
         // Ritual_Outcomes.xml
         var outcome = frame.Outcome.label;
+        var assignedRoles = Accessor.RitualRoleAssignments.AssignedRoles(frame.RitualJob.assignments).ToDictionary(e => e.Key, e => e.Value); 
 
-        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, frame.RitualJob.Ritual.Label, outcome, frame.Participants));
+        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, frame.RitualJob.Ritual.Label, outcome, frame.Participants, assignedRoles));
     }
 
     private static Pawn GetOrganizer(RitualOutcomeContextFrame frame)

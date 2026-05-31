@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
-	<RulePackDef>
+	<RulePackDef MayRequire="Ludeon.RimWorld.Ideology">
 		<defName>PH_RitualOutcome</defName>
 		<include>
 			<li>PH_Common</li>
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry->[PAWN] delivered [Outcome_indefinite] [Ritual] to [Others].</li>
+				<li>entry->[Host] delivered [Outcome_indefinite] [Ritual] to [Others].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

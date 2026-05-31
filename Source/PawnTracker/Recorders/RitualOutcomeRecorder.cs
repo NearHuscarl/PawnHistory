@@ -1,7 +1,8 @@
 using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
-using System.Linq;
+using System.Collections.Generic;
+using PawnHistory.Source.Helper;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
@@ -22,13 +23,13 @@ public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
         if (!ShouldRecord(e.Host))
             return;
 
-        var ritualJoiners = e.Participants.Concat(e.Host).ToList();
         var recordDef = HistoryRecordDefOf.RitualOutcome;
+        // TODO: host can be null (DancePartyTech in Ritual_Behavior). rewrite the event to accomodate
         var desc = recordDef
-            .Description(e.Host)
+            .Description(e.Host, "Host")
             .AddRule("Ritual", e.RitualLabel)
             .AddRule("Outcome", e.OutcomeLabel.ToLowerInvariant(), addSubsymbols: true)
-            .WithOthers(ritualJoiners)
+            .WithOthers(e.Participants)
             .Resolve();
 
         AddRecord(recordDef, e.Host, desc);
@@ -37,6 +38,8 @@ public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
     [RequiresRoyalty]
     public void TestSpeech(TestScenario scenario)
     {
+        scenario.SpeedUp();
+        
         var organizer = scenario.Pawn().FullHeal().Colonist().SetRoyalTitle(Extra.RoyalTitleDefOf.Praetor).CreateSingle();
         var spectators = scenario.Pawn(4).Colonist().Execute();
 
@@ -55,8 +58,43 @@ public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
     }
 
     [RequiresIdeology]
+    public void TestConversion(TestScenario scenario)
+    {
+        scenario.SpeedUp();
+        
+        var organizer = scenario.Pawn()
+            .Colonist()
+            .SetIdeo(role: PreceptDefOf.IdeoRole_Moralist)
+            .CreateSingle();
+        var converted = scenario.Pawn()
+            .Colonist()
+            .SetIdeo(Faction.OfHostile.ideos.PrimaryIdeo)
+            .CreateSingle();
+        var spectators = scenario.Pawn(2).Colonist().Execute();
+
+        scenario.Map()
+            .BuildRoom(8, 8)
+            .AsShrine(organizer.Ideo)
+            .Execute();
+
+        scenario
+            .Ritual(organizer)
+            .Outcome(Extra.RitualOutcomeEffectDefOf.Conversion.BestOutcome)
+            .ConversionRitual(converted, spectators)
+            .Execute();
+
+        Expect.That(organizer).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.RitualOutcome,
+            Description = "[PAWN] delivered a masterful conversion ritual to 3 others.",
+        });
+    }
+
+    [RequiresIdeology]
     public void TestExecution(TestScenario scenario)
     {
+        scenario.SpeedUp();
+
         var executionIdeo = scenario.Ideo().AddPrecept(Extra.PreceptDefOf.Execution).Execute();
         var organizer = scenario.Pawn()
             .Colonist()

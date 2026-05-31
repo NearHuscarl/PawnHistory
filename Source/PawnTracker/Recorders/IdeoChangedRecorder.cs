@@ -92,6 +92,8 @@ public class IdeoChangedRecorder : RecorderBase<IdeoChangedEvent>
     [RequiresIdeology]
     public void TestConversionRitual(TestScenario scenario)
     {
+        scenario.SpeedUp();
+        
         var organizer = scenario.Pawn()
             .Colonist()
             .SetIdeo(role: PreceptDefOf.IdeoRole_Moralist)
@@ -108,7 +110,7 @@ public class IdeoChangedRecorder : RecorderBase<IdeoChangedEvent>
         scenario
             .Ritual(organizer)
             .Outcome(Extra.RitualOutcomeEffectDefOf.Conversion.BestOutcome)
-            .ConversionRitual(converted)
+            .ConversionRitual(converted, [])
             .Execute();
 
         Expect.That(converted).ToHaveHistoryRecord(new ExpectedHistoryRecord

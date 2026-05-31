@@ -166,8 +166,17 @@ public static class Accessor
 
     public class Dialog_BeginRitual
     {
+        public static readonly AccessTools.FieldRef<RimWorld.Dialog_BeginRitual, RimWorld.RitualRoleAssignments> Assignments =
+            AccessTools.FieldRefAccess<RimWorld.Dialog_BeginRitual, RimWorld.RitualRoleAssignments>("assignments");
+
         public static readonly Action<RimWorld.Dialog_BeginRitual> Start =
             AccessTools.MethodDelegate<Action<RimWorld.Dialog_BeginRitual>>(AccessTools.Method(typeof(RimWorld.Dialog_BeginRitual), "Start"));
+    }
+
+    public class RitualRoleAssignments
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.RitualRoleAssignments, Dictionary<string, List<Pawn>>> AssignedRoles =
+            AccessTools.FieldRefAccess<RimWorld.RitualRoleAssignments, Dictionary<string, List<Pawn>>>("assignedRoles");
     }
 
     public static class PlayLogEntry_Interaction

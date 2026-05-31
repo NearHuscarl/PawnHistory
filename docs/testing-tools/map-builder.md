@@ -18,7 +18,7 @@ Queues room and structure work on a map, then applies it in `Execute()`.
 - `AsPrison(int prisonerCount, int bedCount = 1, List<Pawn> prisoners = null)`: add prisoner beds and spawn prisoner pawns into the room.
 - `AsBank(int silvers = 5000)`: add silver, trade beacon, comms console, and power to the room.
 - `AsThroneRoom(Pawn owner)`: add throne-room furniture and claim the throne for the owner.
-- `AsShrine()`: place an ideogram in the room interior.
+- `AsShrine(Ideo ideo)`: place an ideogram in the room interior, bound to the given ideology's ideogram precept. Defaults to the player's primary ideology.
 
 ## Contents And Ownership
 

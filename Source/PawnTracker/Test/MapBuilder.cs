@@ -255,12 +255,10 @@ public class MapBuilder
         return this;
     }
 
-    public MapBuilder AsShrine(Ideo ideo = null)
+    public MapBuilder AsShrine(Ideo ideo)
     {
         actions.Add(() =>
         {
-            ideo ??= Faction.OfPlayer.ideos.PrimaryIdeo;
-
             var buildingPrecept = EnsureIdeogramPrecept(ideo);
             var rect = TestManager.Scenario.LastRoomRect.ContractedBy(1);
             var ideogram = new ThingBuilder(ThingDefOf.Ideogram).At(rect.CenterCell).Faction(Faction.OfPlayer).CreateSingle();

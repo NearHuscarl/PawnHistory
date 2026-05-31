@@ -7,15 +7,9 @@ using Verse.AI.Group;
 
 namespace PawnHistory.Source.PawnTracker.Test;
 
-public class RitualBuilder
+public class RitualBuilder(Pawn organizer)
 {
     private readonly List<Action> processors = [];
-    private readonly Pawn organizer;
-    
-    public RitualBuilder(Pawn organizer)
-    {
-        this.organizer = organizer;
-    }
 
     public RitualBuilder Outcome(RitualOutcomePossibility outcome)
     {
@@ -31,24 +25,25 @@ public class RitualBuilder
             var speechEffectComp = speech.EffectComps.OfType<CompAbilityEffect_StartRitual>().First();
             var dialog = (Dialog_BeginRitual)speechEffectComp.ConfirmationDialog((LocalTargetInfo)organizer, null);
 
+            dialog.PostOpen(); // runs TryAssignSpectate()
             StartAndApplyOutcome(dialog, [organizer, ..spectators], speechEffectComp.Ritual);
         });
 
         return this;
     }
 
-    public RitualBuilder ConversionRitual(Pawn convertee)
+    public RitualBuilder ConversionRitual(Pawn convertee, List<Pawn> spectators)
     {
         processors.Add(() =>
         {
-            var forcedRoles = new Dictionary<string, Pawn>
+            var assignedRoles = new Dictionary<string, Pawn>
             {
                 ["moralist"] = organizer,
                 ["convertee"] = convertee,
             };
-            var (ritual, dialog) = CreateRitualDialogFromIdeogram(Extra.PreceptDefOf.Conversion, forcedRoles);
+            var (ritual, dialog) = CreateRitualDialogFromIdeogram(Extra.PreceptDefOf.Conversion, assignedRoles);
 
-            StartAndApplyOutcome(dialog, [organizer, convertee], ritual);
+            StartAndApplyOutcome(dialog, [organizer, convertee, ..spectators], ritual);
         });
 
         return this;
@@ -58,12 +53,12 @@ public class RitualBuilder
     {
         processors.Add(() =>
         {
-            var forcedRoles = new Dictionary<string, Pawn>
+            var assignedRoles = new Dictionary<string, Pawn>
             {
                 ["executioner"] = organizer,
                 ["prisoner"] = prisoner,
             };
-            var (ritual, dialog) = CreateRitualDialogFromIdeogram(Extra.PreceptDefOf.Execution, forcedRoles);
+            var (ritual, dialog) = CreateRitualDialogFromIdeogram(Extra.PreceptDefOf.Execution, assignedRoles);
 
             StartAndApplyOutcome(dialog, [organizer, ..spectators], ritual);
         });
@@ -76,25 +71,42 @@ public class RitualBuilder
         processors.ForEach(processor => processor());
     }
 
-    private (Precept_Ritual Ritual, Dialog_BeginRitual Dialog) CreateRitualDialogFromIdeogram(PreceptDef ritualDef, Dictionary<string, Pawn> forcedRoles)
+    private (Precept_Ritual Ritual, Dialog_BeginRitual Dialog) CreateRitualDialogFromIdeogram(PreceptDef ritualDef, Dictionary<string, Pawn> assignedRoles)
     {
-        var ritual = organizer.Ideo.GetPrecept(ritualDef) as Precept_Ritual
-            ?? throw new InvalidOperationException($"Failed to find ritual precept {ritualDef.defName} on {organizer.Ideo}.");
-        var ritualFocus = organizer.MapHeld?.listerThings.ThingsOfDef(ThingDefOf.Ideogram)
-            .FirstOrDefault(thing => ritual.ShouldShowGizmo(thing))
-            ?? throw new InvalidOperationException($"Failed to find an ideogram for {ritual.Label}.");
-        ritual.ShowRitualBeginWindow(ritualFocus, forcedForRole: forcedRoles);
+        var ritual = organizer.Ideo.GetAllPreceptsOfType<Precept_Ritual>().First(p => p.def == ritualDef);
+        var ritualFocus = organizer.MapHeld?.listerThings.ThingsOfDef(ThingDefOf.Ideogram).FirstOrDefault(thing => ritual.ShouldShowGizmo(thing))
+                          ?? throw new InvalidOperationException($"Failed to find an ideogram for {ritual.Label}.");
+        ritual.ShowRitualBeginWindow(ritualFocus);
         var dialog = Find.WindowStack.WindowOfType<Dialog_BeginRitual>();
+
+        ReassignRoles(dialog, assignedRoles);
 
         return (ritual, dialog);
     }
 
+    private static void ReassignRoles(Dialog_BeginRitual dialog, Dictionary<string, Pawn> assignedRoles)
+    {
+        var assignments = Accessor.Dialog_BeginRitual.Assignments(dialog);
+
+        // reset the assigned roles happened in dialog.PostOpen() > FillPawns(). Roles can only be reassigned again after it was unassigned first. 
+        foreach (var roleId in assignedRoles.Keys)
+        {
+            foreach (var p in assignments.AssignedPawns(roleId).ToList())
+                assignments.TryUnassignAnyRole(p);
+        }
+
+        // Use our roles instead. Note that ritual.ShowRitualBeginWindow(.., forcedForRole: assignedRoles); does not work in manual test. 
+        foreach (var (roleId, pawn) in assignedRoles)
+        {
+            var role = assignments.GetRole(roleId);
+
+            if (!assignments.TryAssign(pawn, role, out _, default))
+                throw new InvalidOperationException($"Failed to assign {pawn} to ritual role '{role}'.");
+        }
+    }
+
     private void StartAndApplyOutcome(Dialog_BeginRitual dialog, IEnumerable<Pawn> attendees, Precept_Ritual ritual)
     {
-        if (dialog == null)
-            throw new InvalidOperationException("Failed to start ritual because no ritual dialog was created.");
-
-        dialog.PostOpen(); // runs TryAssignSpectate()
         Accessor.Dialog_BeginRitual.Start(dialog);
 
         var lord = organizer.GetLord();
