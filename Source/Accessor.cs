@@ -177,6 +177,9 @@ public static class Accessor
     {
         public static readonly AccessTools.FieldRef<RimWorld.RitualRoleAssignments, Dictionary<string, List<Pawn>>> AssignedRoles =
             AccessTools.FieldRefAccess<RimWorld.RitualRoleAssignments, Dictionary<string, List<Pawn>>>("assignedRoles");
+
+        public static readonly AccessTools.FieldRef<RimWorld.RitualRoleAssignments, List<Pawn>> Spectators =
+            AccessTools.FieldRefAccess<RimWorld.RitualRoleAssignments, List<Pawn>>("spectators");
     }
 
     public static class PlayLogEntry_Interaction

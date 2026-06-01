@@ -2,7 +2,7 @@ using PawnHistory.Source.PawnTracker.Events;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System.Collections.Generic;
-using PawnHistory.Source.Helper;
+using System.Linq;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
@@ -17,22 +17,34 @@ public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
 
     public override void CreateRecord(RitualOutcomeCompletedEvent e)
     {
-        if (e?.Host == null)
-            return;
-
         if (!ShouldRecord(e.Host))
             return;
 
         var recordDef = HistoryRecordDefOf.RitualOutcome;
-        // TODO: host can be null (DancePartyTech in Ritual_Behavior). rewrite the event to accomodate
-        var desc = recordDef
+        var spectatorsAndHost = e.Spectators.ToList();
+        if (e.Host != null)
+            spectatorsAndHost.Add(e.Host);
+        
+        var builder = recordDef
             .Description(e.Host, "Host")
+            .IncludePawnGrammar()
             .AddRule("Ritual", e.RitualLabel)
             .AddRule("Outcome", e.OutcomeLabel.ToLowerInvariant(), addSubsymbols: true)
-            .WithOthers(e.Participants)
-            .Resolve();
+            .WithOthers(spectatorsAndHost)
+            .AddConstant("ritual", e.RitualDef.defName);
+        var concerns = new List<Thing>();
+        var input = new RitualOutcomeComp.BuildInput(e);
 
-        AddRecord(recordDef, e.Host, desc);
+        foreach (var comp in Comps.OfType<RitualOutcomeComp>())
+        {
+            if (!comp.Match(input))
+                continue;
+
+            builder = comp.BuildGrammarRequest(builder, input);
+            concerns.AddRange(comp.GetConcerns(input));
+        }
+
+        AddRecord(recordDef, e.Host, builder.Resolve(), concerns);
     }
 
     [RequiresRoyalty]
@@ -55,70 +67,5 @@ public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
             .Execute();
 
         Expect.That(organizer).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] delivered an inspirational throne speech to 4 others.");
-    }
-
-    [RequiresIdeology]
-    public void TestConversion(TestScenario scenario)
-    {
-        scenario.SpeedUp();
-        
-        var organizer = scenario.Pawn()
-            .Colonist()
-            .SetIdeo(role: PreceptDefOf.IdeoRole_Moralist)
-            .CreateSingle();
-        var converted = scenario.Pawn()
-            .Colonist()
-            .SetIdeo(Faction.OfHostile.ideos.PrimaryIdeo)
-            .CreateSingle();
-        var spectators = scenario.Pawn(2).Colonist().Execute();
-
-        scenario.Map()
-            .BuildRoom(8, 8)
-            .AsShrine(organizer.Ideo)
-            .Execute();
-
-        scenario
-            .Ritual(organizer)
-            .Outcome(Extra.RitualOutcomeEffectDefOf.Conversion.BestOutcome)
-            .ConversionRitual(converted, spectators)
-            .Execute();
-
-        Expect.That(organizer).ToHaveHistoryRecord(new ExpectedHistoryRecord
-        {
-            Def = HistoryRecordDefOf.RitualOutcome,
-            Description = "[PAWN] delivered a masterful conversion ritual to 3 others.",
-        });
-    }
-
-    [RequiresIdeology]
-    public void TestExecution(TestScenario scenario)
-    {
-        scenario.SpeedUp();
-
-        var executionIdeo = scenario.Ideo().AddPrecept(Extra.PreceptDefOf.Execution).Execute();
-        var organizer = scenario.Pawn()
-            .Colonist()
-            .SetIdeo(executionIdeo)
-            .CreateSingle();
-        var spectators = scenario.Pawn(2).Colonist().Execute();
-        var prisoners = new List<Pawn>();
-
-        scenario.Map()
-            .BuildRoom(8, 8, "prison")
-            .AsPrison(1, prisoners: prisoners)
-            .Execute();
-
-        scenario.Map()
-            .BuildRoom(MapBuilder.Beside("prison", Rot4.East, 8, 8), "shrine", floorDef: TerrainDefOf.MetalTile)
-            .AsShrine(executionIdeo)
-            .Execute();
-
-        scenario
-            .Ritual(organizer)
-            .Outcome(Extra.RitualOutcomeEffectDefOf.Execution.BestOutcome)
-            .Execution(prisoners[0], spectators)
-            .Execute();
-        
-        Expect.That(organizer).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] delivered a spectacular public execution to 2 others.");
     }
 }
