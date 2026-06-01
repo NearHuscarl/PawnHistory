@@ -320,6 +320,7 @@ public static class Extra
     {
         public static BackstoryDef MusicalKid86;
         public static BackstoryDef NavyScientist52;
+        public static BackstoryDef TribeChild19;
 
         static BackstoryDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(BackstoryDefOf));
     }

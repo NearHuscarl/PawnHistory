@@ -69,6 +69,7 @@ Creates new pawns or reuses existing ones, then runs setup processors before ret
 - `SetIdeoCertainty(float certainty)`: set certainty to an exact value.
 - `SetRole(PreceptDef roleDef)`: assign an ideology role.
 - `SetRoyalTitle(RoyalTitleDef royalTitle)`: assign an Empire royal title if needed.
+- `SetNaturalMeditation()`: override the pawn's childhood backstory so Royalty's `Natural` meditation focus checks pass in ritual and anima-tree tests.
 
 ## Execution
 

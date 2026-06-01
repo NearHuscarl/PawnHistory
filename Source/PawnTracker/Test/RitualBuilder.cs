@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PawnHistory.Source.PawnTracker.Recorders;
 using RimWorld;
 using Verse;
 using Verse.AI.Group;
@@ -24,12 +25,39 @@ public class RitualBuilder(Pawn organizer)
             var speech = organizer.abilities.GetAbility(AbilityDefOf.Speech, includeTemporary: true);
             var speechEffectComp = speech.EffectComps.OfType<CompAbilityEffect_StartRitual>().First();
             var dialog = (Dialog_BeginRitual)speechEffectComp.ConfirmationDialog((LocalTargetInfo)organizer, null);
-
-            dialog.PostOpen(); // runs TryAssignSpectate()
+            var assignedRoles = new Dictionary<string, Pawn>
+            {
+                [RitualRoleId.Speaker] = organizer,
+            };
+            InitRitualDialog(dialog, assignedRoles, spectators);
             StartAndApplyOutcome(dialog, [organizer, ..spectators], speechEffectComp.Ritual);
         });
 
         return this;
+    }
+
+    public RitualBuilder AnimaTreeLinking(Thing animaTree, List<Pawn> spectators)
+    {
+        processors.Add(() =>
+        {
+            var ritual = (Precept_Ritual)organizer.Ideo.GetPrecept(PreceptDefOf.AnimaTreeLinking);
+            var dialog = (Dialog_BeginRitual)ritual.GetRitualBeginWindow(animaTree, null, null, null, null, organizer);
+            var assignedRoles = new Dictionary<string, Pawn>
+            {
+                [RitualRoleId.Organizer] = organizer,
+            };
+            InitRitualDialog(dialog, assignedRoles, spectators);
+            StartAndApplyOutcome(dialog, [organizer, ..spectators], ritual);
+        });
+
+        return this;
+    }
+    
+    private static void InitRitualDialog(Dialog_BeginRitual dialog, Dictionary<string, Pawn> assignedRoles, List<Pawn> spectators)
+    {
+        dialog.PostOpen(); // runs TryAssignSpectate()
+        ReassignRoles(dialog, assignedRoles);
+        ReassignSpectators(dialog, spectators);
     }
 
     public RitualBuilder ConversionRitual(Pawn convertee, List<Pawn> spectators)
@@ -38,10 +66,10 @@ public class RitualBuilder(Pawn organizer)
         {
             var assignedRoles = new Dictionary<string, Pawn>
             {
-                ["moralist"] = organizer,
-                ["convertee"] = convertee,
+                [RitualRoleId.Moralist] = organizer,
+                [RitualRoleId.Convertee] = convertee,
             };
-            var (ritual, dialog) = CreateRitualDialogFromIdeogram(Extra.PreceptDefOf.Conversion, assignedRoles);
+            var (ritual, dialog) = CreateRitualDialogFromIdeogram(Extra.PreceptDefOf.Conversion, assignedRoles, spectators);
 
             StartAndApplyOutcome(dialog, [organizer, convertee, ..spectators], ritual);
         });
@@ -55,10 +83,10 @@ public class RitualBuilder(Pawn organizer)
         {
             var assignedRoles = new Dictionary<string, Pawn>
             {
-                ["executioner"] = organizer,
-                ["prisoner"] = prisoner,
+                [RitualRoleId.Executioner] = organizer,
+                [RitualRoleId.Prisoner] = prisoner,
             };
-            var (ritual, dialog) = CreateRitualDialogFromIdeogram(Extra.PreceptDefOf.Execution, assignedRoles);
+            var (ritual, dialog) = CreateRitualDialogFromIdeogram(Extra.PreceptDefOf.Execution, assignedRoles, spectators);
 
             StartAndApplyOutcome(dialog, [organizer, ..spectators], ritual);
         });
@@ -71,7 +99,7 @@ public class RitualBuilder(Pawn organizer)
         processors.ForEach(processor => processor());
     }
 
-    private (Precept_Ritual Ritual, Dialog_BeginRitual Dialog) CreateRitualDialogFromIdeogram(PreceptDef ritualDef, Dictionary<string, Pawn> assignedRoles)
+    private (Precept_Ritual Ritual, Dialog_BeginRitual Dialog) CreateRitualDialogFromIdeogram(PreceptDef ritualDef, Dictionary<string, Pawn> assignedRoles, List<Pawn> spectators)
     {
         var ritual = organizer.Ideo.GetAllPreceptsOfType<Precept_Ritual>().First(p => p.def == ritualDef);
         var ritualFocus = organizer.MapHeld?.listerThings.ThingsOfDef(ThingDefOf.Ideogram).FirstOrDefault(thing => ritual.ShouldShowGizmo(thing))
@@ -80,6 +108,7 @@ public class RitualBuilder(Pawn organizer)
         var dialog = Find.WindowStack.WindowOfType<Dialog_BeginRitual>();
 
         ReassignRoles(dialog, assignedRoles);
+        ReassignSpectators(dialog, spectators);
 
         return (ritual, dialog);
     }
@@ -102,6 +131,20 @@ public class RitualBuilder(Pawn organizer)
 
             if (!assignments.TryAssign(pawn, role, out _, default))
                 throw new InvalidOperationException($"Failed to assign {pawn} to ritual role '{role}'.");
+        }
+    }
+
+    private static void ReassignSpectators(Dialog_BeginRitual dialog, IEnumerable<Pawn> spectators)
+    {
+        var assignments = Accessor.Dialog_BeginRitual.Assignments(dialog);
+
+        foreach (var pawn in assignments.SpectatorsForReading.ToList())
+            assignments.RemoveParticipant(pawn);
+
+        foreach (var spectator in spectators.Distinct())
+        {
+            if (!assignments.TryAssignSpectate(spectator))
+                throw new InvalidOperationException($"Failed to assign {spectator} as a ritual spectator.");
         }
     }
 

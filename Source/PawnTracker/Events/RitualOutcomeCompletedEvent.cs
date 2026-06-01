@@ -40,7 +40,7 @@ file static class RitualOutcomeContext
 
         var ritualJob = frame.RitualJob;
         var host = GetOrganizer(ritualJob);
-        var outcome = frame.Outcome.label; // Ritual_Outcomes.xml
+        var outcome = frame.Outcome?.label; // Ritual_Outcomes.xml
         var assignedRoles = Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).ToDictionary(e => e.Key, e => e.Value);
         var spectators = Accessor.RitualRoleAssignments.Spectators(ritualJob.assignments).ToList();
 
@@ -53,7 +53,7 @@ file static class RitualOutcomeContext
             return ritualJob.PawnWithRole(RitualRoleId.Moralist);
         if (ritualJob.Ritual.def == Extra.PreceptDefOf.Execution)
             return ritualJob.PawnWithRole(RitualRoleId.Executioner);
-        return ritualJob.Organizer;
+        return Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).Values.First().First();
     }
 }
 
@@ -74,6 +74,7 @@ internal static class RitualOutcomeEffectWorker_Apply_Patch
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Speech), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Conversion), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Execution), methodName);
+        yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_AnimaTreeLinking), methodName);
         // yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_ChildBirth), methodName); ----> handled by GaveBirthRecorder as it's triggered outside ritual context as well.
     }
 

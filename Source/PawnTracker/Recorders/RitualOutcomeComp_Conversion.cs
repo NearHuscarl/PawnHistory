@@ -52,7 +52,7 @@ public class RitualOutcomeComp_Conversion : RitualOutcomeComp
         Expect.That(organizer).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.RitualOutcome,
-            Description = "[PAWN] delivered a masterful conversion ritual to bring [Convertee] into [His] ideoligion before 2 others.",
+            Description = "[PAWN] led a masterful conversion ritual to bring [Convertee] into [His] ideoligion in front of 2 others.",
             Concerns = [converted],
         });
     }

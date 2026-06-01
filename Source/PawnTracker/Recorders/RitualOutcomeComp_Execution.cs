@@ -54,7 +54,7 @@ public class RitualOutcomeComp_Execution : RitualOutcomeComp
         Expect.That(organizer).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.RitualOutcome,
-            Description = "[PAWN] carried out a spectacular public execution of [ExecutedPawn] before 2 others.",
+            Description = "[PAWN] carried out a spectacular public execution of [ExecutedPawn] in front of 2 others.",
             Concerns = [prisoners[0]],
         });
     }

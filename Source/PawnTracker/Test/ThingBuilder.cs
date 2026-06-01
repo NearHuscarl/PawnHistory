@@ -118,9 +118,16 @@ public class ThingBuilder(ThingDef def, ThingDef stuffDef = null)
         if (spawn)
         {
             var cell = position ?? map.Center;
-            
+
             foreach (var thing in things)
+            {
+                if (thing.def.IsPlant)
+                {
+                    map.roofGrid.SetRoof(cell, null);
+                    map.terrainGrid.SetTerrain(cell, TerrainDefOf.Soil);
+                }
                 GenPlace.TryPlaceThing(thing, cell, map, placeMode);
+            }
         }
 
         return things;

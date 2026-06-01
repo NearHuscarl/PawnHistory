@@ -13,4 +13,16 @@ internal static class PawnBuilderRoyaltyExtension
             p.royalty.SetTitle(Faction.OfEmpire, royalTitle, grantRewards: false);
         });
     }
+
+    public static PawnBuilder SetNaturalMeditation(this PawnBuilder builder)
+    {
+        return builder.Do(p =>
+        {
+            if (p.story == null)
+                return;
+
+            p.story.Childhood = Extra.BackstoryDefOf.TribeChild19;
+            MeditationFocusTypeAvailabilityCache.ClearFor(p);
+        });
+    }
 }
