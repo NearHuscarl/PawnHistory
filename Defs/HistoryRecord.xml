@@ -33,7 +33,7 @@
 		<defName>RitualOutcome</defName>
 		<label>ritual outcome</label>
 		<descriptionMaker>PH_RitualOutcome</descriptionMaker>
-		<icon>Things/Mote/SpeechSymbols/Speech</icon>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
 		</categories>

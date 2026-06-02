@@ -7,10 +7,15 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>InFrontOfOthers(otherCount==0)-></li>
-				<li>InFrontOfOthers(otherCount>0) -> in front of [Others]</li>
+				<li>InFrontOfOthers(OtherCount==0)-></li>
+				<li>InFrontOfOthers(OtherCount>0) -> in front of [Others]</li>
 
 				<li>entry(priority=1,ritual==AnimaTreeLinking)->[Host] linked with an anima tree[InFrontOfOthers].</li>
+
+				<li>entry(priority=1,ritual==ChildBirth,outcome==Healthy)->[Host] delivered a healthy baby for [Carrier][InFrontOfOthers].</li>
+				<li>entry(priority=1,ritual==ChildBirth,outcome==Sick)   ->[Host] delivered a sick baby for [Carrier][InFrontOfOthers].</li>
+				<li>entry(priority=1,ritual==ChildBirth,outcome==Still)  ->[Host] delivered a stillborn baby for [Carrier][InFrontOfOthers].</li>
+				
 				<li>entry(priority=1,ritual==Conversion)      ->[Host] led [Outcome_indefinite] [Ritual] to bring [Convertee] into [Host_possessive] ideoligion[InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==Execution)       ->[Host] carried out [Outcome_indefinite] [Ritual] of [ExecutedPawn][InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==ThroneSpeech)    ->[Host] delivered [Outcome_indefinite] [Ritual] to [Others].</li> <!-- at least 1 spectator -->

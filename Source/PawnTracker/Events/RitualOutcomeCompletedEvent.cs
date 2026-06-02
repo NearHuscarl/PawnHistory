@@ -53,6 +53,8 @@ file static class RitualOutcomeContext
             return ritualJob.PawnWithRole(RitualRoleId.Moralist);
         if (ritualJob.Ritual.def == Extra.PreceptDefOf.Execution)
             return ritualJob.PawnWithRole(RitualRoleId.Executioner);
+        if (ritualJob.Ritual.def == PreceptDefOf.ChildBirth)
+            return ritualJob.PawnWithRole(RitualRoleId.Doctor);
         return Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).Values.First().First();
     }
 }
@@ -75,7 +77,7 @@ internal static class RitualOutcomeEffectWorker_Apply_Patch
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Conversion), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Execution), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_AnimaTreeLinking), methodName);
-        // yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_ChildBirth), methodName); ----> handled by GaveBirthRecorder as it's triggered outside ritual context as well.
+        yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_ChildBirth), methodName);
     }
 
     private static void Prefix(Dictionary<Pawn, int> totalPresence, LordJob_Ritual jobRitual) => RitualOutcomeContext.Begin(jobRitual, totalPresence);

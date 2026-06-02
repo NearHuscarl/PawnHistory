@@ -30,7 +30,8 @@ public class RitualBuilder(Pawn organizer)
                 [RitualRoleId.Speaker] = organizer,
             };
             InitRitualDialog(dialog, assignedRoles, spectators);
-            StartAndApplyOutcome(dialog, [organizer, ..spectators], speechEffectComp.Ritual);
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome([organizer, ..spectators], speechEffectComp.Ritual);
         });
 
         return this;
@@ -47,7 +48,8 @@ public class RitualBuilder(Pawn organizer)
                 [RitualRoleId.Organizer] = organizer,
             };
             InitRitualDialog(dialog, assignedRoles, spectators);
-            StartAndApplyOutcome(dialog, [organizer, ..spectators], ritual);
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome([organizer, ..spectators], ritual);
         });
 
         return this;
@@ -58,6 +60,32 @@ public class RitualBuilder(Pawn organizer)
         dialog.PostOpen(); // runs TryAssignSpectate()
         ReassignRoles(dialog, assignedRoles);
         ReassignSpectators(dialog, spectators);
+    }
+
+    public RitualBuilder ChildBirth(Pawn carrier, List<Pawn> spectators)
+    {
+        processors.Add(() =>
+        {
+            var ritual = (Precept_Ritual)carrier.Ideo.GetPrecept(PreceptDefOf.ChildBirth);
+            var birthBed = carrier.CurrentBed() ?? RestUtility.FindPatientBedFor(carrier);
+            var assignedRoles = new Dictionary<string, Pawn>
+            {
+                [RitualRoleId.Mother] = carrier,
+                [RitualRoleId.Doctor] = organizer,
+            };
+
+            ritual.ShowRitualBeginWindow(birthBed, null, carrier);
+            var dialog = Find.WindowStack.WindowOfType<Dialog_BeginRitual>();
+
+            ReassignRoles(dialog, assignedRoles);
+            ReassignSpectators(dialog, spectators);
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            
+            carrier.health.RemoveHediff(carrier.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PregnancyLabor)); // add PregnancyLaborPushing in PreRemoved 
+            carrier.health.RemoveHediff(carrier.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PregnancyLaborPushing)); // run ApplyOutcome(1f) in PreRemoved
+        });
+
+        return this;
     }
 
     public RitualBuilder ConversionRitual(Pawn convertee, List<Pawn> spectators)
@@ -71,7 +99,8 @@ public class RitualBuilder(Pawn organizer)
             };
             var (ritual, dialog) = CreateRitualDialogFromIdeogram(Extra.PreceptDefOf.Conversion, assignedRoles, spectators);
 
-            StartAndApplyOutcome(dialog, [organizer, convertee, ..spectators], ritual);
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome([organizer, convertee, ..spectators], ritual);
         });
 
         return this;
@@ -88,7 +117,8 @@ public class RitualBuilder(Pawn organizer)
             };
             var (ritual, dialog) = CreateRitualDialogFromIdeogram(Extra.PreceptDefOf.Execution, assignedRoles, spectators);
 
-            StartAndApplyOutcome(dialog, [organizer, ..spectators], ritual);
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome([organizer, ..spectators], ritual);
         });
 
         return this;
@@ -148,10 +178,8 @@ public class RitualBuilder(Pawn organizer)
         }
     }
 
-    private void StartAndApplyOutcome(Dialog_BeginRitual dialog, IEnumerable<Pawn> attendees, Precept_Ritual ritual)
+    private void ApplyOutcome(IEnumerable<Pawn> attendees, Precept_Ritual ritual)
     {
-        Accessor.Dialog_BeginRitual.Start(dialog);
-
         var lord = organizer.GetLord();
         var ritualLordJob = lord?.LordJob as LordJob_Ritual;
         var totalPresence = attendees.Distinct().ToDictionary(p => p, _ => 0);

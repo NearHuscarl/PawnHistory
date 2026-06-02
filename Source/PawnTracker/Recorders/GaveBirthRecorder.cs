@@ -6,6 +6,8 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
+// ChildBirth is a ritual which is normally handled in RitualOutcomeRecorder, but a separate recorder is needed
+// as it can also occur outside the context of a ritual (without doctor, in vat).
 public class GaveBirthRecorder : RecorderBase<GaveBirthEvent>
 {
     private const string BabyPov = "baby";
