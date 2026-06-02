@@ -1,9 +1,7 @@
 # PawnHistory
 
-This mod expands RimWorld's storytelling aspect by tracking important pawn events during their life on the rim.
-It watches for significant colonist-related incidents, then turns them into flavorful narrative records.
-
-It also backdates selected generator-time records. When RimWorld creates an older pawn with things like scars, royal milestones, bonded persona weapons, or mechlinks all at the spawn tick, PawnHistory redistributes those supported records earlier across the pawn's life so the log reads like lived history instead of a same-second dump.
+This mod expands RimWorld's storytelling aspect by tracking significant pawn events and the small tales of
+their daily life on the rim, turning them into a clear, flavorful narrative records.
 
 ## Data flow
 
@@ -16,9 +14,11 @@ GameEventBus.Publish(GameEvent)
     ↓
 Recorder (map event → domain object) → Recorder.Register() → subscribes to events on start up
     ↓
-CreateRecord(input) (filter, generate description) ← Simulator (external trigger)
+CreateRecord(input) (filter, generate description) ← Backfill simulator (external trigger)
     ↓
 AddRecord() (factory)
+    ↓
+History priority sort (for same-tick events)
     ↓
 HistoryCompManager → HistoryRecord[]
 ```
@@ -114,7 +114,8 @@ internal class HediffRecorder : RecorderBase<HediffAddedEvent>
 
 ## Testing
 
-PawnHistory is shipped with an internal test framework to ease up the work of setting up the world for testing any [recorder](#implementing-a-recorder), Core components:
+PawnHistory is shipped with a custom test framework to ease up the work of setting up the scenario
+and creating assertions, Core components:
 
 - `XyzBuilder` like `MapBuilder`, `PawnBuilder`, `ThingBuilder`...: used together to construct a scenario for testing. they are often created through `TestScenario` class:
 
@@ -132,10 +133,14 @@ public class TestScenario
 ```
 
 - `TestManager`: Coordinates execution of multiple tests in sequence and creates a test report.
-- `TestContext` (internal): context for the current running test: number of passed/failed assertions, ongoing delayed assertions..
-- `SkipTestAttribute`, `DebugValuesAttribute`: Customization for test method.
-- `Expect`, `PawnHistoryAssertions`: Create matchers and assertions.
-- `RecorderManager`: Provides debug buttons to scan and run all tests or any specific test.
+- `TestContext` (internal): context for the current running test: number of passed/failed assertions,
+ongoing delayed assertions..
+- `SkipTestAttribute`, `DebugValuesAttribute`, `RequiresAttribute`: Customization for test methods.
+  - Additional attributes on top of `RequiresAttribute` for convenience: `[RequiresRoyalty]`,
+  `[RequiresBiotech]`, `[RequiresIdeology]`, `[RequiresAnomaly]`, and `[RequiresOdyssey]` when a test depends on DLC content.
+- `Expect`, `PawnHistoryAssertions`: Create test assertions.
+- `RecorderManager`: Provides debug buttons in the devtool to run tests. You can run all tests, specific test, tagged 
+tests, last-failed tests and dlc-specific tests.
 
 ## Writing test
 
@@ -170,14 +175,20 @@ internal class HediffRecorder : RecorderBase
 }
 ```
 
-### Run all tests
+Use `Expect.Assertions(n)` when the test registers assertions later from a callback, delayed tick, or other deferred flow. It declares the exact number of assertions that must eventually run before the test can pass.
+
+### Run tests
 
 - Enable Development Mode
 - Open: Debug Actions Menu
-- Navigate to: Pawn History → Run All Tests
+- Navigate to: Pawn History
+  - → Run All Tests
+  - → Run Tagged Tests
+  - → Run Last Failed Tests
+  - → Run Specific Tests... → `[RecorderClass_TestMethod]`: Run specific test defined in  `RecorderClass.TestMethod()` 
 
-### Run a specific recorder test
+### Stop an ongoing test run
 
 - Enable Development Mode
 - Open: Debug Actions Menu
-- Navigate to: Pawn History → Recorder Tests… → `[Recorder Name]`
+- Navigate to: Pawn History → Stop Test Run
