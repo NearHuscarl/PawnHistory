@@ -8,23 +8,30 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Events;
 
-public record RitualOutcomeCompletedEvent(Pawn Host, PreceptDef RitualDef, string RitualLabel, string OutcomeLabel, List<Pawn> Participants, List<Pawn> Spectators, Dictionary<string, List<Pawn>> AssignedRoles) : GameEventBase;
+public record RitualOutcomeCompletedEvent(
+    Pawn Host,
+    PreceptDef RitualDef,
+    string RitualLabel,
+    string OutcomeLabel,
+    List<Pawn> Spectators,
+    Dictionary<string, List<Pawn>> AssignedRoles,
+    TargetInfo TargetA) : GameEventBase;
 
-file record RitualOutcomeContextFrame(LordJob_Ritual RitualJob, List<Pawn> Participants, RitualOutcomePossibility Outcome);
+file record RitualOutcomeContextFrame(LordJob_Ritual RitualJob, RitualOutcomePossibility Outcome);
 
 file static class RitualOutcomeContext
 {
     public static int CallDepth; // TODO: Necessary (?)
     public static RitualOutcomeContextFrame Frame; // RitualOutcomeEffectWorker_RemoveConsumableBuilding
 
-    public static void Begin(LordJob_Ritual jobRitual, Dictionary<Pawn, int> totalPresence)
+    public static void Begin(LordJob_Ritual jobRitual)
     {
         CallDepth++;
 
         if (CallDepth > 1)
             return;
 
-        Frame = new RitualOutcomeContextFrame(jobRitual, totalPresence.Keys.ToList(), null);
+        Frame = new RitualOutcomeContextFrame(jobRitual, null);
     }
 
     public static void End()
@@ -43,8 +50,9 @@ file static class RitualOutcomeContext
         var outcome = frame.Outcome?.label; // Ritual_Outcomes.xml
         var assignedRoles = Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).ToDictionary(e => e.Key, e => e.Value);
         var spectators = Accessor.RitualRoleAssignments.Spectators(ritualJob.assignments).ToList();
+        var targetA = ritualJob.obligation?.targetA ?? TargetInfo.Invalid;
 
-        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, ritualJob.Ritual.def, ritualJob.Ritual.Label, outcome, frame.Participants, spectators, assignedRoles));
+        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, ritualJob.Ritual.def, ritualJob.Ritual.Label, outcome, spectators, assignedRoles, targetA));
     }
 
     private static Pawn GetOrganizer(LordJob_Ritual ritualJob)
@@ -80,7 +88,7 @@ internal static class RitualOutcomeEffectWorker_Apply_Patch
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_ChildBirth), methodName);
     }
 
-    private static void Prefix(Dictionary<Pawn, int> totalPresence, LordJob_Ritual jobRitual) => RitualOutcomeContext.Begin(jobRitual, totalPresence);
+    private static void Prefix(LordJob_Ritual jobRitual) => RitualOutcomeContext.Begin(jobRitual);
     private static void Finalizer() => RitualOutcomeContext.End();
 }
 

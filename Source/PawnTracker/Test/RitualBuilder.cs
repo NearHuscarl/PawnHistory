@@ -54,6 +54,27 @@ public class RitualBuilder(Pawn organizer)
 
         return this;
     }
+
+    public RitualBuilder Funeral(Pawn deceased, List<Pawn> spectators, bool noCorpse = false)
+    {
+        processors.Add(() =>
+        {
+            var ritual = (Precept_Ritual)organizer.Ideo.GetPrecept(noCorpse ? PreceptDefOf.FuneralNoCorpse : PreceptDefOf.Funeral);
+            var obligation = ritual.activeObligations.First(o => o.targetA.Thing == deceased);
+            var graves = organizer.MapHeld.listerThings.ThingsInGroup(ThingRequestGroup.Grave).OfType<Building_Grave>();
+            var grave = noCorpse ? graves.First(g => g.Corpse == null) : graves.First(g => g.Corpse?.InnerPawn == deceased);
+            var assignedRoles = new Dictionary<string, Pawn>
+            {
+                [RitualRoleId.Moralist] = organizer,
+            };
+            var dialog = (Dialog_BeginRitual)ritual.GetRitualBeginWindow(grave, obligation, null, null, null, organizer);
+            InitRitualDialog(dialog, assignedRoles, spectators);
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome([organizer, ..spectators], ritual);
+        });
+
+        return this;
+    }
     
     private static void InitRitualDialog(Dialog_BeginRitual dialog, Dictionary<string, Pawn> assignedRoles, List<Pawn> spectators)
     {
@@ -83,6 +104,9 @@ public class RitualBuilder(Pawn organizer)
             
             carrier.health.RemoveHediff(carrier.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PregnancyLabor)); // add PregnancyLaborPushing in PreRemoved 
             carrier.health.RemoveHediff(carrier.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PregnancyLaborPushing)); // run ApplyOutcome(1f) in PreRemoved
+            
+            foreach (var letter in Find.LetterStack.LettersListForReading.OfType<ChoiceLetter_BabyBirth>().ToList())
+                Find.LetterStack.RemoveLetter(letter);
         });
 
         return this;

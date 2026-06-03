@@ -308,6 +308,10 @@ public static class Extra
     {
         public static RitualOutcomeEffectDef AttendedSpeech;
         [MayRequireIdeology]
+        public static RitualOutcomeEffectDef AttendedFuneral;
+        [MayRequireIdeology]
+        public static RitualOutcomeEffectDef AttendedFuneralNoCorpse;
+        [MayRequireIdeology]
         public static RitualOutcomeEffectDef Conversion;
         [MayRequireIdeology]
         public static RitualOutcomeEffectDef Execution;

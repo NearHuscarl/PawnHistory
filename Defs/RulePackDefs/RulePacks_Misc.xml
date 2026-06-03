@@ -16,6 +16,8 @@
 				<li>entry(priority=1,ritual==ChildBirth,outcome==Sick)   ->[Host] delivered a sick baby for [Carrier][InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==ChildBirth,outcome==Still)  ->[Host] delivered a stillborn baby for [Carrier][InFrontOfOthers].</li>
 				
+				<li>entry(priority=1,ritual==Funeral)        ->[Host] held [Outcome_indefinite] funeral for [DeadPawn][InFrontOfOthers].</li>
+				<li>entry(priority=1,ritual==FuneralNoCorpse)->[Host] held [Outcome_indefinite] funeral for [DeadPawn][InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==Conversion)      ->[Host] led [Outcome_indefinite] [Ritual] to bring [Convertee] into [Host_possessive] ideoligion[InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==Execution)       ->[Host] carried out [Outcome_indefinite] [Ritual] of [ExecutedPawn][InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==ThroneSpeech)    ->[Host] delivered [Outcome_indefinite] [Ritual] to [Others].</li> <!-- at least 1 spectator -->
