@@ -27,6 +27,15 @@
 		<defName>PH_Common</defName>
 		<rulePack>
 			<rulesStrings>
+				<li>AndOthers(OtherCount==0)-></li>
+				<li>AndOthers(OtherCount!=0)-> and [Others]</li>
+
+				<li>WithOthers(OtherCount==0)-></li>
+				<li>WithOthers(OtherCount!=0)-> with [Others]</li>
+
+				<li>AlongWithOthers(OtherCount==0)-></li>
+				<li>AlongWithOthers(OtherCount!=0)-> along with [Others]</li>
+
 				<li>PH_Quantity->two</li>
 				<li>PH_Quantity->three</li>
 				<li>PH_Quantity->four</li>
@@ -39,15 +48,6 @@
 				<li>PH_Quantity->several</li>
 				<li>PH_Quantity->a group of</li>
 				<li>PH_Quantity->dozens of</li>
-
-				<li>AndOthers(OtherCount==0)-></li>
-				<li>AndOthers(OtherCount!=0)-> and [Others]</li>
-				
-				<li>WithOthers(OtherCount==0)-></li>
-				<li>WithOthers(OtherCount!=0)-> with [Others]</li>
-
-				<li>AlongWithOthers(OtherCount==0)-></li>
-				<li>AlongWithOthers(OtherCount!=0)-> along with [Others]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

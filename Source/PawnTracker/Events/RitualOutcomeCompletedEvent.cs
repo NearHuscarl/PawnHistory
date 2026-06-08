@@ -14,6 +14,7 @@ public record RitualOutcomeCompletedEvent(
     string RitualLabel,
     string OutcomeLabel,
     List<Pawn> Spectators,
+    List<Pawn> Participants,
     Dictionary<string, List<Pawn>> AssignedRoles,
     TargetInfo TargetA) : GameEventBase;
 
@@ -50,9 +51,10 @@ file static class RitualOutcomeContext
         var outcome = frame.Outcome?.label; // Ritual_Outcomes.xml
         var assignedRoles = Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).ToDictionary(e => e.Key, e => e.Value);
         var spectators = Accessor.RitualRoleAssignments.Spectators(ritualJob.assignments).ToList();
+        var participants = Accessor.RitualRoleAssignments.Participants(ritualJob.assignments).ToList();
         var targetA = ritualJob.obligation?.targetA ?? TargetInfo.Invalid;
 
-        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, ritualJob.Ritual.def, ritualJob.Ritual.Label, outcome, spectators, assignedRoles, targetA));
+        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, ritualJob.Ritual.def, ritualJob.Ritual.Label, outcome, spectators, participants, assignedRoles, targetA));
     }
 
     private static Pawn GetOrganizer(LordJob_Ritual ritualJob)
@@ -63,7 +65,7 @@ file static class RitualOutcomeContext
             return ritualJob.PawnWithRole(RitualRoleId.Executioner);
         if (ritualJob.Ritual.def == PreceptDefOf.ChildBirth)
             return ritualJob.PawnWithRole(RitualRoleId.Doctor);
-        return Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).Values.First().First();
+        return Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).Values.FirstOrDefault()?.First();
     }
 }
 

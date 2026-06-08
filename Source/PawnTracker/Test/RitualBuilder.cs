@@ -121,7 +121,7 @@ public class RitualBuilder(Pawn organizer)
                 [RitualRoleId.Moralist] = organizer,
                 [RitualRoleId.Convertee] = convertee,
             };
-            var (ritual, dialog) = CreateRitualDialogFromIdeogram(Extra.PreceptDefOf.Conversion, assignedRoles, spectators);
+            var (ritual, dialog) = CreateRitualDialogFrom(ThingDefOf.Ideogram, Extra.PreceptDefOf.Festival, assignedRoles, spectators);
 
             Accessor.Dialog_BeginRitual.Start(dialog);
             ApplyOutcome([organizer, convertee, ..spectators], ritual);
@@ -139,10 +139,27 @@ public class RitualBuilder(Pawn organizer)
                 [RitualRoleId.Executioner] = organizer,
                 [RitualRoleId.Prisoner] = prisoner,
             };
-            var (ritual, dialog) = CreateRitualDialogFromIdeogram(Extra.PreceptDefOf.Execution, assignedRoles, spectators);
+            var (ritual, dialog) = CreateRitualDialogFrom(ThingDefOf.Ideogram, Extra.PreceptDefOf.Festival, assignedRoles, spectators);
 
             Accessor.Dialog_BeginRitual.Start(dialog);
             ApplyOutcome([organizer, ..spectators], ritual);
+        });
+
+        return this;
+    }
+
+    public RitualBuilder Festival(List<Pawn> joiners)
+    {
+        processors.Add(() =>
+        {
+            var assignedRoles = new Dictionary<string, Pawn>
+            {
+                [RitualRoleId.Leader] = organizer,
+            };
+            var (ritual, dialog) = CreateRitualDialogFrom(ThingDefOf.PartySpot, Extra.PreceptDefOf.Festival, assignedRoles, joiners);
+
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome([organizer, ..joiners], ritual);
         });
 
         return this;
@@ -153,11 +170,10 @@ public class RitualBuilder(Pawn organizer)
         processors.ForEach(processor => processor());
     }
 
-    private (Precept_Ritual Ritual, Dialog_BeginRitual Dialog) CreateRitualDialogFromIdeogram(PreceptDef ritualDef, Dictionary<string, Pawn> assignedRoles, List<Pawn> spectators)
+    private (Precept_Ritual Ritual, Dialog_BeginRitual Dialog) CreateRitualDialogFrom(ThingDef thingDef, PreceptDef ritualDef, Dictionary<string, Pawn> assignedRoles, List<Pawn> spectators)
     {
         var ritual = organizer.Ideo.GetAllPreceptsOfType<Precept_Ritual>().First(p => p.def == ritualDef);
-        var ritualFocus = organizer.MapHeld?.listerThings.ThingsOfDef(ThingDefOf.Ideogram).FirstOrDefault(thing => ritual.ShouldShowGizmo(thing))
-                          ?? throw new InvalidOperationException($"Failed to find an ideogram for {ritual.Label}.");
+        var ritualFocus = organizer.MapHeld.listerThings.ThingsOfDef(thingDef).First(thing => ritual.ShouldShowGizmo(thing));
         ritual.ShowRitualBeginWindow(ritualFocus);
         var dialog = Find.WindowStack.WindowOfType<Dialog_BeginRitual>();
 

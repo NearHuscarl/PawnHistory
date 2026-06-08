@@ -62,7 +62,7 @@ public class RitualOutcomeComp_Funeral : RitualOutcomeComp
         Expect.That(organizer).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.RitualOutcome,
-            Description = "[Host] held a heartwarming funeral for [DeadPawn] in front of 2 others.",
+            Description = "[Host] held a heartwarming [Ritual] for [DeadPawn] in front of 2 others.",
             Concerns = [deceased],
         });
     }
@@ -106,7 +106,7 @@ public class RitualOutcomeComp_Funeral : RitualOutcomeComp
         Expect.That(organizer).ToHaveHistoryRecord(new ExpectedHistoryRecord
         {
             Def = HistoryRecordDefOf.RitualOutcome,
-            Description = "[Host] held a terrible funeral for [DeadPawn] in front of 2 others.",
+            Description = $"[Host] held a terrible [Ritual] for [DeadPawn] in front of 2 others.",
             Concerns = [deceased],
         });
     }

@@ -17,34 +17,50 @@ public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
 
     public override void CreateRecord(RitualOutcomeCompletedEvent e)
     {
-        if (!ShouldRecord(e.Host))
-            return;
-
         var recordDef = HistoryRecordDefOf.RitualOutcome;
+        var input = new RitualOutcomeComp.BuildInput(e);
+        var comp = Comps.OfType<RitualOutcomeComp>().FirstOrDefault(c => c.Match(input));
+
+        if (comp is { RecordParticipants: true })
+        {
+            foreach (var pawn in e.Participants)
+            {
+                if (!ShouldRecord(pawn))
+                    continue;
+                
+                var builder = BuildCommon(pawn, e);
+                var concerns = comp.GetConcerns(input);
+                AddRecord(recordDef, pawn, builder.Resolve(), concerns);
+            }
+            return;
+        }
+
+        if (ShouldRecord(e.Host))
+        {
+            var builder = BuildCommon(e.Host, e);
+            var concerns = new List<Thing>();
+
+            if (comp != null)
+            {
+                builder = comp.BuildGrammarRequest(builder, input);
+                concerns.AddRange(comp.GetConcerns(input));
+            }
+            AddRecord(recordDef, e.Host, builder.Resolve(), concerns);
+        }
+    }
+
+    private static HistoryDescriptionBuilder BuildCommon(Pawn pawn, RitualOutcomeCompletedEvent e)
+    {
         var spectatorsAndHost = e.Spectators.ToList();
         if (e.Host != null)
             spectatorsAndHost.Add(e.Host);
-        
-        var builder = recordDef
-            .Description(e.Host, "Host")
+
+        return HistoryRecordDefOf.RitualOutcome.Description(pawn)
             .IncludePawnGrammar()
             .AddRule("Ritual", e.RitualLabel)
             .AddRule("Outcome", e.OutcomeLabel?.ToLowerInvariant(), addSubsymbols: true)
             .WithOthers(spectatorsAndHost)
             .AddConstant("ritual", e.RitualDef.defName);
-        var concerns = new List<Thing>();
-        var input = new RitualOutcomeComp.BuildInput(e);
-
-        foreach (var comp in Comps.OfType<RitualOutcomeComp>())
-        {
-            if (!comp.Match(input))
-                continue;
-
-            builder = comp.BuildGrammarRequest(builder, input);
-            concerns.AddRange(comp.GetConcerns(input));
-        }
-
-        AddRecord(recordDef, e.Host, builder.Resolve(), concerns);
     }
 
     [RequiresRoyalty]

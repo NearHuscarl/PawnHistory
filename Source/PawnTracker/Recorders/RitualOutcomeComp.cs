@@ -19,4 +19,6 @@ public abstract class RitualOutcomeComp : RecordComp<RitualOutcomeRecorder>
     {
         yield break;
     }
+
+    public virtual bool RecordParticipants { get; protected set; } = false;
 }

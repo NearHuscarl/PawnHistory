@@ -180,6 +180,9 @@ public static class Accessor
 
         public static readonly AccessTools.FieldRef<RimWorld.RitualRoleAssignments, List<Pawn>> Spectators =
             AccessTools.FieldRefAccess<RimWorld.RitualRoleAssignments, List<Pawn>>("spectators");
+
+        public static readonly AccessTools.FieldRef<RimWorld.RitualRoleAssignments, List<Pawn>> Participants =
+            AccessTools.FieldRefAccess<RimWorld.RitualRoleAssignments, List<Pawn>>("tmpParticipants");
     }
 
     public static class PlayLogEntry_Interaction

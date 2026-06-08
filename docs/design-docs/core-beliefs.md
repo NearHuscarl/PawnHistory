@@ -2,6 +2,7 @@
 
 ## Recorder Design
 
+- Transpilers, IL manipulation, and IL/decompiled assembly inspection are completely forbidden to read.
 - Prefer modern C# already used in the repo: `record`, collection expressions, and concise APIs.
 - Each recorder and event class must live in its own file.
 - Keep recorder logic small and event-focused.
@@ -15,7 +16,6 @@
 - Put reflected field and method access in `Source/Accessor.cs`. Do not use raw `AccessTools` outside it.
 - Use the simplest viable Harmony state.
 - Reset patch context in `Finalizer()`.
-- Transpilers and IL manipulation are out of bounds.
 
 ## Testing
 
