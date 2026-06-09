@@ -21,6 +21,8 @@
 				<li>entry(priority=1,ritual==Conversion)     ->[PAWN] led [Outcome_indefinite] [Ritual] to bring [Convertee] into [PAWN_possessive] ideoligion[InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==Execution)      ->[PAWN] carried out [Outcome_indefinite] [Ritual] of [ExecutedPawn][InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==Festival)       ->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>
+				<li>entry(priority=1,ritual==Classic_DrumParty) ->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>
+				<li>entry(priority=1,ritual==Classic_DanceParty)->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>
 				<li>entry(priority=1,ritual==ThroneSpeech)   ->[PAWN] delivered [Outcome_indefinite] [Ritual] to [Others].</li> <!-- at least 1 spectator -->
 				<li>entry(priority=0)->[PAWN] delivered [Outcome_indefinite] [Ritual] [InFrontOfOthers].</li>
 			</rulesStrings>

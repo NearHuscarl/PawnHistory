@@ -378,5 +378,9 @@ public static class Extra
         public static PreceptDef Execution;
         [MayRequireIdeology]
         public static PreceptDef Festival;
+        [MayRequireIdeology]
+        public static PreceptDef Classic_DrumParty;
+        [MayRequireIdeology]
+        public static PreceptDef Classic_DanceParty;
     }
 }

@@ -286,12 +286,12 @@ public class MapBuilder
         return ideogramPrecept;
     }
 
-    public MapBuilder WithThing(ThingDef thingDef, int totalCount = 10, Faction faction = null)
+    public MapBuilder WithThing(ThingDef thingDef, int totalCount = 10, Faction faction = null, ThingDef stuffDef = null)
     {
         actions.Add(() =>
         {
             var interior = TestManager.Scenario.LastRoomRect.ContractedBy(1);
-            new ThingBuilder(thingDef).Map(map).Stack(totalCount).Faction(faction).At(interior.RandomCell).Create();
+            new ThingBuilder(thingDef, stuffDef).Map(map).Stack(totalCount).Faction(faction).At(interior.RandomCell).Create();
             map.resourceCounter.UpdateResourceCounts(); // unoptimized?
         });
         return this;

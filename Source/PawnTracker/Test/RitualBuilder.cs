@@ -165,6 +165,34 @@ public class RitualBuilder(Pawn organizer)
         return this;
     }
 
+    public RitualBuilder DrumParty(List<Pawn> joiners)
+    {
+        processors.Add(() =>
+        {
+            List<Pawn> participants = [organizer, ..joiners];
+            var (ritual, dialog) = CreateRitualDialogFrom(ThingDefOf.RitualSpot, Extra.PreceptDefOf.Classic_DrumParty, [] /* <roles Inherit="False"/> */, participants);
+
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome(participants, ritual);
+        });
+
+        return this;
+    }
+
+    public RitualBuilder DanceParty(List<Pawn> joiners)
+    {
+        processors.Add(() =>
+        {
+            List<Pawn> participants = [organizer, ..joiners];
+            var (ritual, dialog) = CreateRitualDialogFrom(ThingDefOf.RitualSpot, Extra.PreceptDefOf.Classic_DanceParty, [], participants);
+
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome(participants, ritual);
+        });
+
+        return this;
+    }
+
     public void Execute()
     {
         processors.ForEach(processor => processor());
