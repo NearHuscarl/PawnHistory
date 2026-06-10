@@ -121,7 +121,7 @@ public class RitualBuilder(Pawn organizer)
                 [RitualRoleId.Moralist] = organizer,
                 [RitualRoleId.Convertee] = convertee,
             };
-            var (ritual, dialog) = CreateRitualDialogFrom(ThingDefOf.Ideogram, Extra.PreceptDefOf.Festival, assignedRoles, spectators);
+            var (ritual, dialog) = CreateRitualDialogFrom(ThingDefOf.Ideogram, Extra.PreceptDefOf.Conversion, assignedRoles, spectators);
 
             Accessor.Dialog_BeginRitual.Start(dialog);
             ApplyOutcome([organizer, convertee, ..spectators], ritual);
@@ -139,7 +139,7 @@ public class RitualBuilder(Pawn organizer)
                 [RitualRoleId.Executioner] = organizer,
                 [RitualRoleId.Prisoner] = prisoner,
             };
-            var (ritual, dialog) = CreateRitualDialogFrom(ThingDefOf.Ideogram, Extra.PreceptDefOf.Festival, assignedRoles, spectators);
+            var (ritual, dialog) = CreateRitualDialogFrom(ThingDefOf.Ideogram, Extra.PreceptDefOf.Execution, assignedRoles, spectators);
 
             Accessor.Dialog_BeginRitual.Start(dialog);
             ApplyOutcome([organizer, ..spectators], ritual);
@@ -193,6 +193,20 @@ public class RitualBuilder(Pawn organizer)
         return this;
     }
 
+    public RitualBuilder SkyLanternFestival(List<Pawn> joiners)
+    {
+        processors.Add(() =>
+        {
+            List<Pawn> participants = [organizer, ..joiners];
+            var (ritual, dialog) = CreateRitualDialogFrom(ThingDefOf.RitualSpot, Extra.RitualPatternDefOf.CelebrationSkyLanterns, [], participants);
+
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome(participants, ritual);
+        });
+
+        return this;
+    }
+
     public void Execute()
     {
         processors.ForEach(processor => processor());
@@ -201,6 +215,17 @@ public class RitualBuilder(Pawn organizer)
     private (Precept_Ritual Ritual, Dialog_BeginRitual Dialog) CreateRitualDialogFrom(ThingDef thingDef, PreceptDef ritualDef, Dictionary<string, Pawn> assignedRoles, List<Pawn> spectators)
     {
         var ritual = organizer.Ideo.GetAllPreceptsOfType<Precept_Ritual>().First(p => p.def == ritualDef);
+        return CreateRitualDialogFrom(thingDef, ritual, assignedRoles, spectators);
+    }
+
+    private (Precept_Ritual Ritual, Dialog_BeginRitual Dialog) CreateRitualDialogFrom(ThingDef thingDef, RitualPatternDef ritualPatternDef, Dictionary<string, Pawn> assignedRoles, List<Pawn> spectators)
+    {
+        var ritual = organizer.Ideo.GetAllPreceptsOfType<Precept_Ritual>().First(p => p.sourcePattern == ritualPatternDef);
+        return CreateRitualDialogFrom(thingDef, ritual, assignedRoles, spectators);
+    }
+
+    private (Precept_Ritual Ritual, Dialog_BeginRitual Dialog) CreateRitualDialogFrom(ThingDef thingDef, Precept_Ritual ritual, Dictionary<string, Pawn> assignedRoles, List<Pawn> spectators)
+    {
         var ritualFocus = organizer.MapHeld.listerThings.ThingsOfDef(thingDef).First(thing => ritual.ShouldShowGizmo(thing));
         ritual.ShowRitualBeginWindow(ritualFocus);
         var dialog = Find.WindowStack.WindowOfType<Dialog_BeginRitual>();

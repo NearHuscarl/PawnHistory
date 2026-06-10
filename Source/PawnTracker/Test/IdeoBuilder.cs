@@ -9,12 +9,12 @@ public class IdeoBuilder
 {
     private readonly List<Action<Ideo>> processors = [];
     
-    public IdeoBuilder AddPrecept(PreceptDef preceptDef)
+    public IdeoBuilder AddPrecept(PreceptDef preceptDef, RitualPatternDef fillWith = null)
     {
         processors.Add(ideo =>
         {
             var precept = PreceptMaker.MakePrecept(preceptDef);
-            ideo.AddPrecept(precept, init: true, fillWith: preceptDef.ritualPatternBase);
+            ideo.AddPrecept(precept, init: true, fillWith: fillWith ?? preceptDef.ritualPatternBase);
         });
         return this;
     }

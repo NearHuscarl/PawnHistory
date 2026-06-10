@@ -317,8 +317,19 @@ public static class Extra
         public static RitualOutcomeEffectDef Conversion;
         [MayRequireIdeology]
         public static RitualOutcomeEffectDef Execution;
+        [MayRequireIdeology]
+        public static RitualOutcomeEffectDef CelebrationSkyLanterns;
 
         static RitualOutcomeEffectDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualOutcomeEffectDefOf));
+    }
+
+    [DefOf]
+    public static class RitualPatternDefOf
+    {
+        [MayRequireIdeology]
+        public static RitualPatternDef CelebrationSkyLanterns;
+
+        static RitualPatternDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualPatternDefOf));
     }
 
     [DefOf]

@@ -113,6 +113,37 @@ public class RitualOutcomeComp_Festival : RitualOutcomeComp
         Expect.ThatAll(participants).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] attended an unforgettable [Ritual] with 2 others.");
     }
 
+    [RequiresIdeology]
+    public void TestSkyLanternFestival(TestScenario scenario)
+    {
+        scenario.SpeedUp();
+        scenario.ForwardDays(60);
+
+        var skyLanternIdeo = scenario.Ideo()
+            .AddPrecept(Extra.PreceptDefOf.Festival, Extra.RitualPatternDefOf.CelebrationSkyLanterns)
+            .Execute();
+        var organizer = scenario.Pawn()
+            .Colonist()
+            .SetIdeo(skyLanternIdeo, role: PreceptDefOf.IdeoRole_Leader)
+            .CreateSingle();
+        var joiners = scenario.Pawn(2)
+            .Colonist()
+            .SetIdeo(skyLanternIdeo)
+            .Execute();
+        var participants = joiners.Concat(organizer);
+
+        scenario.Thing(ThingDefOf.RitualSpot).Faction(Faction.OfPlayer).CreateSingle();
+        scenario.Thing(ThingDefOf.WoodLog).Stack((joiners.Count + 1) * 4).Create();
+
+        scenario
+            .Ritual(organizer)
+            .Outcome(Extra.RitualOutcomeEffectDefOf.CelebrationSkyLanterns.WorstOutcome)
+            .SkyLanternFestival(joiners)
+            .Execute();
+
+        Expect.ThatAll(participants).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] attended a terrible [Ritual] with 2 others.");
+    }
+
     private static RitualOutcomePossibility BestOutcomeFor(Ideo ideo, PreceptDef ritualDef)
     {
         var ritual = (Precept_Ritual)ideo.GetPrecept(ritualDef);
