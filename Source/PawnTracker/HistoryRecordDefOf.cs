@@ -68,9 +68,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef Ransom;
     public static HistoryRecordDef Banish;
     public static HistoryRecordDef PawnLost;
-    public static HistoryRecordDef PartyStarted;
-    public static HistoryRecordDef PartyJoined;
-    public static HistoryRecordDef PartyFinished;
+    public static HistoryRecordDef PartyAttended;
     public static HistoryRecordDef Married;
     public static HistoryRecordDef WeddingStarted;
     public static HistoryRecordDef WeddingJoined;

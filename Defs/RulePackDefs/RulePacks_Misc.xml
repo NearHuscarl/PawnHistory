@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
-	<RulePackDef MayRequire="Ludeon.RimWorld.Ideology">
+	<RulePackDef>
 		<defName>PH_RitualOutcome</defName>
 		<include>
 			<li>PH_Common</li>
@@ -335,27 +335,14 @@
 	</RulePackDef>
 
 	<RulePackDef>
-		<defName>PH_PartyStarted</defName>
-		<rulePack>
-			<rulesStrings>
-				<li>entry(isOrganizer==True) ->[PAWN] threw a party for the colony.</li>
-				<li>entry(isOrganizer==False)->[PAWN] joined [Organizer]'s party.</li>
-			</rulesStrings>
-		</rulePack>
-	</RulePackDef>
-
-	<RulePackDef>
-		<defName>PH_PartyFinished</defName>
+		<defName>PH_PartyAttended</defName>
 		<include>
 			<li>PH_Common</li>
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(reason==Timeout)      ->[PAWN] attended [Organizer]'s party[WithOthers].</li>
-				<li>entry(reason==Unknown)      ->[Organizer]'s party was cancelled.</li>
-				<li>entry(reason==PawnKilled)   ->[Organizer]'s party was cancelled after [DeadPawn] died.</li>
-				<li>entry(reason==OrganizerLeft)->[Organizer]'s party was cancelled after [Organizer_pronoun] left.</li>
-				<li>entry(reason==DangerousMap) ->[Organizer]'s party was cancelled due to nearby threats.</li>
+				<li>entry(isOrganizer==True) ->[PAWN] threw a party for the colony[WithOthers].</li>
+				<li>entry(isOrganizer==False)->[PAWN] attended [Organizer]'s party[WithOthers].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
