@@ -9,14 +9,14 @@ using Verse.AI.Group;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class PartyRecorder : HistoryTaleRecorder<AttendedPartyEvent>
+public class PartyRecorder : HistoryTaleRecorder<PartyAttendedEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<AttendedPartyEvent>(CreateRecord);
+        GameEventBus.Subscribe<PartyAttendedEvent>(CreateRecord);
     }
 
-    public override void CreateRecord(AttendedPartyEvent e)
+    public override void CreateRecord(PartyAttendedEvent e)
     {
         var (attender, organizer) = e;
         if (!ShouldRecord(attender))

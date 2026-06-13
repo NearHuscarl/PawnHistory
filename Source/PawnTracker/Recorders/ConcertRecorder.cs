@@ -7,39 +7,33 @@ using Verse.AI.Group;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class ConcertRecorder : RecorderBase<PartyAttendedEvent>
+public class ConcertRecorder : HistoryTaleRecorder<ConcertAttendedEvent>
 {
     public override void Register()
     {
         if (!ModsConfig.RoyaltyActive)
             return;
 
-        GameEventBus.Subscribe<PartyAttendedEvent>(CreateRecord);
+        GameEventBus.Subscribe<ConcertAttendedEvent>(CreateRecord);
     }
 
-    public override void CreateRecord(PartyAttendedEvent e)
+    public override void CreateRecord(ConcertAttendedEvent e)
     {
-        if (e.Type != PartyType.Concert)
+        var (attender, organizer) = e;
+        if (!ShouldRecord(attender))
             return;
 
-        var organizer = e.Organizer;
+        var recordDef = HistoryRecordDefOf.ConcertAttended;
+        var desc = recordDef
+            .Description(attender, "Attender")
+            .IncludePawnGrammar()
+            .AddRule("Organizer", organizer)
+            .Resolve();
 
-        foreach (var pawn in e.Partygoers)
-        {
-            if (!ShouldRecord(pawn))
-                continue;
+        if (!ShouldRecordTale(attender, recordDef, desc))
+            return;
 
-            var isOrganizer = pawn == organizer;
-            var recordDef = HistoryRecordDefOf.ConcertAttended;
-            var desc = recordDef
-                .Description(pawn)
-                .WithOthers(e.Partygoers)
-                .AddRule("Organizer", organizer)
-                .AddConstant("isOrganizer", isOrganizer)
-                .Resolve();
-
-            AddRecord(recordDef, pawn, desc, [organizer]);
-        }
+        AddRecord(recordDef, attender, desc, [organizer]);
     }
 
     [RequiresRoyalty]
@@ -54,15 +48,10 @@ public class ConcertRecorder : RecorderBase<PartyAttendedEvent>
         scenario.WaitUntil(() => lord.CurLordToil is LordToil_End, () =>
         {
             var attendees = lord.ownedPawns.Where(pawn => pawn != organizer).ToList();
-            Expect.That(organizer).ToHaveHistoryRecord(new ExpectedHistoryRecord
-            {
-                Def = HistoryRecordDefOf.ConcertAttended,
-                Description = "[PAWN] held a concert for the colony with [Others].",
-            });
+            Expect.That(organizer).ToHaveHistoryRecordOf(HistoryRecordDefOf.ConcertHeld);
             Expect.ThatAny(attendees).ToHaveHistoryRecord(new ExpectedHistoryRecord
             {
                 Def = HistoryRecordDefOf.ConcertAttended,
-                Description = "[PAWN] attended [Organizer]'s concert with [Others].",
                 Concerns = [organizer],
             });
         });
@@ -79,7 +68,7 @@ public class ConcertRecorder : RecorderBase<PartyAttendedEvent>
             .Colonist()
             .SetRoyalTitle(Extra.RoyalTitleDefOf.Praetor)
             .CreateSingle();
-        scenario.Pawn(3).Colonist().FullHeal().Execute();
+        scenario.Pawn(10).Colonist().FullHeal().Execute();
 
         var result = scenario.Incident(Extra.GatheringDefOf.Concert).Execute();
         return (result.Organizers.Single(), result.Lord);

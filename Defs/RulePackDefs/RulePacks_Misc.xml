@@ -390,8 +390,89 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(isOrganizer==True) ->[PAWN] held a concert for the colony[WithOthers].</li>
-				<li>entry(isOrganizer==False)->[PAWN] attended [Organizer]'s concert[WithOthers].</li>
+				<!-- Royalty\Defs\TaleDefs\Tales_Job.xml#ConcertAttended -->
+				<li>tale_noun->[Attender] attended [Organizer]'s concert</li>
+				<li>tale_noun->[Attender] listened to [Organizer]'s performance</li>
+				<li>tale_noun->[Attender] sat through [Organizer]'s concert</li>
+
+				<li>image->[Attender_pronoun] listened quietly [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] enjoyed [Organizer]'s performance [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] swayed to the music [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] was absorbed in the sound [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] leaned closer as [Organizer] played [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] watched [Organizer] from the edge of the crowd [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] kept time with one hand [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] stayed still through the quiet parts [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] nodded along to the rhythm [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] held [Attender_possessive] breath for a moment [circumstance_phrase]</li>
+				
+				<li>circumstance_phrase->with a smile</li>
+				<li>circumstance_phrase->in a rare moment of calm</li>
+				<li>circumstance_phrase->as the room fell still</li>
+				<li>circumstance_phrase->as the melody carrying through the hall</li>
+				<li>circumstance_phrase->while the crowd listened closely</li>
+				<li>circumstance_phrase->among the rows of quiet listeners</li>
+				<li>circumstance_phrase->among rows of quiet faces</li>
+				<li>circumstance_phrase->as the hall settled around the sound</li>
+				<li>circumstance_phrase->while the last echoes faded</li>
+				<li>circumstance_phrase->as every small noise seemed louder</li>
+				<li>circumstance_phrase->with work left waiting outside</li>
+
+				<li>desc_sentence->The music held the room's attention for a while.</li>
+				<li>desc_sentence->[Attender] looked drawn into the song.</li>
+				<li>desc_sentence->The surrounding colonists listened in a shared hush.</li>
+				<li>desc_sentence->The concert gave the colony a brief pause from daily strain.</li>
+				<li>desc_sentence->[Organizer]'s performance seemed to settle over the room.</li>
+				<li>desc_sentence->The final notes lingered after the room quieted.</li>
+				<li>desc_sentence->For a moment, the colony sounded less tired.</li>
+				<li>desc_sentence->The last chord left a small silence behind it.</li>
+				<li>desc_sentence->For once, no one seemed eager to speak first.</li>
+				<li>desc_sentence->The gathered colonists looked almost peaceful.</li>
+				<li>desc_sentence->The hard edges of the settlement softened for a few minutes.</li>
+				<li>desc_sentence->The air seemed lighter after the final note.</li>
+
+				<li>entry(p=85)->[Attender] attended [Organizer]'s concert.</li>
+				<li>entry(p=15)->[tale_noun]. [image]. [desc_sentence]</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef MayRequire="Ludeon.RimWorld.Royalty">
+		<defName>PH_ConcertHeld</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<!-- Royalty\Defs\TaleDefs\Tales_Job.xml#ConcertHeld -->
+				<li>tale_noun->[Organizer] held a concert</li>
+				<li>tale_noun->[Organizer] performed at a concert</li>
+
+				<li>image->[Organizer_pronoun] played [Organizer_possessive] signature song [circumstance_phrase]</li>
+				<li>image->[Organizer_pronoun] invited the colonists to sing along [circumstance_phrase]</li>
+				<li>image->[Organizer_pronoun] played an inspiring song [circumstance_phrase]</li>
+				<li>image->[Organizer_pronoun] played a difficult piece [circumstance_phrase]</li>
+				<li>image->[Organizer_pronoun] worked through a difficult passage [circumstance_phrase]</li>
+				<li>image->[Organizer_pronoun] stood before the colony and played [circumstance_phrase]</li>
+				<li>image->[Organizer_pronoun] finished the concert under watchful eyes [circumstance_phrase]</li>
+
+				<li>circumstance_phrase->with an intense expression</li>
+				<li>circumstance_phrase->with careful focus</li>
+				<li>circumstance_phrase->as the crowd listened nearby</li>
+				<li>circumstance_phrase->while the room went quiet</li>
+				<li>circumstance_phrase->with the last sound hanging in the air</li>
+				<li>circumstance_phrase->under the colony's full attention</li>
+				<li>circumstance_phrase->with tired confidence</li>
+
+				<li>desc_sentence->The performance drew the room together for a while.</li>
+				<li>desc_sentence->[Organizer] seemed to steady [Organizer_objective]self as the music continued.</li>
+				<li>desc_sentence->The audience followed the melody in silence.</li>
+				<li>desc_sentence->The set sounded practiced, fragile, and sincere.</li>
+				<li>desc_sentence->The final notes seemed to matter more than anyone expected.</li>
+				<li>desc_sentence->[Organizer] looked relieved when the performance ended.</li>
+				<li>desc_sentence->The room stayed quiet for a breath after the music stopped.</li>
+
+				<li>entry->[tale_noun]. [image]. [desc_sentence]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

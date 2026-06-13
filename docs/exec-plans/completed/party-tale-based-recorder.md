@@ -1,6 +1,6 @@
 # Party Tale-Based Recorder
 
-Normal parties already emit RimWorld's Core `AttendedParty` tale from `LordJob_Joinable_Party.ApplyOutcome()`. Using that tale keeps the party recorder on the same event source as other tale-backed history records while preserving the separate `PartyAttendedEvent` path for concerts.
+Normal parties already emit RimWorld's Core `AttendedParty` tale from `LordJob_Joinable_Party.ApplyOutcome()`. Using that tale keeps the party recorder on the same event source as other tale-backed history records. Concerts were later moved to their Royalty `ConcertAttended` and `ConcertHeld` tales, so the shared party-completion event path is no longer part of the current design.
 
 ## Summary
 
@@ -10,22 +10,21 @@ Normal parties already emit RimWorld's Core `AttendedParty` tale from `LordJob_J
 
 - Added a typed tale dispatcher for `TaleDefOf.AttendedParty` with attender and organizer pawns.
 - Converted `PartyRecorder` to `HistoryTaleRecorder<AttendedPartyEvent>`.
-- Left `PartyAttendedEvent` in place for `ConcertRecorder`, which still needs party-versus-concert type data.
+- Removed the need for the old party-versus-concert completion event path once concerts moved to Royalty tale dispatch.
 - Expanded `PH_PartyAttended` with past-tense tale-style grammar based on Core `AttendedParty`.
 
 ## Design
 
 The dispatcher receives the first tale argument as the attender and the second as the organizer, matching vanilla `ApplyOutcome()` where both organizer and attendees are emitted with the organizer supplied as the second pawn. `PartyRecorder` resolves `[Attender]` and `[Organizer]` directly without using vanilla uppercase tale subsymbols.
 
-The rulepack uses `p=4` for the concise attendee sentence and `p=1` for the tale-style entry, making tale-style attendee text a relative 20% outcome. Organizer records keep the concise host sentence.
+The rulepack uses weighted entries for attendee descriptions: the concise sentence has higher weight, while the richer tale-style text remains a rarer variant. Organizer records keep the concise host sentence.
 
 ## Rules
 
 - Cancelled parties do not run `ApplyOutcome()`, so they do not produce `PartyAttended`.
-- Attendee records include the organizer as a concern.
-- Organizer records do not attach the organizer as a self-concern.
+- Party attendance records pass the organizer as a concern.
 - Tale-style text avoids randomized quantity claims such as `[Quantity_adjphrase]`.
-- Concert recording remains separate and still writes `ConcertAttended`.
+- Concert recording remains separate and writes `ConcertAttended` plus `ConcertHeld`.
 
 ## Verification
 

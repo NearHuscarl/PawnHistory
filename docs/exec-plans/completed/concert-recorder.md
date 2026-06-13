@@ -1,30 +1,33 @@
 # Concert Recorder
 
-Royalty concerts are social gatherings with a dedicated performer and attendees. They are worth recording because a successful concert is a visible colony-life event, and Royalty already treats it as distinct from a normal party through `HeldConcert` and `AttendedConcert` tales.
+Royalty concerts are social gatherings with a dedicated performer and attendees. They are worth recording because a successful concert is a visible colony-life event, and Royalty already treats it as distinct from a normal party through `ConcertHeld` and `ConcertAttended` tales.
 
 ## Summary
 
-The implementation adds a Royalty-gated concert history record that is written only after a concert finishes successfully. It reuses the shared party-attendance completion event and does not record concert start, join, or cancellation events.
+Concert history is written from Royalty's own concert tales after a concert finishes successfully. Attendees use `ConcertAttended`; the performer uses `ConcertHeld`. This replaces the earlier shared party-completion event path, so concerts no longer depend on lord toil transitions or party-versus-concert event tags.
 
 ## Shipped Scope
 
-- Added `ConcertRecorder`, discovered through the existing recorder reflection path.
-- Reused `PartyAttendedEvent` with `PartyType.Concert` as the single successful-completion source.
-- Added `ConcertAttended` as a Royalty-gated history record def and `HistoryRecordDefOf` entry.
-- Added `PH_ConcertAttended` with organizer and attendee text.
-- Filtered `PartyRecorder` to `PartyType.Party` so concerts do not also produce party records.
+- Added `ConcertRecorder`, discovered through the existing recorder reflection path, for `ConcertAttendedEvent`.
+- Added `ConcertHeldRecorder` for the performer's `ConcertHeldEvent`.
+- Added typed tale dispatchers for `TaleDefOf.ConcertAttended` and `TaleDefOf.ConcertHeld`.
+- Added `ConcertAttended` and `ConcertHeld` as Royalty-gated history record defs and `HistoryRecordDefOf` entries.
+- Added `PH_ConcertAttended` and `PH_ConcertHeld` rulepacks with separate attendee and performer wording.
+- Kept concerts separate from party records; concert attendees do not receive `PartyAttended`.
 
 ## Design
 
-The recorder listens for `PartyAttendedEvent` and filters to `PartyType.Concert`. The shared event is attached to the successful timeout transition of `LordJob_Joinable_Party`; Royalty concerts inherit that job and are tagged as concerts by the event publisher.
+Royalty concert completion emits `ConcertAttended` and `ConcertHeld` tales from the successful outcome path. `ConcertAttendedDispatcher` maps the tale pawn to the attendee and the first tale parameter to the organizer. `ConcertHeldDispatcher` maps the tale pawn directly to the organizer.
 
-Attendee records are based on the event's partygoer list. The organizer is supplied separately on the event and used for host/attendee wording plus concern links.
+The attendee recorder writes `ConcertAttended` on the attending pawn and attaches the organizer as a concern. The performer recorder writes `ConcertHeld` on the organizer without recomputing attendance from the lord.
 
 ## Rule Names
 
-The new rulepack uses `[PAWN]`, `[Others]`, and `[Organizer]`. `[Organizer]` is the only extra recorder-supplied symbol needed beyond the usual pawn and group symbols. Royalty's tale defs use `ATTENDER` and `ORGANIZER`, but this mod's `HistoryDescriptionBuilder.Description(pawn)` only supplies `[PAWN]` unless the recorder adds more rules.
+The rulepacks use PascalCase symbols such as `[Attender]` and `[Organizer]` instead of Royalty's uppercase tale symbols. They rename the vanilla `circumstance_group` concept to `circumstance_phrase`, convert concert tale text to past tense, and avoid randomized quantity claims.
 
 ## Verification
 
 - Added recorder-local Royalty test coverage for successful concert completion.
-- The test asserts the organizer concert record, an attendee concert record with organizer concern, and absence of a `PartyAttended` history record on concert attendees.
+- The test asserts the organizer `ConcertHeld` record, an attendee `ConcertAttended` record with organizer concern, and absence of a `PartyAttended` history record on concert attendees.
+- Ran the Debug MSBuild build successfully after the tale-based concert migration.
+- The in-game recorder test remains the runtime verification path for actual concert tale emission.
