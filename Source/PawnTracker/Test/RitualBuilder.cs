@@ -12,6 +12,11 @@ public class RitualBuilder(Pawn organizer)
 {
     private readonly List<Action> processors = [];
 
+    public void Execute()
+    {
+        processors.ForEach(processor => processor());
+    }
+
     public RitualBuilder Outcome(RitualOutcomePossibility outcome)
     {
         TestManager.Scenario.ForcedRitualOutcome = outcome;
@@ -205,11 +210,6 @@ public class RitualBuilder(Pawn organizer)
         });
 
         return this;
-    }
-
-    public void Execute()
-    {
-        processors.ForEach(processor => processor());
     }
 
     private (Precept_Ritual Ritual, Dialog_BeginRitual Dialog) CreateRitualDialogFrom(ThingDef thingDef, PreceptDef ritualDef, Dictionary<string, Pawn> assignedRoles, List<Pawn> spectators)

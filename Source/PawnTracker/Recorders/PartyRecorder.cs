@@ -9,36 +9,32 @@ using Verse.AI.Group;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class PartyRecorder : RecorderBase<PartyAttendedEvent>
+public class PartyRecorder : HistoryTaleRecorder<AttendedPartyEvent>
 {
     public override void Register()
     {
-        GameEventBus.Subscribe<PartyAttendedEvent>(CreateRecord);
+        GameEventBus.Subscribe<AttendedPartyEvent>(CreateRecord);
     }
 
-    public override void CreateRecord(PartyAttendedEvent e)
+    public override void CreateRecord(AttendedPartyEvent e)
     {
-        if (e.Type != PartyType.Party)
+        var (attender, organizer) = e;
+        if (!ShouldRecord(attender))
             return;
 
-        var organizer = e.Organizer;
+        var isOrganizer = attender == organizer;
+        var recordDef = HistoryRecordDefOf.PartyAttended;
+        var desc = recordDef
+            .Description(attender, "Attender")
+            .IncludePawnGrammar()
+            .AddRule("Organizer", organizer)
+            .AddConstant("isOrganizer", isOrganizer)
+            .Resolve();
 
-        foreach (var pawn in e.Partygoers)
-        {
-            if (!ShouldRecord(pawn))
-                continue;
+        if (!ShouldRecordTale(attender, recordDef, desc))
+            return;
 
-            var isOrganizer = pawn == organizer;
-            var recordDef = HistoryRecordDefOf.PartyAttended;
-            var desc = recordDef
-                .Description(pawn)
-                .WithOthers(e.Partygoers)
-                .AddRule("Organizer", organizer)
-                .AddConstant("isOrganizer", isOrganizer)
-                .Resolve();
-
-            AddRecord(recordDef, pawn, desc, [organizer]);
-        }
+        AddRecord(recordDef, attender, desc, [organizer]);
     }
 
     public static readonly int MinPartyDuration = 1200; // must larger than this value in IsGatheringAboutToEnd()
@@ -58,12 +54,11 @@ public class PartyRecorder : RecorderBase<PartyAttendedEvent>
             Expect.That(organizer).ToHaveHistoryRecord(new ExpectedHistoryRecord
             {
                 Def = HistoryRecordDefOf.PartyAttended,
-                Description = "[PAWN] threw a party for the colony with [Others].",
+                Description = "[Attender] threw a party for the colony.",
             });
             Expect.ThatAny(attendees).ToHaveHistoryRecord(new ExpectedHistoryRecord
             {
                 Def = HistoryRecordDefOf.PartyAttended,
-                Description = "[PAWN] attended [Organizer]'s party with [Others].",
                 Concerns = [organizer],
             });
         });
@@ -93,7 +88,7 @@ public class PartyRecorder : RecorderBase<PartyAttendedEvent>
     private static (Pawn organizer, Lord lord) SetupParty(TestScenario scenario)
     {
         scenario.Map().BuildRoom(8, 8).WithThing(ThingDefOf.PartySpot, 1, Faction.OfPlayer).Execute();
-        scenario.Pawn(4).Colonist().Execute();
+        scenario.Pawn(8).Colonist().Execute();
         var result = scenario.Incident(GatheringDefOf.Party).Execute();
 
         // mocked party ends almost immediately. Force joining party to be registered.

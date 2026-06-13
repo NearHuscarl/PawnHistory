@@ -341,8 +341,44 @@
 		</include>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(isOrganizer==True) ->[PAWN] threw a party for the colony[WithOthers].</li>
-				<li>entry(isOrganizer==False)->[PAWN] attended [Organizer]'s party[WithOthers].</li>
+				<!-- Core\Defs\TaleDefs\Tales_Job.xml#AttendedParty -->
+				<li>tale_noun->[Attender] attended [Organizer]'s party</li>
+				<li>tale_noun->[Attender] relaxed with [Organizer] at a party</li>
+				<li>tale_noun->[Attender] spent part of the party with [Organizer]</li>
+				<li>tale_noun->[Attender] shared a quiet moment with [Organizer] at the party</li>
+
+				<li>image->[Attender_pronoun] had a conversation with [Organizer] [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] got a drink from [Organizer] [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] chatted with [Organizer] [circumstance_phrase]</li>
+				<li>image->[Organizer] welcomed [Attender_objective] [circumstance_phrase]</li>
+				<li>image->[Organizer] introduced [Attender_objective] to a friend [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] and [Organizer] laughed together [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] lingered near [Organizer] as the party wound down [circumstance_phrase]</li>
+				<li>image->[Attender_pronoun] shared food and conversation with [Organizer] [circumstance_phrase]</li>
+
+				<li>circumstance_phrase->with a broad grin</li>
+				<li>circumstance_phrase->with a laugh</li>
+				<li>circumstance_phrase->with a [AdjectiveFriendly] smile</li>
+				<li>circumstance_phrase->while laughing uproariously</li>
+				<li>circumstance_phrase->in a relaxed mood</li>
+				<li>circumstance_phrase->during a warm gathering</li>
+				<li>circumstance_phrase->as the party found an easy rhythm</li>
+
+				<li>desc_sentence->The scene suggested shared laughter and easy company.</li>
+				<li>desc_sentence->[Attender] seemed glad for a brief rest from daily work.</li>
+				<li>desc_sentence->Other colonists were gathered nearby.</li>
+				<li>desc_sentence->The surrounding crowd looked comfortable.</li>
+				<li>desc_sentence->[Organizer] seemed at ease among the guests.</li>
+				<li>desc_sentence->Someone laughed too loudly, and nobody seemed to mind.</li>
+				<li>desc_sentence->The room felt warmer with so many colonists together.</li>
+				<li>desc_sentence->The lights flickered over tired faces.</li>
+				<li>desc_sentence->For a short while, the colony felt less fragile.</li>
+				<li>desc_sentence->A rare bit of comfort settled over the room.</li>
+				<li>desc_sentence->The room looked worn, crowded, and strangely safe.</li>
+
+				<li>entry(isOrganizer==True)     ->[Attender] threw a party for the colony.</li>
+				<li>entry(isOrganizer==False,p=9)->[Attender] attended [Organizer]'s party.</li>
+				<li>entry(isOrganizer==False,p=1)->[tale_noun]. [image]. [desc_sentence]</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
