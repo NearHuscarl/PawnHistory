@@ -18,6 +18,8 @@ public static class Extra
         public static AbilityDef Convert;
         [MayRequireIdeology]
         public static AbilityDef ConversionRitual;
+        [MayRequireIdeology]
+        public static AbilityDef LeaderSpeech;
 
         static AbilityDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(AbilityDefOf));
     }
@@ -404,5 +406,7 @@ public static class Extra
         public static PreceptDef Classic_DrumParty;
         [MayRequireIdeology]
         public static PreceptDef Classic_DanceParty;
+        [MayRequireIdeology]
+        public static PreceptDef LeaderSpeech;
     }
 }

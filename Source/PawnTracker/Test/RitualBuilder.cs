@@ -27,19 +27,43 @@ public class RitualBuilder(Pawn organizer)
     {
         processors.Add(() =>
         {
-            var speech = organizer.abilities.GetAbility(AbilityDefOf.Speech, includeTemporary: true);
-            var speechEffectComp = speech.EffectComps.OfType<CompAbilityEffect_StartRitual>().First();
-            var dialog = (Dialog_BeginRitual)speechEffectComp.ConfirmationDialog((LocalTargetInfo)organizer, null);
+            var (ritual, dialog) = CreateRitualDialogFrom(AbilityDefOf.Speech);
             var assignedRoles = new Dictionary<string, Pawn>
             {
                 [RitualRoleId.Speaker] = organizer,
             };
             InitRitualDialog(dialog, assignedRoles, spectators);
             Accessor.Dialog_BeginRitual.Start(dialog);
-            ApplyOutcome([organizer, ..spectators], speechEffectComp.Ritual);
+            ApplyOutcome([organizer, ..spectators], ritual);
         });
 
         return this;
+    }
+
+    public RitualBuilder LeaderSpeech(List<Pawn> spectators)
+    {
+        processors.Add(() =>
+        {
+            var (ritual, dialog) = CreateRitualDialogFrom(Extra.AbilityDefOf.LeaderSpeech);
+            var assignedRoles = new Dictionary<string, Pawn>
+            {
+                [RitualRoleId.Speaker] = organizer,
+            };
+            InitRitualDialog(dialog, assignedRoles, spectators);
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome([organizer, ..spectators], ritual);
+        });
+
+        return this;
+    }
+
+    private (Precept_Ritual Ritual, Dialog_BeginRitual Dialog) CreateRitualDialogFrom(AbilityDef abilityDef)
+    {
+        var speech = organizer.abilities.GetAbility(abilityDef, includeTemporary: true);
+        var speechEffectComp = speech.EffectComps.OfType<CompAbilityEffect_StartRitual>().First();
+        var dialog = (Dialog_BeginRitual)speechEffectComp.ConfirmationDialog((LocalTargetInfo)organizer, null);
+
+        return (speechEffectComp.Ritual, dialog);
     }
 
     public RitualBuilder AnimaTreeLinking(Thing animaTree, List<Pawn> spectators)

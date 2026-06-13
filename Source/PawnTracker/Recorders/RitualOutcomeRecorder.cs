@@ -86,6 +86,36 @@ public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
     }
 
     [RequiresIdeology]
+    public void TestLeaderSpeech(TestScenario scenario)
+    {
+        scenario.SpeedUp();
+
+        var leaderIdeo = scenario.Ideo().AddPrecept(Extra.PreceptDefOf.LeaderSpeech).Execute();
+        var organizer = scenario.Pawn()
+            .FullHeal()
+            .Colonist()
+            .SetIdeo(leaderIdeo, role: PreceptDefOf.IdeoRole_Leader)
+            .CreateSingle(false);
+        var spectators = scenario.Pawn(4)
+            .Colonist()
+            .SetIdeo(leaderIdeo)
+            .Execute();
+
+        scenario.Map()
+            .BuildRoom(10, 10, floorDef: TerrainDefOf.MetalTile)
+            .AsShrine(leaderIdeo)
+            .Execute();
+
+        scenario
+            .Ritual(organizer)
+            .Outcome(Extra.RitualOutcomeEffectDefOf.AttendedSpeech.BestOutcome)
+            .LeaderSpeech(spectators)
+            .Execute();
+
+        Expect.That(organizer).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] delivered an inspirational leader speech to 4 others.");
+    }
+
+    [RequiresIdeology]
     [RequiresRoyalty]
     public void TestAnimaTreeLinking(TestScenario scenario)
     {
