@@ -57,6 +57,39 @@ public class RitualBuilder(Pawn organizer)
         return this;
     }
 
+    public RitualBuilder Trial(Pawn convict, List<Pawn> spectators)
+    {
+        processors.Add(() =>
+        {
+            var ritual = TrialRitualFor(convict);
+            var forcedRoles = new Dictionary<string, Pawn>
+            {
+                [RitualRoleId.Convict] = convict,
+            };
+            var dialog = (Dialog_BeginRitual)ritual.GetRitualBeginWindow(convict, null, null, null, forcedRoles, organizer);
+            var assignedRoles = new Dictionary<string, Pawn>
+            {
+                [RitualRoleId.Leader] = organizer,
+            };
+
+            InitRitualDialog(dialog, assignedRoles, spectators);
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome([organizer, convict, ..spectators], ritual);
+        });
+
+        return this;
+    }
+
+    private Precept_Ritual TrialRitualFor(Pawn convict)
+    {
+        if (convict.InMentalState && organizer.Ideo.GetPrecept(Extra.PreceptDefOf.TrialMentalState) is Precept_Ritual mentalStateTrial)
+            return mentalStateTrial;
+        if (convict.IsPrisonerOfColony && organizer.Ideo.GetPrecept(Extra.PreceptDefOf.TrialPrisoner) is Precept_Ritual prisonerTrial)
+            return prisonerTrial;
+
+        return (Precept_Ritual)organizer.Ideo.GetPrecept(Extra.PreceptDefOf.Trial);
+    }
+
     private (Precept_Ritual Ritual, Dialog_BeginRitual Dialog) CreateRitualDialogFrom(AbilityDef abilityDef)
     {
         var speech = organizer.abilities.GetAbility(abilityDef, includeTemporary: true);

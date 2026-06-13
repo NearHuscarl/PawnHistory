@@ -331,6 +331,8 @@ public static class Extra
         [MayRequireIdeology]
         public static RitualOutcomeEffectDef Execution;
         [MayRequireIdeology]
+        public static RitualOutcomeEffectDef Trial;
+        [MayRequireIdeology]
         public static RitualOutcomeEffectDef CelebrationSkyLanterns;
 
         static RitualOutcomeEffectDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualOutcomeEffectDefOf));
@@ -400,6 +402,12 @@ public static class Extra
         public static PreceptDef Conversion;
         [MayRequireIdeology]
         public static PreceptDef Execution;
+        [MayRequireIdeology]
+        public static PreceptDef Trial;
+        [MayRequireIdeology]
+        public static PreceptDef TrialPrisoner;
+        [MayRequireIdeology]
+        public static PreceptDef TrialMentalState;
         [MayRequireIdeology]
         public static PreceptDef Festival;
         [MayRequireIdeology]

@@ -15,6 +15,14 @@ public abstract class RitualOutcomeComp : RecordComp<RitualOutcomeRecorder>
         return builder;
     }
 
+    public virtual IEnumerable<Pawn> GetRecordPawns(BuildInput input)
+    {
+        if (RecordParticipants)
+            return input.Event.Participants;
+
+        return [input.Event.Host];
+    }
+
     public virtual IEnumerable<Thing> GetConcerns(BuildInput input)
     {
         yield break;

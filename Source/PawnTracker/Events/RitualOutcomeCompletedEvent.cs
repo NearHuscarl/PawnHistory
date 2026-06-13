@@ -49,7 +49,8 @@ file static class RitualOutcomeContext
         var ritualJob = frame.RitualJob;
         var host = GetOrganizer(ritualJob);
         var outcome = frame.Outcome?.label; // Ritual_Outcomes.xml
-        var assignedRoles = Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).ToDictionary(e => e.Key, e => e.Value);
+        var forcedRoles = ritualJob.assignments.ForcedRolesForReading.ToDictionary(e => e.Key, e => new List<Pawn> { e.Value });
+        var assignedRoles = Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).Concat(forcedRoles).ToDictionary(e => e.Key, e => e.Value);
         var spectators = Accessor.RitualRoleAssignments.Spectators(ritualJob.assignments).ToList();
         var participants = Accessor.RitualRoleAssignments.Participants(ritualJob.assignments).ToList();
         var targetA = ritualJob.obligation?.targetA ?? TargetInfo.Invalid;
@@ -63,6 +64,10 @@ file static class RitualOutcomeContext
             return ritualJob.PawnWithRole(RitualRoleId.Moralist);
         if (ritualJob.Ritual.def == Extra.PreceptDefOf.Execution)
             return ritualJob.PawnWithRole(RitualRoleId.Executioner);
+        if (ritualJob.Ritual.def == Extra.PreceptDefOf.Trial
+            || ritualJob.Ritual.def == Extra.PreceptDefOf.TrialPrisoner
+            || ritualJob.Ritual.def == Extra.PreceptDefOf.TrialMentalState)
+            return ritualJob.PawnWithRole(RitualRoleId.Leader);
         if (ritualJob.Ritual.def == PreceptDefOf.ChildBirth)
             return ritualJob.PawnWithRole(RitualRoleId.Doctor);
         return Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).Values.FirstOrDefault()?.First();
@@ -88,15 +93,25 @@ internal static class RitualOutcomeEffectWorker_Apply_Patch
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Execution), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_AnimaTreeLinking), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_ChildBirth), methodName);
+        yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Trial), methodName);
     }
 
     private static void Prefix(LordJob_Ritual jobRitual) => RitualOutcomeContext.Begin(jobRitual);
     private static void Finalizer() => RitualOutcomeContext.End();
 }
 
-[HarmonyPatch(typeof(RitualOutcomeEffectWorker_FromQuality), nameof(RitualOutcomeEffectWorker_FromQuality.GetOutcome))]
-internal static class RitualOutcomeEffectWorker_FromQuality_GetOutcome_Patch
+[HarmonyPatch]
+internal static class RitualOutcomeEffectWorker_GetOutcome_Patch
 {
+    [HarmonyTargetMethods]
+    private static IEnumerable<MethodBase> TargetMethods()
+    {
+        const string methodName = nameof(RitualOutcomeEffectWorker_FromQuality.GetOutcome);
+
+        yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_FromQuality), methodName);
+        yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Trial), methodName);
+    }
+
     private static void Postfix(LordJob_Ritual ritual, RitualOutcomePossibility __result)
     {
         if (RitualOutcomeContext.Frame.RitualJob != ritual)

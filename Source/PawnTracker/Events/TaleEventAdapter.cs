@@ -34,6 +34,9 @@ internal static class TaleDispatcherManager
         foreach (var type in typeof(TaleDispatcher).AllSubclassesNonAbstract())
         {
             var dispatcher = (TaleDispatcher)Activator.CreateInstance(type);
+            
+            if (dispatcher.TaleDef == null) // DLC gated
+                continue;
 
             if (!Dispatchers.TryGetValue(dispatcher.TaleDef, out var list))
                 Dispatchers[dispatcher.TaleDef] = list = [];

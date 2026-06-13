@@ -21,23 +21,13 @@ public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
         var input = new RitualOutcomeComp.BuildInput(e);
         var comp = Comps.OfType<RitualOutcomeComp>().FirstOrDefault(c => c.Match(input));
 
-        if (comp is { RecordParticipants: true })
+        var recordPawns = comp?.GetRecordPawns(input) ?? [e.Host];
+        foreach (var pawn in recordPawns)
         {
-            foreach (var pawn in e.Participants)
-            {
-                if (!ShouldRecord(pawn))
-                    continue;
-                
-                var builder = BuildCommon(pawn, e);
-                var concerns = comp.GetConcerns(input);
-                AddRecord(recordDef, pawn, builder.Resolve(), concerns);
-            }
-            return;
-        }
+            if (!ShouldRecord(pawn))
+                continue;
 
-        if (ShouldRecord(e.Host))
-        {
-            var builder = BuildCommon(e.Host, e);
+            var builder = BuildCommon(pawn, e);
             var concerns = new List<Thing>();
 
             if (comp != null)
@@ -45,7 +35,7 @@ public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
                 builder = comp.BuildGrammarRequest(builder, input);
                 concerns.AddRange(comp.GetConcerns(input));
             }
-            AddRecord(recordDef, e.Host, builder.Resolve(), concerns);
+            AddRecord(recordDef, pawn, builder.Resolve(), concerns);
         }
     }
 
