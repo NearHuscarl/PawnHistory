@@ -37,7 +37,7 @@ public class PartyRecorder : RecorderBase<PartyAttendedEvent>
                 .AddConstant("isOrganizer", isOrganizer)
                 .Resolve();
 
-            AddRecord(recordDef, pawn, desc, isOrganizer ? null : [organizer]);
+            AddRecord(recordDef, pawn, desc, [organizer]);
         }
     }
 

@@ -426,9 +426,6 @@ public class PawnBuilder(int count = 1)
         pawn.story.Adulthood = Adulthood;
         pawn.Notify_DisabledWorkTypesChanged();
 
-        // Make sure no work is disabled
-        pawn.workSettings?.EnableAndInitialize();
-
         // 2. Remove work-disabling traits (e.g., Lazy, Brawler, etc.)
         pawn.story.traits.allTraits.Clear();
 
@@ -437,6 +434,14 @@ public class PawnBuilder(int count = 1)
 
         // 4. IMPORTANT: Refresh the pawn's internal work-tag cache
         pawn.Notify_DisabledWorkTypesChanged();
+
+        // Assign default priority to every work type still enabled after cleanup.
+        pawn.workSettings?.EnableAndInitialize();
+        foreach (var workType in DefDatabase<WorkTypeDef>.AllDefsListForReading)
+        {
+            if (!pawn.WorkTypeIsDisabled(workType))
+                pawn.workSettings?.SetPriority(workType, 3);
+        }
     }
 
     public PawnBuilder SetFaction(Faction faction2)

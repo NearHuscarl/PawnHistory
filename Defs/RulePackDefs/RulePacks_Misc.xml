@@ -347,6 +347,19 @@
 		</rulePack>
 	</RulePackDef>
 
+	<RulePackDef MayRequire="Ludeon.RimWorld.Royalty">
+		<defName>PH_ConcertAttended</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(isOrganizer==True) ->[PAWN] held a concert for the colony[WithOthers].</li>
+				<li>entry(isOrganizer==False)->[PAWN] attended [Organizer]'s concert[WithOthers].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
 	<RulePackDef>
 		<defName>PH_WeddingJoined</defName>
 		<rulePack>

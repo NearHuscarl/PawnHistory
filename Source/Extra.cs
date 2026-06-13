@@ -31,6 +31,15 @@ public static class Extra
     }
 
     [DefOf]
+    public static class GatheringDefOf
+    {
+        [MayRequireRoyalty]
+        public static GatheringDef Concert;
+
+        static GatheringDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(GatheringDefOf));
+    }
+
+    [DefOf]
     public static class HediffDefOf
     {
         // ReSharper disable once IdentifierTypo
@@ -294,6 +303,8 @@ public static class Extra
         public static ThingDef Joywire;
         public static ThingDef VanometricPowerCell;
         
+        [MayRequireRoyalty]
+        public static ThingDef Harpsichord;
         [MayRequireRoyalty]
         public static ThingDef MeleeWeapon_MonoSwordBladelink;
 

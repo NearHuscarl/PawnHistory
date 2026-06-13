@@ -121,6 +121,8 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef QuestRefugeeBetrayalOffer;
     [MayRequireRoyalty]
     public static HistoryRecordDef QuestRefugeeAssault;
+    [MayRequireRoyalty]
+    public static HistoryRecordDef ConcertAttended;
 
     [MayRequireBiotech]
     public static HistoryRecordDef MechlinkInstalled;

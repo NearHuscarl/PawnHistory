@@ -615,29 +615,19 @@
 	</HistoryRecordDef>
 	
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>PartyStarted</defName>
-		<label>party started</label>
-		<descriptionMaker>PH_PartyStarted</descriptionMaker>
+		<defName>PartyAttended</defName>
+		<label>party attended</label>
+		<descriptionMaker>PH_PartyAttended</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
 			<li>Gathering</li>
 		</categories>
 	</HistoryRecordDef>
-	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>PartyJoined</defName>
-		<label>party joined</label>
-		<descriptionMaker>PH_PartyStarted</descriptionMaker>
-		<icon>Things/Pawn/Wounds/WoundMechA</icon>
-		<categories>
-			<li>Life</li>
-			<li>Gathering</li>
-		</categories>
-	</HistoryRecordDef>
-	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
-		<defName>PartyFinished</defName>
-		<label>party finished</label>
-		<descriptionMaker>PH_PartyFinished</descriptionMaker>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
+		<defName>ConcertAttended</defName>
+		<label>concert finished</label>
+		<descriptionMaker>PH_ConcertAttended</descriptionMaker>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Life</li>
