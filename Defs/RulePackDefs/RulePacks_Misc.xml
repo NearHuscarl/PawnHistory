@@ -33,6 +33,23 @@
 		</rulePack>
 	</RulePackDef>
 
+	<RulePackDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>PH_IdeoRoleChanged</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>InFrontOfOthers(OtherCount==0)-></li>
+				<li>InFrontOfOthers(OtherCount>0) -> in front of [Others]</li>
+
+				<li>entry(hasOldRole==False,hasNewRole==True) ->[PAWN] became [NewRole_indefinite] after a successful role change[InFrontOfOthers].</li>
+				<li>entry(hasOldRole==True, hasNewRole==True) ->[PAWN] resigned from [OldRole] to become [NewRole_indefinite] after a successful role change[InFrontOfOthers].</li>
+				<li>entry(hasOldRole==True, hasNewRole==False)->[PAWN] gave up [OldRole] after a successful role change[InFrontOfOthers].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
 	<RulePackDef MayRequire="Ludeon.RimWorld.Royalty">
 		<defName>PH_WeaponBonded</defName>
 		<rulePack>

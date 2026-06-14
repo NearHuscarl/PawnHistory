@@ -141,8 +141,7 @@ public class RitualBuilder(Pawn organizer)
     private static void InitRitualDialog(Dialog_BeginRitual dialog, Dictionary<string, Pawn> assignedRoles, List<Pawn> spectators)
     {
         dialog.PostOpen(); // runs TryAssignSpectate()
-        ReassignRoles(dialog, assignedRoles);
-        ReassignSpectators(dialog, spectators);
+        ReassignRoles(dialog, assignedRoles, spectators);
     }
 
     public RitualBuilder ChildBirth(Pawn carrier, List<Pawn> spectators)
@@ -160,8 +159,7 @@ public class RitualBuilder(Pawn organizer)
             ritual.ShowRitualBeginWindow(birthBed, null, carrier);
             var dialog = Find.WindowStack.WindowOfType<Dialog_BeginRitual>();
 
-            ReassignRoles(dialog, assignedRoles);
-            ReassignSpectators(dialog, spectators);
+            ReassignRoles(dialog, assignedRoles, spectators);
             Accessor.Dialog_BeginRitual.Start(dialog);
             
             carrier.health.RemoveHediff(carrier.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PregnancyLabor)); // add PregnancyLaborPushing in PreRemoved 
@@ -187,6 +185,24 @@ public class RitualBuilder(Pawn organizer)
 
             Accessor.Dialog_BeginRitual.Start(dialog);
             ApplyOutcome([organizer, convertee, ..spectators], ritual);
+        });
+
+        return this;
+    }
+
+    public RitualBuilder RoleChange(Precept_Role newRole, List<Pawn> spectators)
+    {
+        processors.Add(() =>
+        {
+            var assignedRoles = new Dictionary<string, Pawn>
+            {
+                [RitualRoleId.RoleChanger] = organizer,
+            };
+            var (ritual, dialog) = CreateRitualDialogFrom(ThingDefOf.Ideogram, PreceptDefOf.RoleChange, assignedRoles, spectators);
+
+            Accessor.Dialog_BeginRitual.Assignments(dialog).SetRoleChangeSelection(newRole);
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome([organizer, ..spectators], ritual);
         });
 
         return this;
@@ -287,13 +303,12 @@ public class RitualBuilder(Pawn organizer)
         ritual.ShowRitualBeginWindow(ritualFocus);
         var dialog = Find.WindowStack.WindowOfType<Dialog_BeginRitual>();
 
-        ReassignRoles(dialog, assignedRoles);
-        ReassignSpectators(dialog, spectators);
+        ReassignRoles(dialog, assignedRoles, spectators);
 
         return (ritual, dialog);
     }
 
-    private static void ReassignRoles(Dialog_BeginRitual dialog, Dictionary<string, Pawn> assignedRoles)
+    private static void ReassignRoles(Dialog_BeginRitual dialog, Dictionary<string, Pawn> assignedRoles, IEnumerable<Pawn> spectators)
     {
         var assignments = Accessor.Dialog_BeginRitual.Assignments(dialog);
 
@@ -312,12 +327,8 @@ public class RitualBuilder(Pawn organizer)
             if (!assignments.TryAssign(pawn, role, out _, default))
                 throw new InvalidOperationException($"Failed to assign {pawn} to ritual role '{role}'.");
         }
-    }
 
-    private static void ReassignSpectators(Dialog_BeginRitual dialog, IEnumerable<Pawn> spectators)
-    {
-        var assignments = Accessor.Dialog_BeginRitual.Assignments(dialog);
-
+        // reassign spectators
         foreach (var pawn in assignments.SpectatorsForReading.ToList())
             assignments.RemoveParticipant(pawn);
 

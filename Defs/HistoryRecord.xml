@@ -38,6 +38,15 @@
 			<li>Life</li>
 		</categories>
 	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>IdeoRoleChanged</defName>
+		<label>ideo role changed</label>
+		<descriptionMaker>PH_IdeoRoleChanged</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>Raid</defName>
 		<label>raid</label>

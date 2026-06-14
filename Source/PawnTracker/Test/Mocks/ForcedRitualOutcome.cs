@@ -26,3 +26,15 @@ internal class ForcedRitualOutcome
         __result = TestManager.Scenario.ForcedRitualOutcome;
     }
 }
+
+[HarmonyPatch(typeof(RitualOutcomeComp_RoleChangeParticipants), nameof(RitualOutcomeComp_RoleChangeParticipants.QualityOffset))]
+internal class ForcedRitualOutcome_RoleChange
+{
+    private static void Postfix(ref float __result, LordJob_Ritual ritual)
+    {
+        if (TestManager.Scenario.ForcedRitualOutcome == null)
+            return;
+
+        __result = TestManager.Scenario.ForcedRitualOutcome.BestPositiveOutcome(ritual) ? 1f : 0f;
+    }
+}

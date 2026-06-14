@@ -334,6 +334,8 @@ public static class Extra
         public static RitualOutcomeEffectDef Trial;
         [MayRequireIdeology]
         public static RitualOutcomeEffectDef CelebrationSkyLanterns;
+        [MayRequireIdeology]
+        public static RitualOutcomeEffectDef RoleChange;
 
         static RitualOutcomeEffectDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualOutcomeEffectDefOf));
     }
