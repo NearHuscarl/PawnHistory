@@ -79,6 +79,21 @@ public static class Accessor
             AccessTools.FieldRefAccess<Verse.AI.JobDriver, Pawn>("pawn");
     }
 
+    public class Trigger_TicksPassed
+    {
+        public static readonly AccessTools.FieldRef<Verse.AI.Group.Trigger_TicksPassed, int> Duration =
+            AccessTools.FieldRefAccess<Verse.AI.Group.Trigger_TicksPassed, int>("duration");
+    }
+
+    public class Trigger_FractionColonyDamageTaken
+    {
+        public static readonly AccessTools.FieldRef<RimWorld.Trigger_FractionColonyDamageTaken, float> DesiredColonyDamageFraction =
+            AccessTools.FieldRefAccess<RimWorld.Trigger_FractionColonyDamageTaken, float>("desiredColonyDamageFraction");
+
+        public static readonly AccessTools.FieldRef<RimWorld.Trigger_FractionColonyDamageTaken, float> MinDamage =
+            AccessTools.FieldRefAccess<RimWorld.Trigger_FractionColonyDamageTaken, float>("minDamage");
+    }
+
     public class JobDriver_Execute
     {
         public static readonly Func<RimWorld.JobDriver_Execute, Pawn> Victim =

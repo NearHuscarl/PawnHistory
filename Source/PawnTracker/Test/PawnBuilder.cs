@@ -353,8 +353,6 @@ public class PawnBuilder(int count = 1)
 
         foreach (var pawn in sourcedPawns)
         {
-            if (spawnPosition.HasValue)
-                pawn.Position = spawnPosition.Value;
             if (faction != null && faction != pawn.Faction)
                 pawn.SetFaction(faction ?? pawn.Faction);
         }
@@ -377,6 +375,18 @@ public class PawnBuilder(int count = 1)
 
         foreach (var pawn in sourcedPawns)
         {
+            if (spawnPosition.HasValue)
+            {
+                var map = pawn.MapHeld;
+                pawn.DeSpawn();
+                GenSpawn.Spawn(pawn, spawnPosition.Value, map);
+            }
+            else if (isWorldPawn)
+            {
+                pawn.DeSpawn();
+                Find.WorldPawns.PassToWorld(pawn, PawnDiscardDecideMode.KeepForever);
+            }
+
             if (isKilled && !pawn.Dead)
                 HealthUtility.DamageUntilDead(pawn);
             if (isRotten && pawn.Dead && pawn.Corpse.TryGetComp<CompRottable>(out var rot))
@@ -384,12 +394,6 @@ public class PawnBuilder(int count = 1)
                 var corpse = pawn.Corpse;
                 rot.RotImmediately();
                 corpse.Map.gasGrid.AddGas(corpse.Position, GasType.RotStink, 1000); // don't know where this shit comes from
-            }
-
-            if (isWorldPawn)
-            {
-                pawn.DeSpawn();
-                Find.WorldPawns.PassToWorld(pawn, PawnDiscardDecideMode.KeepForever);
             }
         }
 

@@ -11,6 +11,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef Custom;
     public static HistoryRecordDef PawnGenerated;
     public static HistoryRecordDef Raid;
+    public static HistoryRecordDef RaidersLeft;
     public static HistoryRecordDef SiteAmbush;
     public static HistoryRecordDef CaravanAmbush;
     public static HistoryRecordDef DefenderGenerated;

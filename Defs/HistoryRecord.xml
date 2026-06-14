@@ -48,6 +48,16 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>RaidersLeft</defName>
+		<label>raiders left</label>
+		<descriptionMaker>PH_RaidersLeft</descriptionMaker>
+		<icon>Ui/Commands/AttackSettlement</icon>
+		<categories>
+			<li>Departure</li>
+			<li>Combat</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>SiteAmbush</defName>
 		<label>ambush</label>
 		<descriptionMaker>PH_SiteAmbush</descriptionMaker>

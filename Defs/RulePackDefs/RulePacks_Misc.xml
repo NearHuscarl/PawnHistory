@@ -854,4 +854,19 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_RaidersLeft</defName>
+		<include>
+			<li>PH_Common</li>
+			<li>PH_Faction</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(reason==FactionNoLongerHostile)->[PAWN][AndOthers] from [Faction] began to leave after [PAWN_possessive] faction was no longer hostile to [PlayerFaction].</li>
+				<li>entry(reason==GivenUp)               ->[PAWN][AndOthers] from [Faction] gave up and began to leave.</li>
+				<li>entry(reason==Satisfied)             ->[PAWN][AndOthers] from [Faction] withdrew after doing enough damage to [PlayerFaction].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>

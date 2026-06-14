@@ -18,7 +18,7 @@ public static class DebugActionLord
     {
         if (pawn?.lord == null)
         {
-            Log.Error($"Please select a pawn that has an assigned lord (raider, caravan trader, refugee...)");
+            Log.Error("Please select a pawn that has an assigned lord (raider, caravan trader, refugee...)");
             return;
         }
 
