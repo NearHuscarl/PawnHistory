@@ -55,7 +55,7 @@ public class RitualOutcomeComp_Trial : RitualOutcomeComp
             .Execute();
     }
 
-    private static void AssertTrialRecords(Pawn judge, Pawn convict, List<Pawn> spectators, RitualOutcomePossibility outcome)
+    private static void AssertTrialRecords(Pawn judge, Pawn convict, RitualOutcomePossibility outcome)
     {
         var description = outcome == Extra.RitualOutcomeEffectDefOf.Trial.WorstOutcome
             ? "[Convict] was exonerated in [Judge]'s trial before 2 others."
@@ -100,7 +100,7 @@ public class RitualOutcomeComp_Trial : RitualOutcomeComp
             .Trial(convict, spectators)
             .Execute();
 
-        AssertTrialRecords(judge, convict, spectators, outcome);
+        AssertTrialRecords(judge, convict, outcome);
     }
 
     [RequiresIdeology]
@@ -133,7 +133,7 @@ public class RitualOutcomeComp_Trial : RitualOutcomeComp
             .Trial(prisoners[0], spectators)
             .Execute();
 
-        AssertTrialRecords(judge, prisoners[0], spectators, outcome);
+        AssertTrialRecords(judge, prisoners[0], outcome);
     }
 
     [RequiresIdeology]
@@ -166,6 +166,6 @@ public class RitualOutcomeComp_Trial : RitualOutcomeComp
             .Trial(convict, spectators)
             .Execute();
 
-        AssertTrialRecords(judge, convict, spectators, outcome);
+        AssertTrialRecords(judge, convict, outcome);
     }
 }

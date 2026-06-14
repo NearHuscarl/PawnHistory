@@ -859,6 +859,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PrisonerEscaped</defName>
+		<label>prisoner escaped</label>
+		<descriptionMaker>PH_PrisonerEscaped</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/SparkJailbreak</icon>
+		<categories>
+			<li>Departure</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>PrisonBreak</defName>
 		<label>prison break</label>
 		<descriptionMaker>PH_PrisonBreak</descriptionMaker>

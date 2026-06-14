@@ -753,6 +753,15 @@
 		</rulePack>
 	</RulePackDef>
 
+	<RulePackDef>
+		<defName>PH_PrisonerEscaped</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] attempted to escape captivity after finding a way off the map.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
 	<RulePackDef MayRequire="Ludeon.RimWorld.Ideology">
 		<defName>PH_SlaveRebellion</defName>
 		<include>

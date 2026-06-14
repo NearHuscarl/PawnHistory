@@ -90,6 +90,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef PrisonerExecuted;
     public static HistoryRecordDef PrisonerReleased;
     public static HistoryRecordDef PrisonerRecruited;
+    public static HistoryRecordDef PrisonerEscaped;
     public static HistoryRecordDef PrisonBreak;
     public static HistoryRecordDef LightningStrike;
     public static HistoryRecordDef WalkNaked;
