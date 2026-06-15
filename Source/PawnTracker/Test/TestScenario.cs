@@ -32,7 +32,7 @@ public class TestScenario
     public SlaveRebellionType? ForceSlaveRebellionType;
     public bool ForceSlaveRebellionViolent;
     public int PartyDuration = 0;
-    public readonly int ForcedDebugMapSize = 25;
+    public readonly int DefaultDebugMapSize = 25;
 
     public PawnBuilder Pawn(int count = 1) => new(count);
     public PawnBuilder Pawn(IEnumerable<Pawn> pawns) => new PawnBuilder().WithPawns(pawns);

@@ -18,7 +18,7 @@ internal static class EnableDebugMap
         if (!TestManager.EnableDebugMap)
             return;
         
-        var size = TestManager.Scenario.ForcedDebugMapSize;
+        var size = TestManager.ForcedDebugMapSize;
         if (parent is Settlement s && s.Faction != Faction.OfPlayer)
             size = Math.Max(size, MinSettlementDebugSize);
         mapSize = new IntVec3(size, 1, size);

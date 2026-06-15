@@ -4,7 +4,6 @@ using RimWorld;
 using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
-using PawnHistory.Source.DebugTools;
 using PawnHistory.Source.PawnTracker.Test;
 using Verse;
 
@@ -28,7 +27,7 @@ public static class GameUtility
             Current.Game.World = WorldGenerator.GenerateWorld(0.03f, GenText.RandomSeedString(), OverallRainfall.AlmostNone, OverallTemperature.Normal, OverallPopulation.Normal, LandmarkDensity.Sparse);
             MakeWorldFlatAndBuildable(Current.Game.World);
             Find.GameInitData.startingTile = FindValidFlatTile(); // small map size requires a flat tile to avoid generation issues
-            Find.GameInitData.mapSize = TestManager.Scenario.ForcedDebugMapSize;
+            Find.GameInitData.mapSize = TestManager.ForcedDebugMapSize;
             Find.Scenario.PostIdeoChosen();
 
             PageUtility.InitGameStart();

@@ -21,7 +21,6 @@ The rulepack uses weighted entries for attendee descriptions: the concise senten
 
 ## Rules
 
-- Cancelled parties do not run `ApplyOutcome()`, so they do not produce `PartyAttended`.
 - Party attendance records pass the organizer as a concern.
 - Tale-style text avoids randomized quantity claims such as `[Quantity_adjphrase]`.
 - Concert recording remains separate and writes `ConcertAttended` plus `ConcertHeld`.

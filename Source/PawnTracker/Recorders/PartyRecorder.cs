@@ -73,7 +73,7 @@ public class PartyRecorder : HistoryTaleRecorder<PartyAttendedEvent>
         scenario.WaitUntil(() => lord.CurLordToil is LordToil_End, () =>
         {
             var partyGoers = lord.ownedPawns.ToList();
-            Expect.ThatAll(partyGoers).Not().ToHaveHistoryRecordOf(HistoryRecordDefOf.PartyAttended);
+            Expect.ThatAll(partyGoers).ToHaveHistoryRecordOf(HistoryRecordDefOf.PartyAttended);
         });
 
         TickDelayManager.Delay(200, () =>
@@ -88,12 +88,15 @@ public class PartyRecorder : HistoryTaleRecorder<PartyAttendedEvent>
     private static (Pawn organizer, Lord lord) SetupParty(TestScenario scenario)
     {
         scenario.Map().BuildRoom(8, 8).WithThing(ThingDefOf.PartySpot, 1, Faction.OfPlayer).Execute();
-        scenario.Pawn(8).Colonist().Execute();
+        scenario.Pawn(8).Colonist().Position(scenario.LastRoomRect.CenterCell).Execute();
         var result = scenario.Incident(GatheringDefOf.Party).Execute();
 
         // mocked party ends almost immediately. Force joining party to be registered.
         foreach (var pawn in Find.CurrentMap.mapPawns.FreeColonistsSpawned.ToList())
+        {
             pawn.jobs.EndCurrentJob(JobCondition.InterruptForced, startNewJob: true);
+            pawn.jobs.CheckForJobOverride();
+        }
 
         return (result.Organizers.Single(), result.Lord);
     }

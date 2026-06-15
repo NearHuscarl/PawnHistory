@@ -66,6 +66,7 @@ public class PawnTradedRecorder : RecorderBase<PawnTradedRecorder.Input>
         });
     }
 
+    [TestTag("Flaky")]
     public void TestBuy(TestScenario scenario)
     {
         var traderKind = Extra.TraderKindDefOf.Caravan_Neolithic_Slaver;

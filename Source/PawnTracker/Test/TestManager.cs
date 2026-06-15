@@ -15,18 +15,22 @@ public static class TestManager
     public static bool IsRunningTest => Scenario != TestScenario.Empty;
     private static readonly Queue<Action> Queue = new();
     private static bool isRunningTestCollection;
-    public static bool EnableDebugMap = false;
 
-    public static void EnqueueTest(string testId, Func<object> testAction, bool reuseMap = false)
+    public static bool EnableDebugMap = false;
+    public static int ForcedDebugMapSize = Scenario.DefaultDebugMapSize;
+    
+    public static void EnqueueTest(string testId, Func<object> testAction, bool reuseMap = false, int? debugMapSize = null)
     {
         Queue.Enqueue(() =>
         {
+            ForcedDebugMapSize = debugMapSize ?? Scenario.DefaultDebugMapSize;
+
             if (reuseMap)
             {
                 ExecuteTestMethod(testId, testAction, _ => RunNext());
                 return;
             }
-                
+
             GameUtility.CreateTestGame(() => ExecuteTestMethod(testId, testAction, _ => RunNext()));
         });
     }
@@ -149,6 +153,7 @@ public static class TestManager
     {
         Scenario = TestScenario.Empty;
         NearDebugSettings.NeverEverEverPause = false;
+        ForcedDebugMapSize = Scenario.DefaultDebugMapSize;
         TestReportManager.AddReportEntry(Ctx.CreateReportEntry());
         Ctx?.Cleanup();
     }

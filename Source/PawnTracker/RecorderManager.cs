@@ -86,7 +86,7 @@ public static class RecorderManager
         
         foreach (var t in methodInfos)
         {
-            TestManager.EnqueueTest(t.Id, () => InvokeTest(t));
+            TestManager.EnqueueTest(t.Id, () => InvokeTest(t), debugMapSize: t.Attributes.DebugMapSize);
         }
         TestManager.Run();
     }
@@ -112,7 +112,7 @@ public static class RecorderManager
             {
                 foreach (var t in taggedMethodInfos)
                 {
-                    TestManager.EnqueueTest(t.Id, () => InvokeTest(t));
+                    TestManager.EnqueueTest(t.Id, () => InvokeTest(t), debugMapSize: t.Attributes.DebugMapSize);
                 }
                 TestManager.Run();
             }));
@@ -135,7 +135,7 @@ public static class RecorderManager
         
         foreach (var t in methodInfos)
         {
-            TestManager.EnqueueTest(t.Id, () => InvokeTest(t));
+            TestManager.EnqueueTest(t.Id, () => InvokeTest(t), debugMapSize: t.Attributes.DebugMapSize);
         }
         TestManager.Run();
     }
@@ -156,7 +156,7 @@ public static class RecorderManager
                 {
                     try
                     {
-                        TestManager.EnqueueTest(id, () => InvokeTest(testMethodInfo), true);
+                        TestManager.EnqueueTest(id, () => InvokeTest(testMethodInfo), true, attributes.DebugMapSize);
                         TestManager.Run();
                     }
                     catch (Exception ex)
@@ -177,7 +177,7 @@ public static class RecorderManager
                         {
                             try
                             {
-                                TestManager.EnqueueTest(id, () => InvokeTest(testMethodInfo, [count]), true);
+                                TestManager.EnqueueTest(id, () => InvokeTest(testMethodInfo, [count]), true, attributes.DebugMapSize);
                                 TestManager.Run();
                             }
                             catch (Exception ex)
@@ -202,7 +202,7 @@ public static class RecorderManager
         TestManager.StopTestRun();
     }
 
-    private record TestAttributes(int[] DebugValues, bool SkipTest, HashSet<string> Tags, Dictionary<string, bool> ModActiveById);
+    private record TestAttributes(int[] DebugValues, bool SkipTest, int? DebugMapSize, HashSet<string> Tags, Dictionary<string, bool> ModActiveById);
     private record TestMethodInfo(string Id, string Label, object Target, MethodInfo Method, TestAttributes Attributes);
     
     private static string GetTestId(string ownerName, string targetName, string methodName)
@@ -253,9 +253,10 @@ public static class RecorderManager
             var label = requiredMods.NullOrEmpty() ? id : $"{id} [{requiredMods}]";
 
             var skipTest = method.GetCustomAttribute<SkipTestAttribute>();
+            var debugMapSize = method.GetCustomAttribute<DebugMapSizeAttribute>()?.Size;
             var tags = method.GetCustomAttributes<TestTagAttribute>().Select(a => a.Tag).ToHashSet();
             var modActiveById = requires.ToDictionary(a => a.ModId, a => a.IsActive);
-            var testAttributes = new TestAttributes(debugValues, skipTest != null, tags, modActiveById);
+            var testAttributes = new TestAttributes(debugValues, skipTest != null, debugMapSize, tags, modActiveById);
 
             yield return new TestMethodInfo(id, label, target, method, testAttributes);
         }

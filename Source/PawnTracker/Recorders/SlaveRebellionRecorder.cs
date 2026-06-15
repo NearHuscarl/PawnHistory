@@ -97,7 +97,7 @@ public class SlaveRebellionRecorder : RecorderBase<SlaveRebellionEvent>
     }
     
     [RequiresIdeology]
-    [SkipTest]
+    [SkipTest] // TODO: non-violent tests are indeterministic. Think of a good way to mock forceAggressive
     public void TestSingle(TestScenario scenario)
     {
         RunTest(scenario, SlaveRebellionType.SingleRebellion, false, "[PAWN] [Escape].");
@@ -110,6 +110,7 @@ public class SlaveRebellionRecorder : RecorderBase<SlaveRebellionEvent>
     }
     
     [RequiresIdeology]
+    [DebugMapSize(30)]
     [SkipTest]
     public void TestLocal(TestScenario scenario)
     {
@@ -117,6 +118,7 @@ public class SlaveRebellionRecorder : RecorderBase<SlaveRebellionEvent>
     }
     
     [RequiresIdeology]
+    [DebugMapSize(30)]
     public void TestLocalViolent(TestScenario scenario)
     {
         RunTest(scenario, SlaveRebellionType.LocalRebellion, true, "[PAWN] started a slave rebellion with [Others].", "[PAWN] and [Others] joined a slave rebellion led by [Initiator].");
@@ -132,7 +134,6 @@ public class SlaveRebellionRecorder : RecorderBase<SlaveRebellionEvent>
     }
     
     [RequiresIdeology]
-    [SkipTest]
     public void TestGrandViolent(TestScenario scenario)
     {
         RunTest(scenario, SlaveRebellionType.GrandRebellion, true, "[PAWN] started a grand slave rebellion with [Others].", "[PAWN] and [Others] joined a grand slave rebellion led by [Initiator].");
@@ -188,13 +189,14 @@ public class SlaveRebellionRecorder : RecorderBase<SlaveRebellionEvent>
     }
     
     [RequiresIdeology]
-    [SkipTest]
+    [DebugMapSize(30)]
     public void TestJailbreakerLocal(TestScenario scenario)
     {
         RunTestJailbreaker(scenario, SlaveRebellionType.LocalRebellion, false, "[Reason] As a result, [PAWN] and [Others] [Escape].");
     }
     
     [RequiresIdeology]
+    [DebugMapSize(30)]
     public void TestJailbreakerLocalViolent(TestScenario scenario)
     {
         RunTestJailbreaker(scenario, SlaveRebellionType.LocalRebellion, true, "[Reason] As a result, [PAWN] and [Others] started a slave rebellion.");
