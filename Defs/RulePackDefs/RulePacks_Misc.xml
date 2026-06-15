@@ -256,6 +256,37 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_Disease</defName>
+		<include>
+			<li>PH_Common</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry(disease!=OrganDecay)->[PAWN] got sick from [Disease][AlongWithOthers].</li>
+				<li>entry(disease==OrganDecay)->[PAWN] developed a flesh-eating infection known as [Disease] in [PAWN_possessive] [Part].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_LungRot</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] got sick from [Disease] due to long-term exposure to rot stink gas, which is given off by rotting corpses.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_HediffDiscovered</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN] suffered from [Hediff].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_SkillLeveledUp</defName>
 		<rulePack>
 			<rulesStrings>
@@ -519,28 +550,6 @@
 				<li>entry(reason==Unknown)      ->[Pawn1] and [Pawn2]'s wedding was called off.</li>
 				<li>entry(reason==PawnKilled)   ->[Pawn1] and [Pawn2]'s wedding was called off after [DeadPawn] died.</li>
 				<li>entry(reason==DangerousMap) ->[Pawn1] and [Pawn2]'s wedding was called off due to nearby threats.</li>
-			</rulesStrings>
-		</rulePack>
-	</RulePackDef>
-
-	<RulePackDef>
-		<defName>PH_Disease</defName>
-		<include>
-			<li>PH_Common</li>
-		</include>
-		<rulePack>
-			<rulesStrings>
-				<li>entry(disease!=OrganDecay)->[PAWN] got sick from [Disease][AlongWithOthers].</li>
-				<li>entry(disease==OrganDecay)->[PAWN] developed a flesh-eating infection known as [Disease] in [PAWN_possessive] [Part].</li>
-			</rulesStrings>
-		</rulePack>
-	</RulePackDef>
-
-	<RulePackDef>
-		<defName>PH_LungRot</defName>
-		<rulePack>
-			<rulesStrings>
-				<li>entry->[PAWN] got sick from [Disease] due to long-term exposure to rot stink gas, which is given off by rotting corpses.</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

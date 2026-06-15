@@ -74,6 +74,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef WeddingStarted;
     public static HistoryRecordDef WeddingJoined;
     public static HistoryRecordDef WeddingFinished;
+    public static HistoryRecordDef HediffDiscovered;
     public static HistoryRecordDef Disease;
     public static HistoryRecordDef LungRot;
     public static HistoryRecordDef MentalBreak;
