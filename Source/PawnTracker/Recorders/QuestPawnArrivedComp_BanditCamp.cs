@@ -17,6 +17,7 @@ public class QuestPawnArrivedComp_BanditCamp : QuestPawnArrivedComp
     }
 
     // QuestNode_GiveRewards
+    [TestTag("Flaky")]
     public void Test(TestScenario scenario)
     {
         var (quest, rewardPawn) = QuestPawnArrivedRecorder.SetupQuestWithReward(scenario, Extra.QuestScriptDefOf.OpportunitySite_BanditCamp);

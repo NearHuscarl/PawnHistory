@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using Verse;
 
@@ -9,6 +8,7 @@ public class TestFailure : IExposable
 {
     public string testId;
     public string message;
+    public string stackTrace;
     public long ticksAbs = Stopwatch.GetTimestamp();
 
     public TestFailure() { }
@@ -25,6 +25,7 @@ public class TestFailure : IExposable
     {
         Scribe_Values.Look(ref testId, "testId");
         Scribe_Values.Look(ref message, "message");
+        Scribe_Values.Look(ref stackTrace, "stackTrace");
         Scribe_Values.Look(ref ticksAbs, "ticksAbs");
     }
 }

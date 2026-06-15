@@ -77,6 +77,7 @@ internal sealed class TestContext(string testId)
         }
 
         te.AssertionSource = source;
+        te.Failure.stackTrace = source?.StackTrace.ToString();
         switch (te.Failure)
         {
             case TimeoutFailure:

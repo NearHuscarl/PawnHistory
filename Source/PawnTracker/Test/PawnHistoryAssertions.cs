@@ -2,6 +2,7 @@
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using PawnHistory.Source.DebugTools;
@@ -135,12 +136,13 @@ public sealed class PawnHistoryAssertions(IEnumerable<Pawn> pawns, MatchConditio
                         pawn.HistoryRecords.TryAt(index.Value, out record);
                     else
                         record = pawn.HistoryRecords.FirstOrDefault(r => r.def == def) ?? pawn.HistoryRecords.LastOrDefault();
-                    
+
+                    Debug.Assert(def != null, nameof(def) + " != null");
                     return new AssertionResult(
                         record?.def == def,
-                        $"Expect HistoryRecordDef to exist for {pawn} {testParams}.",
-                        $"Expect HistoryRecordDef NOT to exist for {pawn} {testParams}.",
-                        def?.defName,
+                        $"Expect HistoryRecordDef.{def.defName} to exist for {pawn} {testParams}.",
+                        $"Expect HistoryRecordDef.{def.defName} NOT to exist for {pawn} {testParams}.",
+                        def.defName,
                         record?.def?.defName
                     );
                 });

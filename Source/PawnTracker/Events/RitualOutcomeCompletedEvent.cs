@@ -49,7 +49,7 @@ file static class RitualOutcomeContext
         var ritualJob = frame.RitualJob;
         var host = GetOrganizer(ritualJob);
         var outcome = frame.Outcome?.label; // Ritual_Outcomes.xml
-        var forcedRoles = ritualJob.assignments.ForcedRolesForReading.ToDictionary(e => e.Key, e => new List<Pawn> { e.Value });
+        var forcedRoles = (ritualJob.assignments.ForcedRolesForReading ?? []).ToDictionary(e => e.Key, e => new List<Pawn> { e.Value });
         var assignedRoles = Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).Concat(forcedRoles).ToDictionary(e => e.Key, e => e.Value);
         var spectators = Accessor.RitualRoleAssignments.Spectators(ritualJob.assignments).ToList();
         var participants = Accessor.RitualRoleAssignments.Participants(ritualJob.assignments).ToList();
