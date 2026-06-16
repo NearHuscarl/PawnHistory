@@ -85,6 +85,7 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef SocialFight;
     public static HistoryRecordDef Rescued;
     public static HistoryRecordDef NewLover;
+    public static HistoryRecordDef Rebuff;
     public static HistoryRecordDef NewAffair;
     public static HistoryRecordDef Breakup;
     public static HistoryRecordDef MarriageProposal;

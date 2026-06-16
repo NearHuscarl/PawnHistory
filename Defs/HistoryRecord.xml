@@ -797,6 +797,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Rebuff</defName>
+		<label>rebuff</label>
+		<descriptionMaker>PH_Rebuff</descriptionMaker>
+		<icon>Things/Mote/SpeechSymbols/Romance</icon>
+		<categories>
+			<li>Relationship</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>NewAffair</defName>
 		<label>new affair</label>
 		<descriptionMaker>PH_NewAffair</descriptionMaker>

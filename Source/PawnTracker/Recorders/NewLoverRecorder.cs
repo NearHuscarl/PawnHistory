@@ -63,7 +63,7 @@ public class NewLoverRecorder : RecorderBase<NewLoverEvent>
         var initiator = scenario.Pawn()
             .Colonist()
             .Position(recipient.Position) 
-            .Do((p, i, pawns) => p.interactions.TryInteractWith(recipient, InteractionDefOf.RomanceAttempt))
+            .Do(p => p.interactions.TryInteractWith(recipient, InteractionDefOf.RomanceAttempt))
             .CreateSingle();
         
         var expected = new ExpectedHistoryRecord

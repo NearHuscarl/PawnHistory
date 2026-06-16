@@ -50,14 +50,13 @@ public abstract class RecorderBase
         Comps.Add(comp);
     }
     
-    protected virtual float DaysToRecordAgain => -1f;
-    protected bool IsTooSoonToRecordAgain(Pawn pawn, HistoryRecordDef recordDef, float? daysToRecordAgainOverride = null)
+    protected bool IsTooSoonToRecordAgain(Pawn pawn, HistoryRecordDef recordDef, float daysToRecordAgain)
     {
         var lastRecord = GeRecordsOfType(pawn, recordDef).FirstOrDefault();
         if (lastRecord == null)
             return false;
 
-        return GenTicks.TicksAbs - lastRecord.date < GenDate.DaysToTicks(daysToRecordAgainOverride ?? DaysToRecordAgain);
+        return GenTicks.TicksAbs - lastRecord.date < GenDate.DaysToTicks(daysToRecordAgain);
     }
 }
 

@@ -67,6 +67,8 @@ internal static class InteractionWorker_RomanceAttempt_SuccessChance_Patch
     {
         if (NearDebugSettings.ForceRomanceSuccess)
             __result = 10f;
+        else if (NearDebugSettings.ForceRomanceRejection)
+            __result = 0f;
     }
 }
 
@@ -103,6 +105,7 @@ internal class NearDebugSettings
     public static bool ForceManhunterChance = false;
     public static bool ForceSpringTrap = false;
     public static bool ForceRomanceSuccess = false;
+    public static bool ForceRomanceRejection = false;
     public static bool ForceMarriageProposalAccepted = false;
     public static bool ForceMarriageProposalRejected = false;
     public static bool ShipEscapeSpawnNearby = false;

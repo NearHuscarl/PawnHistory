@@ -8,7 +8,7 @@ public abstract class HistoryTaleRecorder<TInput> : RecorderBase<TInput> where T
 {
     protected bool SkipDateCheck = false;
     protected bool SkipOverlapCheck = false;
-    protected override float DaysToRecordAgain => 1f;
+    protected virtual float DaysToRecordAgain => 1f;
 
     public abstract override void Register();
 
@@ -19,7 +19,7 @@ public abstract class HistoryTaleRecorder<TInput> : RecorderBase<TInput> where T
         if (!ShouldRecord(pawn))
             return false;
 
-        if (IsTooSoonToRecordAgain(pawn, recordDef))
+        if (IsTooSoonToRecordAgain(pawn, recordDef, DaysToRecordAgain))
         {
             Log.Message($"[PawnHistory] Skipped recording {pawn}'s {recordDef.defName} event | TooSoon");
             if (!SkipDateCheck) return false;
