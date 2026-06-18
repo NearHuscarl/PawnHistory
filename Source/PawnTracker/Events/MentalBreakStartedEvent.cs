@@ -26,6 +26,7 @@ internal static class MentalBreakContext
     public static Hediff CurrentTickingHediff;
     public static TraitDegreeData CurrentTickingTraitData;
     public static readonly HashSet<string> IgnoredMentalBreaks = [
+        "PanicFlee", // Handled in PanicFleeRecorder. MentalBreakRecorder does not support event of a group of pawns
         "PanicFleeFire", // Happens too frequently
         "SocialFighting", // Handled by SocialFightStartedEvent
         "IdeoChange", // Handled separately because MentalStateHandler.CurState is set to SadWander immediately in the nested call (MentalState_IdeoChange.PostStart)

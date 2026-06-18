@@ -898,4 +898,16 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+	<RulePackDef>
+		<defName>PH_PanicFlee</defName>
+		<include>
+			<li>PH_Common</li>
+			<li>PH_Faction</li>
+		</include>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->[PAWN][AndOthers] from [Faction] broke and fled in panic.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>

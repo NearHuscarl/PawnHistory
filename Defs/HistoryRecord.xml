@@ -67,6 +67,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>PanicFlee</defName>
+		<label>panic flee</label>
+		<descriptionMaker>PH_PanicFlee</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Departure</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>SiteAmbush</defName>
 		<label>ambush</label>
 		<descriptionMaker>PH_SiteAmbush</descriptionMaker>

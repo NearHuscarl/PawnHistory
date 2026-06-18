@@ -105,7 +105,7 @@ public class IncidentBuilder
 
         var newLord = map.lordManager.lords.Except(oldLords).FirstOrDefault();
         if (newLord != null)
-            return newLord.ownedPawns;
+            return newLord.ownedPawns.ToList();
 
         return map.mapPawns.AllPawnsSpawned.Except(oldPawns).ToList();
     }
