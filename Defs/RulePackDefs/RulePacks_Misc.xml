@@ -16,19 +16,20 @@
 				<li>entry(priority=1,ritual==ChildBirth,outcome==Sick)   ->[PAWN] delivered a sick baby for [Carrier][InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==ChildBirth,outcome==Still)  ->[PAWN] delivered a stillborn baby for [Carrier][InFrontOfOthers].</li>
 				
-				<li>entry(priority=1,ritual==Funeral)         ->[PAWN] held [Outcome_indefinite] [Ritual] for [DeadPawn][InFrontOfOthers].</li>
-				<li>entry(priority=1,ritual==FuneralNoCorpse) ->[PAWN] held [Outcome_indefinite] [Ritual] for [DeadPawn][InFrontOfOthers].</li>
-				<li>entry(priority=1,ritual==Conversion)      ->[PAWN] led [Outcome_indefinite] [Ritual] to bring [Convertee] into [PAWN_possessive] ideoligion[InFrontOfOthers].</li>
-				<li>entry(priority=1,ritual==Execution)       ->[PAWN] carried out [Outcome_indefinite] [Ritual] of [ExecutedPawn][InFrontOfOthers].</li>
-				<li>entry(priority=1,ritual==Trial)           ->[Convict] was [Outcome] in [Judge]'s [Ritual] before [Others].</li> <!-- at least 1 spectator -->
-				<li>entry(priority=1,ritual==TrialPrisoner)   ->[Convict] was [Outcome] in [Judge]'s [Ritual] before [Others].</li> <!-- at least 1 spectator -->
-				<li>entry(priority=1,ritual==TrialMentalState)->[Convict] was [Outcome] in [Judge]'s [Ritual] before [Others].</li> <!-- at least 1 spectator -->
-				<li>entry(priority=1,ritual==BlindingCeremony)->[Target] was blinded by [Doer] during [Outcome_indefinite] [Ritual][InFrontOfOthers].</li>
-				<li>entry(priority=1,ritual==Festival)        ->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>
+				<li>entry(priority=1,ritual==Funeral)           ->[PAWN] held [Outcome_indefinite] [Ritual] for [DeadPawn][InFrontOfOthers].</li>
+				<li>entry(priority=1,ritual==FuneralNoCorpse)   ->[PAWN] held [Outcome_indefinite] [Ritual] for [DeadPawn][InFrontOfOthers].</li>
+				<li>entry(priority=1,ritual==Conversion)        ->[PAWN] led [Outcome_indefinite] [Ritual] to bring [Convertee] into [PAWN_possessive] ideoligion[InFrontOfOthers].</li>
+				<li>entry(priority=1,ritual==Execution)         ->[PAWN] carried out [Outcome_indefinite] [Ritual] of [ExecutedPawn][InFrontOfOthers].</li>
+				<li>entry(priority=1,ritual==Trial)             ->[Convict] was [Outcome] in [Judge]'s [Ritual] before [Others].</li> <!-- at least 1 spectator -->
+				<li>entry(priority=1,ritual==TrialPrisoner)     ->[Convict] was [Outcome] in [Judge]'s [Ritual] before [Others].</li> <!-- at least 1 spectator -->
+				<li>entry(priority=1,ritual==TrialMentalState)  ->[Convict] was [Outcome] in [Judge]'s [Ritual] before [Others].</li> <!-- at least 1 spectator -->
+				<li>entry(priority=1,ritual==BlindingCeremony)  ->[Target] was blinded by [Doer] during [Outcome_indefinite] [Ritual][InFrontOfOthers].</li>
+				<li>entry(priority=1,ritual==ScarificationCeremony)->[Target] was scarified by [Doer] during [Outcome_indefinite] [Ritual][InFrontOfOthers].</li>
+				<li>entry(priority=1,ritual==Festival)          ->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>
 				<li>entry(priority=1,ritual==Classic_DrumParty) ->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>
 				<li>entry(priority=1,ritual==Classic_DanceParty)->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>
-				<li>entry(priority=1,ritual==ThroneSpeech)    ->[PAWN] delivered [Outcome_indefinite] [Ritual] to [Others].</li> <!-- at least 1 spectator -->
-				<li>entry(priority=1,ritual==LeaderSpeech)    ->[PAWN] delivered [Outcome_indefinite] [Ritual] to [Others].</li> <!-- at least 1 spectator -->
+				<li>entry(priority=1,ritual==ThroneSpeech)      ->[PAWN] delivered [Outcome_indefinite] [Ritual] to [Others].</li> <!-- at least 1 spectator -->
+				<li>entry(priority=1,ritual==LeaderSpeech)      ->[PAWN] delivered [Outcome_indefinite] [Ritual] to [Others].</li> <!-- at least 1 spectator -->
 				<li>entry(priority=0)->[PAWN] delivered [Outcome_indefinite] [Ritual] [InFrontOfOthers].</li>
 			</rulesStrings>
 		</rulePack>
@@ -169,6 +170,7 @@
 
 				<li>entry(reason==InstantDamage)->[PAWN] had [Hediffs] [InBodyPart].</li>
 				<li>entry(reason==PostHeal)     ->[PAWN] recovered with [Hediff_indefinite] [InBodyPart].</li>
+				<li>entry(reason==Scarification)->[PAWN] had [Hediff_indefinite] [InBodyPart].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

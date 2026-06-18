@@ -211,6 +211,27 @@ public class RitualBuilder(Pawn organizer)
         return this;
     }
 
+    public RitualBuilder ScarificationCeremony(Pawn target, List<Pawn> spectators)
+    {
+        processors.Add(() =>
+        {
+            var ritual = organizer.Ideo.GetAllPreceptsOfType<Precept_Ritual>().First(p => p.def == Extra.PreceptDefOf.ScarificationCeremony);
+            var ritualFocus = organizer.MapHeld.listerThings.ThingsOfDef(ThingDefOf.Ideogram).First(thing => ritual.ShouldShowGizmo(thing));
+            var dialog = (Dialog_BeginRitual)ritual.GetRitualBeginWindow(ritualFocus, null, null, organizer, null, organizer);
+            var assignedRoles = new Dictionary<string, Pawn>
+            {
+                [RitualRoleId.Doer] = organizer,
+                [RitualRoleId.Target] = target,
+            };
+
+            InitRitualDialog(dialog, assignedRoles, spectators);
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome([organizer, target, ..spectators], ritual);
+        });
+
+        return this;
+    }
+
     public RitualBuilder RoleChange(Precept_Role newRole, List<Pawn> spectators)
     {
         processors.Add(() =>

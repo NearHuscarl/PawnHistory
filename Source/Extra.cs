@@ -338,6 +338,8 @@ public static class Extra
         public static RitualOutcomeEffectDef RoleChange;
         [MayRequireIdeology]
         public static RitualOutcomeEffectDef BlindingCeremony;
+        [MayRequireIdeology]
+        public static RitualOutcomeEffectDef ScarificationCeremony;
 
         static RitualOutcomeEffectDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualOutcomeEffectDefOf));
     }
@@ -420,5 +422,13 @@ public static class Extra
         public static PreceptDef Classic_DanceParty;
         [MayRequireIdeology]
         public static PreceptDef LeaderSpeech;
+        [MayRequireIdeology]
+        public static PreceptDef BlindingCeremony;
+        [MayRequireIdeology]
+        public static PreceptDef Blindness_Respected;
+        [MayRequireIdeology]
+        public static PreceptDef ScarificationCeremony;
+        [MayRequireIdeology]
+        public static PreceptDef Scarification_Minor;
     }
 }

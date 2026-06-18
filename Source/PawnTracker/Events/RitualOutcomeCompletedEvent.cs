@@ -70,6 +70,8 @@ file static class RitualOutcomeContext
             return ritualJob.PawnWithRole(RitualRoleId.Leader);
         if (ritualJob.Ritual.def == Extra.PreceptDefOf.BlindingCeremony)
             return ritualJob.PawnWithRole(RitualRoleId.Doer);
+        if (ritualJob.Ritual.def == Extra.PreceptDefOf.ScarificationCeremony)
+            return ritualJob.PawnWithRole(RitualRoleId.Doer);
         if (ritualJob.Ritual.def == PreceptDefOf.ChildBirth)
             return ritualJob.PawnWithRole(RitualRoleId.Doctor);
         return Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).Values.FirstOrDefault()?.First();

@@ -95,3 +95,5 @@ internal class JobDriver_Scarify_Scarify_Patch
         GameEventBus.Publish(new BodyPartScarredEvent(pawn, hediff, part, null, ScarReason.Scarification));
     }
 }
+
+// TODO: scar from death refusal Hediff_DeathRefusal.Resurrect()
