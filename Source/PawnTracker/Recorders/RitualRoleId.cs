@@ -16,4 +16,5 @@ public static class RitualRoleId
     public static readonly string RoleChanger = "role_changer";
     public static readonly string Doer = "doer";
     public static readonly string Target = "target";
+    public static readonly string Connector = "connector";
 }

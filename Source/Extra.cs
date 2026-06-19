@@ -415,6 +415,8 @@ public static class Extra
         [MayRequireIdeology]
         public static PreceptDef TrialMentalState;
         [MayRequireIdeology]
+        public static PreceptDef TreeConnection;
+        [MayRequireIdeology]
         public static PreceptDef Festival;
         [MayRequireIdeology]
         public static PreceptDef Classic_DrumParty;

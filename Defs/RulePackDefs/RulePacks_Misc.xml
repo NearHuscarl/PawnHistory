@@ -10,7 +10,8 @@
 				<li>InFrontOfOthers(OtherCount==0)-></li>
 				<li>InFrontOfOthers(OtherCount>0) -> in front of [Others]</li>
 
-				<li>entry(priority=1,ritual==AnimaTreeLinking)->[PAWN] linked with an anima tree[InFrontOfOthers].</li>
+				<li>entry(priority=1,ritual==AnimaTreeLinking)->[PAWN] linked with [Tree_indefinite][InFrontOfOthers].</li>
+				<li>entry(priority=1,ritual==TreeConnection)  ->[PAWN] connected with [Tree_indefinite][InFrontOfOthers].</li>
 
 				<li>entry(priority=1,ritual==ChildBirth,outcome==Healthy)->[PAWN] delivered a healthy baby for [Carrier][InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==ChildBirth,outcome==Sick)   ->[PAWN] delivered a sick baby for [Carrier][InFrontOfOthers].</li>

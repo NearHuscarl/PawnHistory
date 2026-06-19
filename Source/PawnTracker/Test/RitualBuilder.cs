@@ -117,6 +117,24 @@ public class RitualBuilder(Pawn organizer)
         return this;
     }
 
+    public RitualBuilder TreeConnection(Thing gauranlenTree, List<Pawn> spectators)
+    {
+        processors.Add(() =>
+        {
+            var ritual = (Precept_Ritual)organizer.Ideo.GetPrecept(Extra.PreceptDefOf.TreeConnection);
+            var dialog = (Dialog_BeginRitual)ritual.GetRitualBeginWindow(gauranlenTree, null, null, null, null, organizer);
+            var assignedRoles = new Dictionary<string, Pawn>
+            {
+                [RitualRoleId.Connector] = organizer,
+            };
+            InitRitualDialog(dialog, assignedRoles, spectators);
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome([organizer, ..spectators], ritual);
+        });
+
+        return this;
+    }
+
     public RitualBuilder Funeral(Pawn deceased, List<Pawn> spectators, bool noCorpse = false)
     {
         processors.Add(() =>

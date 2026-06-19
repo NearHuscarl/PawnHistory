@@ -16,7 +16,7 @@ public record RitualOutcomeCompletedEvent(
     List<Pawn> Spectators,
     List<Pawn> Participants,
     Dictionary<string, List<Pawn>> AssignedRoles,
-    TargetInfo TargetA) : GameEventBase;
+    List<Thing> Targets) : GameEventBase;
 
 file record RitualOutcomeContextFrame(LordJob_Ritual RitualJob, RitualOutcomePossibility Outcome);
 
@@ -53,9 +53,11 @@ file static class RitualOutcomeContext
         var assignedRoles = Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).Concat(forcedRoles).ToDictionary(e => e.Key, e => e.Value);
         var spectators = Accessor.RitualRoleAssignments.Spectators(ritualJob.assignments).ToList();
         var participants = Accessor.RitualRoleAssignments.Participants(ritualJob.assignments).ToList();
-        var targetA = ritualJob.obligation?.targetA ?? TargetInfo.Invalid;
+        List<Thing> targets = [ritualJob.selectedTarget.Thing, ritualJob.obligation?.targetA.Thing, ritualJob.obligation?.targetB.Thing, ritualJob.obligation?.targetC.Thing];
 
-        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, ritualJob.Ritual.def, ritualJob.Ritual.Label, outcome, spectators, participants, assignedRoles, targetA));
+        targets = targets.Where(t => t != null).Distinct().ToList();
+
+        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, ritualJob.Ritual.def, ritualJob.Ritual.Label, outcome, spectators, participants, assignedRoles, targets));
     }
 
     private static Pawn GetOrganizer(LordJob_Ritual ritualJob)
@@ -96,6 +98,7 @@ internal static class RitualOutcomeEffectWorker_Apply_Patch
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Conversion), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Execution), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_AnimaTreeLinking), methodName);
+        yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_ConnectToTree), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_ChildBirth), methodName);
         yield return AccessTools.Method(typeof(RitualOutcomeEffectWorker_Trial), methodName);
     }

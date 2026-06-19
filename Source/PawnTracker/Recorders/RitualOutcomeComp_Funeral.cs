@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using Verse;
@@ -24,7 +25,7 @@ public class RitualOutcomeComp_Funeral : RitualOutcomeComp
 
     private static Pawn GetDeadPawn(BuildInput input)
     {
-        if (input.Event.TargetA.Thing is Pawn pawn)
+        if (input.Event.Targets.OfType<Pawn>().FirstOrDefault() is { } pawn)
             return pawn;
         return null;
     }
