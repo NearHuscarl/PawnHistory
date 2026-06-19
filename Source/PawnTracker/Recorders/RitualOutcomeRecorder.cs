@@ -104,5 +104,4 @@ public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
 
         Expect.That(organizer).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] delivered an inspirational leader speech to 4 others.");
     }
-
 }

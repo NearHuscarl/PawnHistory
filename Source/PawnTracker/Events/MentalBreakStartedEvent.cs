@@ -13,10 +13,11 @@ public enum MentalBreakCause
     Mood,
     Hediff,
     Trait,
+    Arrested,
     Royalty,
 }
 
-public record MentalBreakReason(MentalBreakCause Cause, string InGameReason, Hediff Hediff = null, string Trait = null);
+public record MentalBreakReason(MentalBreakCause Cause, string InGameReason, Hediff Hediff = null, string Trait = null, Pawn Arrester = null);
 
 public record MentalBreakStartedEvent(Pawn Pawn, MentalBreakReason Reason, MentalBreakDef MentalBreak, MentalState MentalState = null, Pawn Target = null, Quest Quest = null) : GameEventBase;
 
@@ -25,6 +26,7 @@ internal static class MentalBreakContext
     public static readonly Dictionary<Pawn, (MentalState mentalState, string reason, bool causedByMood, bool hasRecord)> OnGoingMentalStates = [];
     public static Hediff CurrentTickingHediff;
     public static TraitDegreeData CurrentTickingTraitData;
+    public static Pawn CurrentArrester;
     public static readonly HashSet<string> IgnoredMentalBreaks = [
         "PanicFlee", // Handled in PanicFleeRecorder. MentalBreakRecorder does not support event of a group of pawns
         "PanicFleeFire", // Happens too frequently
@@ -37,7 +39,7 @@ internal static class MentalBreakContext
         var cause = GetCause(causedByMood, issueDecree);
         var hediff = CurrentTickingHediff;
         var trait = CurrentTickingTraitData;
-        return new MentalBreakReason(cause, inGameReason, hediff, trait?.label);
+        return new MentalBreakReason(cause, inGameReason, hediff, trait?.label, CurrentArrester);
     }
 
     private static MentalBreakCause GetCause(bool causedByMood, bool issueDecree = false)
@@ -46,6 +48,8 @@ internal static class MentalBreakContext
             return MentalBreakCause.Hediff;
         if (CurrentTickingTraitData != null)
             return MentalBreakCause.Trait;
+        if (CurrentArrester != null)
+            return MentalBreakCause.Arrested;
         if (causedByMood)
             return MentalBreakCause.Mood;
         if (issueDecree)
@@ -191,6 +195,18 @@ internal static class TraitMentalStateGiver_CheckGive_Patch
 {
     private static void Prefix(TraitMentalStateGiver __instance) => MentalBreakContext.CurrentTickingTraitData = __instance.traitDegreeData;
     private static void Postfix() => MentalBreakContext.CurrentTickingTraitData = null;
+}
+
+// Call order:
+// - pawn.CheckAcceptArrest() prefix
+//  - pawn.mindState.mentalStateHandler.TryStartMentalState()
+// - pawn.CheckAcceptArrest() postfix
+
+[HarmonyPatch(typeof(Pawn), nameof(Pawn.CheckAcceptArrest))]
+internal static class Pawn_CheckAcceptArrest_Patch
+{
+    private static void Prefix(Pawn arrester) => MentalBreakContext.CurrentArrester = arrester;
+    private static void Postfix() => MentalBreakContext.CurrentArrester = null;
 }
 
 // Edge case: IdeoChange mental break

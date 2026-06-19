@@ -562,9 +562,10 @@
 		<defName>PH_MentalBreak</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>Reason(cause==Mood)   ->This happened because of poor mood: [ReasonMood].</li>
-				<li>Reason(cause==Hediff) ->This happened because of: [ReasonHediff].</li>
-				<li>Reason(cause==Trait)  ->This happened because of the trait: [ReasonTrait].</li>
+				<li>Reason(cause==Mood)    ->This happened because of poor mood: [ReasonMood].</li>
+				<li>Reason(cause==Hediff)  ->This happened because of: [ReasonHediff].</li>
+				<li>Reason(cause==Trait)   ->This happened because of the trait: [ReasonTrait].</li>
+				<li>Reason(cause==Arrested)->This happened because [PAWN] was arrested by [ReasonArrester].</li>
 				
 				<li>entry(priority=1,name==Berserk)             ->[PAWN] went berserk. [PAWN_pronoun] was going to attack anyone [PAWN_pronoun] sees. [Reason]</li>
 				<li>entry(priority=1,name==FireStartingSpree)   ->[PAWN] was on a fire starting spree. [PAWN_pronoun] wandered around for a while, randomly starting fires. [Reason]</li>

@@ -34,7 +34,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
         }
 
         var recordDef = mentalState?.def.category == MentalStateCategory.Aggro ? HistoryRecordDefOf.MentalBreakViolent : HistoryRecordDefOf.MentalBreak;
-        var concerns = new List<Thing> { mentalState?.causedByPawn, target };
+        var concerns = new List<Thing> { mentalState?.causedByPawn, target, reason.Arrester };
         var builder = recordDef.Description(pawn)
             .IncludePawnGrammar()
             .AddRule("Target", target, addSubsymbols: true)
@@ -42,6 +42,7 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
             .AddRule("ReasonHediff", reason.Hediff?.LabelNounInBracket())
             .AddRule("ReasonTrait", reason.Trait?.Colorize(NeedsCardUtility.MoodColorNegative))
             .AddRule("ReasonMood", ParsePoorMoodReason(reason.InGameReason)?.Colorize(NeedsCardUtility.MoodColorNegative))
+            .AddRule("ReasonArrester", reason.Arrester)
             .AddConstant("cause", reason.Cause)
             .AddConstant("name", defName);
         var buildInput = new MentalBreakComp.BuildInput(pawn, reason, mentalBreak, mentalState, target, quest);
@@ -330,5 +331,29 @@ public class MentalBreakRecorder : RecorderBase<MentalBreakStartedEvent>
                 break;
         }
         Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.MentalBreak, $"[PAWN] pigged out on food. This happened because of the trait: Gourmand.");
+    }
+
+    public void TestArrested(TestScenario scenario)
+    {
+        var arrester = scenario.Pawn()
+            .Colonist()
+            .ResetSkillLevel(SkillDefOf.Social, 0)
+            .AddHediff(HediffDefOf.MissingBodyPart, BodyPartDefOf.Arm, partIndex: 0)
+            .CreateSingle();
+
+        var pawn = scenario.Pawn()
+            .WithKind(PawnKindDefOf.WildMan)
+            .StopMentalState()
+            .CreateSingle();
+
+        for (var i = 0; i < 10 && pawn.MentalState == null; i++)
+            pawn.CheckAcceptArrest(arrester);
+
+        Expect.That(pawn).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.MentalBreakViolent,
+            Description = "[PAWN] went berserk. [He] was going to attack anyone [He] sees. This happened because [PAWN] was arrested by [ReasonArrester].",
+            Concerns = [arrester],
+        });
     }
 }
