@@ -317,6 +317,20 @@ public class RitualBuilder(Pawn organizer)
         return this;
     }
 
+    public RitualBuilder ChristmasTreeParty(List<Pawn> joiners)
+    {
+        processors.Add(() =>
+        {
+            List<Pawn> participants = [organizer, ..joiners];
+            var (ritual, dialog) = CreateRitualDialogFrom(Extra.ThingDefOf.ChristmasTree, Extra.PreceptDefOf.DateRitualConsumable, [], participants);
+
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome(participants, ritual);
+        });
+
+        return this;
+    }
+
     public RitualBuilder DanceParty(List<Pawn> joiners)
     {
         processors.Add(() =>

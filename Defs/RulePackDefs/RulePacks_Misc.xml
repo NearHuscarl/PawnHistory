@@ -27,6 +27,7 @@
 				<li>entry(priority=1,ritual==BlindingCeremony)  ->[Target] was blinded by [Doer] during [Outcome_indefinite] [Ritual][InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==ScarificationCeremony)->[Target] was scarified by [Doer] during [Outcome_indefinite] [Ritual][InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==Festival)          ->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>
+				<li>entry(priority=1,ritual==DateRitualConsumable)->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>
 				<li>entry(priority=1,ritual==Classic_DrumParty) ->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>
 				<li>entry(priority=1,ritual==Classic_DanceParty)->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>
 				<li>entry(priority=1,ritual==ThroneSpeech)      ->[PAWN] delivered [Outcome_indefinite] [Ritual] to [Others].</li> <!-- at least 1 spectator -->

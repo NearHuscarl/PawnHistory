@@ -310,6 +310,9 @@ public static class Extra
         [MayRequireRoyalty]
         public static ThingDef MeleeWeapon_MonoSwordBladelink;
 
+        [MayRequireIdeology]
+        public static ThingDef ChristmasTree;
+
         [MayRequireOdyssey]
         public static ThingDef AncientUplink;
         
@@ -418,6 +421,8 @@ public static class Extra
         public static PreceptDef TreeConnection;
         [MayRequireIdeology]
         public static PreceptDef Festival;
+        [MayRequireIdeology]
+        public static PreceptDef DateRitualConsumable;
         [MayRequireIdeology]
         public static PreceptDef Classic_DrumParty;
         [MayRequireIdeology]

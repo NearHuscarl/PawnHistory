@@ -9,6 +9,7 @@ public class RitualOutcomeComp_Festival : RitualOutcomeComp
     public override bool Match(BuildInput input)
     {
         return input.Event.RitualDef == Extra.PreceptDefOf.Festival
+            || input.Event.RitualDef == Extra.PreceptDefOf.DateRitualConsumable
             || input.Event.RitualDef == Extra.PreceptDefOf.Classic_DrumParty
             || input.Event.RitualDef == Extra.PreceptDefOf.Classic_DanceParty;
     }
@@ -74,6 +75,39 @@ public class RitualOutcomeComp_Festival : RitualOutcomeComp
             .Ritual(organizer)
             .Outcome(BestOutcomeFor(drumPartyIdeo, Extra.PreceptDefOf.Classic_DrumParty))
             .DrumParty(joiners)
+            .Execute();
+
+        Expect.ThatAll(participants).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] attended an unforgettable [Ritual] with 2 others.");
+    }
+
+    [RequiresIdeology]
+    public void TestChristmasTreeParty(TestScenario scenario)
+    {
+        scenario.SpeedUp();
+        scenario.ForwardDays(60);
+
+        var christmasTreeIdeo = scenario.Ideo().AddPrecept(Extra.PreceptDefOf.DateRitualConsumable).Execute();
+        var organizer = scenario.Pawn()
+            .Colonist()
+            .SetIdeo(christmasTreeIdeo)
+            .CreateSingle();
+        var joiners = scenario.Pawn(2)
+            .Colonist()
+            .SetIdeo(christmasTreeIdeo)
+            .Execute();
+        var participants = joiners.Concat(organizer);
+
+        scenario.Map()
+            .BuildRoom(8, 8)
+            .WithThing(Extra.ThingDefOf.ChristmasTree, 1, Faction.OfPlayer)
+            .Execute();
+
+        scenario
+            .Ritual(organizer)
+            .Outcome(BestOutcomeFor(christmasTreeIdeo, Extra.PreceptDefOf.DateRitualConsumable))
+            .ChristmasTreeParty(joiners)
+            // outcome applied twice because RitualOutcomeEffectWorker_RemoveConsumableBuilding.ApplyOnFailure = true. This is intended.
+            // Manual apply deletes the selectedTarget -> ritual is invalid -> RitualOutcomeEffectWorker_RemoveConsumableBuilding.Apply() again.
             .Execute();
 
         Expect.ThatAll(participants).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] attended an unforgettable [Ritual] with 2 others.");
