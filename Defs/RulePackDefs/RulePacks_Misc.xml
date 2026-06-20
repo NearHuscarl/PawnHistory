@@ -913,4 +913,12 @@
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
+	<RulePackDef MayRequire="Ludeon.RimWorld.Odyssey">
+		<defName>PH_RareCatch</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>entry->While fishing, [PAWN] made an unusual catch: [Catches].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>

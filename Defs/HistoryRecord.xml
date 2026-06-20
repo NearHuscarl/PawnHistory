@@ -1071,6 +1071,15 @@
 		<importance>Minor</importance>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Odyssey">
+		<defName>RareCatch</defName>
+		<label>rare catch</label>
+		<descriptionMaker>PH_RareCatch</descriptionMaker>
+		<icon>UI/Icons/ThingCategories/Category_Fish</icon>
+		<categories>
+			<li>Work</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Odyssey">
 		<defName>QuestDiscovered</defName>
 		<label>quest discovered</label>
 		<descriptionMaker>PH_QuestDiscovered</descriptionMaker>

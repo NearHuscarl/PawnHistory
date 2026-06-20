@@ -23,6 +23,7 @@ public class TestScenario
     public RitualOutcomePossibility ForcedRitualOutcome;
     public SurgeryOutcome SurgeryForcedOutcome;
     public Pawn ForceRewardPawnInQuest;
+    public Thing ForcedRareCatch;
     public bool ForceInjuryScar = false;
     public bool ForcePostHealScar = false;
     public bool ForceMotherDeathDuringBirth = false;

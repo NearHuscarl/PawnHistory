@@ -178,6 +178,8 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef SlaveRebellion;
 
     [MayRequireOdyssey]
+    public static HistoryRecordDef RareCatch;
+    [MayRequireOdyssey]
     public static HistoryRecordDef QuestDiscovered;
 
     static HistoryRecordDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(HistoryRecordDefOf));
