@@ -216,8 +216,13 @@
 			<rulesStrings>
 				<li>CauseClause(hasCook==True,cause==IncompetentCook) ->[Cause] [Cook]</li>
 				<li>CauseClause(hasCook==False)                       ->[Cause]</li>
-				<li>entry(cause==Unknown)->[PAWN] got food poisoning from [Ingestible_indefinite].</li>
-				<li>entry(cause!=Unknown)->[PAWN] got food poisoning from [Ingestible_indefinite] because of [CauseClause].</li>
+
+				<li>Meal(isCorpse==True,humanLikeCorpse==True)  ->[Ingestible]'s corpse</li>
+				<li>Meal(isCorpse==True,humanLikeCorpse==False) ->[Ingestible_indefinite]'s corpse</li>
+				<li>Meal(isCorpse==False)                       ->[Ingestible_indefinite]</li>
+
+				<li>entry(cause==Unknown)->[PAWN] got food poisoning from [Meal].</li>
+				<li>entry(cause!=Unknown)->[PAWN] got food poisoning from [Meal] because of [CauseClause].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>

@@ -21,15 +21,19 @@ public class FoodPoisoningRecorder : RecorderBase<FoodPoisoningEvent>
             return;
 
         var recordDef = HistoryRecordDefOf.FoodPoisoning;
+        var ingestibleCorpse = ingestible as Corpse;
         var desc = recordDef.Description(e.Victim)
             .AddRule("Ingestible", ingestible.LabelShort, addSubsymbols: true)
+            .AddRule("Ingestible", ingestibleCorpse?.InnerPawn, addSubsymbols: true, replaceIfExist: true)
             .AddRule("Cook", cook)
             .AddRule("Cause", cause.ToStringHuman())
+            .AddConstant("isCorpse", ingestibleCorpse != null)
+            .AddConstant("humanLikeCorpse", ingestibleCorpse?.InnerPawn.RaceProps.Humanlike)
             .AddConstant("cause", cause)
             .AddConstant("hasCook", cook != null)
             .Resolve();
 
-        AddRecord(recordDef, e.Victim, desc, [e.Cook]);
+        AddRecord(recordDef, e.Victim, desc, [e.Cook, ingestibleCorpse?.InnerPawn]);
     }
 
     public void Test(TestScenario scenario)
@@ -52,6 +56,31 @@ public class FoodPoisoningRecorder : RecorderBase<FoodPoisoningEvent>
         Expect.That(victim).ToHaveHistoryRecord(HistoryRecordDefOf.FoodPoisoning, "[PAWN] got food poisoning from a simple meal because of dangerous food type.", index: -1);
 
         scenario.OpenHistoryRecordTab(victim);
+    }
+
+    public void TestCorpse(TestScenario scenario)
+    {
+        var victim = scenario.Pawn()
+            .ThatMatches(ShouldRecord)
+            .FullHeal()
+            .CreateSingle();
+        var deadHuman = scenario.Pawn().Do(p => p.Kill(null)).CreateSingle();
+        var deadAnimal = scenario.Pawn().Animal(PawnKindDefOf.Muffalo).Do(p => p.Kill(null)).CreateSingle();
+        
+        FoodUtility.AddFoodPoisoningHediff(victim, deadHuman.Corpse, FoodPoisonCause.Unknown);
+        FoodUtility.AddFoodPoisoningHediff(victim, deadAnimal.Corpse, FoodPoisonCause.Unknown);
+        Expect.That(victim).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.FoodPoisoning,
+            Description = "[PAWN] got food poisoning from [PAWN]'s corpse.",
+            Concerns = [deadHuman],
+        });
+        Expect.That(victim).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.FoodPoisoning,
+            Description = "[PAWN] got food poisoning from a muffalo's corpse.",
+            Concerns = [deadAnimal],
+        });
     }
 
     public void TestIncompetentCook(TestScenario scenario)
