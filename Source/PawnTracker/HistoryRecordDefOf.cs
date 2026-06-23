@@ -83,6 +83,8 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef AnimalRevenge;
     public static HistoryRecordDef AnimalTamed;
     public static HistoryRecordDef PredatorHuntingColonist;
+    public static HistoryRecordDef AtePawn;
+    public static HistoryRecordDef Eaten;
     public static HistoryRecordDef SocialFight;
     public static HistoryRecordDef Rescued;
     public static HistoryRecordDef NewLover;
@@ -167,6 +169,8 @@ public class HistoryRecordDefOf
     [MayRequireIdeology]
     public static HistoryRecordDef SlaveExecuted;
     [MayRequireIdeology]
+    public static HistoryRecordDef SlaveRebellion;
+    [MayRequireIdeology]
     public static HistoryRecordDef IdeoChanged;
     [MayRequireIdeology]
     public static HistoryRecordDef IdeoRoleChanged;
@@ -174,8 +178,6 @@ public class HistoryRecordDefOf
     public static HistoryRecordDef DivorceByIdeo;
     [MayRequireIdeology]
     public static HistoryRecordDef BondRemovedByIdeo;
-    [MayRequireIdeology]
-    public static HistoryRecordDef SlaveRebellion;
 
     [MayRequireOdyssey]
     public static HistoryRecordDef RareCatch;

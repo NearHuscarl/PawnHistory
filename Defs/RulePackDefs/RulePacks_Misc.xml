@@ -888,6 +888,18 @@
 	</RulePackDef>
 
 	<RulePackDef>
+		<defName>PH_Eaten</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>EatenEntry(eaterHumanlike==True) ->[PAWN] was eaten by [Eater].</li>
+				<li>EatenEntry(eaterHumanlike==False)->[PAWN] was eaten by [Eater_indefinite].</li>
+				<li>entry(pov==Eaten)->[EatenEntry]</li>
+				<li>entry(pov==Eater)->[PAWN] ate [Eaten]'s corpse.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
 		<defName>PH_RaidersLeft</defName>
 		<include>
 			<li>PH_Common</li>

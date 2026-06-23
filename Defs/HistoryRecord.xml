@@ -1051,6 +1051,25 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>AtePawn</defName>
+		<label>ate pawn</label>
+		<descriptionMaker>PH_Eaten</descriptionMaker>
+		<icon>Things/Mote/BattleSymbols/Skull</icon>
+		<categories>
+			<li>Life</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>Eaten</defName>
+		<label>eaten by</label>
+		<descriptionMaker>PH_Eaten</descriptionMaker>
+		<icon>Things/Mote/BattleSymbols/Skull</icon>
+		<categories>
+			<li>Life</li>
+			<li>Health</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>VisitedGrave</defName>
 		<label>visited grave</label>
 		<descriptionMaker>PH_VisitedGrave</descriptionMaker>
