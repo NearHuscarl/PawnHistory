@@ -92,7 +92,7 @@ public class CasualtyRecorder : RecorderBase<CasualtyRecorder.KillInput>, IRecor
 
                 if (lastRecord?.def == HistoryRecordDefOf.Downed && GenTicks.TicksAbs - lastRecord?.date <= 1)
                 {
-                    Log.Message($"[PawnHistory] Received death & downed transitions from {subject.NameShortColored} in the same tick. Skipping down transition..");
+                    L.Message($"Received death & downed transitions from {subject.NameShortColored} in the same tick. Skipping down transition..");
                     subject.HistoryRecords.Pop();
                 }
             }

@@ -343,6 +343,8 @@ public static class Extra
         public static RitualOutcomeEffectDef BlindingCeremony;
         [MayRequireIdeology]
         public static RitualOutcomeEffectDef ScarificationCeremony;
+        [MayRequireIdeology]
+        public static RitualOutcomeEffectDef GladiatorDuel;
 
         static RitualOutcomeEffectDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualOutcomeEffectDefOf));
     }
@@ -437,5 +439,7 @@ public static class Extra
         public static PreceptDef ScarificationCeremony;
         [MayRequireIdeology]
         public static PreceptDef Scarification_Minor;
+        [MayRequireIdeology]
+        public static PreceptDef GladiatorDuel;
     }
 }

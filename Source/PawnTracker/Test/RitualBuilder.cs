@@ -286,6 +286,27 @@ public class RitualBuilder(Pawn organizer)
         return this;
     }
 
+    public RitualBuilder GladiatorDuel(Pawn duelist1, Pawn duelist2, Pawn escort1, Pawn escort2, List<Pawn> spectators)
+    {
+        processors.Add(() =>
+        {
+            var assignedRoles = new Dictionary<string, Pawn>
+            {
+                [RitualRoleId.Leader] = organizer,
+                [RitualRoleId.Duelist1] = duelist1,
+                [RitualRoleId.Duelist2] = duelist2,
+                [RitualRoleId.Escort1] = escort1,
+                [RitualRoleId.Escort2] = escort2,
+            };
+            var (ritual, dialog) = CreateRitualDialogFrom(ThingDefOf.RitualSpot, Extra.PreceptDefOf.GladiatorDuel, assignedRoles, spectators);
+
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome([organizer, duelist1, duelist2, escort1, escort2, ..spectators], ritual);
+        });
+
+        return this;
+    }
+
     public RitualBuilder Festival(List<Pawn> joiners)
     {
         processors.Add(() =>

@@ -70,6 +70,8 @@ file static class RitualOutcomeContext
             || ritualJob.Ritual.def == Extra.PreceptDefOf.TrialPrisoner
             || ritualJob.Ritual.def == Extra.PreceptDefOf.TrialMentalState)
             return ritualJob.PawnWithRole(RitualRoleId.Leader);
+        if (ritualJob.Ritual.def == Extra.PreceptDefOf.GladiatorDuel)
+            return ritualJob.PawnWithRole(RitualRoleId.Leader);
         if (ritualJob.Ritual.def == Extra.PreceptDefOf.BlindingCeremony)
             return ritualJob.PawnWithRole(RitualRoleId.Doer);
         if (ritualJob.Ritual.def == Extra.PreceptDefOf.ScarificationCeremony)
