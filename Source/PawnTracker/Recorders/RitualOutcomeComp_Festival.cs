@@ -8,6 +8,10 @@ public class RitualOutcomeComp_Festival : RitualOutcomeComp
 {
     public override bool Match(BuildInput input)
     {
+        // handled in RitualOutcomeComp_Sacrifice
+        if (ModsConfig.IdeologyActive && input.Event.OutcomeEffectDef == Extra.RitualOutcomeEffectDefOf.Sacrifice)
+            return false;
+
         return input.Event.RitualDef == Extra.PreceptDefOf.Festival
             || input.Event.RitualDef == Extra.PreceptDefOf.DateRitualConsumable
             || input.Event.RitualDef == Extra.PreceptDefOf.Classic_DrumParty

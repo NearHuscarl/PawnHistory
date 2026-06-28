@@ -11,6 +11,7 @@ namespace PawnHistory.Source.PawnTracker.Events;
 public record RitualOutcomeCompletedEvent(
     Pawn Host,
     PreceptDef RitualDef,
+    RitualOutcomeEffectDef OutcomeEffectDef,
     string RitualLabel,
     string OutcomeLabel,
     List<Pawn> Spectators,
@@ -53,11 +54,12 @@ file static class RitualOutcomeContext
         var assignedRoles = Accessor.RitualRoleAssignments.AssignedRoles(ritualJob.assignments).Concat(forcedRoles).ToDictionary(e => e.Key, e => e.Value);
         var spectators = Accessor.RitualRoleAssignments.Spectators(ritualJob.assignments).ToList();
         var participants = Accessor.RitualRoleAssignments.Participants(ritualJob.assignments).ToList();
+        var outcomeDef = ritualJob.Ritual.outcomeEffect.def;
         List<Thing> targets = [ritualJob.selectedTarget.Thing, ritualJob.obligation?.targetA.Thing, ritualJob.obligation?.targetB.Thing, ritualJob.obligation?.targetC.Thing];
 
         targets = targets.Where(t => t != null).Distinct().ToList();
 
-        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, ritualJob.Ritual.def, ritualJob.Ritual.Label, outcome, spectators, participants, assignedRoles, targets));
+        GameEventBus.Publish(new RitualOutcomeCompletedEvent(host, ritualJob.Ritual.def, outcomeDef, ritualJob.Ritual.Label, outcome, spectators, participants, assignedRoles, targets));
     }
 
     private static Pawn GetOrganizer(LordJob_Ritual ritualJob)
@@ -66,6 +68,8 @@ file static class RitualOutcomeContext
             return ritualJob.PawnWithRole(RitualRoleId.Moralist);
         if (ritualJob.Ritual.def == Extra.PreceptDefOf.Execution)
             return ritualJob.PawnWithRole(RitualRoleId.Executioner);
+        if (ModsConfig.IdeologyActive && ritualJob.Ritual.outcomeEffect.def == Extra.RitualOutcomeEffectDefOf.Sacrifice)
+            return ritualJob.PawnWithRole(RitualRoleId.Moralist);
         if (ritualJob.Ritual.def == Extra.PreceptDefOf.Trial
             || ritualJob.Ritual.def == Extra.PreceptDefOf.TrialPrisoner
             || ritualJob.Ritual.def == Extra.PreceptDefOf.TrialMentalState)

@@ -351,6 +351,8 @@ public static class Extra
         public static RitualOutcomeEffectDef ScarificationCeremony;
         [MayRequireIdeology]
         public static RitualOutcomeEffectDef GladiatorDuel;
+        [MayRequireIdeology]
+        public static RitualOutcomeEffectDef Sacrifice;
 
         static RitualOutcomeEffectDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualOutcomeEffectDefOf));
     }
@@ -366,6 +368,10 @@ public static class Extra
         public static RitualPatternDef FeastCannibal;
         [MayRequireIdeology]
         public static RitualPatternDef SmokeCircle;
+        [MayRequireIdeology]
+        public static RitualPatternDef SacrificePrisoner;
+        [MayRequireIdeology]
+        public static RitualPatternDef SacrificeAnimal;
 
         static RitualPatternDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualPatternDefOf));
     }

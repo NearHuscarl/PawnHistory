@@ -27,6 +27,7 @@
 				<li>entry(priority=1,ritual==BlindingCeremony)  ->[Target] was blinded by [Doer] during [Outcome_indefinite] [Ritual][InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==ScarificationCeremony)->[Target] was scarified by [Doer] during [Outcome_indefinite] [Ritual][InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==GladiatorDuel)     ->[Duelist1] and [Duelist2] fought in [Outcome_indefinite] [Ritual] organized by [Organizer][InFrontOfOthers].</li>
+				<li>entry(priority=2,ritual==Sacrifice)         ->[Victim] was sacrificed by [Executioner] during [Outcome_indefinite] [Ritual][InFrontOfOthers].</li>
 				<li>entry(priority=1,ritual==Festival)          ->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>
 				<li>entry(priority=1,ritual==DateRitualConsumable)->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>
 				<li>entry(priority=1,ritual==Classic_DrumParty) ->[PAWN] attended [Outcome_indefinite] [Ritual][WithOthers].</li>

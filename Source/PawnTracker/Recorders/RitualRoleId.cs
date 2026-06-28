@@ -11,6 +11,7 @@ public static class RitualRoleId
     public static readonly string Convertee = "convertee";
     public static readonly string Executioner = "executioner";
     public static readonly string Prisoner = "prisoner";
+    public static readonly string Animal = "animal";
     public static readonly string Mother = "mother";
     public static readonly string Doctor = "doctor";
     public static readonly string RoleChanger = "role_changer";
