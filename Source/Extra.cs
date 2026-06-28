@@ -311,7 +311,11 @@ public static class Extra
         public static ThingDef MeleeWeapon_MonoSwordBladelink;
 
         [MayRequireIdeology]
+        public static ThingDef Burnbong;
+        [MayRequireIdeology]
         public static ThingDef ChristmasTree;
+        [MayRequireIdeology]
+        public static ThingDef Effigy;
 
         [MayRequireOdyssey]
         public static ThingDef AncientUplink;
@@ -353,7 +357,11 @@ public static class Extra
     public static class RitualPatternDefOf
     {
         [MayRequireIdeology]
+        public static RitualPatternDef BurnCircle;
+        [MayRequireIdeology]
         public static RitualPatternDef CelebrationSkyLanterns;
+        [MayRequireIdeology]
+        public static RitualPatternDef SmokeCircle;
 
         static RitualPatternDefOf() => DefOfHelper.EnsureInitializedInCtor(typeof(RitualPatternDefOf));
     }

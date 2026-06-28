@@ -114,6 +114,72 @@ public class RitualOutcomeComp_Festival : RitualOutcomeComp
     }
 
     [RequiresIdeology]
+    public void TestBurnCircle(TestScenario scenario)
+    {
+        scenario.SpeedUp();
+        scenario.ForwardDays(60);
+
+        var burnCircleIdeo = scenario.Ideo()
+            .AddPrecept(Extra.PreceptDefOf.DateRitualConsumable, Extra.RitualPatternDefOf.BurnCircle)
+            .Execute();
+        var organizer = scenario.Pawn()
+            .Colonist()
+            .SetIdeo(burnCircleIdeo)
+            .CreateSingle();
+        var joiners = scenario.Pawn(2)
+            .Colonist()
+            .SetIdeo(burnCircleIdeo)
+            .Execute();
+        var participants = joiners.Concat(organizer);
+
+        scenario.Map()
+            .BuildRoom(8, 8)
+            .WithThing(Extra.ThingDefOf.Effigy, 1, Faction.OfPlayer)
+            .Execute();
+
+        scenario
+            .Ritual(organizer)
+            .Outcome(BestOutcomeFor(burnCircleIdeo, Extra.PreceptDefOf.DateRitualConsumable))
+            .BurnCircle(joiners)
+            .Execute();
+
+        Expect.ThatAll(participants).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] attended an unforgettable [Ritual] with 2 others.");
+    }
+
+    [RequiresIdeology]
+    public void TestSmokeCircle(TestScenario scenario)
+    {
+        scenario.SpeedUp();
+        scenario.ForwardDays(60);
+
+        var smokeCircleIdeo = scenario.Ideo()
+            .AddPrecept(Extra.PreceptDefOf.DateRitualConsumable, Extra.RitualPatternDefOf.SmokeCircle)
+            .Execute();
+        var organizer = scenario.Pawn()
+            .Colonist()
+            .SetIdeo(smokeCircleIdeo)
+            .CreateSingle();
+        var joiners = scenario.Pawn(2)
+            .Colonist()
+            .SetIdeo(smokeCircleIdeo)
+            .Execute();
+        var participants = joiners.Concat(organizer);
+
+        scenario.Map()
+            .BuildRoom(8, 8)
+            .WithThing(Extra.ThingDefOf.Burnbong, 1, Faction.OfPlayer)
+            .Execute();
+
+        scenario
+            .Ritual(organizer)
+            .Outcome(BestOutcomeFor(smokeCircleIdeo, Extra.PreceptDefOf.DateRitualConsumable))
+            .SmokeCircle(joiners)
+            .Execute();
+
+        Expect.ThatAll(participants).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] attended an unforgettable [Ritual] with 2 others.");
+    }
+
+    [RequiresIdeology]
     public void TestClassicDanceParty(TestScenario scenario)
     {
         scenario.SpeedUp();

@@ -352,6 +352,34 @@ public class RitualBuilder(Pawn organizer)
         return this;
     }
 
+    public RitualBuilder BurnCircle(List<Pawn> joiners)
+    {
+        processors.Add(() =>
+        {
+            List<Pawn> participants = [organizer, ..joiners];
+            var (ritual, dialog) = CreateRitualDialogFrom(Extra.ThingDefOf.Effigy, Extra.RitualPatternDefOf.BurnCircle, [], participants);
+
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome(participants, ritual);
+        });
+
+        return this;
+    }
+
+    public RitualBuilder SmokeCircle(List<Pawn> joiners)
+    {
+        processors.Add(() =>
+        {
+            List<Pawn> participants = [organizer, ..joiners];
+            var (ritual, dialog) = CreateRitualDialogFrom(Extra.ThingDefOf.Burnbong, Extra.RitualPatternDefOf.SmokeCircle, [], participants);
+
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome(participants, ritual);
+        });
+
+        return this;
+    }
+
     public RitualBuilder DanceParty(List<Pawn> joiners)
     {
         processors.Add(() =>
