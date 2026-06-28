@@ -106,8 +106,6 @@ public class RitualOutcomeComp_Festival : RitualOutcomeComp
             .Ritual(organizer)
             .Outcome(BestOutcomeFor(christmasTreeIdeo, Extra.PreceptDefOf.DateRitualConsumable))
             .ChristmasTreeParty(joiners)
-            // outcome applied twice because RitualOutcomeEffectWorker_RemoveConsumableBuilding.ApplyOnFailure = true. This is intended.
-            // Manual apply deletes the selectedTarget -> ritual is invalid -> RitualOutcomeEffectWorker_RemoveConsumableBuilding.Apply() again.
             .Execute();
 
         Expect.ThatAll(participants).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] attended an unforgettable [Ritual] with 2 others.");
@@ -174,6 +172,39 @@ public class RitualOutcomeComp_Festival : RitualOutcomeComp
             .Ritual(organizer)
             .Outcome(BestOutcomeFor(smokeCircleIdeo, Extra.PreceptDefOf.DateRitualConsumable))
             .SmokeCircle(joiners)
+            .Execute();
+
+        Expect.ThatAll(participants).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] attended an unforgettable [Ritual] with 2 others.");
+    }
+
+    [RequiresIdeology]
+    public void TestCannibalFeast(TestScenario scenario)
+    {
+        scenario.SpeedUp();
+        scenario.ForwardDays(60);
+
+        var cannibalFeastIdeo = scenario.Ideo()
+            .AddPrecept(Extra.PreceptDefOf.DateRitualConsumable, Extra.RitualPatternDefOf.FeastCannibal)
+            .Execute();
+        var organizer = scenario.Pawn()
+            .Colonist()
+            .SetIdeo(cannibalFeastIdeo)
+            .CreateSingle();
+        var joiners = scenario.Pawn(2)
+            .Colonist()
+            .SetIdeo(cannibalFeastIdeo)
+            .Execute();
+        var participants = joiners.Concat(organizer);
+
+        scenario.Map()
+            .BuildRoom(8, 8)
+            .WithThing(Extra.ThingDefOf.CannibalPlatter, 1, Faction.OfPlayer)
+            .Execute();
+
+        scenario
+            .Ritual(organizer)
+            .Outcome(BestOutcomeFor(cannibalFeastIdeo, Extra.PreceptDefOf.DateRitualConsumable))
+            .CannibalFeast(joiners)
             .Execute();
 
         Expect.ThatAll(participants).ToHaveHistoryRecord(HistoryRecordDefOf.RitualOutcome, "[PAWN] attended an unforgettable [Ritual] with 2 others.");

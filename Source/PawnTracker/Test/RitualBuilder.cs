@@ -380,6 +380,24 @@ public class RitualBuilder(Pawn organizer)
         return this;
     }
 
+    public RitualBuilder CannibalFeast(List<Pawn> joiners)
+    {
+        processors.Add(() =>
+        {
+            List<Pawn> participants = [organizer, ..joiners];
+            var (ritual, dialog) = CreateRitualDialogFrom(Extra.ThingDefOf.CannibalPlatter, Extra.RitualPatternDefOf.FeastCannibal, [], participants);
+
+            Accessor.Dialog_BeginRitual.Start(dialog);
+            ApplyOutcome(participants, ritual);
+
+            // Fix an error due to the remaining live lord immediately spams a job that depends on the destroyed thing.
+            var lord = organizer.GetLord();
+            lord.lordManager.RemoveLord(lord);
+        });
+
+        return this;
+    }
+
     public RitualBuilder DanceParty(List<Pawn> joiners)
     {
         processors.Add(() =>

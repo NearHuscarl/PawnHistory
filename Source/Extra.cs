@@ -313,6 +313,8 @@ public static class Extra
         [MayRequireIdeology]
         public static ThingDef Burnbong;
         [MayRequireIdeology]
+        public static ThingDef CannibalPlatter;
+        [MayRequireIdeology]
         public static ThingDef ChristmasTree;
         [MayRequireIdeology]
         public static ThingDef Effigy;
@@ -360,6 +362,8 @@ public static class Extra
         public static RitualPatternDef BurnCircle;
         [MayRequireIdeology]
         public static RitualPatternDef CelebrationSkyLanterns;
+        [MayRequireIdeology]
+        public static RitualPatternDef FeastCannibal;
         [MayRequireIdeology]
         public static RitualPatternDef SmokeCircle;
 
