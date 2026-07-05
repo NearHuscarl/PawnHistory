@@ -39,8 +39,16 @@
 	<NH_PH_List_Many>{0}, {1} and {2} {3}</NH_PH_List_Many>
 	<NH_PH_Other>other</NH_PH_Other>
 	<NH_PH_OtherPart>other part</NH_PH_OtherPart>
-	<NH_PH_OtherGene>other gene</NH_PH_OtherGene>
 	<NH_PH_OtherScar>other scar</NH_PH_OtherScar>
+
+	<NH_PH_LabeledList_One>{0} {1}</NH_PH_LabeledList_One>
+	<NH_PH_LabeledList_Two>{0} and {1} {2}</NH_PH_LabeledList_Two>
+	<NH_PH_LabeledList_Three>{0}, {1} and {2} {3}</NH_PH_LabeledList_Three>
+	<NH_PH_LabeledList_Many>{0}, {1} and {2} {3}</NH_PH_LabeledList_Many>
+
+	<NH_PH_Gene>gene</NH_PH_Gene>
+	<NH_PH_Genes>genes</NH_PH_Genes>
+	<NH_PH_OtherGene>other gene</NH_PH_OtherGene>
 
 	<NH_TheSettlement>the colony</NH_TheSettlement>
 </LanguageData>

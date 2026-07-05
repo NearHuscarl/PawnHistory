@@ -28,7 +28,33 @@ internal static class LangUtility
         var n3 = toString(items[2]);
         if (count == 3) return "NH_PH_List_Three".Translate(n1, n2, n3);
 
-        return "NH_PH_List_Many".Translate(n1, n2, count - 2, Find.ActiveLanguageWorker.Pluralize(otherText));
+        var otherCount = count - 2;
+        otherText = otherCount > 1 ? Find.ActiveLanguageWorker.Pluralize(otherText) : otherText;
+        return "NH_PH_List_Many".Translate(n1, n2, otherCount, otherText);
+    }
+    
+    public static TaggedString FormatLabeledList<T>(IReadOnlyList<T> items, Func<T, string> toString = null, string singularLabel = null, string pluralLabel = null, string otherText = null)
+    {
+        toString ??= item => item.ToString();
+        singularLabel ??= string.Empty;
+        pluralLabel ??= Find.ActiveLanguageWorker.Pluralize(singularLabel);
+        otherText ??= "NH_PH_Other".Translate();
+
+        int count = items.Count;
+        if (count == 0) return string.Empty;
+
+        var n1 = toString(items[0]);
+        if (count == 1) return "NH_PH_LabeledList_One".Translate(n1, singularLabel);
+
+        var n2 = toString(items[1]);
+        if (count == 2) return "NH_PH_LabeledList_Two".Translate(n1, n2, pluralLabel);
+
+        var n3 = toString(items[2]);
+        if (count == 3) return "NH_PH_LabeledList_Three".Translate(n1, n2, n3, pluralLabel);
+
+        var otherCount = count - 2;
+        otherText = otherCount > 1 ? Find.ActiveLanguageWorker.Pluralize(otherText) : otherText;
+        return "NH_PH_LabeledList_Many".Translate(n1, n2, otherCount, otherText);
     }
 
     public static string ReplaceFirstMatch(this string text, string search, string replace, StringComparison comparisonType = StringComparison.CurrentCulture)

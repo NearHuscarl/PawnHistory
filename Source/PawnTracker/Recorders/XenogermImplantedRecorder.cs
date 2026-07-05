@@ -26,15 +26,24 @@ public class XenogermImplantedRecorder : RecorderBase<XenogermImplantedEvent>
 
         var recordDef = HistoryRecordDefOf.XenogermImplanted;
         var genes = OrderByImpact(e.Genes);
+        var geneList = LangUtility.FormatLabeledList(
+            genes,
+            gene => gene.label.Colorize(ColoredText.GeneColor),
+            "NH_PH_Gene".Translate(),
+            "NH_PH_Genes".Translate(),
+            "NH_PH_OtherGene".Translate()
+        );
         var desc = recordDef.Description(e.Pawn)
             .IncludePawnGrammar()
             .AddRule("XenotypeName", e.XenotypeName)
             .AddRule("OldXenotypeName", e.OldXenotypeName, addSubsymbols: true)
+            .AddRule("Donor", e.Donor)
             .AddConstant("hasOldXenotypeName", !e.OldXenotypeName.NullOrEmpty())
-            .AddRule("Genes", LangUtility.FormatList(genes, gene => gene.label.Colorize(ColoredText.GeneColor), "NH_PH_OtherGene".TranslateSimple()))
+            .AddConstant("hasDonor", e.Donor != null)
+            .AddRule("Genes", geneList)
             .Resolve();
 
-        AddRecord(recordDef, e.Pawn, desc);
+        AddRecord(recordDef, e.Pawn, desc, [e.Donor]);
     }
 
     private static List<GeneDef> OrderByImpact(List<GeneDef> genes)
@@ -84,8 +93,30 @@ public class XenogermImplantedRecorder : RecorderBase<XenogermImplantedEvent>
 
         Expect.That(pawn).ToHaveHistoryRecord(
             HistoryRecordDefOf.XenogermImplanted,
-            "[PAWN] was implanted with the Archivist xenogerm, gaining deathless, scarless and 1 other gene.");
+            "[PAWN] was implanted with the Archivist xenogerm, gaining deathless, scarless and deathrest genes.");
         var record = pawn.HistoryRecords.Last(r => r.def == HistoryRecordDefOf.XenogermImplanted);
         Expect.That(record.description).Not().Contain("who was once");
+    }
+
+    [RequiresBiotech]
+    public void TestReimplanted(TestScenario scenario)
+    {
+        var donor = scenario.Pawn()
+            .Colonist()
+            .SetXenotype("MasterRace", Extra.XenotypeIconDefOf.Crown, [GeneDefOf.Deathless])
+            .CreateSingle();
+        var recipient = scenario.Pawn()
+            .Colonist()
+            .SetXenotype(Extra.XenotypeDefOf.Dirtmole)
+            .CreateSingle();
+
+        GeneUtility.ReimplantXenogerm(donor, recipient);
+
+        Expect.That(recipient).ToHaveHistoryRecord(new ExpectedHistoryRecord
+        {
+            Def = HistoryRecordDefOf.XenogermImplanted,
+            Description = "[PAWN], who was once a dirtmole, was implanted with the MasterRace xenogerm by [Donor], gaining deathless gene.",
+            Concerns = [donor]
+        });
     }
 }

@@ -90,8 +90,10 @@
 		<defName>PH_XenogermImplanted</defName>
 		<rulePack>
 			<rulesStrings>
-				<li>entry(hasOldXenotypeName==True) ->[PAWN], who was once [OldXenotypeName_indefinite], was implanted with the [XenotypeName] xenogerm, gaining [Genes].</li>
-				<li>entry(hasOldXenotypeName==False)->[PAWN] was implanted with the [XenotypeName] xenogerm, gaining [Genes].</li>
+				<li>WasImplanted(hasDonor==True) ->was implanted with the [XenotypeName] xenogerm by [Donor], gaining [Genes]</li>
+				<li>WasImplanted(hasDonor==False)->was implanted with the [XenotypeName] xenogerm, gaining [Genes]</li>
+				<li>entry(hasOldXenotypeName==True) ->[PAWN], who was once [OldXenotypeName_indefinite], [WasImplanted].</li>
+				<li>entry(hasOldXenotypeName==False)->[PAWN] [WasImplanted].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
