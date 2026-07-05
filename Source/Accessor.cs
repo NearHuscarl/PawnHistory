@@ -282,6 +282,15 @@ public static class Accessor
             AccessTools.FieldRefAccess<Verse.HediffComp_MessageAfterTicks, int>("ticksUntilMessage");
     }
 
+    public class HediffComp_Infecter
+    {
+        public static readonly int AlreadyMadeInfectionValue =
+            (int)AccessTools.Field(typeof(Verse.HediffComp_Infecter), "AlreadyMadeInfectionValue").GetRawConstantValue();
+
+        public static readonly AccessTools.FieldRef<Verse.HediffComp_Infecter, int> TicksUntilInfect =
+            AccessTools.FieldRefAccess<Verse.HediffComp_Infecter, int>("ticksUntilInfect");
+    }
+
     public class LogLineDisplayableLog
     {
         public static readonly AccessTools.FieldRef<RimWorld.ITab_Pawn_Log_Utility.LogLineDisplayableLog, LogEntry> Log =

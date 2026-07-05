@@ -14,9 +14,9 @@ public class HediffDiscoveredRecorder : RecorderBase<HediffDiscoveredEvent>
         GameEventBus.Subscribe<HediffDiscoveredEvent>(CreateRecord);
     }
     
-    // TODO: will be handled by a separate recorder
     private static bool ShouldIgnore(Hediff hediff)
     {
+        // handled by WoundInfectionRecorder
         return hediff.def == HediffDefOf.WoundInfection || hediff.def == HediffDefOf.ScariaInfection;
     }
 

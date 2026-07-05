@@ -67,7 +67,6 @@ public class BodyPartScarredRecorder : RecorderBase<BodyPartScarredEvent>
         });
     }
 
-    [SkipTest]
     public Action TestInjury(TestScenario scenario)
     {
         scenario.ForceInjuryScar = true;
@@ -79,14 +78,21 @@ public class BodyPartScarredRecorder : RecorderBase<BodyPartScarredEvent>
             .Point(500)
             .Execute();
 
-        scenario.Pawn(friends.Concat(enemies))
+        var pawns = scenario.Pawn(friends.Concat(enemies))
             .ThatMatches(ShouldRecord)
             .FullHeal()
             .Execute();
 
         scenario.SpeedUp();
+        
+        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecordOf(HistoryRecordDefOf.BodyPartScarred);
 
-        return () => scenario.SlowDown();
+        return () =>
+        {
+            var scarredPawn = pawns.First(p => p.HistoryRecords.Any(r => r.def == HistoryRecordDefOf.BodyPartScarred));
+            scenario.OpenHistoryRecordTab(scarredPawn);
+            scenario.SlowDown();
+        };
     }
 
     [SkipTest]

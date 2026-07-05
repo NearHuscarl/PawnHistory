@@ -13,27 +13,6 @@ public enum ScarReason
 
 public record BodyPartScarredEvent(Pawn Pawn, Hediff Hediff, BodyPartRecord Part, Thing Instigator, ScarReason Reason) : GameEventBase;
 
-public class HediffComp_History : HediffComp
-{
-    public Thing instigator;
-
-    public static void InjectComp()
-    {
-        foreach (var def in DefDatabase<HediffDef>.AllDefs)
-        {
-            if (def.HasComp(typeof(HediffComp_GetsPermanent)))
-            {
-                def.comps.Add(new HediffCompProperties { compClass = typeof(HediffComp_History) });
-            }
-        }
-    }
-
-    public override void CompExposeData()
-    {
-        Scribe_References.Look(ref instigator, "PH_instigator");
-    }
-}
-
 // Search for: "IsPermanent = true;"
 
 // Call order:
@@ -48,13 +27,7 @@ internal class DamageWorker_AddInjury_FinalizeAndAddInjury_Patch
     private static void Postfix(Pawn pawn, Hediff_Injury injury, DamageInfo dinfo)
     {
         if (!injury.IsPermanent())
-        {
-            if (dinfo.Instigator != null && injury.TryGetComp(out HediffComp_History comp))
-            {
-                comp.instigator = dinfo.Instigator;
-            }
             return;
-        }
 
         var part = injury.Part;
 

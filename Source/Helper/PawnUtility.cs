@@ -16,7 +16,8 @@ internal static class PawnUtility
         public string NameDef =>
             pawn.Name != null
                 ? Find.ActiveLanguageWorker.WithDefiniteArticlePostProcessed(pawn.Name.ToStringShort, pawn.gender, name: true).ApplyTag(TagType.Name).Resolve()
-                : pawn.KindLabelDefinite().ApplyTag(TagType.Name).Resolve();
+                // no-name animal
+                : pawn.KindLabelIndefinite().ApplyTag(TagType.Name).Resolve();
 
         public List<HistoryRecord> HistoryRecords => CompHistoryManager.GetComp(pawn)?.records ?? [];
         public List<HistoryRecord> VisibleHistoryRecords => pawn.HistoryRecords.Where(r => r.def.importance != RecordImportance.Debug).ToList();

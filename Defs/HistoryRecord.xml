@@ -210,6 +210,15 @@
 		</categories>
 	</HistoryRecordDef>
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
+		<defName>WoundInfection</defName>
+		<label>wound infection</label>
+		<descriptionMaker>PH_WoundInfection</descriptionMaker>
+		<icon>Things/Pawn/Wounds/WoundMechA</icon>
+		<categories>
+			<li>Health</li>
+		</categories>
+	</HistoryRecordDef>
+	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef">
 		<defName>DrugAddicted</defName>
 		<label>drug addicted</label>
 		<descriptionMaker>PH_DrugAddicted</descriptionMaker>

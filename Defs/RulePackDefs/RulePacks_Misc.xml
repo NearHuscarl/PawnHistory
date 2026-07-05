@@ -172,6 +172,7 @@
 				<li>InBodyPart(hasInstigator==False,hasDmgSource==True) ->in [PAWN_possessive] [Part] by [DmgSource]</li>
 				<li>InBodyPart(hasInstigator==False,hasDmgSource==False)->in [PAWN_possessive] [Part]</li>
 
+				<!-- TODO: include combat log? similar to CasualtyRecorder & WoundInfectionRecorder -->
 				<li>entry(reason==InstantDamage)->[PAWN] had [Hediffs] [InBodyPart].</li>
 				<li>entry(reason==PostHeal)     ->[PAWN] recovered with [Hediff_indefinite] [InBodyPart].</li>
 				<li>entry(reason==Scarification)->[PAWN] had [Hediff_indefinite] [InBodyPart].</li>
@@ -244,6 +245,21 @@
 				
 				<li>entry(hasCause==False)->[PAWN] developed [Condition][InHisPart].</li>
 				<li>entry(hasCause==True) ->[PAWN] developed [Condition][InHisPart]. It was caused by [Cause].</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+	<RulePackDef>
+		<defName>PH_WoundInfection</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>WoundVerb(priority=1,woundDef==Bite)   ->bitten</li>
+				<li>WoundVerb(priority=1,woundDef==Scratch)->scratched</li>
+				<li>WoundVerb(priority=0)                  ->bitten</li>
+
+				<li>entry(hasCombatLog==True)                        ->[CombatLog] Later, [PAWN] developed [Infection] in [PAWN_possessive] [Part].</li>
+				<li>entry(hasCombatLog==False,hasScariaSource==True) ->[PAWN] developed [Infection] in [PAWN_possessive] [Part] after being [WoundVerb] by [ScariaAnimal].</li>
+				<li>entry(hasCombatLog==False,hasScariaSource==False)->[PAWN] developed [Infection] from [SourceWound].</li>
 			</rulesStrings>
 		</rulePack>
 	</RulePackDef>
