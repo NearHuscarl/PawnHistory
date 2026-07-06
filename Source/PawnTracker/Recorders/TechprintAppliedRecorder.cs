@@ -27,7 +27,6 @@ public class TechprintAppliedRecorder : RecorderBase<TechprintAppliedEvent>
         AddRecord(recordDef, e.Pawn, desc);
     }
 
-    // TODO: test with royalty
     [RequiresRoyalty]
     public void Test(TestScenario scenario)
     {
@@ -37,6 +36,6 @@ public class TechprintAppliedRecorder : RecorderBase<TechprintAppliedEvent>
 
         Find.ResearchManager.ApplyTechprint(project, pawn);
 
-        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.TechprintApplied, "[PAWN] applied a techprint to [Project], gaining [n] XP in intellectual.");
+        Expect.That(pawn).ToHaveHistoryRecord(HistoryRecordDefOf.TechprintApplied, "[PAWN] applied a techprint to the [Project] research project, gaining [n] XP in intellectual.");
     }
 }

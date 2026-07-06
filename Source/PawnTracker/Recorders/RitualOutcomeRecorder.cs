@@ -7,7 +7,6 @@ using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-// TODO: more testing
 public class RitualOutcomeRecorder : RecorderBase<RitualOutcomeCompletedEvent>
 {
     public override void Register()

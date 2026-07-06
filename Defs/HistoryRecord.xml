@@ -1147,7 +1147,7 @@
 	<HistoryRecordDef Class="PawnHistory.Source.PawnTracker.HistoryRecordDef" MayRequire="Ludeon.RimWorld.Royalty">
 		<defName>TechprintApplied</defName>
 		<label>techprint applied</label>
-		<description>{PAWN} applied a techprint to {Project}, gaining {Xp} XP in intellectual.</description>
+		<description>{PAWN} applied a techprint to the {Project} research project, gaining {Xp} XP in intellectual.</description>
 		<icon>Things/Pawn/Wounds/WoundMechA</icon>
 		<categories>
 			<li>Work</li>

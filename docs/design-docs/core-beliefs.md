@@ -2,7 +2,7 @@
 
 ## Recorder Design
 
-- Transpilers, IL manipulation, and IL/decompiled assembly inspection are completely forbidden to read.
+- Transpilers, IL manipulation, and IL/decompiled assembly inspection are completely forbidden to read. Do not read DLL files you fucking moron.
 - Prefer modern C# already used in the repo: `record`, collection expressions, and concise APIs.
 - Each recorder and event class must live in its own file.
 - Keep recorder logic small and event-focused.

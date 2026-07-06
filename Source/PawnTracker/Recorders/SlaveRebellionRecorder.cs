@@ -124,10 +124,8 @@ public class SlaveRebellionRecorder : RecorderBase<SlaveRebellionEvent>
         RunTest(scenario, SlaveRebellionType.LocalRebellion, true, "[PAWN] started a slave rebellion with [Others].", "[PAWN] and [Others] joined a slave rebellion led by [Initiator].");
     }
     
-    // Map is too small, local rebellion becomes grand rebellion as all slaves are within a close distance.
-    // TODO: add map size config for specific test.
     [RequiresIdeology]
-    [SkipTest]
+    [SkipTest] // TODO: non-violent tests are indeterministic. Think of a good way to mock forceAggressive
     public void TestGrand(TestScenario scenario)
     {
         RunTest(scenario, SlaveRebellionType.GrandRebellion, false, "[PAWN] started a grand slave escape with [Others].", "[PAWN] and [Others] joined a grand [EscapeNoun] led by [Initiator].");
