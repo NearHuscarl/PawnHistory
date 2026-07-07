@@ -12,7 +12,13 @@ internal static class PawnBuilderIdeologyExtension
     
     public static PawnBuilder SetIdeo(this PawnBuilder builder, Ideo ideo = null, PreceptDef role = null, float? certainty = null)
     {
-        builder.Do(p => p.ideo.SetIdeo(ideo ?? Faction.OfPlayer.ideos.PrimaryIdeo));
+        builder.Do(p =>
+        {
+            p.ideo.SetIdeo(ideo ?? Faction.OfPlayer.ideos.PrimaryIdeo);
+            foreach (var r in p.ideo.Ideo.RolesListForReading)
+                r.restrictToSupremeGender = false;
+        });
+        
 
         if (role != null)
             builder.SetRole(role);
@@ -36,6 +42,7 @@ internal static class PawnBuilderIdeologyExtension
         return builder.Do(p =>
         {
             var role = (Precept_RoleSingle)p.Ideo.RolesListForReading.First(r => r.def == roleDef);
+            role.restrictToSupremeGender = false;
             role.Assign(p, addThoughts: false);
         });
     }
