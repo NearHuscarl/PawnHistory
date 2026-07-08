@@ -2,31 +2,20 @@
 using PawnHistory.Source.PawnTracker.Test;
 using RimWorld;
 using System;
-using System.Linq;
 using Verse;
 
 namespace PawnHistory.Source.PawnTracker.Recorders;
 
-public class AncientDangerWarningRecorder : RecorderBase<Pawn>
+public class AncientDangerWarningRecorder : RecorderBase<AncientDangerWarningEvent>
 {
-    private static readonly string LetterLabel = "LetterLabelAncientShrineWarning".Translate();
-
     public override void Register()
     {
-        GameEventBus.Subscribe<ReceiveLetterEvent>(e =>
-        {
-            if (e.Label.Resolve() != LetterLabel)
-                return;
-
-            if (e.Pawns.FirstOrDefault() == null)
-                return;
-
-            CreateRecord(e.Pawns.FirstOrDefault());
-        });
+        GameEventBus.Subscribe<AncientDangerWarningEvent>(CreateRecord);
     }
 
-    public override void CreateRecord(Pawn pawn)
+    public override void CreateRecord(AncientDangerWarningEvent e)
     {
+        var pawn = e.Pawn;
         if (!ShouldRecord(pawn))
             return;
 
@@ -42,27 +31,28 @@ public class AncientDangerWarningRecorder : RecorderBase<Pawn>
     {
         var map = Find.CurrentMap;
 
+        Expect.Assertions(1);
+        scenario.RunOnceOn<AncientDangerWarningEvent>(e =>
+        {
+            Expect.That(e.Pawn).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord()
+            {
+                Def = HistoryRecordDefOf.AncientDangerWarning,
+                Description = "[PAWN] felt a deep sense of foreboding while approaching an ancient structure, sensing great danger within.",
+                Location = RecordLocation.Of(e.Pawn)
+            });
+        });
         scenario.SpeedUp();
+        var startCell = CellFinder.RandomClosewalkCellNear(new IntVec3(1, 0, 1), map, 3);
+        var destinationCell = CellFinder.RandomClosewalkCellNear(new IntVec3(map.Size.x - 2, 0, map.Size.z - 2), map, 3);
         var pawns = scenario.Pawn(3)
             .Colonist()
-            .Do(p => p.Position = CellFinder.RandomEdgeCell(map)) // so pawn does not end up in the ancient temple
+            .Position(startCell, 0)
             .Execute();
         scenario.Map().GenerateAncientTemple(8, 8).Execute();
         scenario.Pawn(pawns[0])
             .Colonist()
-            .StartJob(JobDefOf.Goto, map.Center)
+            .StartJob(JobDefOf.Goto, destinationCell)
             .CreateSingle();
-
-        Expect.ThatAny(pawns).Eventually().ToHaveHistoryRecord(new ExpectedHistoryRecord()
-        {
-            Def = HistoryRecordDefOf.AncientDangerWarning,
-            Description = "[PAWN] felt a deep sense of foreboding while approaching an ancient structure, sensing great danger within.",
-            Location = new RecordLocation
-            {
-                position = pawns[0].Position,
-                map = pawns[0].Map
-            }
-        });
 
         return () => scenario.SlowDown();
     }

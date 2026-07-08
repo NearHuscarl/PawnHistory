@@ -21,7 +21,12 @@ public class MapBuilder
     public MapBuilder GenerateAncientTemple(int width, int height)
     { 
         var rect = map.Center.RectAbout(width, height);
-        MovePawnsOutside(rect);
+        var clearRect = rect.ExpandedBy(1).ClipInsideMap(map);
+        MovePawnsOutside(clearRect);
+        GenDebug.ClearArea(clearRect, map);
+        foreach (var cell in clearRect)
+            map.zoneManager.ZoneAt(cell)?.RemoveCell(cell);
+
         var resolveParams = new ResolveParams();
         resolveParams.rect = rect;
         resolveParams.disableSinglePawn = true;
